@@ -88,8 +88,7 @@ itself current instead of aging into a snapshot of the day it was written.
 | Repository                                                        | What it is                                                                                          |
 | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
 | [📐 `standards`](https://github.com/tannergolden/standards)       | The engine. Reusable workflows, composite actions, and the documented standards they enforce        |
-| [🛤️ `path`](https://github.com/tannergolden/path)                 | The public template. Structure, health files, and wiring, all decided and ready to build on         |
-| [🛤️ `repo`](https://github.com/tannergolden/repo)                 | The private template. The same wiring, with the structure left for you to invent                    |
+| [🛤️ `path`](https://github.com/tannergolden/path)                 | The template. Structure, health files, and wiring, all decided and ready to build on                |
 | [🤖 `intelligence`](https://github.com/tannergolden/intelligence) | Agent instructions, published once and pinned, rather than pasted into every repository             |
 | [🛡️ `.github`](https://github.com/tannergolden/.github)           | The account's community health files, served to every repository at once                            |
 | [👋 `tannergolden`](https://github.com/tannergolden/tannergolden) | This file                                                                                           |
@@ -101,14 +100,14 @@ short trigger stub naming the events it cares about, and nothing else. The logic
 linter configuration, and the standards themselves live in `standards` and are pulled in by
 reference. A trigger has nothing in it to go stale, so nothing downstream ages.
 
-That rule is what makes the templates worth using. Generating from `path` or `repo` gives you a
-repository that is already wired, and the wiring keeps improving after you generate, because you
-were never handed a copy of it. The two templates differ in exactly five ways, and a gate enforces
-that list rather than a paragraph asking nicely.
+That rule is what makes the template worth using. Generating from `path` gives you a repository that
+is already wired, and the wiring keeps improving after you generate, precisely because you were
+never handed a copy of it.
 
-The split between the two is about structure, not quality. `path` decides the shape for you, which
-is what you want when the project has a conventional one. `repo` decides nothing, which is what you
-want when the shape is the design work and an imposed `src/` is the first thing you would delete.
+The two halves arrive differently, and that is deliberate. Structure comes as real folders, yours to
+change from the first commit, because only you can decide what the project becomes. Standards come
+as links, never copies, because a standard pasted into a repository starts going stale the moment it
+lands. What you own, you own outright; what is shared stays shared.
 
 > [!NOTE]
 > **The core repositories take the conventions and not the automation.** `.github`,

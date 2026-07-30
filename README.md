@@ -1,6 +1,6 @@
 <!--
 title: '👋 HELLO WORLD'
-description: 'Profile README for @tannergolden, covering focus areas, engineering principles, and how to get in touch.'
+description: 'Profile README for @tannergolden, covering focus areas, engineering principles, the core repositories and how they fit together, and how to get in touch.'
 tags: [profile, ai-research, systems-engineering, reproducibility]
 category: profile
 -->
@@ -78,11 +78,43 @@ These are the working principles I hold to, and the ones I look for in the peopl
 
 ---
 
-## 📦 Selected Work
+## 📦 The Core Repositories
 
-My current projects are pinned below. Common threads across them: hardened continuous integration,
-enforced documentation standards, and infrastructure that keeps itself current instead of aging into
-a snapshot of the day it was written.
+These are not a portfolio of unrelated projects. They are one system, each repository with a single
+job, wired so that a fix lands once and reaches everything downstream of it. Common threads:
+hardened continuous integration, enforced documentation standards, and infrastructure that keeps
+itself current instead of aging into a snapshot of the day it was written.
+
+| Repository                                                        | What it is                                                                                          |
+| :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| [📐 `standards`](https://github.com/tannergolden/standards)       | The engine. Reusable workflows, composite actions, and the documented standards they enforce        |
+| [🛤️ `path`](https://github.com/tannergolden/path)                 | The public template. Structure, health files, and wiring, all decided and ready to build on         |
+| [🛤️ `repo`](https://github.com/tannergolden/repo)                 | The private template. The same wiring, with the structure left for you to invent                    |
+| [🤖 `intelligence`](https://github.com/tannergolden/intelligence) | Agent instructions, published once and pinned, rather than pasted into every repository             |
+| [🛡️ `.github`](https://github.com/tannergolden/.github)           | The account's community health files, served to every repository at once                            |
+| [👋 `tannergolden`](https://github.com/tannergolden/tannergolden) | This file                                                                                           |
+
+### 🌿 How they fit together
+
+**One rule holds the system up: called, never copied.** A repository that runs a pipeline holds a
+short trigger stub naming the events it cares about, and nothing else. The logic, the scripts, the
+linter configuration, and the standards themselves live in `standards` and are pulled in by
+reference. A trigger has nothing in it to go stale, so nothing downstream ages.
+
+That rule is what makes the templates worth using. Generating from `path` or `repo` gives you a
+repository that is already wired, and the wiring keeps improving after you generate, because you
+were never handed a copy of it. The two templates differ in exactly five ways, and a gate enforces
+that list rather than a paragraph asking nicely.
+
+The split between the two is about structure, not quality. `path` decides the shape for you, which
+is what you want when the project has a conventional one. `repo` decides nothing, which is what you
+want when the shape is the design work and an imposed `src/` is the first thing you would delete.
+
+> [!NOTE]
+> **The core repositories take the conventions and not the automation.** `.github`,
+> `intelligence`, and this profile hold no project to lint, test or build, so they follow the
+> documented standards by link without installing the gate set. "Called, never copied" describes how
+> the automation reaches the repositories that run it, not a claim that every repository runs it.
 
 ---
 

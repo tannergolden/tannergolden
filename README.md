@@ -90,7 +90,7 @@ itself current instead of aging into a snapshot of the day it was written.
 | [📐 `standards`](https://github.com/tannergolden/standards)       | The engine. Reusable workflows, composite actions, and the documented standards they enforce        |
 | [🛤️ `path`](https://github.com/tannergolden/path)                 | The template. Structure, health files, and wiring, all decided and ready to build on                |
 | [🤖 `intelligence`](https://github.com/tannergolden/intelligence) | Agent instructions, published once and pinned, rather than pasted into every repository             |
-| [🛡️ `.github`](https://github.com/tannergolden/.github)           | The account's community health files, served to every repository at once                            |
+| [🛡️ `.github`](https://github.com/tannergolden/.github)           | The account's default community health files, for repositories that do not ship their own           |
 | [👋 `tannergolden`](https://github.com/tannergolden/tannergolden) | This file                                                                                           |
 
 ### 🌿 How they fit together
@@ -108,6 +108,12 @@ The two halves arrive differently, and that is deliberate. Structure comes as re
 change from the first commit, because only you can decide what the project becomes. Standards come
 as links, never copies, because a standard pasted into a repository starts going stale the moment it
 lands. What you own, you own outright; what is shared stays shared.
+
+Community health files are the one thing `path` copies rather than inherits, and that is the same
+reasoning applied to a case where it points the other way. Account defaults reach the repositories
+inside the account; a repository generated from a public template may not live in this account at
+all, so a default here would never travel with it. A template meant for other people has to hand
+over a repository that is complete on its own, not one that only looks complete from the inside.
 
 > [!NOTE]
 > **The core repositories take the conventions and not the automation.** `.github`,

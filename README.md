@@ -24,29 +24,29 @@ _Build it so the right way is the only easy way._
 ## 💡 About
 
 I work at the boundary between AI research and the systems that make it hold up: the pipelines,
-guardrails, and standards that decide whether a result can be reproduced next week by someone else,
-on another machine, without the original author in the room.
+guardrails, and standards that decide whether a result can be reproduced next week, on another
+machine, by someone who was not there the first time.
 
-Most of what I build exists because that gap is where good work quietly dies. A model that cannot be
-rerun is an anecdote. A pipeline that only its author can operate is a liability. A standard that
-lives in someone's head is already out of date. The interesting engineering problem is not producing
-the result, it is making the result survive contact with time, tooling, and other people.
+That gap is where most of my work sits. Research code accumulates quiet assumptions about the
+machine it was written on, and those assumptions tend to surface late, usually when somebody else
+needs the result and the person who produced it has moved on. I build the environments, continuous
+integration, and documentation standards that surface them early instead, and I spend most of my
+effort making the correct path the one that takes the least work.
 
 ---
 
 ## 🛠️ What I Build
 
-- 🤖 **AI-native infrastructure.** Repositories, pipelines, and guardrails designed so that frontier
-  models and human engineers both do their best work by default, steered by machine-loaded rules
-  instead of by memory or convention.
+- 🤖 **AI-native infrastructure.** Repositories and pipelines set up so that engineers and coding
+  agents both start with the project's rules already loaded, rather than discovering them in review.
 - 🛡️ **Security-first automation.** Least-privilege continuous integration, third-party actions
-  pinned to commit SHAs, an explicit supply-chain posture, and licensing metadata that survives an
-  audit rather than one that merely exists.
+  pinned to commit SHAs, an explicit supply-chain posture, and licensing metadata that holds up to
+  an audit.
 - ⚙️ **Reproducible environments.** Toolchains and command-line tooling built so that the same
   inputs produce the same outputs on someone else's hardware, including the GPU-bound work where
   that is hardest to guarantee.
-- 📝 **Documentation as law.** Standards written as machine-checked, indexed guides that a gate
-  enforces on every change, rather than prose that rots politely in a wiki.
+- 📝 **Enforced documentation.** Standards written as machine-checked, indexed guides that a gate
+  verifies on every change, which keeps the written rule and the enforced rule the same rule.
 
 ---
 
@@ -54,14 +54,14 @@ the result, it is making the result survive contact with time, tooling, and othe
 
 These are the working principles I hold to, and the ones I look for in the people I build alongside:
 
-- **Standards over opinions.** The documented rule wins until a pull request changes it. Seniority
-  is not an argument.
-- **Machined, not memorized.** If a rule matters, something enforces it automatically. Quality that
-  depends on everyone remembering is quality that degrades the first busy week.
-- **Small diffs, green gates.** Changes ship tested, reviewed, and reversible. A change nobody can
-  revert safely is a change nobody should have merged.
-- **Verified over vanity.** Claims carry evidence. A green badge that measures nothing is worse than
-  no badge, because it buys false confidence.
+- **Standards over opinions.** The documented rule holds until a pull request changes it, which
+  keeps design decisions in the repository and out of the review thread.
+- **Machined, not memorized.** If a rule matters, something enforces it automatically. Rules that
+  depend on recall drift, and the drift is hardest to notice in the weeks it matters most.
+- **Small diffs, green gates.** Changes ship tested, reviewed, and reversible, so a wrong call costs
+  a revert rather than a release.
+- **Evidence over badges.** Claims carry evidence. A green check that measures nothing is worse than
+  no check at all, because it buys confidence that nothing has earned.
 - **Defaults are policy.** Most people never change a default, so the default is the real decision.
   I spend disproportionate effort there.
 
@@ -70,11 +70,13 @@ These are the working principles I hold to, and the ones I look for in the peopl
 ## 🌿 How I Work With Others
 
 - **Review is for correctness, security, and fit with the established pattern.** Style is the
-  formatter's job, and I would rather spend the review on the thing that actually breaks.
-- **Written first.** Decisions land in the repository, not in a thread that scrolls away. If a
-  choice mattered enough to argue about, it matters enough to record.
+  formatter's job, which leaves the review for the parts that actually break.
+- **Written first.** Decisions land in the repository rather than in a thread that scrolls away, so
+  the reasoning is still there for whoever picks the work up next.
 - **Bias toward reversibility.** I would rather ship something narrow and undo it cheaply than ship
-  something broad and negotiate its removal for a quarter.
+  something broad and spend a quarter negotiating its removal.
+- **The tooling is the handover.** Most of what I build exists so that someone else can run the work
+  without me in the room, and I treat a colleague stuck on my setup as a defect in the setup.
 
 ---
 

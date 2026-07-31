@@ -85,13 +85,14 @@ job, wired so that a fix lands once and reaches everything downstream of it. Com
 hardened continuous integration, enforced documentation standards, and infrastructure that keeps
 itself current instead of aging into a snapshot of the day it was written.
 
-| Repository                                                        | What it is                                                                                          |
-| :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
-| [📐 `standards`](https://github.com/tannergolden/standards)       | The engine. Reusable workflows, composite actions, and the documented standards they enforce        |
-| [🛤️ `path`](https://github.com/tannergolden/path)                 | The template. Structure, health files, and wiring, all decided and ready to build on                |
-| [🤖 `intelligence`](https://github.com/tannergolden/intelligence) | Agent instructions, published once and pinned, rather than pasted into every repository             |
-| [🛡️ `.github`](https://github.com/tannergolden/.github)           | The account's default community health files, for repositories that do not ship their own           |
-| [👋 `tannergolden`](https://github.com/tannergolden/tannergolden) | This file                                                                                           |
+| Repository                                                     | What it is                                                                                          |
+| :------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| [`standards`](https://github.com/tannergolden/standards)       | The engine. Reusable workflows, composite actions, and the documented standards they enforce        |
+| [`path`](https://github.com/tannergolden/path)                 | The template. Structure, health files, and wiring, all decided and ready to build on                |
+| [`intelligence`](https://github.com/tannergolden/intelligence) | Agent instructions, published once and pinned, rather than pasted into every repository             |
+| [`.github`](https://github.com/tannergolden/.github)           | The account's default community health files, for repositories that do not ship their own           |
+| [`dotfiles`](https://github.com/tannergolden/dotfiles)         | The workstation. Shell, editor, and toolchain configuration, installed the same way everywhere      |
+| [`tannergolden`](https://github.com/tannergolden/tannergolden) | This file                                                                                           |
 
 ### 🌿 How they fit together
 
@@ -116,7 +117,7 @@ all, so a default here would never travel with it. A template meant for other pe
 over a repository that is complete on its own, not one that only looks complete from the inside.
 
 > [!NOTE]
-> **The core repositories take the conventions and not the automation.** `.github`,
+> **The core repositories take the conventions and not the automation.** `.github`, `dotfiles`,
 > `intelligence`, and this profile hold no project to lint, test or build, so they follow the
 > documented standards by link without installing the gate set. "Called, never copied" describes how
 > the automation reaches the repositories that run it, not a claim that every repository runs it.

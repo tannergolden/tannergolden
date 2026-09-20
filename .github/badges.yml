@@ -13,6 +13,11 @@
 #   style          for-the-badge (default) | flat | flat-square
 #   link           where the badge points when embedded (reference only)
 #
+# THE STACK BADGES CARRY NO LABEL. The table's row header already says
+# Languages, Tooling or Operations, so a left segment repeating it five
+# times across a row is the same word over and over and nothing else. An
+# empty label renders a single segment: the icon and the name.
+#
 # STYLE IS SPLIT ON PURPOSE. The four identity badges in the header keep
 # `for-the-badge`, which is what the documentation standard specifies for a
 # header and what every other repository on this account wears. Everything
@@ -70,86 +75,86 @@ badges:
 
   # --- Stack: black label, flat-square, body ------------------------------------
   - name: stack-python
-    label: Language
+    label: ''
     message: Python
-    label_color: black
+    label_color: azure
     message_color: azure
     icon: code
     style: flat-square
   - name: stack-bash
-    label: Language
+    label: ''
     message: Bash
-    label_color: black
+    label_color: lime
     message_color: lime
     icon: terminal
     style: flat-square
   - name: stack-javascript
-    label: Language
+    label: ''
     message: JavaScript
-    label_color: black
+    label_color: amber
     message_color: amber
     icon: code
     style: flat-square
   - name: stack-actions
-    label: Tooling
+    label: ''
     message: GitHub Actions
-    label_color: black
+    label_color: indigo
     message_color: indigo
     icon: gear
     style: flat-square
   - name: stack-make
-    label: Tooling
+    label: ''
     message: Make
-    label_color: black
+    label_color: steel
     message_color: steel
     icon: wrench
     style: flat-square
   - name: stack-ruff
-    label: Tooling
+    label: ''
     message: Ruff
-    label_color: black
+    label_color: plum
     message_color: plum
     icon: check
     style: flat-square
   - name: stack-pytest
-    label: Tooling
+    label: ''
     message: pytest
-    label_color: black
+    label_color: teal
     message_color: teal
     icon: flask
     style: flat-square
   - name: stack-prettier
-    label: Tooling
+    label: ''
     message: Prettier
-    label_color: black
+    label_color: rose
     message_color: rose
     icon: sparkle
     style: flat-square
   - name: stack-codeql
-    label: Operations
+    label: ''
     message: CodeQL
-    label_color: black
+    label_color: navy
     message_color: navy
     icon: shield
     style: flat-square
   - name: stack-dependabot
-    label: Operations
+    label: ''
     message: Dependabot
-    label_color: black
+    label_color: sky
     message_color: sky
     icon: package
     style: flat-square
   - name: stack-gitleaks
-    label: Operations
+    label: ''
     message: Gitleaks
-    label_color: black
+    label_color: crimson
     message_color: crimson
     icon: key
     style: flat-square
   - name: stack-sbom
-    label: Operations
+    label: ''
     message: SBOM
-    label_color: black
+    label_color: forest
     message_color: forest
     icon: layers
     style: flat-square

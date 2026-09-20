@@ -37,7 +37,7 @@ from config import (
     STATE_DIR,
 )
 from sources import Dispatch
-from text import clean, fence_for, fence_info, fit_subject, md_block, md_inline, safe_url, wrap_body
+from text import clean, fence_for, fit_subject, md_block, md_inline, safe_url, wrap_body
 
 RECENT_FILE = f"{STATE_DIR}/recent.json"
 MODULES_FILE = f"{STATE_DIR}/modules.json"
@@ -92,7 +92,7 @@ def update_readme(regions: dict) -> bool:
 # --- the commit message --------------------------------------------------------
 
 def commit_message(entry: Dispatch) -> str:
-    """The full message: house-conformant header, prose body, code, provenance, sign-off.
+    """The full message: house-conformant header, prose body, provenance, sign-off.
 
     Built as a string and written to a file for `git commit -F`; it is never
     passed through a shell. The trailer block ends with the author's sign-off
@@ -101,12 +101,6 @@ def commit_message(entry: Dispatch) -> str:
     """
     header = fit_subject(entry.commit_type, entry.scope, entry.emoji, entry.subject)
     parts = [header, "", wrap_body(entry.body)]
-
-    if entry.code:
-        fence = fence_for(entry.code)
-        parts += ["", f"{fence}{fence_info(entry.code_language)}", entry.code, fence]
-        if entry.code_trimmed:
-            parts += ["", "The listing is cut to quotation length; the full program is at the source."]
 
     provenance = [f"Source: {entry.source_url}"]
     if entry.attribution:
@@ -231,11 +225,6 @@ def render_dispatch(entry: Dispatch, when: datetime) -> str:
         "",
     ]
     lines.append(md_block(wrap_body(entry.body)))
-    if entry.code:
-        fence = fence_for(entry.code)
-        lines += ["", f"{fence}{fence_info(entry.code_language)}", entry.code, fence]
-        if entry.code_trimmed:
-            lines += ["", "_Cut to quotation length; the full program is at the source._"]
 
     provenance = f"[{md_inline(entry.source_name)}]({safe_url(entry.source_url)})"
     if entry.attribution:

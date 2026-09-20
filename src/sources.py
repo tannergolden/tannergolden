@@ -20,6 +20,7 @@ from __future__ import annotations
 import hashlib
 import random
 import re
+import urllib.parse
 from dataclasses import dataclass, field
 from datetime import date
 from typing import Callable
@@ -417,7 +418,8 @@ def fetch_rosetta(ledger: Ledger, today: date) -> Entry | None:
         again = task in used_tasks
         verb = "rewrite" if again else "solve"
         title = clean(task)
-        permalink = f"{ROSETTA_PAGE}?title={task.replace(' ', '_')}&oldid={revid}" if revid else f"https://rosettacode.org/wiki/{task.replace(' ', '_')}"
+        slug = urllib.parse.quote(task.replace(" ", "_"), safe="_/")
+        permalink = f"{ROSETTA_PAGE}?title={slug}&oldid={revid}" if revid else f"https://rosettacode.org/wiki/{slug}"
         body = (
             f"The Rosetta Code task {title!s}, {'again, this time' if again else 'solved'} in {clean(language)}."
             + ("" if REPRODUCE_ROSETTA_CODE else " The code is at the link; this entry cites rather than reproduces it.")
@@ -446,10 +448,17 @@ def fetch_rosetta(ledger: Ledger, today: date) -> Entry | None:
 
 WDQS = "https://query.wikidata.org/sparql"
 
+# Both queries take the TRUTHY date (wdt:, the best-ranked statement, never a
+# deprecated one) and then insist that statement carries DAY precision
+# (wikibase:timePrecision 11). A date Wikidata knows only to the year is
+# stored as January the first, so without the precision clause New Year's
+# Day would celebrate everything ever dated by year; without the truthy
+# clause a demoted regional release date would count as the release.
 RELEASE_QUERY = """
 SELECT DISTINCT ?item ?itemLabel ?itemDescription ?date ?links WHERE {{
   VALUES ?class {{ wd:Q7889 wd:Q7397 wd:Q9135 wd:Q9143 wd:Q166142 }}
-  ?item wdt:P31 ?class ; wdt:P577 ?date ; wikibase:sitelinks ?links .
+  ?item wdt:P31 ?class ; wdt:P577 ?date ; wikibase:sitelinks ?links ;
+        p:P577/psv:P577 [ wikibase:timeValue ?date ; wikibase:timePrecision 11 ] .
   FILTER(MONTH(?date) = {month} && DAY(?date) = {day} && ?links >= 5)
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
 }} ORDER BY DESC(?links) LIMIT 80
@@ -458,7 +467,8 @@ SELECT DISTINCT ?item ?itemLabel ?itemDescription ?date ?links WHERE {{
 BORN_QUERY = """
 SELECT DISTINCT ?item ?itemLabel ?itemDescription ?dob ?links WHERE {{
   VALUES ?occupation {{ wd:Q82594 wd:Q5482740 wd:Q183888 wd:Q210167 }}
-  ?item wdt:P31 wd:Q5 ; wdt:P106 ?occupation ; wdt:P569 ?dob ; wikibase:sitelinks ?links .
+  ?item wdt:P31 wd:Q5 ; wdt:P106 ?occupation ; wdt:P569 ?dob ; wikibase:sitelinks ?links ;
+        p:P569/psv:P569 [ wikibase:timeValue ?dob ; wikibase:timePrecision 11 ] .
   FILTER(MONTH(?dob) = {month} && DAY(?dob) = {day} && ?links >= 3)
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
 }} ORDER BY DESC(?links) LIMIT 80

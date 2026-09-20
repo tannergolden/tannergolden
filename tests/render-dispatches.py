@@ -21,10 +21,11 @@ from sources import Dispatch
 
 def make_entry(**overrides) -> Dispatch:
     base = dict(
-        kind="unicode", commit_type="feat", emoji="✨", subject="add U+2603 ☃ SNOWMAN",
-        title="U+2603 ☃ SNOWMAN", body="U+2603 is SNOWMAN \u2014 in Miscellaneous Symbols.",
-        identifier="2603", source_name="Unicode Character Database",
-        source_url="https://util.unicode.org/UnicodeJsps/character.jsp?a=2603", license="Unicode-3.0",
+        kind="release", commit_type="feat", emoji="✨", subject="note Go 1.25.0",
+        title="Go 1.25.0", body="Go 1.25.0 was published 2 days ago \u2014 the collector is eager now.",
+        identifier="golang/go@v1.25.0", source_name="golang/go",
+        source_url="https://github.com/golang/go/releases/tag/v1.25.0",
+        license="Release metadata, reported as fact",
     )
     base.update(overrides)
     return Dispatch(**base)
@@ -39,8 +40,8 @@ def test_month_file_gets_frontmatter_with_four_tags(repo, moment):
     assert len(tags) == 4
     assert "<!-- markdownlint-disable MD041 -->" in text
     assert "## Sunday, September 20, 2026\n\n" in text  # the day, written once
-    assert "### ✨ U+2603 ☃ SNOWMAN" in text  # the heading is the entry
-    assert "\n`feat(unicode)` · 13:05 EDT\n" in text
+    assert "### ✨ Go 1.25.0" in text  # the heading is the entry
+    assert "\n`feat(release)` · 13:05 EDT\n" in text
     assert "\u2014" not in text
 
 
@@ -52,21 +53,33 @@ def test_second_entry_is_appended_not_rewritten(repo, moment):
     assert second.startswith(first)
 
 
-def test_a_backtick_in_the_language_cannot_break_the_fence(repo, moment):
-    hostile = "<a href=\"https://phish.example/\">verify</a>\n## injected\n[x](https://phish.example)"
-    entry = make_entry(kind="rosetta", commit_type="refactor", code=hostile, code_language="Zig`x", license="GFDL-1.2-only")
+def test_a_hostile_title_cannot_leave_its_heading(repo, moment):
+    """A story title and a release name are written by somebody else."""
+    hostile = "<a href=\"https://phish.example/\">verify</a> ## injected [x](https://phish.example)"
+    entry = make_entry(kind="lobsters", commit_type="docs", title=hostile, identifier="abc123")
     append_dispatch(entry, moment)
     text = Path("dispatches/2026/September.md").read_text(encoding="utf-8")
-    assert "\n```zigx\n" + hostile + "\n```\n" in text
-    assert "```Zig`x" not in text
+    # Escaped, not stripped: the reader sees what the source wrote, and no
+    # part of it becomes a link, a heading or an element.
+    assert "&lt;a href=" in text and "<a href=" not in text
+    assert "\\[x\\](https://phish.example)" in text
+    # Every character of it stays on the heading line, so the `##` in the
+    # middle of it is text: a heading has to start one.
+    heading = next(line for line in text.split("\n") if line.startswith("### "))
+    assert "## injected" in heading and heading.count("\n") == 0
 
 
-def test_code_entry_is_fenced_and_attributed(repo, moment):
-    entry = make_entry(kind="rosetta", commit_type="refactor", code="print('hi') ```", code_language="python", license="GFDL-1.2-only", attribution="Rosetta Code contributors")
+def test_the_provenance_line_carries_attribution_and_licence(repo, moment):
+    entry = make_entry(kind="lobsters", commit_type="docs", identifier="abc123",
+                       source_name="Lobsters", source_url="https://example.invalid/post",
+                       license="Title and score, reported as fact",
+                       attribution="submitted by someone",
+                       extra_links=[("discussion", "https://lobste.rs/s/abc123/a-thing")])
     append_dispatch(entry, moment)
     text = Path("dispatches/2026/September.md").read_text(encoding="utf-8")
-    assert "\n````python\nprint('hi') ```\n````\n" in text
-    assert text.rstrip().endswith("· Rosetta Code contributors · GFDL-1.2-only_\n\n---")
+    assert "[Lobsters](https://example.invalid/post)" in text
+    assert "· submitted by someone · Title and score, reported as fact" in text
+    assert "[discussion](https://lobste.rs/s/abc123/a-thing)" in text
 
 
 def test_recent_index_and_page_rows(repo, moment):

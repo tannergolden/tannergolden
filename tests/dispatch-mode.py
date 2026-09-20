@@ -17,10 +17,10 @@ from state import Schedule
 
 def fake_pick(ledger, today):
     return Dispatch(
-        kind="unicode", commit_type="feat", emoji="✨", subject="add U+2603 ☃ SNOWMAN",
-        title="U+2603 ☃ SNOWMAN", body="U+2603 is SNOWMAN.", identifier="2603",
-        source_name="Unicode Character Database", source_url="https://util.unicode.org/UnicodeJsps/character.jsp?a=2603",
-        license="Unicode-3.0",
+        kind="release", commit_type="feat", emoji="✨", subject="note Go 1.25.0",
+        title="Go 1.25.0", body="Go 1.25.0 was published 2 days ago.", identifier="golang/go@v1.25.0",
+        source_name="golang/go", source_url="https://github.com/golang/go/releases/tag/v1.25.0",
+        license="Release metadata, reported as fact",
     )
 
 
@@ -35,16 +35,16 @@ def test_dispatch_mode_sends_one_and_reschedules(repo, monkeypatch):
     assert dispatches.main() == 0
 
     log = subprocess.run(["git", "log", "--format=%s"], capture_output=True, text=True, check=True).stdout.splitlines()
-    assert log == ["feat(unicode): ✨ add U+2603 ☃ SNOWMAN"]
+    assert log == ["feat(release): ✨ note Go 1.25.0"]
     schedule = Schedule("state/schedule.json")
     assert not schedule.is_fresh
     # The refresh is deliberately left due, so the next tick fills the page.
     assert "next_refresh" not in json.loads(Path("state/schedule.json").read_text(encoding="utf-8"))
     assert schedule.next_refresh < schedule.next_dispatch
     ledger = json.loads(Path("state/ledger.json").read_text(encoding="utf-8"))
-    assert ledger == {"unicode": ["2603"]}
+    assert ledger == {"release": ["golang/go@v1.25.0"]}
     committed = subprocess.run(["git", "show", "--stat", "--format=", "HEAD"], capture_output=True, text=True, check=True).stdout
     for path in ("README.md", "dispatches/2026/September.md", "state/ledger.json", "state/recent.json", "state/schedule.json"):
         assert path in committed, path
     page = Path("README.md").read_text(encoding="utf-8")
-    assert "| `feat(unicode)` | [U+2603 ☃ SNOWMAN](dispatches/2026/September.md#dispatch-" in page
+    assert "| `feat(release)` | [Go 1.25.0](dispatches/2026/September.md#dispatch-" in page

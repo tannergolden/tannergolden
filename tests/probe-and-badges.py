@@ -38,7 +38,7 @@ def snapshot(root):
 
 
 def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys):
-    monkeypatch.setattr(sources, "FETCHERS", {"rfc": good, "born": empty, "rosetta": broken})
+    monkeypatch.setattr(sources, "FETCHERS", {"rfc": good, "eol": empty, "lobsters": broken})
     monkeypatch.setattr(modules, "show_hn", lambda ledger: {"title": "Foo"})
     monkeypatch.setattr(modules, "good_first_issue", lambda ledger, langs: None)
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: {"command": "jq"})
@@ -50,14 +50,14 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
     assert dispatches.probe() == 1  # one source raised
     out = capsys.readouterr().out
     assert "rfc          ok     docs(rfc): \U0001F4DD record RFC 1, Host Software" in out
-    assert "born         empty  nothing available today" in out
-    assert "rosetta      error  RuntimeError('the wiki is down" in out and "\u2014" not in out
+    assert "eol          empty  nothing available today" in out
+    assert "lobsters     error  RuntimeError('the wiki is down" in out and "\u2014" not in out
     assert "show hn      ok     Foo" in out and "first issue  empty" in out and "stats        ok     7 public repositories, 1 languages, commits 412" in out
 
     after = snapshot(repo)
     assert {k: v for k, v in after.items() if k != "summary.md"} == before
     text = summary.read_text(encoding="utf-8")
-    assert "| rfc | ✅ ok |" in text and "| rosetta | ❌ error |" in text and "<!--" not in text
+    assert "| rfc | ✅ ok |" in text and "| lobsters | ❌ error |" in text and "<!--" not in text
 
 
 def test_probe_is_clean_when_everything_answers(repo, monkeypatch):
@@ -113,7 +113,7 @@ def test_the_failure_commit_carries_none_of_the_failed_runs_writes(badge_repo, m
 
     subprocess.run(["git", "add", "-A"], check=True)
     subprocess.run(["git", "commit", "--quiet", "-m", "seed"], check=True)
-    entry = Dispatch(kind="rosetta", commit_type="refactor", emoji="\u267b\ufe0f", subject="solve X in Y", title="X", body="b", identifier="X|Y", source_name="Rosetta Code", source_url="https://rosettacode.org/wiki/X", license="GFDL-1.2-only", code="evil()", code_language="y")
+    entry = Dispatch(kind="release", commit_type="feat", emoji="\u2728", subject="note X 1.0", title="X 1.0", body="b", identifier="x/x@v1.0", source_name="x/x", source_url="https://github.com/x/x/releases/tag/v1.0", license="Release metadata, reported as fact")
     path = append_dispatch(entry, moment)  # a run that got this far, then died
     record_recent(entry, moment, path)
 

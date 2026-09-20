@@ -57,14 +57,22 @@ def entry(**overrides) -> Dispatch:
 
 CASES = [
     entry(),
-    entry(kind="unicode", commit_type="feat", emoji="✨", subject="add U+2603 ☃ SNOWMAN", title="U+2603 ☃ SNOWMAN", body="U+2603 is SNOWMAN."),
-    entry(kind="rosetta", commit_type="refactor", emoji="♻️", subject="solve FizzBuzz in COBOL", title="FizzBuzz, solved in COBOL",
-          body="The task, solved in COBOL.", code="       IDENTIFICATION DIVISION.\n       PROGRAM-ID. FIZZBUZZ.\n``` not a fence", code_language="cobol", code_trimmed=True, license="GFDL-1.2-only"),
-    entry(kind="release", commit_type="chore", emoji="\U0001F9F9", subject="v35.0.0, Linux 0.01 turns 35", title="Linux 0.01 turns 35", body="Released in 1991 \u2013 thirty-five years ago."),
-    entry(kind="born", commit_type="docs", subject="mark the birthday of Ada Lovelace, 1815", title="Ada Lovelace, born 1815", body="Born on this date <!-- DISPATCHES:END --> in 1815."),
-    entry(kind="bug", commit_type="fix", emoji="\U0001F41B", subject="revisit Therac-25", title="Therac-25", body="A race condition \u2015 in the control software."),
-    entry(kind="falsehood", commit_type="fix", emoji="\U0001F41B", subject="correct what programmers believe about time", title="Falsehoods programmers believe about time", body="Time is not monotonic."),
+    entry(kind="release", commit_type="feat", emoji="✨", subject="note Go 1.25.0",
+          title="Go 1.25.0", body="Go 1.25.0 was published 2 days ago \u2013 the collector is eager now.",
+          license="Release metadata, reported as fact", attribution=""),
+    entry(kind="advisory", commit_type="security", emoji="\U0001F512",
+          subject="flag the critical advisory in left-pad", title="GHSA-abcd-1234-efgh: left-pad",
+          body="Critical severity in left-pad (npm) <!-- DISPATCHES:END --> published yesterday.",
+          license="Advisory metadata, reported as fact", attribution=""),
+    entry(kind="eol", commit_type="chore", emoji="\U0001F9F9",
+          subject="mark Ubuntu 20.04 at end of life", title="Ubuntu 20.04, reaches end of life today",
+          body="It stops receiving fixes \u2015 security ones included.", license="CC-BY-4.0", attribution=""),
+    entry(kind="lobsters", commit_type="docs", emoji="\U0001F4DD",
+          subject="read A thing somebody learned the hard way", title="A thing somebody learned the hard way",
+          body="42 points on Lobsters, from example.invalid. Credit @octocat, fixes #12.",
+          license="Title and score, reported as fact", attribution="submitted by someone"),
 ]
+
 
 
 @pytest.mark.parametrize("item", CASES, ids=[c.kind for c in CASES])
@@ -78,10 +86,11 @@ def test_every_kind_passes_the_house_gate(item):
     assert "<!--" not in message and "-->" not in message
 
 
-def test_code_is_fenced_beyond_its_own_backticks():
-    message = commit_message(CASES[2])
-    assert "\n````cobol\n" in message and "\n````\n" in message
-    assert "cut to quotation length" in message
+def test_mentions_and_references_cannot_reach_the_log():
+    """A commit body is pushed: `@name` notifies and `fixes #12` closes."""
+    message = commit_message(CASES[4])
+    assert "@octocat" not in message and "#12" not in message
+    assert "\uff20octocat" in message and "\uff0312" in message
 
 
 def test_body_is_wrapped_at_72():

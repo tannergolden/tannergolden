@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from text import clamp_snippet, clean, fence_for, is_clean, md_inline
+from text import clean, fence_for, is_clean, md_inline
 
 
 def test_dashes_become_spaced_hyphens():
@@ -31,15 +31,6 @@ def test_mentions_and_references_are_defused():
     assert "C# " in out and "a@b.c" in out
 
 
-def test_fence_info_admits_only_a_language_name():
-    from text import fence_info
-
-    assert fence_info("Zig`x") == "zigx"
-    assert fence_info("c++") == "c++" and fence_info("C#") == "c#" and fence_info("objective-c") == "objective-c"
-    assert fence_info("python ```\n<b>") == "python"
-    assert fence_info(None) == ""
-
-
 def test_trojan_source_is_stripped():
     assert clean("ab‮cd​⁦e﻿") == "abcde"
 
@@ -54,23 +45,6 @@ def test_fence_outgrows_any_backtick_run():
     assert fence_for("plain") == "```"
     assert fence_for("has ``` inside") == "````"
     assert fence_for("has ````` five") == "``````"
-
-
-def test_snippet_keeps_its_indentation():
-    code = "       IDENTIFICATION DIVISION.\n\tPROGRAM-ID. X.\r\n    y = 1  \n"
-    text, trimmed = clamp_snippet(code)
-    assert text == "       IDENTIFICATION DIVISION.\n\tPROGRAM-ID. X.\n    y = 1" and not trimmed
-    assert clean("a \u2014 b <!-- c\x00", code=True) == "a  -  b  c"
-    # A decorator is not a mention and an issue number in a comment is not a reference.
-    assert clean("@property\ndef f():  # see #12", code=True) == "@property\ndef f():  # see #12"
-
-
-def test_snippet_is_capped_and_reports_it():
-    long = "\n".join(f"line {i}" for i in range(40))
-    text, trimmed = clamp_snippet(long)
-    assert trimmed and text.count("\n") == 14
-    short, untouched = clamp_snippet("x = 1\ny = 2")
-    assert not untouched and short == "x = 1\ny = 2"
 
 
 def test_table_cell_escaping():

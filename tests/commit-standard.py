@@ -159,34 +159,54 @@ RULES = (
 
 def dispatch(**overrides) -> Dispatch:
     base = dict(
-        kind="unicode", commit_type="feat", emoji="✨", subject="add U+2603 ☃ SNOWMAN",
-        title="U+2603 ☃ SNOWMAN",
-        body="A symbol in the Miscellaneous Symbols block, in Unicode since version 1.1.",
-        identifier="2603", source_name="Unicode Character Database",
-        source_url="https://util.unicode.org/UnicodeJsps/character.jsp?a=2603", license="Unicode-3.0",
+        kind="release", commit_type="feat", emoji="\u2728", subject="note Go 1.25.0",
+        title="Go 1.25.0",
+        body="Go 1.25.0 was published 2 days ago. The collector returns memory to the system sooner.",
+        identifier="golang/go@v1.25.0", source_name="golang/go",
+        source_url="https://github.com/golang/go/releases/tag/v1.25.0",
+        license="Release metadata, reported as fact",
     )
     base.update(overrides)
     return Dispatch(**base)
 
 
+# One canonical example of each of the five kinds. The subject of every one
+# opens with a verb drawn from that kind's pool, which is what the redraw
+# sweep below replaces to prove no draw escapes the standard.
 KINDS = {
-    "rosetta": dispatch(kind="rosetta", commit_type="refactor", emoji="♻️",
-                        subject="solve FizzBuzz in COBOL", title="FizzBuzz, solved in COBOL",
-                        body="Rosetta Code carries 82 solutions to this task. This is the COBOL one.",
-                        code="       IDENTIFICATION DIVISION.\n       PROGRAM-ID. FIZZBUZZ.",
-                        code_language="cobol", license="GFDL-1.2-only", attribution="Rosetta Code contributors"),
-    "unicode": dispatch(),
-    "rfc": dispatch(kind="rfc", commit_type="docs", emoji="\U0001F4DD",
-                    subject="record RFC 2324, Hyper Text Coffee Pot Control Protocol", title="RFC 2324",
-                    body="Published in April 1998, with the status informational.",
-                    license="IETF Trust Legal Provisions; RFCs may be freely reproduced", attribution="L. Masinter"),
-    "bug": dispatch(kind="bug", commit_type="fix", emoji="\U0001F41B", subject="revisit the Mars Climate Orbiter",
-                    title="Mars Climate Orbiter", body="Lost in 1999 over a mismatch of units.",
-                    license="CC-BY-SA-4.0", attribution="Wikipedia contributors"),
-    "falsehood": dispatch(kind="falsehood", commit_type="fix", emoji="\U0001F41B",
-                          subject="correct what programmers believe about time",
-                          title="Falsehoods programmers believe about time", body="Time is not monotonic.",
-                          license="CC0-1.0 (the list); the article itself is not reproduced"),
+    "release": dispatch(),
+    "advisory": dispatch(
+        kind="advisory", commit_type="security", emoji="\U0001F512",
+        subject="flag the critical advisory in left-pad",
+        title="GHSA-abcd-1234-efgh: left-pad",
+        body="Critical severity in left-pad (npm), published yesterday. Tracked as CVE-2026-1111.",
+        identifier="GHSA-abcd-1234-efgh", source_name="GitHub Security Advisories",
+        source_url="https://github.com/advisories/GHSA-abcd-1234-efgh",
+        license="Advisory metadata, reported as fact"),
+    "eol": dispatch(
+        kind="eol", commit_type="chore", emoji="\U0001F9F9",
+        subject="mark Ubuntu 20.04 at end of life",
+        title="Ubuntu 20.04, reaches end of life in 30 days",
+        body="After that date it stops receiving fixes, security ones included.",
+        identifier="ubuntu-20.04", source_name="endoflife.date",
+        source_url="https://endoflife.date/ubuntu", license="CC-BY-4.0"),
+    "rfc": dispatch(
+        kind="rfc", commit_type="docs", emoji="\U0001F4DD",
+        subject="record RFC 9818, A Standard Somebody Needed",
+        title="RFC 9818: A Standard Somebody Needed",
+        body="Published in 2026 September, with the status proposed standard.",
+        identifier="9818", source_name="RFC Editor",
+        source_url="https://www.rfc-editor.org/rfc/rfc9818",
+        license="IETF Trust Legal Provisions; RFCs may be freely reproduced",
+        attribution="A. Author"),
+    "lobsters": dispatch(
+        kind="lobsters", commit_type="docs", emoji="\U0001F4DD",
+        subject="read A thing somebody learned the hard way",
+        title="A thing somebody learned the hard way",
+        body="42 points on Lobsters, from example.invalid. Tagged programming.",
+        identifier="abc123", source_name="Lobsters",
+        source_url="https://example.invalid/post",
+        license="Title and score, reported as fact", attribution="submitted by someone"),
 }
 
 MESSAGES = {name: commit_message(item) for name, item in KINDS.items()}

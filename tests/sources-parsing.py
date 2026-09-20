@@ -3,7 +3,7 @@
 """Every source adapter, against a recorded shape of what its API returns.
 
 The fixtures are the documented formats: UnicodeData.txt's semicolon
-fields, the RFC Editor's per-RFC JSON, xkcd's info.0.json, the OEIS search
+fields, the RFC Editor's per-RFC JSON, the OEIS search
 JSON, MediaWiki wikitext, SPARQL result bindings, the awesome-falsehood
 list. A change to any adapter is caught here before a random moment finds
 it on the page.
@@ -115,34 +115,6 @@ def test_rfc_reads_the_editor_record(repo, fake_net, seeded):
 def test_rfc_skips_unissued_numbers_and_gives_up_cleanly(repo, fake_net, seeded):
     fake_net.json("https://www.rfc-editor.org/rfc/rfc", {"title": "Not Issued"})
     assert sources.fetch_rfc(ledger(repo), TODAY) is None
-
-
-# --- docs(xkcd) ----------------------------------------------------------------
-
-def xkcd_item(url):
-    n = int(re.search(r"xkcd\.com/(\d+)/", url).group(1))
-    return {"num": n, "title": f"Comic {n}", "safe_title": f"Comic {n}", "alt": f"Alt {n} \u2013 dashed", "year": "2024"}
-
-
-def test_xkcd_reads_the_json_api(repo, fake_net, seeded):
-    fake_net.json(sources.XKCD_LATEST, {"num": 3000}).json("https://xkcd.com/", xkcd_item)
-    entry = sources.fetch_xkcd(ledger(repo), TODAY)
-    assert entry is not None
-    n = int(entry.identifier)
-    assert 1 <= n <= 3000 and n != 404
-    assert entry.subject == f"record xkcd {n}, Comic {n}"
-    assert entry.body == f'xkcd {n}, Comic {n}, from 2024.\n\nThe hover text reads: "Alt {n} - dashed"'
-    assert entry.license == "CC-BY-NC-2.5" and entry.attribution == "Randall Munroe"
-    assert_well_formed(entry)
-
-
-def test_xkcd_respects_the_ledger(repo, fake_net, seeded):
-    fake_net.json(sources.XKCD_LATEST, {"num": 3}).json("https://xkcd.com/", xkcd_item)
-    led = ledger(repo)
-    for n in (1, 2):
-        led.remember("xkcd", str(n))
-    entry = sources.fetch_xkcd(led, TODAY)
-    assert entry is not None and entry.identifier == "3"
 
 
 # --- test(sequence) -------------------------------------------------------------
@@ -361,7 +333,7 @@ def test_picker_falls_through_a_failing_source_to_the_next(repo, fake_net, seede
 
     def works(ledger, today):
         calls.append("works")
-        return sources.Entry(kind="xkcd", commit_type="docs", emoji="\U0001F4DD", subject="record xkcd 1, Barrel", title="xkcd 1", body="b", identifier="1", source_name="xkcd", source_url="https://xkcd.com/1/", license="CC-BY-NC-2.5")
+        return sources.Entry(kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 1, Host Software", title="RFC 1", body="b", identifier="1", source_name="RFC Editor", source_url="https://www.rfc-editor.org/rfc/rfc1", license="freely reproducible",)
 
     monkeypatch.setattr(sources, "FETCHERS", {"a": boom, "b": empty, "c": works})
     monkeypatch.setattr(sources, "COMMON", ("a", "b", "c"))

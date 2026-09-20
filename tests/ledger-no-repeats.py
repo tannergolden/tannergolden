@@ -10,17 +10,17 @@ from state import Ledger
 
 def test_ledger_round_trips(repo):
     ledger = Ledger("state/ledger.json")
-    assert not ledger.seen("xkcd", "327")
-    ledger.remember("xkcd", "327")
+    assert not ledger.seen("rfc", "327")
+    ledger.remember("rfc", "327")
     ledger.remember("rosetta", "FizzBuzz|COBOL")
     ledger.retire("bug")
     ledger.save()
 
     again = Ledger("state/ledger.json")
-    assert again.seen("xkcd", "327") and again.seen("xkcd", 327)
+    assert again.seen("rfc", "327") and again.seen("rfc", 327)
     assert again.used("rosetta") == {"FizzBuzz|COBOL"}
     assert again.retired == {"bug"}
-    assert again.count("xkcd") == 1
+    assert again.count("rfc") == 1
 
 
 def test_weights_give_the_rare_pair_one_draw_in_twenty():

@@ -125,7 +125,6 @@ page.
 | `refactor(rosetta)`   | One task, one language, the code                        | Rosetta Code               | GFDL 1.2, this version only |
 | `feat(unicode)`       | A character with a name worth reading                   | Unicode Character Database | Unicode License v3          |
 | `docs(rfc)`           | An RFC, what it did, and when                           | RFC Editor                 | Freely reproducible         |
-| `docs(xkcd)`          | A comic, its title and hover text, by number            | xkcd                       | CC BY-NC 2.5                |
 | `test(sequence)`      | Eight terms, and the ninth in the body                  | OEIS                       | CC BY-SA 4.0                |
 | `fix(bug)`, rare      | A famous software failure                               | Wikipedia                  | CC BY-SA 4.0                |
 | `fix(falsehood)`, rare | A catalogue of things programmers believe               | awesome-falsehood          | CC0 1.0 (the list)          |

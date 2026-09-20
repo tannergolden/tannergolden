@@ -58,8 +58,7 @@ def test_a_local_run_keeps_the_configured_committer(repo, monkeypatch):
     Path("journal").mkdir()
     Path("journal/x.md").write_text("x\n", encoding="utf-8")
     entry = Entry(
-        kind="xkcd", commit_type="docs", emoji="\U0001F4DD", subject="record xkcd 1, Barrel", title="xkcd 1",
-        body="b", identifier="1", source_name="xkcd", source_url="https://xkcd.com/1/", license="CC-BY-NC-2.5",
+        kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 1, Host Software", title="RFC 1", body="b", identifier="1", source_name="RFC Editor", source_url="https://www.rfc-editor.org/rfc/rfc1", license="freely reproducible",
     )
     assert journal.commit(commit_message(entry))
     assert run("log", "-1", "--format=%an|%cn <%ce>").strip() == "Tanner Golden|A Person <person@example.test>"
@@ -75,8 +74,7 @@ def test_under_actions_the_committer_defaults_to_the_bot(repo, monkeypatch):
     Path("journal").mkdir()
     Path("journal/x.md").write_text("x\n", encoding="utf-8")
     entry = Entry(
-        kind="xkcd", commit_type="docs", emoji="\U0001F4DD", subject="record xkcd 1, Barrel", title="xkcd 1",
-        body="b", identifier="1", source_name="xkcd", source_url="https://xkcd.com/1/", license="CC-BY-NC-2.5",
+        kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 1, Host Software", title="RFC 1", body="b", identifier="1", source_name="RFC Editor", source_url="https://www.rfc-editor.org/rfc/rfc1", license="freely reproducible",
     )
     assert journal.commit(commit_message(entry))
     assert run("log", "-1", "--format=%cn").strip() == "github-actions[bot]"

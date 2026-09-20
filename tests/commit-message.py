@@ -65,7 +65,6 @@ CASES = [
     entry(kind="born", commit_type="docs", subject="mark the birthday of Ada Lovelace, 1815", title="Ada Lovelace, born 1815", body="Born on this date <!-- JOURNAL:END --> in 1815."),
     entry(kind="bug", commit_type="fix", emoji="\U0001F41B", subject="revisit Therac-25", title="Therac-25", body="A race condition \u2015 in the control software."),
     entry(kind="falsehood", commit_type="fix", emoji="\U0001F41B", subject="correct what programmers believe about time", title="Falsehoods programmers believe about time", body="Time is not monotonic."),
-    entry(kind="xkcd", subject="record xkcd 327, Exploits of a Mom", title="xkcd 327: Exploits of a Mom", body='The hover text reads: "Her daughter is named Help I\'m trapped in a driver\'s license factory."', license="CC-BY-NC-2.5"),
 ]
 
 

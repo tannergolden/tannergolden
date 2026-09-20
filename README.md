@@ -57,15 +57,14 @@ follows.
 <!-- JOURNAL:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=726f02f7)](journal/2026/09.md)
+[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=1228ef48)](journal/2026/09.md)
 
 | Time | Commit | Entry |
 | :--- | :--- | :--- |
 | 09:28 | `feat(unicode)` | [U+10330 𐌰 GOTHIC LETTER AHSA](journal/2026/09.md#entry-20260920-092834) |
-| 09:28 | `docs(xkcd)` | [xkcd 1983: Clutter](journal/2026/09.md#entry-20260920-092832) |
 | 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](journal/2026/09.md#entry-20260920-092830) |
 
-[Full journal](journal/) · [How it works](How-It-Works.md) · 3 entries in September
+[Full journal](journal/) · [How it works](How-It-Works.md) · 2 entries in September
 <!-- JOURNAL:END -->
 
 <!-- MODULES:BEGIN -->
@@ -135,13 +134,13 @@ Open to conversations about AI infrastructure, reproducibility, and developer to
 
 ---
 
-Journal sources: Wikidata (CC0) · Unicode · RFC Editor · xkcd (CC BY-NC) · OEIS (CC BY-SA) ·
-Rosetta Code (GFDL) · Wikipedia (CC BY-SA) · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
+Journal sources: Wikidata (CC0) · Unicode · RFC Editor · OEIS (CC BY-SA) · Rosetta Code (GFDL) ·
+Wikipedia (CC BY-SA) · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
 [`NOTICE`](NOTICE). Every image on this page is a committed file; nothing is fetched from an image
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 09:28 EDT on Sunday, September 20, 2026.
+Last updated 09:36 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

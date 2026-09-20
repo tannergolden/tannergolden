@@ -41,5 +41,5 @@ def test_header_matches_the_house_regex_and_opens_lowercase():
 
 
 def test_hostile_subject_is_cleaned_before_fitting():
-    header = fit_subject("docs", "xkcd", "\U0001F4DD", "record xkcd 1 \u2014 Barrel \u2013 Part 1 --> x")
+    header = fit_subject("docs", "rfc", "\U0001F4DD", "record RFC 1 \u2014 Host Software \u2013 Part 1 --> x")
     assert "\u2014" not in header and "\u2013" not in header and "-->" not in header

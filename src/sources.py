@@ -38,7 +38,7 @@ _RNG = random.SystemRandom()
 class Entry:
     """One journal entry, ready to be rendered into a commit and a page row."""
 
-    kind: str  # the ledger key and the scope: unicode, rfc, xkcd, ...
+    kind: str  # the ledger key and the scope: unicode, rfc, sequence, ...
     commit_type: str  # feat, fix, docs, refactor, test, chore
     emoji: str  # one emoji from the house mapping for that type
     subject: str  # lowercase imperative, without the type(scope) prefix
@@ -331,53 +331,6 @@ def fetch_rfc(ledger: Ledger, today: date) -> Entry | None:
             source_url=RFC_PAGE.format(n=n),
             license="IETF Trust Legal Provisions; RFCs may be freely reproduced",
             attribution=authors,
-        )
-    return None
-
-
-# --- docs(xkcd) ---------------------------------------------------------------
-
-XKCD_LATEST = "https://xkcd.com/info.0.json"
-XKCD_ITEM = "https://xkcd.com/{n}/info.0.json"
-
-
-def fetch_xkcd(ledger: Ledger, today: date) -> Entry | None:
-    latest = net.get_json(XKCD_LATEST)
-    if not isinstance(latest, dict) or not isinstance(latest.get("num"), int):
-        return None
-    ceiling = latest["num"]
-
-    tried = 0
-    for _ in range(60):
-        if tried >= 10:
-            break
-        n = _RNG.randint(1, ceiling)
-        if n == 404 or ledger.seen("xkcd", str(n)):  # 404 famously does not exist
-            continue
-        tried += 1
-        comic = net.get_json(XKCD_ITEM.format(n=n))
-        if not isinstance(comic, dict) or not comic.get("title"):
-            continue
-        title = clean(str(comic.get("safe_title") or comic.get("title")))
-        alt = clean(str(comic.get("alt", "")))
-        if len(alt) > 320:
-            alt = alt[:319].rsplit(" ", 1)[0] + "…"
-        year = clean(str(comic.get("year", "")))
-        body = f"xkcd {n}, {title!s}" + (f", from {year}." if year else ".")
-        if alt:
-            body += f'\n\nThe hover text reads: "{alt}"'
-        return Entry(
-            kind="xkcd",
-            commit_type="docs",
-            emoji="\U0001F4DD",
-            subject=f"record xkcd {n}, {title}",
-            title=f"xkcd {n}: {title}",
-            body=body,
-            identifier=str(n),
-            source_name="xkcd",
-            source_url=f"https://xkcd.com/{n}/",
-            license="CC-BY-NC-2.5",
-            attribution="Randall Munroe",
         )
     return None
 
@@ -778,13 +731,12 @@ FETCHERS: dict = {
     "rosetta": fetch_rosetta,
     "unicode": fetch_unicode,
     "rfc": fetch_rfc,
-    "xkcd": fetch_xkcd,
     "sequence": fetch_sequence,
     "bug": fetch_bug,
     "falsehood": fetch_falsehood,
 }
 
-COMMON = ("release", "born", "rosetta", "unicode", "rfc", "xkcd", "sequence")
+COMMON = ("release", "born", "rosetta", "unicode", "rfc", "sequence")
 RARE = ("bug", "falsehood")
 RARE_SHARE = 0.05  # the two rare kinds together, while their lists last
 

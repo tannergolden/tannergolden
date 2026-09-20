@@ -22,7 +22,7 @@ KIT = Path(os.environ.get("EMBLEMS_KIT", ".emblems/src/badge-kit.py"))
 
 
 def good(ledger, today):
-    return sources.Entry(kind="xkcd", commit_type="docs", emoji="\U0001F4DD", subject="record xkcd 1, Barrel", title="xkcd 1", body="b", identifier="1", source_name="xkcd", source_url="https://xkcd.com/1/", license="CC-BY-NC-2.5")
+    return sources.Entry(kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 1, Host Software", title="RFC 1", body="b", identifier="1", source_name="RFC Editor", source_url="https://www.rfc-editor.org/rfc/rfc1", license="freely reproducible",)
 
 
 def empty(ledger, today):
@@ -38,7 +38,7 @@ def snapshot(root):
 
 
 def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys):
-    monkeypatch.setattr(sources, "FETCHERS", {"xkcd": good, "born": empty, "rosetta": broken})
+    monkeypatch.setattr(sources, "FETCHERS", {"rfc": good, "born": empty, "rosetta": broken})
     monkeypatch.setattr(modules, "show_hn", lambda ledger: {"title": "Foo"})
     monkeypatch.setattr(modules, "good_first_issue", lambda ledger, langs: None)
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: {"command": "jq"})
@@ -49,7 +49,7 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
 
     assert journal.probe() == 1  # one source raised
     out = capsys.readouterr().out
-    assert "xkcd         ok     docs(xkcd): \U0001F4DD record xkcd 1, Barrel" in out
+    assert "rfc          ok     docs(rfc): \U0001F4DD record RFC 1, Host Software" in out
     assert "born         empty  nothing available today" in out
     assert "rosetta      error  RuntimeError('the wiki is down" in out and "\u2014" not in out
     assert "show hn      ok     Foo" in out and "first issue  empty" in out and "stats        ok     7 public repositories, 1 languages, commits 412" in out
@@ -57,11 +57,11 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
     after = snapshot(repo)
     assert {k: v for k, v in after.items() if k != "summary.md"} == before
     text = summary.read_text(encoding="utf-8")
-    assert "| xkcd | ✅ ok |" in text and "| rosetta | ❌ error |" in text and "<!--" not in text
+    assert "| rfc | ✅ ok |" in text and "| rosetta | ❌ error |" in text and "<!--" not in text
 
 
 def test_probe_is_clean_when_everything_answers(repo, monkeypatch):
-    monkeypatch.setattr(sources, "FETCHERS", {"xkcd": good})
+    monkeypatch.setattr(sources, "FETCHERS", {"rfc": good})
     monkeypatch.setattr(modules, "show_hn", lambda ledger: None)
     monkeypatch.setattr(modules, "good_first_issue", lambda ledger, langs: None)
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)

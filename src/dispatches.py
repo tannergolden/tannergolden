@@ -37,6 +37,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import cards
+import masthead
 import modules
 import render
 import sources
@@ -217,6 +218,7 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
     # Badges first: the page embeds each one with a tag of its bytes.
     render_badges(month_count, *status, availability=render.load_availability())
     regions = {
+        "MASTHEAD": cards.masthead_region(),
         "AVAILABILITY": render.render_availability_region(render.load_availability()),
         "DISPATCHES": render.render_dispatches_region(recent, when, month_count),
         "UPDATED": render.render_updated_line(when),
@@ -292,6 +294,8 @@ def refresh_page(ledger: Ledger, when: datetime) -> str:
     render.save_modules(current)
     ledger.save()
 
+    cards.write_masthead(masthead.lines())
+    changed.append("the masthead")
     login = os.environ.get("GITHUB_REPOSITORY_OWNER") or profile.get("login") or "tannergolden"
     stats = cards.github_stats(login, os.environ.get("GITHUB_TOKEN"))
     if stats:
@@ -429,9 +433,9 @@ def main() -> int:
 
     if args.mode == "check":
         document = Path(README).read_text(encoding="utf-8")
-        for name in ("AVAILABILITY", "DISPATCHES", "MODULES", "CARDS", "UPDATED"):
+        for name in ("MASTHEAD", "AVAILABILITY", "DISPATCHES", "MODULES", "CARDS", "UPDATED"):
             render.read_region(document, name)
-        print("README.md: all five regions intact")
+        print("README.md: all six regions intact")
         return 0
 
     if args.mode == "render":

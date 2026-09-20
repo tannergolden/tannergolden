@@ -14,6 +14,9 @@ PAGE = """<!-- frontmatter -->
 
 prose before
 
+<!-- MASTHEAD:BEGIN -->
+<!-- MASTHEAD:END -->
+
 <!-- AVAILABILITY:BEGIN -->
 <!-- AVAILABILITY:END -->
 

@@ -51,6 +51,47 @@ and scheduled, and every one of them is authored by me.
 
 ---
 
+## ⌨️ The Masthead
+
+The page opens with a terminal that types itself out. `👋🏻 Hello World!` is
+always first; the three lines after it are assembled on every page refresh
+from [`src/masthead.py`](src/masthead.py).
+
+Not from a word salad. A slot filled at random from a pool that fits every
+other slot in its frame produces grammar by accident and nonsense by default,
+and an earlier draft of this really did offer "Automating more than I add" and
+"Deleting what people forget". Each frame now carries its own pools, small
+enough to have been read end to end, and the test walks **every** line the
+generator can produce rather than a sample: a generator nobody can enumerate
+is a generator nobody can vouch for.
+
+| | |
+| :--- | ---: |
+| Distinct lines | 239 |
+| Distinct mastheads (three drawn from ten frames) | **822,553** |
+| Words per line | 4 to 8 |
+| Widest line | 51 cells, 594px |
+| Loop | 18.8 seconds |
+
+The count that matters is the second one. A reader takes in the set at once,
+so two mastheads differing in one line are two different mastheads.
+
+**It is black in both colour schemes**, which makes it one file rather than a
+light and a dark variant. That is not a style choice: `#00ff41` on the page's
+light surface comes to 1.33:1, which is invisible. On the plate it is 14.9:1.
+
+The reveal steps one cell at a time rather than growing smoothly, because a
+rectangle widening continuously uncovers letters through their own middles and
+reads as a wipe. Stepping by whole cells is what makes it look typed.
+
+**No script, anywhere.** GitHub strips those from an SVG in a README, which is
+why the animation is SMIL and the words are chosen in Python. The glow is an
+SVG filter, and a filter is the one thing here whose survival through GitHub's
+sanitiser is unproven; it degrades to flat green on black, which is the same
+picture without the bloom.
+
+---
+
 ## 🟢 Availability
 
 One badge on this page is set by a person rather than by a source. The

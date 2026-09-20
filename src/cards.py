@@ -25,6 +25,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+import masthead
 import net
 from config import ASSETS_DIR
 
@@ -60,6 +61,150 @@ def _svg_header(width: int, height: int, title: str, theme: dict) -> str:
         f'<rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="6" '
         f'fill="{theme["surface"]}" stroke="{theme["border"]}"/>\n'
     )
+
+
+# --- the masthead ------------------------------------------------------------------
+
+# A terminal, so the plate is black in both schemes and there is only one
+# file. Neon green on the page's own light surface comes to 1.33:1, which is
+# invisible; on this plate it is 14.9:1.
+CRT = {"plate": "#0d0208", "edge": "#1f3b23", "ink": "#00ff41", "dim": "#00b02d"}
+
+MASTHEAD_FONT_SIZE = 18
+MASTHEAD_HEIGHT = 52
+
+# Type, hold, erase. One slot per line, and the whole loop is their sum, so
+# four lines come to 18.8 seconds and a visitor sees most of them.
+TYPE_SECONDS, HOLD_SECONDS, ERASE_SECONDS = 1.6, 2.2, 0.9
+
+
+def _reveal(index: int, line: str, slot: float, cycle: float, cell: float) -> tuple:
+    """Discrete keyframes that step one cell at a time, like a real terminal.
+
+    A rectangle whose width grows continuously reveals letters through their
+    own middles, which reads as a wipe rather than as typing. Stepping it by
+    whole cells is what makes it look typed, and `calcMode="discrete"` is
+    what holds each step until the next one.
+    """
+    width = masthead.cells(line)
+    start = index * slot
+    keys, values = [(0.0, 0.0)], None
+
+    for step in range(width + 1):  # 0 cells through all of them
+        keys.append((start + TYPE_SECONDS * step / max(width, 1), step * cell))
+    keys.append((start + TYPE_SECONDS + HOLD_SECONDS, width * cell))
+    for step in range(width, -1, -1):  # and back down, the same way
+        keys.append((start + TYPE_SECONDS + HOLD_SECONDS
+                     + ERASE_SECONDS * (width - step) / max(width, 1), step * cell))
+    keys.append((start + slot, 0.0))
+    keys.append((cycle, 0.0))
+
+    times, widths = [], []
+    for time, value in keys:
+        moment = min(max(time / cycle, 0.0), 1.0)
+        if times and moment <= times[-1]:
+            continue
+        times.append(moment)
+        widths.append(value)
+    values = widths
+    return times, values, start / cycle, (start + slot) / cycle
+
+
+def masthead_svg(lines: list) -> str:
+    """The lines typed out on a black plate, in pure SMIL.
+
+    No script: GitHub strips those from an SVG in a README, which is why the
+    animation is SMIL and the text is chosen in Python rather than here. The
+    glow is a filter, and a filter is the one thing in this file whose
+    survival through GitHub's sanitiser is unproven. It degrades to flat
+    green on black, which is the same picture without the bloom.
+    """
+    lines = [line for line in lines if line][:5] or [masthead.GREETING]
+    cell = MASTHEAD_FONT_SIZE * 0.61
+    widest = max(masthead.cells(line) for line in lines)
+    width = int(widest * cell) + 40
+    slot = TYPE_SECONDS + HOLD_SECONDS + ERASE_SECONDS
+    cycle = slot * len(lines)
+    dur = f'dur="{cycle:.1f}s" repeatCount="indefinite"'
+    baseline = MASTHEAD_HEIGHT // 2 + MASTHEAD_FONT_SIZE // 3
+
+    frames = [_reveal(i, line, slot, cycle, cell) for i, line in enumerate(lines)]
+    out = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{MASTHEAD_HEIGHT}" '
+        f'viewBox="0 0 {width} {MASTHEAD_HEIGHT}" role="img" aria-labelledby="t">',
+        f"<title id=\"t\">{escape(' / '.join(lines))}</title>",
+        "<defs>",
+        # Bloom: blur the glyphs, stack the blur twice under the sharp text.
+        '<filter id="g" x="-10%" y="-60%" width="120%" height="220%">',
+        '<feGaussianBlur stdDeviation="1.8" result="b"/>',
+        '<feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>',
+        "</filter>",
+    ]
+    for index, (times, widths, _, _) in enumerate(frames):
+        key_times = ";".join(f"{t:.5f}" for t in times)
+        sizes = ";".join(f"{w:.1f}" for w in widths)
+        out.append(
+            f'<clipPath id="c{index}"><rect x="0" y="0" width="0" height="{MASTHEAD_HEIGHT}">'
+            f'<animate attributeName="width" values="{sizes}" keyTimes="{key_times}" '
+            f'calcMode="discrete" {dur}/></rect></clipPath>'
+        )
+    out.append("</defs>")
+    out.append(
+        f'<rect width="{width}" height="{MASTHEAD_HEIGHT}" rx="8" fill="{CRT["plate"]}" '
+        f'stroke="{CRT["edge"]}"/>'
+    )
+    out.append(
+        f'<style>text{{font-family:{FONT};font-size:{MASTHEAD_FONT_SIZE}px;'
+        f'fill:{CRT["ink"]};white-space:pre}}</style>'
+    )
+    out.append('<g filter="url(#g)">')
+    for index, line in enumerate(lines):
+        out.append(f'<text x="16" y="{baseline}" clip-path="url(#c{index})">{escape(line)}</text>')
+
+    # The cursor sits at the typed edge and blinks on a cycle of its own.
+    for times, widths, start, end in frames:
+        key_times = ";".join(f"{t:.5f}" for t in times)
+        xs = ";".join(f"{w + 17:.1f}" for w in widths)
+        on = ";".join("1" if start <= t < end else "0" for t in times)
+        out.append(
+            f'<g opacity="0"><animate attributeName="opacity" values="{on}" '
+            f'keyTimes="{key_times}" calcMode="discrete" {dur}/>'
+            f'<rect y="{baseline - MASTHEAD_FONT_SIZE + 2}" width="{cell * 0.85:.1f}" '
+            f'height="{MASTHEAD_FONT_SIZE + 2}" fill="{CRT["ink"]}">'
+            f'<animate attributeName="x" values="{xs}" keyTimes="{key_times}" '
+            f'calcMode="discrete" {dur}/>'
+            '<animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" '
+            'repeatCount="indefinite"/></rect></g>'
+        )
+    out.append("</g></svg>")
+    return "\n".join(out) + "\n"
+
+
+def write_masthead(lines: list) -> str:
+    """One file: the plate is black whatever the reader's scheme is."""
+    _write(f"{ASSETS_DIR}/masthead.json", json.dumps({"lines": list(lines)}, indent=2) + "\n")
+    return _write(f"{ASSETS_DIR}/masthead.svg", masthead_svg(lines))
+
+
+def load_masthead_lines() -> list:
+    """What the committed image says, for the alt text of a render that drew nothing."""
+    try:
+        loaded = json.loads(Path(f"{ASSETS_DIR}/masthead.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    return [str(line) for line in (loaded.get("lines") or [])] if isinstance(loaded, dict) else []
+
+
+def masthead_region() -> str:
+    """The image, cache-busted, with every line it types in the alt text.
+
+    One file rather than a `<picture>` pair: a terminal is black in either
+    colour scheme, so there is nothing to switch between.
+    """
+    path = f"{ASSETS_DIR}/masthead.svg"
+    lines = load_masthead_lines() or [masthead.GREETING]
+    alt = escape(" / ".join(lines), {chr(34): "&quot;"})
+    return f'<img alt="{alt}" src="{path}?v={content_tag(path)}">'
 
 
 # --- the account's numbers --------------------------------------------------------

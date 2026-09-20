@@ -9,9 +9,11 @@ category: profile
 
 <div align="center">
 
-# 👋 HI, I'M TANNER GOLDEN
-
 <a name="top"></a>
+
+<!-- MASTHEAD:BEGIN -->
+<img alt="👋🏻 Hello World! / ♻️ Standards that a new machine cannot break / ✂️ Deleting more than I write / 🧹 Documenting the boring parts" src="assets/masthead.svg?v=9047d92e">
+<!-- MASTHEAD:END -->
 
 [![Status: Active](assets/badges/static/status.svg)](./)
 [![Role: Profile](assets/badges/static/role.svg)](./)
@@ -104,7 +106,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:39 EDT on Sunday, September 20, 2026.
+Last updated 19:56 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

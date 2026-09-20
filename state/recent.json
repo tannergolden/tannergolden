@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "at": "2026-09-20T22:38:03.501830+00:00",
+    "type": "security",
+    "scope": "advisory",
+    "title": "GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp",
+    "path": "dispatches/2026/September.md",
+    "anchor": "dispatch-20260920-183803"
+  }
+]

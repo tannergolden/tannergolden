@@ -1,4 +1,7 @@
 {
+  "advisory": [
+    "GHSA-c8w2-fgvx-vhv4"
+  ],
   "tip": [
     "docker-compose-down",
     "sed"

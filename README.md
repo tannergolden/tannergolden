@@ -68,11 +68,13 @@ account follows.
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=c8694d5f)](dispatches/)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=2f7904e7)](dispatches/2026/September.md)
 
-_No dispatches yet. The first lands at a random moment within the next twelve hours or so; nothing here is on a schedule._
+| Time | Commit | Dispatch |
+| :--- | :--- | :--- |
+| 18:38 | `security(advisory)` | [GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp](dispatches/2026/September.md#dispatch-20260920-183803) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 0 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 1 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -147,7 +149,7 @@ RFC Editor · Lobsters · tldr-pages (CC BY) · GitHub. Terms in
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 15:44 EDT on Sunday, September 20, 2026.
+Last updated 18:38 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

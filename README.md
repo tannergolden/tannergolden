@@ -13,10 +13,6 @@ category: profile
 
 <a name="top"></a>
 
-**I build the automation and standards that keep things working after the person who built them moves on.**
-
-_If the right way is the easy way, people take it._
-
 [![Status: Active](assets/badges/static/status.svg)](./)
 [![Role: Profile](assets/badges/static/role.svg)](./)
 [![Context: Automation](assets/badges/static/context.svg)](./)
@@ -32,21 +28,9 @@ _If the right way is the easy way, people take it._
 
 ## 💡 About
 
-I work on the plumbing that makes AI research hold up. Pipelines, guardrails, the standards that
-decide whether a result still runs next week, on a different machine, for someone who wasn't there
-the first time.
-
-Research code quietly picks up assumptions about the machine it was written on, and you usually
-find out too late. My job is to surface them early. In practice that means CI with the smallest
-permissions that work, third-party actions pinned to a commit SHA instead of a tag, and rules
-something actually checks on every change rather than rules people are asked to remember.
-
 ---
 
 ## 📡 Dispatch
-
-Developer news a workflow finds and commits on its own. I wrote it, I don't run it.
-[How it works](How-It-Works.md).
 
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
@@ -77,8 +61,6 @@ Developer news a workflow finds and commits on its own. I wrote it, I don't run 
 
 ## 📦 Repositories
 
-Not a portfolio. These fit together as one system, and each one does a single job.
-
 | Repository                                                     | What it is                                                                            |
 | :------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
 | [`standards`](https://github.com/tannergolden/standards)       | Reusable workflows and the documented standards they enforce                          |
@@ -89,16 +71,9 @@ Not a portfolio. These fit together as one system, and each one does a single jo
 | [`dotfiles`](https://github.com/tannergolden/dotfiles)         | Shell, editor, and toolchain configuration, installed the same way everywhere         |
 | [`tannergolden`](https://github.com/tannergolden/tannergolden) | This file, and the workflow that keeps it current                                     |
 
-When one of these runs a pipeline, all it holds is a short trigger. The logic, the config and the
-standards live in `standards` and get called from there, never copied in. So there's nothing in the
-trigger to go stale, and fixing something once fixes it everywhere. This repo is the exception, and
-it's written down as one: it's a profile rather than a pipeline, so its workflow lives here.
-
 ---
 
 ## 🧰 Stack
-
-What I reach for most. Mostly boring choices, picked because they are boring.
 
 | Area           | Tools                                                                                                                                                                                                                                          |
 | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -126,22 +101,13 @@ What I reach for most. Mostly boring choices, picked because they are boring.
 | **Website**  | [tannergolden.com](https://www.tannergolden.com)             |
 | **LinkedIn** | [in/tannergolden](https://www.linkedin.com/in/tannergolden/) |
 
-Happy to talk about AI infrastructure, reproducibility, or developer tooling. The badge at the
-top says whether I'm looking for work right now.
-
 ---
 
-Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY), with the full terms in
-[`NOTICE`](NOTICE). Every image here is a file in this repo, so loading the page fetches nothing
-from an image service.
-
 <!-- UPDATED:BEGIN -->
-Last updated 19:33 EDT on Sunday, September 20, 2026.
+Last updated 19:39 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">
-
-**Built to keep working after I stop paying attention to it.**
 
 [↑ Back to Top](#top)
 

@@ -230,11 +230,7 @@ def render_dispatch(entry: Dispatch, when: datetime) -> str:
         f"`{entry.commit_type}({entry.scope})` · {stamp:%H:%M} {stamp:%Z}",
         "",
     ]
-    prose = md_block(wrap_body(entry.body))
-    if entry.spoiler:
-        lines += ["<details>", "<summary>The answer</summary>", "", prose, "", "</details>"]
-    else:
-        lines.append(prose)
+    lines.append(md_block(wrap_body(entry.body)))
     if entry.code:
         fence = fence_for(entry.code)
         lines += ["", f"{fence}{fence_info(entry.code_language)}", entry.code, fence]

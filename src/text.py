@@ -25,8 +25,8 @@ What it defends against, in the order the damage would be worst:
 
   The house gate. `scripts/commit-check.py` in tannergolden/standards rejects
   U+2013 to U+2015 anywhere in a commit message. These commits are authored by
-  a person, so they are not exempt from that gate, and RFC titles and
-  OEIS names carry en dashes routinely. Replacement happens here,
+  a person, so they are not exempt from that gate, and RFC titles carry
+  en dashes routinely. Replacement happens here,
   once, rather than at nine call sites.
 """
 

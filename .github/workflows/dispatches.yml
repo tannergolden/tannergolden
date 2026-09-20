@@ -20,8 +20,8 @@
 # guidance: audit first, then block with the allowlist the audit reveals.
 # The endpoints this job is expected to reach, for that allowlist:
 #   api.github.com, raw.githubusercontent.com, github.com,
-#   www.unicode.org, www.rfc-editor.org, oeis.org,
-#   rosettacode.org, en.wikipedia.org, hacker-news.firebaseio.com
+#   www.unicode.org, www.rfc-editor.org, rosettacode.org,
+#   en.wikipedia.org, hacker-news.firebaseio.com
 
 name: '📡 Dispatches'
 

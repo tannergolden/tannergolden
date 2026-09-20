@@ -121,8 +121,8 @@ class Ledger:
     """Every identifier ever used, so nothing appears twice.
 
     Keyed by kind, and the identifier is whatever uniquely names the item at
-    its source: an RFC number, a Unicode code point, an OEIS A-number, a
-    Rosetta Code task and language pair. Storing the source's
+    its source: an RFC number, a Unicode code point, a Rosetta Code task
+    and language pair. Storing the source's
     own identifier rather than a hash of the rendered text means an item stays
     recognised after its wiki page is reworded.
     """

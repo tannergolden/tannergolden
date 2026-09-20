@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The six kinds of dispatch, and the picker that chooses between them.
+"""The five kinds of dispatch, and the picker that chooses between them.
 
 Each fetcher returns one `Dispatch` the ledger has never seen, or None when its
 source is down, empty for today, or exhausted. None is an ordinary answer: the
@@ -39,7 +39,7 @@ _RNG = random.SystemRandom()
 class Dispatch:
     """One dispatch, ready to be rendered into a commit and a page row."""
 
-    kind: str  # the ledger key and the scope: unicode, rfc, sequence, ...
+    kind: str  # the ledger key and the scope: unicode, rfc, rosetta, ...
     commit_type: str  # feat, fix, docs, refactor, test, chore
     emoji: str  # one emoji from the house mapping for that type
     subject: str  # lowercase imperative, without the type(scope) prefix
@@ -53,10 +53,6 @@ class Dispatch:
     code: str | None = None
     code_language: str | None = None
     code_trimmed: bool = False
-    # True when the body answers a question the title asks. The commit
-    # carries it plainly, because a git log cannot hide anything; the
-    # page folds it away so the puzzle is still a puzzle on the page.
-    spoiler: bool = False
     extra_links: list = field(default_factory=list)  # (label, url) pairs
 
     @property
@@ -347,76 +343,6 @@ def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
     return None
 
 
-# --- test(sequence) -----------------------------------------------------------
-
-OEIS_SEARCH = "https://oeis.org/search"
-
-
-# How many sequences each keyword covers, near enough. The search endpoint
-# returns a bare array of ten with no total, so the random offset is drawn
-# against these and shrinks when a page comes back empty.
-OEIS_POOL = {"nice": 8000, "core": 170}
-
-
-def _oeis_results(payload) -> list:
-    """The records in a search response, whichever shape the endpoint answers.
-
-    Today it is a bare JSON array, `null` when nothing matches. The older
-    envelope, `{"count": N, "results": [...]}`, is read the same way.
-    """
-    if isinstance(payload, dict):
-        payload = payload.get("results")
-    return [r for r in (payload or []) if isinstance(r, dict)] if isinstance(payload, list) else []
-
-
-def fetch_sequence(ledger: Ledger, today: date) -> Dispatch | None:
-    keyword = "core" if _RNG.random() < 0.25 else "nice"
-    ceiling = OEIS_POOL[keyword]
-
-    for _ in range(5):
-        offset = _RNG.randrange(0, max(ceiling, 1))
-        page = net.get_json(OEIS_SEARCH, {"q": f"keyword:{keyword}", "fmt": "json", "start": offset})
-        candidates = _oeis_results(page)
-        if not candidates:
-            # Past the end: the pool is smaller than assumed. Draw lower.
-            ceiling = max(offset // 2, 10)
-            continue
-        chosen = _first_unseen(ledger, "sequence", _shuffled(candidates), key=lambda r: r.get("number"))
-        if chosen is None:
-            continue
-        number = int(chosen["number"])
-        terms = [t for t in str(chosen.get("data", "")).split(",") if t.strip()]
-        if len(terms) < 9:
-            continue
-        shown = terms[:8]
-        answer = terms[8]
-        name = clean(str(chosen.get("name", "")))
-        a_number = f"A{number:06d}"
-        puzzle = ", ".join(shown)
-        return Dispatch(
-            kind="sequence",
-            commit_type="test",
-            emoji=phrasing.emoji_for("test"),
-            subject=f"{phrasing.verb_for('sequence')} {puzzle}",
-            title=f"{puzzle}, what comes next?",
-            body=(
-                phrasing.one_of(
-                    f"The next term is {answer}.",
-                    f"{answer} comes next.",
-                    f"It continues {answer}.",
-                )
-                + f" This is {a_number}, {name}"
-                + ("" if name.endswith(".") else ".")
-            ),
-            spoiler=True,
-            identifier=str(number),
-            source_name="OEIS",
-            source_url=f"https://oeis.org/{a_number}",
-            license="CC-BY-SA-4.0",
-        )
-    return None
-
-
 # --- refactor(rosetta) ----------------------------------------------------------
 
 ROSETTA_API = "https://rosettacode.org/w/api.php"
@@ -632,12 +558,11 @@ FETCHERS: dict = {
     "rosetta": fetch_rosetta,
     "unicode": fetch_unicode,
     "rfc": fetch_rfc,
-    "sequence": fetch_sequence,
     "bug": fetch_bug,
     "falsehood": fetch_falsehood,
 }
 
-COMMON = ("rosetta", "unicode", "rfc", "sequence")
+COMMON = ("rosetta", "unicode", "rfc")
 RARE = ("bug", "falsehood")
 RARE_SHARE = 0.05  # the two rare kinds together, while their lists last
 

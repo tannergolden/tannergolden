@@ -5,10 +5,6 @@
   "issue": [
     "https://github.com/Kesavaraja67/telex/issues/36"
   ],
-  "sequence": [
-    "217",
-    "330"
-  ],
   "tip": [
     "docker-compose-down"
   ],

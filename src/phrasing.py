@@ -50,7 +50,6 @@ EMOJI = {
 VERBS = {
     "unicode": ("add", "encode", "note", "register"),
     "rfc": ("record", "cite", "file", "note"),
-    "sequence": ("continue", "extend", "complete"),
     "rosetta": ("solve", "write", "implement"),
     "rosetta-again": ("rewrite", "port", "redo"),
     "bug": ("revisit", "recall", "study", "trace"),

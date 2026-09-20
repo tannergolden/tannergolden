@@ -113,7 +113,7 @@ enforces, each test naming the section it comes from.
 
 | The standard asks for                            | Every generated commit                                                       |
 | :----------------------------------------------- | :---------------------------------------------------------------------------- |
-| A type from the list, and a required scope       | `feat(unicode)`, `docs(rfc)`, `test(sequence)`, `chore(release)`              |
+| A type from the list, and a required scope       | `feat(unicode)`, `docs(rfc)`, `refactor(rosetta)`, `fix(bug)`                |
 | A lowercase subject, imperative, under 72        | Opens with a verb: add, record, solve, continue, note, mark, revisit, correct |
 | One emoji from the row for that type             | Checked against the mapping table, per type                                  |
 | A body on every commit, wrapped at 72            | The dispatch itself, wrapped                                                 |
@@ -156,13 +156,13 @@ page.
 | `refactor(rosetta)`   | One task, one language, the code                        | Rosetta Code               | GFDL 1.2, this version only |
 | `feat(unicode)`       | A character with a name worth reading                   | Unicode Character Database | Unicode License v3          |
 | `docs(rfc)`           | An RFC, what it did, and when                           | RFC Editor                 | Freely reproducible         |
-| `test(sequence)`      | Eight terms, and the ninth in the body                  | OEIS                       | CC BY-SA 4.0                |
 | `fix(bug)`, rare      | A famous software failure                               | Wikipedia                  | CC BY-SA 4.0                |
 | `fix(falsehood)`, rare | A catalogue of things programmers believe               | awesome-falsehood          | CC0 1.0 (the list)          |
 
-Every kind either tells a reader something or asks them something. Two earlier
-ones did neither, a software release anniversary and a computing birthday, and
-they are gone: knowing that a thing happened on a date is not knowing anything.
+Every kind tells a reader something they did not know. Three earlier ones did
+not: a release anniversary and a computing birthday, which only said that a
+thing happened on a date, and an integer sequence puzzle, which asked rather
+than told.
 The two rare kinds together take one draw in twenty, and each retires when its
 list is used up. If a source is down or empty, the next kind is tried, and if
 every source fails the run writes nothing and leaves the moment in the past for

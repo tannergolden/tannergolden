@@ -60,7 +60,6 @@ CASES = [
     entry(kind="unicode", commit_type="feat", emoji="✨", subject="add U+2603 ☃ SNOWMAN", title="U+2603 ☃ SNOWMAN", body="U+2603 is SNOWMAN."),
     entry(kind="rosetta", commit_type="refactor", emoji="♻️", subject="solve FizzBuzz in COBOL", title="FizzBuzz, solved in COBOL",
           body="The task, solved in COBOL.", code="       IDENTIFICATION DIVISION.\n       PROGRAM-ID. FIZZBUZZ.\n``` not a fence", code_language="cobol", code_trimmed=True, license="GFDL-1.2-only"),
-    entry(kind="sequence", commit_type="test", emoji="\U0001F9EA", subject="continue 1, 1, 2, 3, 5, 8, 13, 21", title="1, 1, 2, 3, 5, 8, 13, 21, what comes next?", body="The next term is 34. This is A000045, Fibonacci numbers."),
     entry(kind="release", commit_type="chore", emoji="\U0001F9F9", subject="v35.0.0, Linux 0.01 turns 35", title="Linux 0.01 turns 35", body="Released in 1991 \u2013 thirty-five years ago."),
     entry(kind="born", commit_type="docs", subject="mark the birthday of Ada Lovelace, 1815", title="Ada Lovelace, born 1815", body="Born on this date <!-- DISPATCHES:END --> in 1815."),
     entry(kind="bug", commit_type="fix", emoji="\U0001F41B", subject="revisit Therac-25", title="Therac-25", body="A race condition \u2015 in the control software."),

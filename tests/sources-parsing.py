@@ -3,8 +3,7 @@
 """Every source adapter, against a recorded shape of what its API returns.
 
 The fixtures are the documented formats: UnicodeData.txt's semicolon
-fields, the RFC Editor's per-RFC JSON, the OEIS search
-JSON, MediaWiki wikitext, SPARQL result bindings, the awesome-falsehood
+fields, the RFC Editor's per-RFC JSON, MediaWiki wikitext, SPARQL result bindings, the awesome-falsehood
 list. A change to any adapter is caught here before a random moment finds
 it on the page.
 """
@@ -123,49 +122,6 @@ def test_rfc_reads_the_editor_record(repo, fake_net, seeded):
 def test_rfc_skips_unissued_numbers_and_gives_up_cleanly(repo, fake_net, seeded):
     fake_net.json("https://www.rfc-editor.org/rfc/rfc", {"title": "Not Issued"})
     assert sources.fetch_rfc(ledger(repo), TODAY) is None
-
-
-# --- test(sequence) -------------------------------------------------------------
-
-OEIS_RECORDS = [
-    {"number": 45, "data": "0,1,1,2,3,5,8,13,21,34,55", "name": "Fibonacci numbers: F(n) = F(n-1) + F(n-2) with F(0) = 0 and F(1) = 1."},
-    {"number": 40, "data": "2,3,5,7,11,13,17,19,23,29,31", "name": "The prime numbers"},
-]
-OEIS = OEIS_RECORDS  # the endpoint answers a bare array, null when empty
-
-
-def test_sequence_shows_eight_terms_and_answers_with_the_ninth(repo, fake_net, seeded):
-    fake_net.json(sources.OEIS_SEARCH, OEIS)
-    led = ledger(repo)
-    led.remember("sequence", "40")
-    entry = sources.fetch_sequence(led, TODAY)
-    assert entry is not None and entry.identifier == "45"
-    verb, _, rest = entry.subject.partition(" ")
-    assert verb in phrasing.VERBS["sequence"] and rest == "0, 1, 1, 2, 3, 5, 8, 13"
-    assert entry.title == "0, 1, 1, 2, 3, 5, 8, 13, what comes next?"
-    # The question is the title and the answer is the body, which the
-    # page folds away so the page still poses a puzzle.
-    assert entry.body == "The next term is 21. This is A000045, Fibonacci numbers: F(n) = F(n-1) + F(n-2) with F(0) = 0 and F(1) = 1."
-    assert entry.spoiler is True
-    assert "0, 1, 1, 2, 3, 5, 8, 13" not in entry.body
-    assert entry.source_url == "https://oeis.org/A000045"
-    assert_well_formed(entry)
-
-
-def test_sequence_reads_the_old_envelope_and_survives_an_empty_page(repo, fake_net, seeded):
-    assert sources._oeis_results({"count": 2, "results": OEIS_RECORDS}) == OEIS_RECORDS
-    assert sources._oeis_results(None) == [] and sources._oeis_results(OEIS_RECORDS) == OEIS_RECORDS
-    fake_net.json(sources.OEIS_SEARCH, None)  # every page empty
-    assert sources.fetch_sequence(ledger(repo), TODAY) is None
-    assert len(fake_net.requests) == 5
-
-
-def test_sequence_appends_a_full_stop_when_the_name_lacks_one(repo, fake_net, seeded):
-    fake_net.json(sources.OEIS_SEARCH, OEIS)
-    led = ledger(repo)
-    led.remember("sequence", "45")
-    entry = sources.fetch_sequence(led, TODAY)
-    assert entry is not None and entry.body.endswith("This is A000040, The prime numbers.")
 
 
 # --- refactor(rosetta) ------------------------------------------------------------

@@ -30,7 +30,6 @@ def test_header_matches_the_house_regex_and_opens_lowercase():
     for kind, scope, emoji, subject in [
         ("docs", "rfc", "\U0001F4DD", "record RFC 2324, Hyper Text Coffee Pot Control Protocol"),
         ("refactor", "rosetta", "♻️", "solve FizzBuzz in COBOL"),
-        ("test", "sequence", "\U0001F9EA", "continue 1, 1, 2, 3, 5, 8, 13, 21"),
         ("chore", "release", "\U0001F9F9", "v35.0.0, Linux 0.01 turns 35"),
     ]:
         header = fit_subject(kind, scope, emoji, subject)

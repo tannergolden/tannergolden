@@ -1,15 +1,17 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The five kinds of dispatch, and the picker that chooses between them.
+"""The three kinds of dispatch, and the picker that chooses between them.
 
 Each fetcher returns one `Dispatch` the ledger has never seen, or None when
 its source is down or has nothing new. None is an ordinary answer: the picker
 moves to the next kind, and a run in which every source comes back empty writes
 nothing and leaves the schedule untouched, so the next run tries again.
 
-Every kind reports something that changed recently. A release from two years
-ago is not news, so each fetcher carries a freshness window and returns None
-rather than reach back for filler: a quiet week is a quiet page.
+Every kind reports what developers are reading or starring right now, which
+means all three draw on lists that are current by construction. They also
+overlap: the same article reaches Hacker News and Lobsters on the same
+morning, so every kind claims a canonical URL as well as a per-source id and
+a claim already taken is a story already sent.
 
 Nothing here is hand-written. Every source keeps producing, which is what
 lets the ledger promise that no item appears twice without the well ever
@@ -20,7 +22,6 @@ Every string that leaves a fetcher has been through `text.clean()`.
 
 from __future__ import annotations
 
-import html
 import os
 import random
 import re
@@ -41,7 +42,7 @@ _RNG = random.SystemRandom()
 class Dispatch:
     """One dispatch, ready to be rendered into a commit and a page row."""
 
-    kind: str  # the ledger key and the scope: release, advisory, eol, ...
+    kind: str  # the ledger key and the scope: hn, trending, lobsters
     commit_type: str  # feat, security, chore, docs
     emoji: str  # one emoji from the house mapping for that type
     subject: str  # lowercase imperative, without the type(scope) prefix
@@ -67,43 +68,7 @@ def _shuffled(items: list) -> list:
     return items
 
 
-# --- feat(release): a new version of a tool people actually run ------------------
-
 GITHUB_API = "https://api.github.com"
-
-# Curated, not scraped. Every entry is a tool a working developer either runs
-# or depends on, and every one cuts GitHub releases rather than bare tags, so
-# `/releases/latest` answers. A repository that stops publishing releases
-# answers 404 and is skipped, which is why the list can go stale safely.
-WATCHLIST = (
-    ("golang/go", "Go"), ("rust-lang/rust", "Rust"), ("python/cpython", "CPython"),
-    ("nodejs/node", "Node.js"), ("denoland/deno", "Deno"), ("oven-sh/bun", "Bun"),
-    ("ziglang/zig", "Zig"), ("JuliaLang/julia", "Julia"), ("elixir-lang/elixir", "Elixir"),
-    ("microsoft/TypeScript", "TypeScript"), ("llvm/llvm-project", "LLVM"),
-    ("kubernetes/kubernetes", "Kubernetes"), ("moby/moby", "Docker Engine"),
-    ("docker/compose", "Docker Compose"), ("hashicorp/terraform", "Terraform"),
-    ("etcd-io/etcd", "etcd"), ("grafana/grafana", "Grafana"),
-    ("prometheus/prometheus", "Prometheus"), ("redis/redis", "Redis"),
-    ("valkey-io/valkey", "Valkey"), ("duckdb/duckdb", "DuckDB"),
-    ("elastic/elasticsearch", "Elasticsearch"), ("apache/kafka", "Kafka"),
-    ("neovim/neovim", "Neovim"), ("helix-editor/helix", "Helix"), ("zed-industries/zed", "Zed"),
-    ("astral-sh/ruff", "Ruff"), ("astral-sh/uv", "uv"), ("psf/black", "Black"),
-    ("pytest-dev/pytest", "pytest"), ("vitejs/vite", "Vite"), ("pnpm/pnpm", "pnpm"),
-    ("facebook/react", "React"), ("vuejs/core", "Vue"), ("sveltejs/svelte", "Svelte"),
-    ("angular/angular", "Angular"), ("denoland/fresh", "Fresh"),
-    ("rails/rails", "Rails"), ("django/django", "Django"), ("fastapi/fastapi", "FastAPI"),
-    ("pallets/flask", "Flask"), ("spring-projects/spring-boot", "Spring Boot"),
-    ("pytorch/pytorch", "PyTorch"), ("huggingface/transformers", "Transformers"),
-    ("ollama/ollama", "Ollama"), ("ggml-org/llama.cpp", "llama.cpp"),
-    ("curl/curl", "curl"), ("openssl/openssl", "OpenSSL"),
-    ("caddyserver/caddy", "Caddy"), ("traefik/traefik", "Traefik"),
-    ("cli/cli", "GitHub CLI"), ("jqlang/jq", "jq"), ("BurntSushi/ripgrep", "ripgrep"),
-    ("sharkdp/fd", "fd"), ("starship/starship", "Starship"), ("tmux/tmux", "tmux"),
-)
-
-# Release notes are Markdown written by whoever cut the release, so the first
-# paragraph is taken and the rest dropped.
-HEADLINE = re.compile(r"^\s*(?:#{1,6}\s*)?(?P<line>[^\n#*\-][^\n]{20,})", re.MULTILINE)
 
 
 def _moment(stamp: str) -> datetime | None:
@@ -140,246 +105,178 @@ def _age(stamp: str) -> str:
     return "today" if days < 1 else ("yesterday" if days == 1 else f"{days} days ago")
 
 
-def fetch_release(ledger: Ledger, today: date) -> Dispatch | None:
-    headers = net.github_headers(os.environ.get("GITHUB_TOKEN"))
-    for repo, product in _shuffled(list(WATCHLIST))[:8]:
-        release = net.get_json_with_headers(f"{GITHUB_API}/repos/{repo}/releases/latest", None, headers)
-        if not isinstance(release, dict) or release.get("draft") or release.get("prerelease"):
+# --- what counts as the same story ------------------------------------------------
+
+# Hacker News, Lobsters and a trending repository list carry the same link on
+# the same morning more often than not. The ledger keys on a per-source id, so
+# without this the page would run the same article three times under three
+# scopes. Every kind also claims the canonical URL, and a claim already taken
+# is a story already sent.
+LINKS = "link"
+
+_TRACKING = re.compile(r"^(utm_|ref_?$|ref_source|source$|fbclid$|gclid$)", re.IGNORECASE)
+
+
+def _canonical(url: str) -> str:
+    """One spelling of a URL, so two sources pointing at one article collide."""
+    try:
+        parts = urllib.parse.urlsplit(clean(url, command=True))
+    except ValueError:
+        return ""
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        return ""
+    host = parts.netloc.lower().removeprefix("www.")
+    path = parts.path.rstrip("/") or "/"
+    kept = [(k, v) for k, v in urllib.parse.parse_qsl(parts.query) if not _TRACKING.match(k)]
+    query = urllib.parse.urlencode(sorted(kept))
+    return f"{host}{path}" + (f"?{query}" if query else "")
+
+
+def _unclaimed(ledger: Ledger, url: str) -> bool:
+    """True when no kind has sent this link before."""
+    key = _canonical(url)
+    return bool(key) and not ledger.seen(LINKS, key)
+
+
+def claim_link(ledger: Ledger, url: str) -> None:
+    """Record that this link has been sent.
+
+    Called once the dispatch is on the page, not when a fetcher finds it: a
+    candidate that never reaches the page must not burn the link for every
+    other source that carries it.
+    """
+    key = _canonical(url)
+    if key:
+        ledger.remember(LINKS, key)
+
+
+def _domain(url: str) -> str:
+    return urllib.parse.urlsplit(url).netloc.lower().removeprefix("www.")
+
+
+# --- docs(hn): the front page of Hacker News ---------------------------------------
+
+HN_TOP = "https://hacker-news.firebaseio.com/v0/topstories.json"
+HN_ITEM = "https://hacker-news.firebaseio.com/v0/item/{id}.json"
+HN_THREAD = "https://news.ycombinator.com/item?id={id}"
+
+# The front page proper. Anything under this is on its way up or on its way
+# out, and neither is what a reader means by "what is everyone reading".
+HN_FLOOR = 100
+
+# How far down the ranking to look. The list is ordered, so this is the front
+# page and a little of the second.
+HN_DEPTH = 40
+
+
+def fetch_hn(ledger: Ledger, today: date) -> Dispatch | None:
+    ids = net.get_json(HN_TOP)
+    if not isinstance(ids, list):
+        return None
+    for story_id in _shuffled([i for i in ids[:HN_DEPTH] if isinstance(i, int)]):
+        if ledger.seen("hn", str(story_id)):
             continue
-        tag = clean(str(release.get("tag_name") or ""))
-        published = str(release.get("published_at") or "")
-        if not tag or not _fresh(published) or ledger.seen("release", f"{repo}@{tag}"):
+        item = net.get_json(HN_ITEM.format(id=story_id))
+        if not isinstance(item, dict) or item.get("type") != "story" or not item.get("title"):
+            continue
+        score = int(item.get("score") or 0)
+        if score < HN_FLOOR or item.get("dead") or item.get("deleted"):
             continue
 
-        version = tag.lstrip("vV") if tag[:1] in "vV" and tag[1:2].isdigit() else tag
-        headline = HEADLINE.search(clean(str(release.get("body") or ""), allow_newlines=True))
+        thread = HN_THREAD.format(id=story_id)
+        url = str(item.get("url") or "")
+        if not url.startswith("https://"):
+            url = thread  # a text post lives on the thread
+        if not _unclaimed(ledger, url):
+            continue
+
+        comments = int(item.get("descendants") or 0)
+        title = clean(str(item["title"]))
+        where = _domain(url)
         body = phrasing.one_of(
-            f"{product} {version} was published {_age(published)}.",
-            f"{product} cut {version} {_age(published)}.",
-            f"A new {product}: {version}, {_age(published)}.",
+            f"{score} points on Hacker News, from {where}.",
+            f"Front page of Hacker News at {score} points; the source is {where}.",
+            f"From {where}, and Hacker News has it at {score} points.",
         )
-        if headline:
-            note = clean(headline.group("line"))
-            body += " " + (note if len(note) <= 300 else note[:299].rsplit(" ", 1)[0] + "\u2026")
+        if comments:
+            body += f" {comments} comments so far."
+        if item.get("time"):
+            body += f" Posted {_age(datetime.fromtimestamp(int(item['time']), timezone.utc).isoformat())}."
+
         return Dispatch(
-            kind="release",
-            commit_type="feat",
-            emoji=phrasing.emoji_for("feat"),
-            subject=f"{phrasing.verb_for('release')} {product} {version}",
-            title=f"{product} {version}",
+            kind="hn",
+            commit_type="docs",
+            emoji=phrasing.emoji_for("docs"),
+            subject=f"{phrasing.verb_for('hn')} {title}",
+            title=title,
             body=body,
-            identifier=f"{repo}@{tag}",
-            source_name=repo,
-            source_url=str(release.get("html_url") or f"https://github.com/{repo}/releases"),
-            license="Release metadata, reported as fact",
+            identifier=str(story_id),
+            source_name="Hacker News",
+            source_url=url,
+            license="Title, score and link, reported as fact",
+            extra_links=[("discussion", thread)] if url != thread else [],
         )
     return None
 
 
-# --- security(advisory): something to patch this week ----------------------------
+# --- feat(trending): a repository the industry is starring this month ----------------
 
-ADVISORIES = f"{GITHUB_API}/advisories"
+SEARCH = f"{GITHUB_API}/search/repositories"
 
-
-def _package_label(package: str) -> str:
-    """A package name short enough to leave room for the rest of the subject.
-
-    A Go module path carries its host, so `github.com/kcp-dev/kcp` spends
-    eleven characters saying where GitHub is before it says what broke, and
-    the subject ceiling then cuts the sentence at "the critical advisory
-    in". The host goes; an npm scope like @babel/core has no dot in its
-    first segment and is left alone.
-    """
-    parts = [part for part in package.split("/") if part]
-    if len(parts) > 1 and "." in parts[0]:
-        parts = parts[1:]
-    return "/".join(parts)
+# Trending is new plus adopted. A repository created inside one of these
+# windows and already near the top by stars is one people are picking up now,
+# rather than one that has been famous for a decade.
+TRENDING_WINDOWS = (14, 30, 90)
+TRENDING_MIN_STARS = 150
 
 
-def fetch_advisory(ledger: Ledger, today: date) -> Dispatch | None:
+def fetch_trending(ledger: Ledger, today: date) -> Dispatch | None:
     headers = net.github_headers(os.environ.get("GITHUB_TOKEN"))
-    severity = phrasing.one_of("critical", "critical", "high")
-    found = net.get_json_with_headers(
-        ADVISORIES,
-        {"type": "reviewed", "severity": severity, "sort": "published", "direction": "desc", "per_page": 50},
+    since = today - timedelta(days=_RNG.choice(TRENDING_WINDOWS))
+    payload = net.get_json_with_headers(
+        SEARCH,
+        {"q": f"created:>{since.isoformat()} stars:>={TRENDING_MIN_STARS}",
+         "sort": "stars", "order": "desc", "per_page": 50},
         headers,
     )
-    if not isinstance(found, list):
+    items = payload.get("items") if isinstance(payload, dict) else None
+    if not isinstance(items, list):
         return None
 
-    for item in _shuffled([a for a in found if isinstance(a, dict)]):
-        ghsa = clean(str(item.get("ghsa_id") or ""))
-        published = str(item.get("published_at") or "")
-        if not ghsa or not _fresh(published) or ledger.seen("advisory", ghsa):
+    for repo in _shuffled([r for r in items if isinstance(r, dict)]):
+        name = clean(str(repo.get("full_name") or ""))
+        url = str(repo.get("html_url") or "")
+        if not name or not url.startswith("https://") or ledger.seen("trending", name):
             continue
-        affected = [v for v in (item.get("vulnerabilities") or []) if isinstance(v, dict)]
-        package = ""
-        ecosystem = ""
-        versions = ""
-        if affected:
-            named = (affected[0].get("package") or {}) if isinstance(affected[0].get("package"), dict) else {}
-            package = clean(str(named.get("name") or ""))
-            ecosystem = clean(str(named.get("ecosystem") or ""))
-            versions = clean(str(affected[0].get("vulnerable_version_range") or ""))
-        summary = clean(str(item.get("summary") or ""))
-        cve = clean(str(item.get("cve_id") or ""))
+        if not _unclaimed(ledger, url):
+            continue
 
-        where = f"{package} ({ecosystem})" if package and ecosystem else (package or "a reviewed package")
+        stars = int(repo.get("stargazers_count") or 0)
+        language = clean(str(repo.get("language") or ""))
+        created = str(repo.get("created_at") or "")
+        summary = clean(str(repo.get("description") or ""))
+        age = _age(created) if created else ""
         body = phrasing.one_of(
-            f"{severity.capitalize()} severity in {where}, published {_age(published)}.",
-            f"Published {_age(published)}: a {severity} severity advisory against {where}.",
-            f"{where} carries a {severity} severity advisory, {_age(published)}.",
+            f"{stars} stars on a repository first pushed {age}." if age else f"{stars} stars.",
+            f"Created {age} and already at {stars} stars." if age else f"At {stars} stars.",
+            f"{stars} stars since it appeared{f' {age}' if age else ''}.",
         )
         if summary:
             body += f" {summary}" + ("" if summary.endswith(".") else ".")
-        if versions:
-            body += f" Affected: {versions}."
-        if cve:
-            body += f" Tracked as {cve}."
+        if language:
+            body += f" Written in {language}."
+
         return Dispatch(
-            kind="advisory",
-            commit_type="security",
-            emoji=phrasing.emoji_for("security"),
-            subject=f"{phrasing.verb_for('advisory')} the {severity} advisory in {_package_label(package) or ghsa}",
-            title=f"{ghsa}: {package or 'a reviewed package'}",
+            kind="trending",
+            commit_type="feat",
+            emoji=phrasing.emoji_for("feat"),
+            subject=f"{phrasing.verb_for('trending')} {name}",
+            title=name,
             body=body,
-            identifier=ghsa,
-            source_name="GitHub Security Advisories",
-            source_url=str(item.get("html_url") or f"https://github.com/advisories/{ghsa}"),
-            license="Advisory metadata, reported as fact",
-        )
-    return None
-
-
-# --- chore(eol): a version that stops getting fixes --------------------------------
-
-EOL_ALL = "https://endoflife.date/api/all.json"
-EOL_PRODUCT = "https://endoflife.date/api/{product}.json"
-
-
-def _eol_cycles(payload) -> list:
-    """The cycle records, whichever shape the API answers.
-
-    The long-lived endpoint returns a bare array of cycles. The newer one
-    wraps them in {"result": {"releases": [...]}}, so both are unwrapped here
-    rather than pinning a version of somebody else's API.
-    """
-    if isinstance(payload, dict):
-        payload = (payload.get("result") or {}).get("releases", payload.get("releases"))
-    return [c for c in (payload or []) if isinstance(c, dict)] if isinstance(payload, list) else []
-
-
-def fetch_eol(ledger: Ledger, today: date) -> Dispatch | None:
-    products = net.get_json(EOL_ALL)
-    names = [clean(str(p)) for p in products if isinstance(p, str)] if isinstance(products, list) else []
-    if not names:
-        return None
-
-    for product in _shuffled(names)[:10]:
-        cycles = _eol_cycles(net.get_json(EOL_PRODUCT.format(product=urllib.parse.quote(product, safe=""))))
-        for cycle in cycles:
-            eol = cycle.get("eol") if not isinstance(cycle.get("eol"), bool) else None
-            name = clean(str(cycle.get("cycle") or cycle.get("name") or ""))
-            if not eol or not name:
-                continue
-            try:
-                when = date.fromisoformat(clean(str(eol)))
-            except ValueError:
-                continue
-            days = (when - today).days
-            # A window either side: what is about to stop getting fixes, and
-            # what just did. Anything further out is a calendar entry.
-            if not -NEWS_WINDOW_DAYS <= days <= 90 or ledger.seen("eol", f"{product}-{name}"):
-                continue
-
-            label = product.replace("-", " ").title()
-            latest = clean(str(cycle.get("latest") or ""))
-            timing = (
-                "reaches end of life today" if days == 0
-                else (f"reaches end of life in {days} days" if days > 0 else f"reached end of life {-days} days ago")
-            )
-            body = phrasing.one_of(
-                f"{label} {name} {timing}.",
-                f"{timing.capitalize()}: {label} {name}.",
-                f"{label} {name}, and it {timing}.",
-            )
-            body += f" The last release on that line was {latest}." if latest else ""
-            body += " After that date it stops receiving fixes, security ones included."
-            return Dispatch(
-                kind="eol",
-                commit_type="chore",
-                emoji=phrasing.emoji_for("chore"),
-                subject=f"{phrasing.verb_for('eol')} {label} {name} at end of life",
-                title=f"{label} {name}, {timing}",
-                body=body,
-                identifier=f"{product}-{name}",
-                source_name="endoflife.date",
-                source_url=f"https://endoflife.date/{product}",
-                license="CC-BY-4.0",
-            )
-    return None
-
-
-# --- docs(rfc): a standard published this year ----------------------------------------
-
-RFC_JSON = "https://www.rfc-editor.org/rfc/rfc{n}.json"
-RFC_PAGE = "https://www.rfc-editor.org/rfc/rfc{n}"
-
-# Where the series had reached when this was written. A number past the end
-# answers 404, which walks the working ceiling down, so the constant going
-# stale costs one wasted request rather than a broken kind.
-RFC_CEILING = 9820
-RFC_RECENT = 250
-
-
-def _html_to_text(value: str) -> str:
-    """The RFC Editor's abstracts arrive as HTML paragraphs; keep the breaks, drop the tags."""
-    text = re.sub(r"</p>\s*<p[^>]*>", "\n\n", value, flags=re.IGNORECASE)
-    text = re.sub(r"<[^>]+>", "", text)
-    return html.unescape(text)
-
-
-def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
-    ceiling = RFC_CEILING
-    for _ in range(10):
-        n = _RNG.randint(max(ceiling - RFC_RECENT, 1), ceiling)
-        if ledger.seen("rfc", str(n)):
-            continue
-        meta = net.get_json(RFC_JSON.format(n=n))
-        if not isinstance(meta, dict) or not meta.get("title"):
-            # Past the end of the series, or never issued. Walk down.
-            ceiling = max(n - 1, 1)
-            continue
-        title = clean(str(meta.get("title", "")))
-        published = clean(str(meta.get("pub_date", "") or ""))
-        if title.lower() in ("not issued", "") or not published:
-            continue
-        year = re.search(r"\b(\d{4})\b", published)
-        if not year or today.year - int(year.group(1)) > 2:
-            continue
-
-        status = clean(str(meta.get("status", "") or "")).lower()
-        abstract = clean(_html_to_text(str(meta.get("abstract", "") or "")), allow_newlines=True)
-        authors = ", ".join(clean(str(a)) for a in (meta.get("authors") or []) if a)
-        body = phrasing.one_of(
-            f"Published in {published}" + (f", with the status {status}." if status else "."),
-            f"{published}" + (f", status {status}." if status else "."),
-            f"The series reached this one in {published}" + (f", as {status}." if status else "."),
-        )
-        if abstract:
-            body += "\n\n" + abstract
-        return Dispatch(
-            kind="rfc",
-            commit_type="docs",
-            emoji=phrasing.emoji_for("docs"),
-            subject=f"{phrasing.verb_for('rfc')} RFC {n}, {title}",
-            title=f"RFC {n}: {title}",
-            body=body,
-            identifier=str(n),
-            source_name="RFC Editor",
-            source_url=RFC_PAGE.format(n=n),
-            license="IETF Trust Legal Provisions; RFCs may be freely reproduced",
-            attribution=authors,
+            identifier=name,
+            source_name="GitHub",
+            source_url=url,
+            license="Repository metadata, reported as fact",
         )
     return None
 
@@ -408,12 +305,12 @@ def fetch_lobsters(ledger: Ledger, today: date) -> Dispatch | None:
             continue
         if not url.startswith("https://"):
             url = comments if comments.startswith("https://") else ""
-        if not url:
+        if not url or not _unclaimed(ledger, url):
             continue
 
         title = clean(str(story.get("title") or ""))
         tags = [clean(str(t)) for t in (story.get("tags") or []) if t]
-        domain = urllib.parse.urlsplit(url).netloc.lower().removeprefix("www.")
+        domain = _domain(url)
         submitter = clean(str((story.get("submitter_user") or {}).get("username") or "")) if isinstance(story.get("submitter_user"), dict) else clean(str(story.get("submitter_user") or ""))
         body = phrasing.one_of(
             f"{score} points on Lobsters, from {domain}.",
@@ -442,14 +339,12 @@ def fetch_lobsters(ledger: Ledger, today: date) -> Dispatch | None:
 # --- the picker -------------------------------------------------------------------
 
 FETCHERS: dict = {
-    "release": fetch_release,
-    "advisory": fetch_advisory,
-    "eol": fetch_eol,
-    "rfc": fetch_rfc,
+    "hn": fetch_hn,
+    "trending": fetch_trending,
     "lobsters": fetch_lobsters,
 }
 
-KINDS = ("release", "advisory", "eol", "rfc", "lobsters")
+KINDS = ("hn", "trending", "lobsters")
 
 
 def draw_order() -> list:

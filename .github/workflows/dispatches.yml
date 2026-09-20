@@ -20,9 +20,9 @@
 # guidance: audit first, then block with the allowlist the audit reveals.
 # The endpoints this job is expected to reach, for that allowlist:
 #   api.github.com, raw.githubusercontent.com, github.com,
-#   www.rfc-editor.org, endoflife.date, lobste.rs
+#   hacker-news.firebaseio.com, lobste.rs
 
-name: '📡 Dispatches'
+name: '📡 Dispatch'
 
 on:
   schedule:

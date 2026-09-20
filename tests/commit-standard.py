@@ -159,46 +159,29 @@ RULES = (
 
 def dispatch(**overrides) -> Dispatch:
     base = dict(
-        kind="release", commit_type="feat", emoji="\u2728", subject="note Go 1.25.0",
-        title="Go 1.25.0",
-        body="Go 1.25.0 was published 2 days ago. The collector returns memory to the system sooner.",
-        identifier="golang/go@v1.25.0", source_name="golang/go",
-        source_url="https://github.com/golang/go/releases/tag/v1.25.0",
-        license="Release metadata, reported as fact",
+        kind="hn", commit_type="docs", emoji="\U0001F4DD", subject="read Why we rewrote it in Rust",
+        title="Why we rewrote it in Rust",
+        body="412 points on Hacker News, from blog.example. 188 comments so far.",
+        identifier="101", source_name="Hacker News",
+        source_url="https://blog.example/why-we-rewrote-it",
+        license="Title, score and link, reported as fact",
     )
     base.update(overrides)
     return Dispatch(**base)
 
 
-# One canonical example of each of the five kinds. The subject of every one
+# One canonical example of each of the three kinds. The subject of every one
 # opens with a verb drawn from that kind's pool, which is what the redraw
 # sweep below replaces to prove no draw escapes the standard.
 KINDS = {
-    "release": dispatch(),
-    "advisory": dispatch(
-        kind="advisory", commit_type="security", emoji="\U0001F512",
-        subject="flag the critical advisory in left-pad",
-        title="GHSA-abcd-1234-efgh: left-pad",
-        body="Critical severity in left-pad (npm), published yesterday. Tracked as CVE-2026-1111.",
-        identifier="GHSA-abcd-1234-efgh", source_name="GitHub Security Advisories",
-        source_url="https://github.com/advisories/GHSA-abcd-1234-efgh",
-        license="Advisory metadata, reported as fact"),
-    "eol": dispatch(
-        kind="eol", commit_type="chore", emoji="\U0001F9F9",
-        subject="mark Ubuntu 20.04 at end of life",
-        title="Ubuntu 20.04, reaches end of life in 30 days",
-        body="After that date it stops receiving fixes, security ones included.",
-        identifier="ubuntu-20.04", source_name="endoflife.date",
-        source_url="https://endoflife.date/ubuntu", license="CC-BY-4.0"),
-    "rfc": dispatch(
-        kind="rfc", commit_type="docs", emoji="\U0001F4DD",
-        subject="record RFC 9818, A Standard Somebody Needed",
-        title="RFC 9818: A Standard Somebody Needed",
-        body="Published in 2026 September, with the status proposed standard.",
-        identifier="9818", source_name="RFC Editor",
-        source_url="https://www.rfc-editor.org/rfc/rfc9818",
-        license="IETF Trust Legal Provisions; RFCs may be freely reproduced",
-        attribution="A. Author"),
+    "hn": dispatch(),
+    "trending": dispatch(
+        kind="trending", commit_type="feat", emoji="\u2728", subject="star someone/fast-thing",
+        title="someone/fast-thing",
+        body="4200 stars on a repository first pushed 9 days ago. A fast thing. Written in Rust.",
+        identifier="someone/fast-thing", source_name="GitHub",
+        source_url="https://github.com/someone/fast-thing",
+        license="Repository metadata, reported as fact"),
     "lobsters": dispatch(
         kind="lobsters", commit_type="docs", emoji="\U0001F4DD",
         subject="read A thing somebody learned the hard way",

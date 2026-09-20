@@ -121,9 +121,12 @@ class Ledger:
     """Every identifier ever used, so nothing appears twice.
 
     Keyed by kind, and the identifier is whatever uniquely names the item at
-    its source: an RFC number, a GHSA advisory id, a repository and tag.
-    Storing the source's own identifier rather than a hash of the rendered
-    text means an item stays recognised after its release notes are edited.
+    its source: a Hacker News item id, a repository's full name, a Lobsters
+    short id. Storing the source's own identifier rather than a hash of the
+    rendered text means an item stays recognised after its title is edited.
+
+    One key is not a kind: every kind also claims the canonical URL of what
+    it sent, so the same article arriving from two aggregators is sent once.
     """
 
     def __init__(self, path: str = LEDGER_FILE) -> None:

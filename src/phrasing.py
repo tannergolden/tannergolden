@@ -48,11 +48,9 @@ EMOJI = {
 # "cite RFC 2324", "extend 1, 1, 2, 3". Each has to make sense in front of
 # whatever that kind puts after it, which is why they are not shared.
 VERBS = {
-    "release": ("note", "record", "log", "track"),
-    "advisory": ("flag", "report", "surface", "raise"),
-    "eol": ("mark", "note", "record", "watch"),
-    "rfc": ("record", "cite", "file", "note"),
-    "lobsters": ("read", "bookmark", "share", "keep"),
+    "hn": ("read", "follow", "note", "surface"),
+    "trending": ("star", "watch", "track", "clone"),
+    "lobsters": ("read", "bookmark", "keep", "queue"),
     "readme": ("refresh", "redraw", "update"),
 }
 

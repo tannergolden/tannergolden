@@ -247,6 +247,7 @@ def write_dispatch(ledger: Ledger, when: datetime) -> str | None:
     path = render.append_dispatch(entry, when)
     render.record_recent(entry, when, path)
     ledger.remember(entry.kind, entry.identifier)
+    sources.claim_link(ledger, entry.source_url)
     ledger.save()
     render_page(when, with_modules=False)
     return render.commit_message(entry)

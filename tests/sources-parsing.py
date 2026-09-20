@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: MIT
 """Every source adapter, against a recorded shape of what its API returns.
 
-The fixtures are the documented formats: a GitHub release object, the
-advisories list, endoflife.date's two cycle shapes, the RFC Editor's per-RFC
-JSON, and a Lobsters story. A change to any adapter is caught here before a
-random moment finds it on the page.
+The fixtures are the documented formats: the Hacker News item shape, the
+repository search payload, and a Lobsters story. A change to any adapter is
+caught here before a random moment finds it on the page.
 
 Every kind reports news, so every fixture carries a timestamp relative to
 `NOW` rather than a fixed date: a test that passes today and fails in three
@@ -47,248 +46,152 @@ def assert_well_formed(entry):
     assert entry.license and entry.body
 
 
-def only(repo_name: str, product: str, monkeypatch):
-    """Narrow the watchlist to one repository, so a fixture can answer for it."""
-    monkeypatch.setattr(sources, "WATCHLIST", ((repo_name, product),))
+# --- the shared link claim ----------------------------------------------------
+
+def test_one_url_has_one_spelling(repo):
+    """Two sources point at one article with different punctuation and tracking."""
+    same = sources._canonical
+    assert same("https://www.example.com/post/?utm_source=hn") == same("https://example.com/post")
+    assert same("https://x.example/a/") == same("https://x.example/a")
+    assert same("https://x.example/a?b=1&c=2") == same("https://x.example/a?c=2&b=1")
+    assert same("https://x.example/a") != same("https://x.example/b")
+    # Anything that is not a fetchable page claims nothing.
+    assert same("javascript:alert(1)") == "" and same("") == "" and same("not a url") == ""
 
 
-# --- feat(release) --------------------------------------------------------------
+def test_a_story_on_two_sources_is_sent_once(repo, fake_net, seeded):
+    """The same link reaches Hacker News and Lobsters on the same morning."""
+    shared = "https://blog.example/why-we-rewrote-it"
+    fake_net.json(sources.HN_TOP, [101])
+    fake_net.json("https://hacker-news.firebaseio.com/v0/item/101.json",
+                  hn_item(url=shared + "/?utm_source=hn"))
+    fake_net.json(sources.LOBSTERS, [story(url=shared)])
 
-def release(**overrides) -> dict:
+    led = ledger(repo)
+    first = sources.fetch_hn(led, TODAY)
+    assert first is not None and first.kind == "hn"
+    # Nothing is claimed yet: a candidate is not a dispatch, and Lobsters
+    # would still be free to offer it if this one never reached the page.
+    assert sources.fetch_lobsters(led, TODAY) is not None
+
+    # The sender claims it, which is what dispatches.py does once the entry
+    # is on the page. Now the other aggregator has nothing new to say.
+    sources.claim_link(led, first.source_url)
+    assert sources.fetch_lobsters(led, TODAY) is None
+
+
+def test_a_candidate_that_never_ships_does_not_burn_the_link(repo, fake_net, seeded):
+    """A fetcher returning an entry the run then discards must cost nothing."""
+    fake_net.json(sources.HN_TOP, [101])
+    fake_net.json("https://hacker-news.firebaseio.com/v0/item/101.json", hn_item())
+    led = ledger(repo)
+    assert sources.fetch_hn(led, TODAY) is not None
+    assert sources.fetch_hn(led, TODAY) is not None  # offered again, not spent
+
+
+# --- docs(hn) -----------------------------------------------------------------
+
+def hn_item(**overrides) -> dict:
     payload = {
-        "tag_name": "v1.25.0",
-        "draft": False,
-        "prerelease": False,
-        "published_at": ago(2),
-        "html_url": "https://github.com/golang/go/releases/tag/v1.25.0",
-        "body": "## Changes\n\nThe garbage collector now returns memory to the operating "
-                "system more eagerly on Linux.\n\n* a bullet nobody needs\n",
+        "type": "story",
+        "title": "Why we rewrote it in Rust",
+        "url": "https://blog.example/why-we-rewrote-it",
+        "score": 412,
+        "descendants": 188,
+        "time": int((NOW - timedelta(hours=6)).timestamp()),
     }
     payload.update(overrides)
     return payload
 
 
-def test_release_reports_the_version_and_the_first_paragraph(repo, fake_net, seeded, monkeypatch):
-    only("golang/go", "Go", monkeypatch)
-    fake_net.json("https://api.github.com/repos/golang/go/releases/latest", release())
-
-    entry = sources.fetch_release(ledger(repo), TODAY)
+def test_hn_reports_the_score_the_domain_and_the_conversation(repo, fake_net, seeded):
+    fake_net.json(sources.HN_TOP, [101])
+    fake_net.json("https://hacker-news.firebaseio.com/v0/item/101.json", hn_item())
+    entry = sources.fetch_hn(ledger(repo), TODAY)
     assert entry is not None
     assert_well_formed(entry)
-    assert entry.kind == "release" and entry.commit_type == "feat"
-    assert entry.identifier == "golang/go@v1.25.0"
-
-    verb, _, rest = entry.subject.partition(" ")
-    assert verb in phrasing.VERBS["release"]
-    # The leading v is a tag convention, not part of the version.
-    assert rest == "Go 1.25.0" and entry.title == "Go 1.25.0"
-    assert "Go 1.25.0" in entry.body or "1.25.0" in entry.body
-    assert "garbage collector" in entry.body
-    assert "## Changes" not in entry.body and "* a bullet" not in entry.body
+    assert entry.kind == "hn" and entry.commit_type == "docs" and entry.identifier == "101"
+    assert entry.subject.split(" ")[0] in phrasing.VERBS["hn"]
+    assert entry.title == "Why we rewrote it in Rust"
+    assert "412 points" in entry.body and "blog.example" in entry.body
+    assert "188 comments" in entry.body
+    assert entry.extra_links == [("discussion", "https://news.ycombinator.com/item?id=101")]
 
 
-def test_release_skips_drafts_prereleases_and_anything_stale(repo, fake_net, seeded, monkeypatch):
-    only("golang/go", "Go", monkeypatch)
-    for bad in ({"draft": True}, {"prerelease": True}, {"published_at": ago(400)}, {"tag_name": ""}):
+def test_hn_ignores_anything_that_is_not_on_the_front_page(repo, fake_net, seeded):
+    """Below the floor is a story on its way up or on its way out."""
+    fake_net.json(sources.HN_TOP, [101])
+    fake_net.json("https://hacker-news.firebaseio.com/v0/item/101.json",
+                  hn_item(score=sources.HN_FLOOR - 1))
+    assert sources.fetch_hn(ledger(repo), TODAY) is None
+
+
+def test_hn_skips_a_job_post_a_dead_story_and_a_poll(repo, fake_net, seeded):
+    for bad in ({"type": "job"}, {"dead": True}, {"deleted": True}, {"title": ""}):
         fake_net.jsons.clear()
-        fake_net.json("https://api.github.com/repos/golang/go/releases/latest", release(**bad))
-        assert sources.fetch_release(ledger(repo), TODAY) is None, bad
+        fake_net.json(sources.HN_TOP, [101])
+        fake_net.json("https://hacker-news.firebaseio.com/v0/item/101.json", hn_item(**bad))
+        assert sources.fetch_hn(ledger(repo), TODAY) is None, bad
 
 
-def test_release_never_repeats_a_tag(repo, fake_net, seeded, monkeypatch):
-    only("golang/go", "Go", monkeypatch)
-    fake_net.json("https://api.github.com/repos/golang/go/releases/latest", release())
-    led = ledger(repo)
-    led.remember("release", "golang/go@v1.25.0")
-    assert sources.fetch_release(led, TODAY) is None
+def test_hn_points_a_text_post_at_its_thread(repo, fake_net, seeded):
+    fake_net.json(sources.HN_TOP, [101])
+    fake_net.json("https://hacker-news.firebaseio.com/v0/item/101.json", hn_item(url=""))
+    entry = sources.fetch_hn(ledger(repo), TODAY)
+    assert entry is not None
+    assert entry.source_url == "https://news.ycombinator.com/item?id=101"
+    assert entry.extra_links == []  # no second link to the place it already points
 
 
-def test_release_keeps_a_tag_that_is_not_a_version_verbatim(repo, fake_net, seeded, monkeypatch):
-    only("sqlite/sqlite", "SQLite", monkeypatch)
-    fake_net.json("https://api.github.com/repos/sqlite/sqlite/releases/latest",
-                  release(tag_name="version-3.50.0", html_url="https://github.com/sqlite/sqlite/releases"))
-    entry = sources.fetch_release(ledger(repo), TODAY)
-    assert entry is not None and entry.title == "SQLite version-3.50.0"
+# --- feat(trending) -----------------------------------------------------------
 
-
-def test_release_survives_a_repository_that_stopped_publishing(repo, fake_net, seeded, monkeypatch):
-    only("nginx/nginx", "nginx", monkeypatch)  # nothing registered: a 404 answers None
-    assert sources.fetch_release(ledger(repo), TODAY) is None
-
-
-# --- security(advisory) ----------------------------------------------------------
-
-def advisory(**overrides) -> dict:
+def trending_repo(**overrides) -> dict:
     payload = {
-        "ghsa_id": "GHSA-abcd-1234-efgh",
-        "cve_id": "CVE-2026-1111",
-        "summary": "Prototype pollution in the merge helper",
-        "published_at": ago(1),
-        "html_url": "https://github.com/advisories/GHSA-abcd-1234-efgh",
-        "vulnerabilities": [
-            {"package": {"name": "left-pad", "ecosystem": "npm"}, "vulnerable_version_range": "< 4.2.1"}
-        ],
+        "full_name": "someone/fast-thing",
+        "html_url": "https://github.com/someone/fast-thing",
+        "stargazers_count": 4200,
+        "language": "Rust",
+        "description": "A fast thing that replaces a slow thing",
+        "created_at": ago(9),
     }
     payload.update(overrides)
     return payload
 
 
-def test_advisory_names_the_package_the_range_and_the_cve(repo, fake_net, seeded):
-    fake_net.json("https://api.github.com/advisories", [advisory()])
-    entry = sources.fetch_advisory(ledger(repo), TODAY)
+def test_trending_reports_the_stars_the_age_and_the_language(repo, fake_net, seeded):
+    fake_net.json(sources.SEARCH, {"items": [trending_repo()]})
+    entry = sources.fetch_trending(ledger(repo), TODAY)
     assert entry is not None
     assert_well_formed(entry)
-    assert entry.commit_type == "security" and entry.identifier == "GHSA-abcd-1234-efgh"
-    assert entry.subject.split(" ")[0] in phrasing.VERBS["advisory"]
-    assert "left-pad" in entry.subject and "left-pad" in entry.title
-    for fact in ("left-pad", "npm", "< 4.2.1", "CVE-2026-1111", "Prototype pollution"):
-        assert fact in entry.body, fact
+    assert entry.kind == "trending" and entry.commit_type == "feat"
+    assert entry.identifier == "someone/fast-thing" and entry.title == "someone/fast-thing"
+    assert entry.subject.split(" ")[0] in phrasing.VERBS["trending"]
+    assert "4200 stars" in entry.body
+    assert "9 days ago" in entry.body
+    assert "A fast thing that replaces a slow thing." in entry.body
+    assert "Written in Rust." in entry.body
 
 
-def test_a_go_module_path_does_not_eat_the_whole_subject(repo, fake_net, seeded):
-    """The case a real run produced, and the subject it truncated to nothing.
+def test_trending_asks_only_for_repositories_new_enough_to_be_trending(repo, fake_net, seeded):
+    fake_net.json(sources.SEARCH, {"items": [trending_repo()]})
+    sources.fetch_trending(ledger(repo), TODAY)
+    asked = fake_net.requests[0]
+    assert "created%3A%3E" in asked and f"stars%3A%3E%3D{sources.TRENDING_MIN_STARS}" in asked
+    assert "sort=stars" in asked and "order=desc" in asked
 
-    `security(advisory): ...surface the critical advisory in
-    github.com/kcp-dev/kcp` is 78 characters, so the ceiling cut it at
-    "in" and the git log line named no package at all. The host goes.
-    """
-    fake_net.json("https://api.github.com/advisories", [advisory(
-        vulnerabilities=[{"package": {"name": "github.com/kcp-dev/kcp", "ecosystem": "go"},
-                          "vulnerable_version_range": "< 0.31.4"}])])
-    entry = sources.fetch_advisory(ledger(repo), TODAY)
+
+def test_trending_survives_a_repository_with_no_description(repo, fake_net, seeded):
+    fake_net.json(sources.SEARCH, {"items": [trending_repo(description="", language="")]})
+    entry = sources.fetch_trending(ledger(repo), TODAY)
     assert entry is not None
     assert_well_formed(entry)
 
-    from render import commit_message
-    header = commit_message(entry).split("\n", 1)[0]
-    assert "kcp-dev/kcp" in header, header
-    assert not header.endswith("\u2026"), header
-    # The page has no ceiling, so it keeps the name the advisory gave.
-    assert "github.com/kcp-dev/kcp" in entry.title
-    assert "github.com/kcp-dev/kcp" in entry.body
 
-
-def test_a_package_name_keeps_every_segment_that_is_not_a_host(repo, fake_net, seeded):
-    assert sources._package_label("@babel/core") == "@babel/core"
-    assert sources._package_label("left-pad") == "left-pad"
-    assert sources._package_label("org.apache.commons:commons-text") == "org.apache.commons:commons-text"
-    assert sources._package_label("github.com/kcp-dev/kcp") == "kcp-dev/kcp"
-
-
-def test_advisory_survives_an_entry_with_no_affected_package(repo, fake_net, seeded):
-    fake_net.json("https://api.github.com/advisories", [advisory(vulnerabilities=[], cve_id="", summary="")])
-    entry = sources.fetch_advisory(ledger(repo), TODAY)
-    assert entry is not None
-    assert_well_formed(entry)
-    assert "GHSA-abcd-1234-efgh" in entry.subject
-
-
-def test_advisory_skips_the_stale_and_the_seen(repo, fake_net, seeded):
-    fake_net.json("https://api.github.com/advisories", [advisory(published_at=ago(90))])
-    assert sources.fetch_advisory(ledger(repo), TODAY) is None
-
-    fake_net.jsons.clear()
-    fake_net.json("https://api.github.com/advisories", [advisory()])
+def test_trending_never_repeats_a_repository(repo, fake_net, seeded):
+    fake_net.json(sources.SEARCH, {"items": [trending_repo()]})
     led = ledger(repo)
-    led.remember("advisory", "GHSA-abcd-1234-efgh")
-    assert sources.fetch_advisory(led, TODAY) is None
-
-
-# --- chore(eol) -------------------------------------------------------------------
-
-def test_eol_reads_the_long_lived_array_shape(repo, fake_net, seeded):
-    soon = (TODAY + timedelta(days=30)).isoformat()
-    fake_net.json(sources.EOL_ALL, ["python"])
-    fake_net.json("https://endoflife.date/api/python.json",
-                  [{"cycle": "3.9", "eol": soon, "latest": "3.9.23"},
-                   {"cycle": "3.13", "eol": False, "latest": "3.13.2"}])
-
-    entry = sources.fetch_eol(ledger(repo), TODAY)
-    assert entry is not None
-    assert_well_formed(entry)
-    assert entry.commit_type == "chore" and entry.identifier == "python-3.9"
-    assert entry.subject.split(" ")[0] in phrasing.VERBS["eol"]
-    assert "Python 3.9" in entry.body and "30 days" in entry.body
-    assert "3.9.23" in entry.body
-    assert entry.source_url == "https://endoflife.date/python"
-
-
-def test_eol_reads_the_wrapped_shape_too(repo, fake_net, seeded):
-    fake_net.json(sources.EOL_ALL, ["ubuntu"])
-    fake_net.json("https://endoflife.date/api/ubuntu.json",
-                  {"result": {"releases": [{"name": "20.04", "eol": TODAY.isoformat(), "latest": "20.04.6"}]}})
-    entry = sources.fetch_eol(ledger(repo), TODAY)
-    assert entry is not None and entry.identifier == "ubuntu-20.04"
-    assert "end of life today" in entry.body
-
-
-def test_eol_reports_what_just_expired_and_ignores_the_far_future(repo, fake_net, seeded):
-    fake_net.json(sources.EOL_ALL, ["nodejs"])
-    fake_net.json("https://endoflife.date/api/nodejs.json",
-                  [{"cycle": "18", "eol": (TODAY - timedelta(days=3)).isoformat()}])
-    entry = sources.fetch_eol(ledger(repo), TODAY)
-    assert entry is not None and "3 days ago" in entry.body
-
-    fake_net.jsons.clear()
-    fake_net.json(sources.EOL_ALL, ["nodejs"])
-    fake_net.json("https://endoflife.date/api/nodejs.json",
-                  [{"cycle": "24", "eol": (TODAY + timedelta(days=900)).isoformat()}])
-    assert sources.fetch_eol(ledger(repo), TODAY) is None
-
-
-def test_eol_survives_a_malformed_date(repo, fake_net, seeded):
-    fake_net.json(sources.EOL_ALL, ["mystery"])
-    fake_net.json("https://endoflife.date/api/mystery.json", [{"cycle": "1", "eol": "whenever"}])
-    assert sources.fetch_eol(ledger(repo), TODAY) is None
-
-
-# --- docs(rfc) ---------------------------------------------------------------------
-
-def rfc_json(n: int, **overrides) -> dict:
-    payload = {
-        "doc_id": f"RFC{n}",
-        "title": f"Title Of {n} - With A Dash",
-        "pub_date": f"{TODAY.year} September",
-        "status": "PROPOSED STANDARD",
-        "abstract": "<p>The first paragraph.</p><p>The second one.</p>",
-        "authors": ["A. Author", "B. Other"],
-    }
-    payload.update(overrides)
-    return payload
-
-
-def test_rfc_reads_the_editor_record(repo, fake_net, seeded):
-    fake_net.json("https://www.rfc-editor.org/rfc/rfc", lambda url: rfc_json(int(re.search(r"rfc(\d+)\.json", url).group(1))))
-    entry = sources.fetch_rfc(ledger(repo), TODAY)
-    assert entry is not None
-    assert_well_formed(entry)
-    n = int(entry.identifier)
-    assert sources.RFC_CEILING - sources.RFC_RECENT <= n <= sources.RFC_CEILING
-
-    verb, _, rest = entry.subject.partition(" ")
-    assert verb in phrasing.VERBS["rfc"]
-    assert rest.startswith(f"RFC {n}, Title Of {n} - With A Dash")
-    assert not entry.body.startswith(f"RFC {n}")
-    assert "proposed standard" in entry.body
-    # The abstract arrives as HTML paragraphs and reaches the body as prose.
-    assert "The first paragraph." in entry.body and "<p>" not in entry.body
-    assert entry.attribution == "A. Author, B. Other"
-
-
-def test_rfc_refuses_anything_that_is_not_recent(repo, fake_net, seeded):
-    fake_net.json("https://www.rfc-editor.org/rfc/rfc", rfc_json(9000, pub_date="1998 April"))
-    assert sources.fetch_rfc(ledger(repo), TODAY) is None
-
-
-def test_rfc_walks_the_ceiling_down_past_the_end_of_the_series(repo, fake_net, seeded):
-    # Nothing registered: every number answers None, which is what a number
-    # past the end of the series answers.
-    assert sources.fetch_rfc(ledger(repo), TODAY) is None
-
-
-def test_rfc_skips_unissued_numbers(repo, fake_net, seeded):
-    fake_net.json("https://www.rfc-editor.org/rfc/rfc", rfc_json(9000, title="Not Issued"))
-    assert sources.fetch_rfc(ledger(repo), TODAY) is None
+    led.remember("trending", "someone/fast-thing")
+    assert sources.fetch_trending(led, TODAY) is None
 
 
 # --- docs(lobsters) -----------------------------------------------------------------

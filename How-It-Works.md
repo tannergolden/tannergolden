@@ -113,8 +113,8 @@ enforces, each test naming the section it comes from.
 
 | The standard asks for                            | Every generated commit                                                       |
 | :----------------------------------------------- | :---------------------------------------------------------------------------- |
-| A type from the list, and a required scope       | `feat(release)`, `security(advisory)`, `chore(eol)`, `docs(rfc)`             |
-| A lowercase subject, imperative, under 72        | Opens with a verb: note, flag, mark, record, read, surface, watch, cite      |
+| A type from the list, and a required scope       | `docs(hn)`, `feat(trending)`, `docs(lobsters)`                              |
+| A lowercase subject, imperative, under 72        | Opens with a verb: read, follow, note, surface, star, watch, track, clone    |
 | One emoji from the row for that type             | Checked against the mapping table, per type                                  |
 | A body on every commit, wrapped at 72            | The dispatch itself, wrapped                                                 |
 | Footers after the body                           | `Source`, `Attribution`, `License`, `Signed-off-by`, in one block            |
@@ -145,57 +145,61 @@ person greps for them.
 
 ## 📚 The Sources
 
-Five sources, each one a primary record rather than a feed about a feed:
-the release a project actually cut, the advisory that was actually reviewed,
-the date support actually ends. Nothing here aggregates somebody else's
-aggregation.
+Three sources, chosen for one property: they say what developers are actually
+reading and starring this week, rather than what was published this week. An
+earlier design drew on primary records instead, a release cut, an advisory
+reviewed, a standard published, and it was authoritative and almost never
+about anything anybody was talking about.
 
-| Commit               | Content                                                | Source                      | License                     |
-| :------------------- | :------------------------------------------------------ | :-------------------------- | :-------------------------- |
-| `feat(release)`      | A new version of a tool people run                      | GitHub Releases             | Metadata, reported as fact  |
-| `security(advisory)` | A reviewed high or critical advisory, with the range    | GitHub Security Advisories  | Metadata, reported as fact  |
-| `chore(eol)`         | A version about to stop getting fixes, or that just did | endoflife.date              | CC BY 4.0                   |
-| `docs(rfc)`          | A standard published this year, and its abstract        | RFC Editor                  | Freely reproducible         |
-| `docs(lobsters)`     | What the quiet end of the internet is reading           | Lobsters                    | Title and score, as fact    |
+| Commit            | Content                                           | Source           | License                       |
+| :---------------- | :-------------------------------------------------- | :--------------- | :---------------------------- |
+| `docs(hn)`        | A front-page story, its score and its conversation  | Hacker News      | Title, score and link, as fact |
+| `feat(trending)`  | A repository the industry is starring this month    | GitHub Search    | Metadata, reported as fact    |
+| `docs(lobsters)`  | What the quiet end of the internet is reading       | Lobsters         | Title and score, as fact      |
 
-**Every kind carries a freshness window.** A release from two years ago is not
-news, so a fetcher whose source has nothing recent returns nothing rather than
-reaching back for filler. `DISPATCH_NEWS_WINDOW_DAYS` sets the window, at
-fourteen days by default: long enough to survive a weekend, a holiday and a run
-of failed fetches, short enough that last month never reaches the page. A quiet
-week is a quiet page, and that is the honest outcome.
+**All three lists are current by construction.** A front page, a hottest list
+and a search for repositories created this month cannot return last year, so
+freshness is a property of the source rather than something this has to
+enforce. Lobsters still carries a window on the story's own date,
+`DISPATCH_NEWS_WINDOW_DAYS`, as a guard against an outlier. An item whose date
+will not parse is not treated as an old one: the two are different answers, and
+collapsing them would take a whole kind dark the day a source renames a field.
 
-An item whose date will not parse is not treated as an old one. The two are
-different answers, and collapsing them would take a whole kind dark the day a
-source renames a field rather than show one stale entry.
+**The three overlap, and that is handled.** Hacker News and Lobsters carry the
+same link on the same morning more often than not, and a trending repository is
+frequently the thing both are discussing. The ledger keys on a per-source
+identifier, so without more than that the page would run one article three
+times under three scopes. Every dispatch therefore also claims the canonical
+URL of what it sent, with tracking parameters and trailing slashes normalised
+away, and a claim already taken is a story already sent.
 
-The five are equals in the draw, because none of them is a finite list that can
-be used up. If a source is down or has nothing new, the next kind is tried, and
-if all five come back empty the run writes nothing and leaves the moment in the
-past for the next run to catch. The ledger in
-[`state/ledger.json`](state/ledger.json) records the identifier of everything
-ever sent, so the same release, advisory, RFC or story never appears twice.
+The claim is filed when the dispatch reaches the page, not when a fetcher finds
+it. A candidate the run discards must not burn the link for the other two
+sources that carry it.
+
+The three are equals in the draw. If a source is down or has nothing new the
+next kind is tried, and if all three come back empty the run writes nothing and
+leaves the moment in the past for the next run to catch.
 
 The commit type is a genre label rather than a claim about this repository:
-`feat(release)` adds no feature here, and `security(advisory)` patches nothing
-here. This repository cuts no releases and runs no changelog generator, which
-is the only reason that is free.
+`feat(trending)` adds no feature here. This repository cuts no releases and
+runs no changelog generator, which is the only reason that is free.
 
-**The curated watchlist.** `feat(release)` reads GitHub's `releases/latest` for
-roughly sixty repositories named in [`src/sources.py`](src/sources.py):
-languages, runtimes, databases, editors, CI and the tools underneath them. It
-is curated rather than scraped, because "most starred" is a popularity contest
-and "trending" is a marketing surface. A repository that stops publishing
-releases answers 404 and is skipped, so the list can go stale without breaking
-anything.
+**What counts as trending.** `docs(hn)` reads the top of the front page and
+takes nothing under a hundred points, because below that a story is on its way
+up or on its way out and neither is what a reader means by "what is everyone
+reading". `feat(trending)` asks GitHub for repositories created inside the last
+fortnight, month or quarter and already past a hundred and fifty stars: new
+plus adopted, rather than famous for a decade. The window is drawn at random
+each time, so the page is not three months of the same fifty repositories.
 
 ---
 
 ## 🛡️ Text From The Open Internet
 
-Release notes, advisory summaries and story titles are written by whoever
-published them, so every fetched string is treated as hostile until it has been
-through [`src/text.py`](src/text.py). Comment delimiters are removed, so no
+A story title, a repository description and a submitter's name are written by
+whoever typed them, so every fetched string is treated as hostile until it has
+been through [`src/text.py`](src/text.py). Comment delimiters are removed, so no
 paragraph can close a page region early. Bidirectional overrides and zero-width
 characters are stripped. Markdown specials are escaped rather than deleted, so
 a title that looks like a link is shown as text instead of becoming one. A
@@ -213,11 +217,11 @@ written into the page unescaped.
 
 ## ⚖️ Licensing
 
-The code here is MIT. What the dispatches carry is mostly fact rather than
-expression: a version number, a date, a severity, a score. Three sources are
-named and linked anyway, because attribution costs nothing and a reader should
-be able to check. One is share-alike: endoflife.date is CC BY 4.0, and those
-entries are marked individually. [`NOTICE`](NOTICE) carries the terms in full.
+The code here is MIT. What the dispatches carry is fact rather than expression:
+a title, a score, a star count, a domain, a link. Every one is named and linked
+anyway, because attribution costs nothing and a reader should be able to check.
+No dispatch source is share-alike any more; tldr-pages, which feeds the terminal
+tip, is CC BY 4.0. [`NOTICE`](NOTICE) carries the terms in full.
 
 No copyleft source is reproduced here at all. An earlier design quoted GFDL
 program listings, which meant this repository had to carry the GFDL text and

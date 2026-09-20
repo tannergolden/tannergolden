@@ -14,17 +14,11 @@ is affected by those terms.
 
 Source                        License                               What a dispatch reproduces
 ----------------------------  ------------------------------------  ------------------------------------------------
-GitHub Releases               Facts via the REST API                Product name, tag, publication date and the
-                                                                    first paragraph of the release notes, linked
-                                                                    to the release.
-GitHub Security Advisories    Facts via the REST API                GHSA and CVE identifiers, severity, package,
-                                                                    ecosystem, affected version range and the
-                                                                    one-line summary, linked to the advisory.
-endoflife.date                CC BY 4.0                             Product, cycle, end-of-life date and latest
-                              https://creativecommons.org/licenses/by/4.0/   release on that line, attributed and
-                                                                    linked. Those entries are CC BY 4.0.
-RFC Editor                    IETF Trust Legal Provisions           Titles, dates, status, abstracts. RFCs may be
-                              https://trustee.ietf.org/documents/trust-legal-provisions/   freely reproduced.
+Hacker News                   Facts via the official API            Story titles, scores, comment counts,
+                                                                    domains and links.
+GitHub Search                 Facts via the REST API                Repository names, star counts, creation
+                                                                    dates, languages and descriptions, linked
+                                                                    to the repository.
 Lobsters                      Facts via the official JSON           Story titles, scores, tags, submitter names,
                                                                     domains and links.
 tldr-pages                    CC BY 4.0                             One command, its one-line summary, and one

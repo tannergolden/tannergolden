@@ -17,10 +17,11 @@ from state import Schedule
 
 def fake_pick(ledger, today):
     return Dispatch(
-        kind="release", commit_type="feat", emoji="✨", subject="note Go 1.25.0",
-        title="Go 1.25.0", body="Go 1.25.0 was published 2 days ago.", identifier="golang/go@v1.25.0",
-        source_name="golang/go", source_url="https://github.com/golang/go/releases/tag/v1.25.0",
-        license="Release metadata, reported as fact",
+        kind="trending", commit_type="feat", emoji="✨", subject="star someone/fast-thing",
+        title="someone/fast-thing", body="4200 stars on a repository first pushed 9 days ago.",
+        identifier="someone/fast-thing", source_name="GitHub",
+        source_url="https://github.com/someone/fast-thing",
+        license="Repository metadata, reported as fact",
     )
 
 
@@ -35,16 +36,18 @@ def test_dispatch_mode_sends_one_and_reschedules(repo, monkeypatch):
     assert dispatches.main() == 0
 
     log = subprocess.run(["git", "log", "--format=%s"], capture_output=True, text=True, check=True).stdout.splitlines()
-    assert log == ["feat(release): ✨ note Go 1.25.0"]
+    assert log == ["feat(trending): ✨ star someone/fast-thing"]
     schedule = Schedule("state/schedule.json")
     assert not schedule.is_fresh
     # The refresh is deliberately left due, so the next tick fills the page.
     assert "next_refresh" not in json.loads(Path("state/schedule.json").read_text(encoding="utf-8"))
     assert schedule.next_refresh < schedule.next_dispatch
     ledger = json.loads(Path("state/ledger.json").read_text(encoding="utf-8"))
-    assert ledger == {"release": ["golang/go@v1.25.0"]}
+    # The kind's own id, and the link claim every kind also files.
+    assert ledger == {"trending": ["someone/fast-thing"],
+                      "link": ["github.com/someone/fast-thing"]}
     committed = subprocess.run(["git", "show", "--stat", "--format=", "HEAD"], capture_output=True, text=True, check=True).stdout
     for path in ("README.md", "dispatches/2026/September.md", "state/ledger.json", "state/recent.json", "state/schedule.json"):
         assert path in committed, path
     page = Path("README.md").read_text(encoding="utf-8")
-    assert "| `feat(release)` | [Go 1.25.0](dispatches/2026/September.md#dispatch-" in page
+    assert "| `feat(trending)` | [someone/fast-thing](dispatches/2026/September.md#dispatch-" in page

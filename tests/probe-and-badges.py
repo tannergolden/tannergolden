@@ -22,7 +22,7 @@ KIT = Path(os.environ.get("EMBLEMS_KIT", ".emblems/src/badge-kit.py"))
 
 
 def good(ledger, today):
-    return sources.Dispatch(kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 1, Host Software", title="RFC 1", body="b", identifier="1", source_name="RFC Editor", source_url="https://www.rfc-editor.org/rfc/rfc1", license="freely reproducible",)
+    return sources.Dispatch(kind="hn", commit_type="docs", emoji="\U0001F4DD", subject="read Why we rewrote it in Rust", title="Why we rewrote it in Rust", body="b", identifier="101", source_name="Hacker News", source_url="https://blog.example/x", license="Title, score and link, reported as fact")
 
 
 def empty(ledger, today):
@@ -38,7 +38,7 @@ def snapshot(root):
 
 
 def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys):
-    monkeypatch.setattr(sources, "FETCHERS", {"rfc": good, "eol": empty, "lobsters": broken})
+    monkeypatch.setattr(sources, "FETCHERS", {"hn": good, "trending": empty, "lobsters": broken})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: {"command": "jq"})
     monkeypatch.setattr(cards, "github_stats", lambda login, token: {"public_repos": 7, "languages": {"Python": 1}, "commits": 412})
     summary = repo / "summary.md"
@@ -49,8 +49,8 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
     out = capsys.readouterr().out
     # The name column is padded to the widest row, so match on the rest.
     rows = {line.split("  ")[0]: line.split("  ", 1)[1].strip() for line in out.splitlines() if line.strip()}
-    assert rows["rfc"] == "ok     docs(rfc): \U0001F4DD record RFC 1, Host Software"
-    assert rows["eol"] == "empty  nothing available today"
+    assert rows["hn"] == "ok     docs(hn): \U0001F4DD read Why we rewrote it in Rust"
+    assert rows["trending"] == "empty  nothing available today"
     assert rows["lobsters"].startswith("error  RuntimeError('the wiki is down") and "\u2014" not in out
     assert rows["tip"] == "ok     jq"
     assert rows["stats"] == "ok     7 public repositories, 1 languages, commits 412"
@@ -58,11 +58,11 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
     after = snapshot(repo)
     assert {k: v for k, v in after.items() if k != "summary.md"} == before
     text = summary.read_text(encoding="utf-8")
-    assert "| rfc | ✅ ok |" in text and "| lobsters | ❌ error |" in text and "<!--" not in text
+    assert "| hn | ✅ ok |" in text and "| lobsters | ❌ error |" in text and "<!--" not in text
 
 
 def test_probe_is_clean_when_everything_answers(repo, monkeypatch):
-    monkeypatch.setattr(sources, "FETCHERS", {"rfc": good})
+    monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
     monkeypatch.setattr(cards, "github_stats", lambda login, token: None)
     assert dispatches.probe() == 0
@@ -112,7 +112,7 @@ def test_the_failure_commit_carries_none_of_the_failed_runs_writes(badge_repo, m
 
     subprocess.run(["git", "add", "-A"], check=True)
     subprocess.run(["git", "commit", "--quiet", "-m", "seed"], check=True)
-    entry = Dispatch(kind="release", commit_type="feat", emoji="\u2728", subject="note X 1.0", title="X 1.0", body="b", identifier="x/x@v1.0", source_name="x/x", source_url="https://github.com/x/x/releases/tag/v1.0", license="Release metadata, reported as fact")
+    entry = Dispatch(kind="trending", commit_type="feat", emoji="\u2728", subject="star x/x", title="x/x", body="b", identifier="x/x", source_name="GitHub", source_url="https://github.com/x/x", license="Repository metadata, reported as fact")
     path = append_dispatch(entry, moment)  # a run that got this far, then died
     record_recent(entry, moment, path)
 

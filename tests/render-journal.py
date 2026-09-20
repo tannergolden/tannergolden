@@ -86,3 +86,24 @@ def test_modules_render_with_escaping(repo):
     })
     assert "A \\| pipe &lt;b>" in region
     assert "> [!TIP]" in region and "> jq '.a'" in region
+
+
+def test_journal_prose_cannot_become_structure(repo, moment):
+    entry = make_entry(title="U+005D ] RIGHT SQUARE BRACKET", body="# not a heading\n\n- not a list\n\n[not](a-link)")
+    append_journal(entry, moment)
+    text = Path("journal/2026/09.md").read_text(encoding="utf-8")
+    assert "**U+005D \\] RIGHT SQUARE BRACKET**" in text
+    assert "\n\\# not a heading\n" in text and "\n\\- not a list\n" in text and "\\[not](a-link)" in text
+
+
+def test_tip_example_cannot_close_its_own_fence(repo):
+    region = render_modules_region({
+        "tip": {"command": "x", "description": "d", "example": "echo ``` done", "url": "https://tldr.example/x"},
+    })
+    assert "> ````bash\n> echo ``` done\n> ````" in region
+    assert not any(line.endswith("  ") for line in region.splitlines() if line.startswith(">"))
+
+
+def test_month_badge_links_to_the_archive_before_the_first_entry(repo, moment):
+    assert "(journal/)" in render_journal_region([], moment, 0)
+    assert "(journal/2026/09.md)" in render_journal_region([], moment, 3)

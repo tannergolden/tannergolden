@@ -47,3 +47,36 @@ def test_author_is_the_person_and_committer_is_the_workflow(repo, monkeypatch):
     assert run("show", "--stat", "--format=", "HEAD").count("journal/2026/09.md") == 1
     journal.push()  # honours JOURNAL_NO_PUSH and returns without a remote
     assert os.environ["JOURNAL_NO_PUSH"] == "1"
+
+
+def test_a_local_run_keeps_the_configured_committer(repo, monkeypatch):
+    run("init", "--quiet", "-b", "Development")
+    run("config", "user.name", "A Person")
+    run("config", "user.email", "person@example.test")
+    for key in ("GITHUB_ACTIONS", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL"):
+        monkeypatch.delenv(key, raising=False)
+    Path("journal").mkdir()
+    Path("journal/x.md").write_text("x\n", encoding="utf-8")
+    entry = Entry(
+        kind="xkcd", commit_type="docs", emoji="\U0001F4DD", subject="record xkcd 1, Barrel", title="xkcd 1",
+        body="b", identifier="1", source_name="xkcd", source_url="https://xkcd.com/1/", license="CC-BY-NC-2.5",
+    )
+    assert journal.commit(commit_message(entry))
+    assert run("log", "-1", "--format=%an|%cn <%ce>").strip() == "Tanner Golden|A Person <person@example.test>"
+
+
+def test_under_actions_the_committer_defaults_to_the_bot(repo, monkeypatch):
+    run("init", "--quiet", "-b", "Development")
+    run("config", "user.name", "A Person")
+    run("config", "user.email", "person@example.test")
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    for key in ("GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL"):
+        monkeypatch.delenv(key, raising=False)
+    Path("journal").mkdir()
+    Path("journal/x.md").write_text("x\n", encoding="utf-8")
+    entry = Entry(
+        kind="xkcd", commit_type="docs", emoji="\U0001F4DD", subject="record xkcd 1, Barrel", title="xkcd 1",
+        body="b", identifier="1", source_name="xkcd", source_url="https://xkcd.com/1/", license="CC-BY-NC-2.5",
+    )
+    assert journal.commit(commit_message(entry))
+    assert run("log", "-1", "--format=%cn").strip() == "github-actions[bot]"

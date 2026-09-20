@@ -35,6 +35,7 @@ from __future__ import annotations
 import re
 import textwrap
 import unicodedata
+import urllib.parse
 
 from config import BODY_WRAP, MAX_SNIPPET_CHARS, MAX_SNIPPET_LINES, MAX_SUBJECT_LENGTH
 
@@ -96,9 +97,59 @@ def is_clean(value: str) -> bool:
     )
 
 
+# Characters that would otherwise start Markdown syntax inside a table cell or
+# a link label: a pipe ends the cell, brackets end the label, and the rest
+# begin emphasis, strikethrough or code. The backslash goes first so a
+# backslash already in the text cannot pair with one this adds.
+_INLINE_SPECIALS = re.compile(r"([\\|\[\]*_`~])")
+
+# A line opening with one of these is a heading, a quote, a table row, a
+# fence or a bullet rather than prose. A fence is three or more, so a code
+# span that happens to start a line is left alone.
+_BLOCK_OPENERS = re.compile(r"^(\s{0,3})([#>|]|`{3,}|~{3,}|[-+*](?=\s|$))")
+
+# An ordered-list opener. Only ASCII punctuation can be escaped in Markdown,
+# so the backslash goes before the delimiter, never before the digits.
+_ORDERED_OPENER = re.compile(r"^(\s{0,3}\d{1,9})([.)])(?=\s|$)")
+
+# A line that is nothing but a rule: a thematic break, or the underline that
+# turns the line above it into a heading.
+_RULE_LINE = re.compile(r"^(\s{0,3})([-*_=])(?=(?:\s*\2){2,}\s*$)")
+
+
 def md_inline(value: str) -> str:
-    """Escape a cleaned string for use inside a Markdown table cell."""
-    return clean(value).replace("\\", "\\\\").replace("|", "\\|").replace("<", "&lt;")
+    """Escape a cleaned string for use inside a table cell or a link label."""
+    return _INLINE_SPECIALS.sub(r"\\\1", clean(value)).replace("<", "&lt;")
+
+
+def md_block(value: str) -> str:
+    """Escape wrapped prose so no fetched line can become structure or a link.
+
+    Applied to the journal only. A commit message is plain text, and the same
+    backslashes there would be noise in `git log`.
+    """
+    lines = []
+    for line in value.split("\n"):
+        line = line.replace("\\", "\\\\")
+        line = _RULE_LINE.sub(r"\1\\\2", line)
+        line = _BLOCK_OPENERS.sub(r"\1\\\2", line)
+        line = _ORDERED_OPENER.sub(r"\1\\\2", line)
+        lines.append(line.replace("[", "\\[").replace("<", "&lt;"))
+    return "\n".join(lines)
+
+
+def safe_url(url: str) -> str:
+    """Percent-encode whatever would end a Markdown link early, and nothing else.
+
+    A URL is not prose: an en dash in it is part of the address, so the dash
+    rule does not apply here. Only the invisible characters are stripped;
+    everything that is not URL-safe, non-ASCII included, is percent-encoded,
+    and an existing percent escape is left exactly as it was.
+    """
+    text = unicodedata.normalize("NFC", url)
+    text = TROJAN.sub("", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Cc").strip()
+    return urllib.parse.quote(text, safe="%:/?#[]@!$&*+,;=~-._")
 
 
 def fence_for(code: str) -> str:

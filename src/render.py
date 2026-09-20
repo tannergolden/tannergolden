@@ -35,7 +35,7 @@ from config import (
     STATE_DIR,
 )
 from sources import Entry
-from text import clean, fence_for, fit_subject, md_inline, wrap_body
+from text import clean, fence_for, fit_subject, md_block, md_inline, safe_url, wrap_body
 
 RECENT_FILE = f"{STATE_DIR}/recent.json"
 MODULES_FILE = f"{STATE_DIR}/modules.json"
@@ -170,9 +170,9 @@ def render_journal_entry(entry: Entry, when: datetime) -> str:
         "",
         f"### {stamp:%H:%M} {stamp:%Z} · `{entry.commit_type}({entry.scope})`",
         "",
-        f"**{clean(entry.title)}**",
+        f"**{md_inline(entry.title)}**",
         "",
-        wrap_body(entry.body),
+        md_block(wrap_body(entry.body)),
     ]
     if entry.code:
         fence = fence_for(entry.code)
@@ -180,12 +180,12 @@ def render_journal_entry(entry: Entry, when: datetime) -> str:
         if entry.code_trimmed:
             lines += ["", "_Cut to quotation length; the full program is at the source._"]
 
-    provenance = f"Source: [{clean(entry.source_name)}]({entry.source_url})"
+    provenance = f"Source: [{md_inline(entry.source_name)}]({safe_url(entry.source_url)})"
     if entry.attribution:
-        provenance += f" · {clean(entry.attribution)}"
-    provenance += f" · License: {clean(entry.license)}"
+        provenance += f" · {md_inline(entry.attribution)}"
+    provenance += f" · License: {md_inline(entry.license)}"
     for label, url in entry.extra_links:
-        provenance += f" · [{clean(label)}]({url})"
+        provenance += f" · [{md_inline(label)}]({safe_url(url)})"
     lines += ["", provenance, "", "---", ""]
     return "\n".join(lines)
 
@@ -268,9 +268,12 @@ def _row(item: dict) -> str:
 def render_journal_region(recent: list, when: datetime, month_count: int) -> str:
     stamp = local(when)
     heading = f"### {stamp:%A, %B} {stamp.day}, {stamp:%Y}"
+    # The month file does not exist until the month's first entry, so the badge
+    # points at the archive until then rather than at a page that is not there.
+    month_target = journal_path(when) if month_count else f"{JOURNAL_DIR}/"
     badges = (
         f"[![Journal workflow status](assets/badges/dynamic/journal.svg)]({REPO_URL}/actions/workflows/journal.yml) "
-        f"[![Entries this month](assets/badges/dynamic/month.svg)]({journal_path(when)})"
+        f"[![Entries this month](assets/badges/dynamic/month.svg)]({month_target})"
     )
     table_head = "| Time | Commit | Entry |\n| :--- | :--- | :--- |"
 
@@ -325,32 +328,39 @@ def render_modules_region(modules: dict) -> str:
     hn = modules.get("hn")
     if hn:
         lines.append(
-            f"\U0001F4F0 **Show HN** [{md_inline(hn['title'])}]({hn['url']}) · "
+            f"\U0001F4F0 **Show HN** [{md_inline(hn['title'])}]({safe_url(hn['url'])}) · "
             f"{int(hn.get('points', 0))} points · {md_inline(hn.get('domain', ''))} · "
-            f"[discuss]({hn['discussion']})"
+            f"[discuss]({safe_url(hn['discussion'])})"
         )
     issue = modules.get("issue")
     if issue:
         lines.append(
-            f"\U0001F9E9 **First issue** [{md_inline(issue['repo'])}#{int(issue['number'])}]({issue['url']}) · "
+            f"\U0001F9E9 **First issue** [{md_inline(issue['repo'])}#{int(issue['number'])}]({safe_url(issue['url'])}) · "
             f"{md_inline(issue['title'])} · {md_inline(issue.get('language', ''))}"
         )
+    # Two trailing spaces keep the module lines on separate rendered lines.
+    blocks = ["  \n".join(lines)] if lines else []
+
     tip = modules.get("tip")
     if tip:
-        lines += [
-            "",
-            "> [!TIP]",
-            f"> **{md_inline(tip['command'])}**: {md_inline(tip['description'])} "
-            f"([tldr]({tip['url']}))",
-            ">",
-            "> ```bash",
-            f"> {clean(tip['example'])}",
-            "> ```",
-        ]
-    if not lines:
+        example = clean(tip["example"])
+        fence = fence_for(example)
+        blocks.append(
+            "\n".join(
+                [
+                    "> [!TIP]",
+                    f"> **{md_inline(tip['command'])}**: {md_inline(tip['description'])} "
+                    f"([tldr]({safe_url(tip['url'])}))",
+                    ">",
+                    f"> {fence}bash",
+                    f"> {example}",
+                    f"> {fence}",
+                ]
+            )
+        )
+    if not blocks:
         return "_The daily modules fill in on the first refresh._"
-    # Two trailing spaces keep the module lines on separate rendered lines.
-    return "  \n".join(line if line else "" for line in lines)
+    return "\n\n".join(blocks)
 
 
 def render_updated_line(when: datetime) -> str:
@@ -363,12 +373,18 @@ def month_badge_message(count: int) -> str:
 
 
 def git_env_for_commit() -> dict:
-    """Author is the person; committer is the Actions identity, set by the workflow."""
+    """Author is the person, always. The committer is whatever performed the write.
+
+    Under Actions that is the Actions identity, which the workflow sets and
+    this falls back to. On a laptop it is left to git's own configuration,
+    so a run a person made by hand is not recorded as made by a machine.
+    """
     env = dict(os.environ)
     env["GIT_AUTHOR_NAME"] = AUTHOR_NAME
     env["GIT_AUTHOR_EMAIL"] = AUTHOR_EMAIL
-    env.setdefault("GIT_COMMITTER_NAME", "github-actions[bot]")
-    env.setdefault("GIT_COMMITTER_EMAIL", "41898282+github-actions[bot]@users.noreply.github.com")
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        env.setdefault("GIT_COMMITTER_NAME", "github-actions[bot]")
+        env.setdefault("GIT_COMMITTER_EMAIL", "41898282+github-actions[bot]@users.noreply.github.com")
     return env
 
 

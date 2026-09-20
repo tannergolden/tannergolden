@@ -21,7 +21,7 @@ import hashlib
 import json
 import os
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -171,30 +171,47 @@ def entry_anchor(when: datetime) -> str:
     return f"entry-{local(when):%Y%m%d-%H%M%S}"
 
 
+def day_heading(when: datetime) -> str:
+    stamp = local(when)
+    return f"## {stamp:%A, %B} {stamp.day}, {stamp:%Y}"
+
+
 def render_journal_entry(entry: Entry, when: datetime) -> str:
+    """One entry: a heading that is the entry, then when and what, then why.
+
+    The title is the heading rather than a bold line under one, so the
+    archive has a table of contents and every entry has a link of its own.
+    The day is carried by the heading above a run of entries, written once
+    per day, because a month of entries reading only "09:28" tells a
+    reader nothing about which September the 9:28 belongs to.
+    """
     stamp = local(when)
     lines = [
         f'<a name="{entry_anchor(when)}"></a>',
         "",
-        f"### {stamp:%H:%M} {stamp:%Z} · `{entry.commit_type}({entry.scope})`",
+        f"### {entry.emoji} {md_inline(entry.title)}",
         "",
-        f"**{md_inline(entry.title)}**",
+        f"`{entry.commit_type}({entry.scope})` · {stamp:%H:%M} {stamp:%Z}",
         "",
-        md_block(wrap_body(entry.body)),
     ]
+    prose = md_block(wrap_body(entry.body))
+    if entry.spoiler:
+        lines += ["<details>", "<summary>The answer</summary>", "", prose, "", "</details>"]
+    else:
+        lines.append(prose)
     if entry.code:
         fence = fence_for(entry.code)
         lines += ["", f"{fence}{fence_info(entry.code_language)}", entry.code, fence]
         if entry.code_trimmed:
             lines += ["", "_Cut to quotation length; the full program is at the source._"]
 
-    provenance = f"Source: [{md_inline(entry.source_name)}]({safe_url(entry.source_url)})"
+    provenance = f"[{md_inline(entry.source_name)}]({safe_url(entry.source_url)})"
     if entry.attribution:
         provenance += f" · {md_inline(entry.attribution)}"
-    provenance += f" · License: {md_inline(entry.license)}"
+    provenance += f" · {md_inline(entry.license)}"
     for label, url in entry.extra_links:
         provenance += f" · [{md_inline(label)}]({safe_url(url)})"
-    lines += ["", provenance, "", "---", ""]
+    lines += ["", f"_{provenance}_", "", "---", ""]
     return "\n".join(lines)
 
 
@@ -245,7 +262,11 @@ def append_journal(entry: Entry, when: datetime) -> str:
             ),
             encoding="utf-8",
         )
+    heading = day_heading(when)
+    opened = heading in path.read_text(encoding="utf-8")
     with open(path, "a", encoding="utf-8") as handle:
+        if not opened:
+            handle.write(f"{heading}\n\n")
         handle.write(render_journal_entry(entry, when))
     update_month_index()
     return str(path)
@@ -301,10 +322,17 @@ def entries_this_month(when: datetime) -> int:
 
 # --- the page regions -------------------------------------------------------------------
 
-def _row(item: dict) -> str:
+def _row(item: dict, today: date | None = None) -> str:
+    """A row in the page's table, dated only when the date is not the heading's.
+
+    Entries go quiet for more than a day about six times a year, so the
+    three shown are often not all from the day the heading names, and a
+    bare "22:41" under today's date would be read as today.
+    """
     when = local(datetime.fromisoformat(item["at"]))
+    stamp = f"{when:%H:%M}" if today and when.date() == today else f"{when:%b} {when.day}, {when:%H:%M}"
     link = f"{item['path']}#{item['anchor']}"
-    return f"| {when:%H:%M} | `{item['type']}({item['scope']})` | [{md_inline(item['title'])}]({link}) |"
+    return f"| {stamp} | `{item['type']}({item['scope']})` | [{md_inline(item['title'])}]({link}) |"
 
 
 def _tag(path: str) -> str:
@@ -335,9 +363,10 @@ def render_journal_region(recent: list, when: datetime, month_count: int) -> str
     visible = recent[:ENTRIES_VISIBLE]
     earlier = recent[ENTRIES_VISIBLE : ENTRIES_VISIBLE + ENTRIES_COLLAPSED]
 
+    today = local(when).date()
     lines = [heading, "", badges, ""]
     if visible:
-        lines += [table_head, *[_row(item) for item in visible]]
+        lines += [table_head, *[_row(item, today) for item in visible]]
     else:
         lines += [
             "_No entries yet. The first one lands at a random moment within the "
@@ -350,7 +379,7 @@ def render_journal_region(recent: list, when: datetime, month_count: int) -> str
             "<summary>Earlier entries</summary>",
             "",
             table_head,
-            *[_row(item) for item in earlier],
+            *[_row(item, today) for item in earlier],
             "",
             "</details>",
         ]

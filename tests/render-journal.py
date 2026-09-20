@@ -38,7 +38,9 @@ def test_month_file_gets_frontmatter_with_four_tags(repo, moment):
     tags = re.search(r"^tags: \[(.+)\]$", text, flags=re.MULTILINE).group(1).split(",")
     assert len(tags) == 4
     assert "<!-- markdownlint-disable MD041 -->" in text
-    assert "### 13:05 EDT · `feat(unicode)`" in text
+    assert "## Sunday, September 20, 2026\n\n" in text  # the day, written once
+    assert "### ✨ U+2603 ☃ SNOWMAN" in text  # the heading is the entry
+    assert "\n`feat(unicode)` · 13:05 EDT\n" in text
     assert "\u2014" not in text
 
 
@@ -64,7 +66,7 @@ def test_code_entry_is_fenced_and_attributed(repo, moment):
     append_journal(entry, moment)
     text = Path("journal/2026/September.md").read_text(encoding="utf-8")
     assert "\n````python\nprint('hi') ```\n````\n" in text
-    assert "License: GFDL-1.2-only" in text and "Rosetta Code contributors" in text
+    assert text.rstrip().endswith("· Rosetta Code contributors · GFDL-1.2-only_\n\n---")
 
 
 def test_recent_index_and_page_rows(repo, moment):
@@ -105,7 +107,7 @@ def test_journal_prose_cannot_become_structure(repo, moment):
     entry = make_entry(title="U+005D ] RIGHT SQUARE BRACKET", body="# not a heading\n\n- not a list\n\n[not](a-link)")
     append_journal(entry, moment)
     text = Path("journal/2026/September.md").read_text(encoding="utf-8")
-    assert "**U+005D \\] RIGHT SQUARE BRACKET**" in text
+    assert "### ✨ U+005D \\] RIGHT SQUARE BRACKET" in text
     assert "\n\\# not a heading\n" in text and "\n\\- not a list\n" in text and "\\[not](a-link)" in text
 
 

@@ -52,6 +52,10 @@ class Entry:
     code: str | None = None
     code_language: str | None = None
     code_trimmed: bool = False
+    # True when the body answers a question the title asks. The commit
+    # carries it plainly, because a git log cannot hide anything; the
+    # journal folds it away so the puzzle is still a puzzle on the page.
+    spoiler: bool = False
     extra_links: list = field(default_factory=list)  # (label, url) pairs
 
     @property
@@ -204,7 +208,9 @@ def fetch_unicode(ledger: Ledger, today: date) -> Entry | None:
     hexname = f"U+{codepoint:04X}"
     name = clean(name)
     what = CATEGORY_NAMES.get(categories.get(codepoint, ""), "a character")
-    body = f"{hexname} {name} is {what} in the {block} block"
+    # The subject and the journal heading both carry the name already, so
+    # the body opens with what the character is rather than repeating it.
+    body = f"{what[:1].upper()}{what[1:]} in the {block} block"
     body += f", in Unicode since version {version}." if version else "."
     body += (
         f" It renders as {glyph}. In UTF-8 it is the byte sequence "
@@ -300,12 +306,12 @@ def fetch_rfc(ledger: Ledger, today: date) -> Entry | None:
         status = clean(str(meta.get("status", "") or "")).lower()
         published = clean(str(meta.get("pub_date", "") or "")) or year
 
-        opener = f"RFC {n}, {title!s}"
+        said = []
         if published:
-            opener += f", was published in {published}"
+            said.append(f"Published in {published}")
         if status:
-            opener += f", with the status {status}"
-        opener += "."
+            said.append(f"with the status {status}")
+        opener = ", ".join(said) + "." if said else "One of the Request for Comments series."
         relations = []
         for key, phrase in (("obsoletes", "obsoletes"), ("obsoleted_by", "is obsoleted by"), ("updates", "updates"), ("updated_by", "is updated by")):
             numbers = _rfc_numbers(meta.get(key))
@@ -388,10 +394,10 @@ def fetch_sequence(ledger: Ledger, today: date) -> Entry | None:
             subject=f"continue {puzzle}",
             title=f"{puzzle}, what comes next?",
             body=(
-                f"The sequence begins {puzzle}. What comes next?\n\n"
                 f"The next term is {answer}. This is {a_number}, {name}"
                 + ("" if name.endswith(".") else ".")
             ),
+            spoiler=True,
             identifier=str(number),
             source_name="OEIS",
             source_url=f"https://oeis.org/{a_number}",
@@ -477,10 +483,11 @@ def fetch_rosetta(ledger: Ledger, today: date) -> Entry | None:
         title = clean(task)
         slug = urllib.parse.quote(task.replace(" ", "_"), safe="_/")
         permalink = f"{ROSETTA_PAGE}?title={slug}&oldid={revid}" if revid else f"https://rosettacode.org/wiki/{slug}"
-        body = (
-            f"The Rosetta Code task {title!s}, {'again, this time' if again else 'solved'} in {clean(language)}."
-            + ("" if REPRODUCE_ROSETTA_CODE else " The code is at the link; this entry cites rather than reproduces it.")
-        )
+        count = len(solutions)
+        body = f"Rosetta Code carries {count} solution{'s' if count != 1 else ''} to this task. This is the {clean(language)} one"
+        body += ", shown again in a language the journal has not used for it before." if again else "."
+        if not REPRODUCE_ROSETTA_CODE:
+            body += " The code is at the link; this entry cites rather than reproduces it."
         return Entry(
             kind="rosetta",
             commit_type="refactor",
@@ -573,7 +580,8 @@ def fetch_release(ledger: Ledger, today: date) -> Entry | None:
     qid = _qid(chosen["item"])
     version = f"v{age}.0.0"
     turns = f"{label} turns {age}" if age > 0 else f"{label} is released"
-    body = f"{label}{', ' + description if description else ''}, was released on this date in {year}."
+    opening = f"{description[:1].upper()}{description[1:]}, released" if description else "Released"
+    body = f"{opening} on this date in {year}."
     if age > 0:
         body += f" It is {age} today, which is the only version number an anniversary gets."
     return Entry(
@@ -602,11 +610,16 @@ def fetch_born(ledger: Ledger, today: date) -> Entry | None:
     year = _year_of(chosen.get("dob", ""))
     died = _year_of(chosen.get("dod", ""))
     qid = _qid(chosen["item"])
-    body = f"{name}{', ' + description if description else ''}, was born on this date" + (f" in {year}" if year else "") + "."
-    if year and died and int(died) >= int(year):
-        body += f" They died in {died}."
-    elif year and today.year > int(year):
-        body += f" Today is the {_ordinal(today.year - int(year))} anniversary of that."
+    said = []
+    if description:
+        said.append(f"{description[:1].upper()}{description[1:]}.")
+    if not year:
+        said.append("Born on this date.")
+    elif died and int(died) >= int(year):
+        said.append(f"Born on this date in {year}, died in {died}.")
+    else:
+        said.append(f"Born on this date in {year}, {_ordinal(today.year - int(year))} anniversary today.")
+    body = " ".join(said)
     return Entry(
         kind="born",
         commit_type="docs",

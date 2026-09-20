@@ -61,10 +61,12 @@ def test_unicode_picks_a_printable_named_character(repo, fake_net, seeded):
     entry = sources.fetch_unicode(led, TODAY)
     assert entry is not None and entry.identifier == "2603"
     assert entry.subject == "add U+2603 ☃ SNOWMAN"
+    # The heading and the subject both carry the name; the body says what it is.
     assert entry.body == (
-        "U+2603 SNOWMAN is a symbol in the Miscellaneous Symbols block, in Unicode since version 1.1. "
+        "A symbol in the Miscellaneous Symbols block, in Unicode since version 1.1. "
         "It renders as ☃. In UTF-8 it is the byte sequence E2 98 83; in HTML, the entity &#x2603;."
     )
+    assert not entry.body.startswith("U+2603")
     assert_well_formed(entry)
 
 
@@ -104,7 +106,8 @@ def test_rfc_reads_the_editor_record(repo, fake_net, seeded):
     assert entry is not None
     n = int(entry.identifier)
     assert entry.subject.startswith(f"record RFC {n}, Title Of {n} - With A Dash")
-    assert entry.body.startswith(f"RFC {n}, Title Of {n} - With A Dash, was published in April 1998, with the status informational.")
+    assert entry.body.startswith("Published in April 1998, with the status informational.")
+    assert not entry.body.startswith(f"RFC {n}")
     assert "It is obsoleted by RFC 7168 and RFC 7169; it updates RFC 2068. It runs to 10 pages." in entry.body
     assert entry.body.endswith(f"The abstract of {n}.\n\nSecond & last.") and "<p>" not in entry.body
     assert entry.attribution == "L. Masinter"
@@ -134,7 +137,11 @@ def test_sequence_shows_eight_terms_and_answers_with_the_ninth(repo, fake_net, s
     assert entry is not None and entry.identifier == "45"
     assert entry.subject == "continue 0, 1, 1, 2, 3, 5, 8, 13"
     assert entry.title == "0, 1, 1, 2, 3, 5, 8, 13, what comes next?"
-    assert entry.body.endswith("The next term is 21. This is A000045, Fibonacci numbers: F(n) = F(n-1) + F(n-2) with F(0) = 0 and F(1) = 1.")
+    # The question is the title and the answer is the body, which the
+    # journal folds away so the page still poses a puzzle.
+    assert entry.body == "The next term is 21. This is A000045, Fibonacci numbers: F(n) = F(n-1) + F(n-2) with F(0) = 0 and F(1) = 1."
+    assert entry.spoiler is True
+    assert "0, 1, 1, 2, 3, 5, 8, 13" not in entry.body
     assert entry.source_url == "https://oeis.org/A000045"
     assert_well_formed(entry)
 
@@ -199,6 +206,9 @@ def test_rosetta_extracts_every_solution_and_cites_the_revision(repo, fake_net, 
     languages = {i.split("|", 1)[1] for i in seen}
     assert {"COBOL", "Zig`x", "Python", "C sharp"} <= languages
     cobol = next(e for i, e in seen.items() if i.endswith("|COBOL"))
+    # The tail differs once the task has been shown before, which it has
+    # by the time this loop reaches COBOL.
+    assert cobol.body.startswith("Rosetta Code carries 4 solutions to this task. This is the COBOL one")
     assert cobol.code.startswith("       IDENTIFICATION DIVISION.")
     assert cobol.code_language == "cobol"
     assert cobol.source_url.endswith("index.php?title=FizzBuzz&oldid=12345") or "Sorting_algorithms/Bubble_sort&oldid=12345" in cobol.source_url
@@ -240,7 +250,7 @@ def test_release_turns_an_age_into_a_version(repo, fake_net, seeded):
     entry = sources.fetch_release(ledger(repo), TODAY)
     assert entry is not None and entry.identifier == "Q171477"
     assert entry.subject == "v35.0.0, Linux turns 35"
-    assert entry.body == "Linux, family of Unix-like operating systems, was released on this date in 1991. It is 35 today, which is the only version number an anniversary gets."
+    assert entry.body == "Family of Unix-like operating systems, released on this date in 1991. It is 35 today, which is the only version number an anniversary gets."
     assert entry.license == "CC0-1.0" and entry.source_url == "https://www.wikidata.org/wiki/Q171477"
     from urllib.parse import unquote_plus
 
@@ -256,7 +266,7 @@ def test_born_reads_the_years_of_a_life(repo, fake_net, seeded):
     entry = sources.fetch_born(ledger(repo), TODAY)
     assert entry is not None
     assert entry.subject == "mark the birthday of Ada Lovelace, 1815"
-    assert entry.body == "Ada Lovelace, English mathematician, was born on this date in 1815. They died in 1852."
+    assert entry.body == "English mathematician. Born on this date in 1815, died in 1852."
     assert_well_formed(entry)
 
 

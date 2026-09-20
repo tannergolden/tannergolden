@@ -57,12 +57,12 @@ follows.
 <!-- JOURNAL:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=1228ef48)](journal/2026/09.md)
+[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=1228ef48)](journal/2026/September.md)
 
 | Time | Commit | Entry |
 | :--- | :--- | :--- |
-| 09:28 | `feat(unicode)` | [U+10330 𐌰 GOTHIC LETTER AHSA](journal/2026/09.md#entry-20260920-092834) |
-| 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](journal/2026/09.md#entry-20260920-092830) |
+| 09:28 | `feat(unicode)` | [U+10330 𐌰 GOTHIC LETTER AHSA](journal/2026/September.md#entry-20260920-092834) |
+| 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](journal/2026/September.md#entry-20260920-092830) |
 
 [Full journal](journal/) · [How it works](How-It-Works.md) · 2 entries in September
 <!-- JOURNAL:END -->

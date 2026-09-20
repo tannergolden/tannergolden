@@ -44,7 +44,7 @@ def test_entry_mode_writes_one_entry_and_reschedules(repo, monkeypatch):
     ledger = json.loads(Path("state/ledger.json").read_text(encoding="utf-8"))
     assert ledger == {"unicode": ["2603"]}
     committed = subprocess.run(["git", "show", "--stat", "--format=", "HEAD"], capture_output=True, text=True, check=True).stdout
-    for path in ("README.md", "journal/2026/09.md", "state/ledger.json", "state/recent.json", "state/schedule.json"):
+    for path in ("README.md", "journal/2026/September.md", "state/ledger.json", "state/recent.json", "state/schedule.json"):
         assert path in committed, path
     page = Path("README.md").read_text(encoding="utf-8")
-    assert "| `feat(unicode)` | [U+2603 ☃ SNOWMAN](journal/2026/09.md#entry-" in page
+    assert "| `feat(unicode)` | [U+2603 ☃ SNOWMAN](journal/2026/September.md#entry-" in page

@@ -32,7 +32,7 @@ def make_entry(**overrides) -> Entry:
 
 def test_month_file_gets_frontmatter_with_four_tags(repo, moment):
     path = append_journal(make_entry(), moment)
-    assert path == "journal/2026/09.md" == journal_path(moment)
+    assert path == "journal/2026/September.md" == journal_path(moment)
     text = Path(path).read_text(encoding="utf-8")
     assert text.startswith("<!--\ntitle: '\U0001F4D3 JOURNAL, September 2026'")
     tags = re.search(r"^tags: \[(.+)\]$", text, flags=re.MULTILINE).group(1).split(",")
@@ -44,9 +44,9 @@ def test_month_file_gets_frontmatter_with_four_tags(repo, moment):
 
 def test_second_entry_is_appended_not_rewritten(repo, moment):
     append_journal(make_entry(), moment)
-    first = Path("journal/2026/09.md").read_text(encoding="utf-8")
+    first = Path("journal/2026/September.md").read_text(encoding="utf-8")
     append_journal(make_entry(kind="rfc", commit_type="docs", identifier="2324", title="RFC 2324", subject="record RFC 2324", body="x"), moment)
-    second = Path("journal/2026/09.md").read_text(encoding="utf-8")
+    second = Path("journal/2026/September.md").read_text(encoding="utf-8")
     assert second.startswith(first)
 
 
@@ -54,7 +54,7 @@ def test_a_backtick_in_the_language_cannot_break_the_fence(repo, moment):
     hostile = "<a href=\"https://phish.example/\">verify</a>\n## injected\n[x](https://phish.example)"
     entry = make_entry(kind="rosetta", commit_type="refactor", code=hostile, code_language="Zig`x", license="GFDL-1.2-only")
     append_journal(entry, moment)
-    text = Path("journal/2026/09.md").read_text(encoding="utf-8")
+    text = Path("journal/2026/September.md").read_text(encoding="utf-8")
     assert "\n```zigx\n" + hostile + "\n```\n" in text
     assert "```Zig`x" not in text
 
@@ -62,7 +62,7 @@ def test_a_backtick_in_the_language_cannot_break_the_fence(repo, moment):
 def test_code_entry_is_fenced_and_attributed(repo, moment):
     entry = make_entry(kind="rosetta", commit_type="refactor", code="print('hi') ```", code_language="python", license="GFDL-1.2-only", attribution="Rosetta Code contributors")
     append_journal(entry, moment)
-    text = Path("journal/2026/09.md").read_text(encoding="utf-8")
+    text = Path("journal/2026/September.md").read_text(encoding="utf-8")
     assert "\n````python\nprint('hi') ```\n````\n" in text
     assert "License: GFDL-1.2-only" in text and "Rosetta Code contributors" in text
 
@@ -104,7 +104,7 @@ def test_modules_render_with_escaping(repo):
 def test_journal_prose_cannot_become_structure(repo, moment):
     entry = make_entry(title="U+005D ] RIGHT SQUARE BRACKET", body="# not a heading\n\n- not a list\n\n[not](a-link)")
     append_journal(entry, moment)
-    text = Path("journal/2026/09.md").read_text(encoding="utf-8")
+    text = Path("journal/2026/September.md").read_text(encoding="utf-8")
     assert "**U+005D \\] RIGHT SQUARE BRACKET**" in text
     assert "\n\\# not a heading\n" in text and "\n\\- not a list\n" in text and "\\[not](a-link)" in text
 
@@ -119,7 +119,7 @@ def test_tip_example_cannot_close_its_own_fence(repo):
 
 def test_month_badge_links_to_the_archive_before_the_first_entry(repo, moment):
     assert "(journal/)" in render_journal_region([], moment, 0)
-    assert "(journal/2026/09.md)" in render_journal_region([], moment, 3)
+    assert "(journal/2026/September.md)" in render_journal_region([], moment, 3)
 
 
 def test_month_index_is_regenerated_between_markers(repo, moment):
@@ -134,5 +134,5 @@ def test_month_index_is_regenerated_between_markers(repo, moment):
     append_journal(make_entry(identifier="2"), moment)
     append_journal(make_entry(identifier="3"), datetime(2026, 8, 2, 12, tzinfo=timezone.utc))
     text = Path("journal/README.md").read_text(encoding="utf-8")
-    assert text.startswith("intro\n\n<!-- MONTHS:BEGIN -->\n| Month | Entries |\n| :--- | ---: |\n| [September 2026](2026/09.md) | 2 |\n| [August 2026](2026/08.md) | 1 |\n<!-- MONTHS:END -->")
+    assert text.startswith("intro\n\n<!-- MONTHS:BEGIN -->\n| Month | Entries |\n| :--- | ---: |\n| [September 2026](2026/September.md) | 2 |\n| [August 2026](2026/August.md) | 1 |\n<!-- MONTHS:END -->")
     assert text.endswith("\n\nouttro\n")

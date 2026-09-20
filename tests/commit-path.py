@@ -26,7 +26,7 @@ def test_author_is_the_person_and_committer_is_the_workflow(repo, monkeypatch):
     monkeypatch.setenv("JOURNAL_NO_PUSH", "1")
     Path("journal").mkdir()
     Path("journal/2026").mkdir()
-    Path("journal/2026/09.md").write_text("entry\n", encoding="utf-8")
+    Path("journal/2026/September.md").write_text("entry\n", encoding="utf-8")
 
     entry = Entry(
         kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 2324, HTCPCP",
@@ -44,7 +44,7 @@ def test_author_is_the_person_and_committer_is_the_workflow(repo, monkeypatch):
     message = run("log", "-1", "--format=%B")
     assert message.startswith("docs(rfc): \U0001F4DD record RFC 2324, HTCPCP\n\nA teapot.\n")
     assert "Signed-off-by: Tanner Golden <24684994+tannergolden@users.noreply.github.com>" in message
-    assert run("show", "--stat", "--format=", "HEAD").count("journal/2026/09.md") == 1
+    assert run("show", "--stat", "--format=", "HEAD").count("journal/2026/September.md") == 1
     journal.push()  # honours JOURNAL_NO_PUSH and returns without a remote
     assert os.environ["JOURNAL_NO_PUSH"] == "1"
 

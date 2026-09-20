@@ -21,7 +21,7 @@ import hashlib
 import json
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -156,8 +156,15 @@ _Appended, never rewritten._
 
 
 def journal_path(when: datetime) -> str:
+    """journal/2026/September.md, not journal/2026/09.md.
+
+    A month has a name and a reader knows it on sight; a two digit number
+    is a sort key wearing a filename. Chronological order is recovered
+    from the name where it is actually needed, which is only the index
+    below.
+    """
     stamp = local(when)
-    return f"{JOURNAL_DIR}/{stamp:%Y}/{stamp:%m}.md"
+    return f"{JOURNAL_DIR}/{stamp:%Y}/{stamp:%B}.md"
 
 
 def entry_anchor(when: datetime) -> str:
@@ -191,7 +198,8 @@ def render_journal_entry(entry: Entry, when: datetime) -> str:
     return "\n".join(lines)
 
 
-MONTH_FILE = re.compile(r"^(\d{4})/(\d{2})\.md$")
+MONTH_FILE = re.compile(r"^(\d{4})/([A-Z][a-z]+)\.md$")
+MONTH_NUMBER = {datetime(2000, n, 1, tzinfo=timezone.utc).strftime("%B"): n for n in range(1, 13)}
 
 
 def update_month_index() -> bool:
@@ -200,15 +208,17 @@ def update_month_index() -> bool:
     Machine-owned between MONTHS markers, like the page's regions: the
     prose around it is written by hand and never touched.
     """
-    rows = []
-    for path in sorted(Path(JOURNAL_DIR).glob("*/*.md"), reverse=True):
+    months = []
+    for path in Path(JOURNAL_DIR).glob("*/*.md"):
         match = MONTH_FILE.match(path.relative_to(JOURNAL_DIR).as_posix())
-        if not match:
+        if not match or match.group(2) not in MONTH_NUMBER:
             continue
-        year, month = int(match.group(1)), int(match.group(2))
+        months.append((int(match.group(1)), MONTH_NUMBER[match.group(2)], match.group(2), path))
+    rows = []
+    # Newest first, by the month a name means rather than by the name.
+    for year, _, name, path in sorted(months, reverse=True):
         count = path.read_text(encoding="utf-8").count('<a name="entry-')
-        label = datetime(year, month, 1, tzinfo=ZoneInfo(DISPLAY_TIMEZONE)).strftime("%B %Y")
-        rows.append(f"| [{label}]({match.group(1)}/{match.group(2)}.md) | {count} |")
+        rows.append(f"| [{name} {year}]({year}/{name}.md) | {count} |")
     table = "| Month | Entries |\n| :--- | ---: |\n" + "\n".join(rows) if rows else "_No entries yet._"
     index = Path(JOURNAL_DIR) / "README.md"
     if not index.exists():

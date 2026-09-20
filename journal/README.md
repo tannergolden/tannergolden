@@ -21,7 +21,7 @@ _The archive the page is cut from._
 
 ---
 
-Each month is a file at `journal/<year>/<month>.md`, created on the first entry of that month and
+Each month is a file at `journal/<year>/<Month>.md`, created on the first entry of that month and
 appended to until the next month begins. Every entry carries its Eastern Time timestamp, its
 commit type, the text, and its source and license. The page shows the newest entries; this is the
 rest.
@@ -31,7 +31,7 @@ How the entries are chosen, timed and attributed is in [How it works](../How-It-
 <!-- MONTHS:BEGIN -->
 | Month | Entries |
 | :--- | ---: |
-| [September 2026](2026/09.md) | 3 |
+| [September 2026](2026/September.md) | 2 |
 <!-- MONTHS:END -->
 
 ---

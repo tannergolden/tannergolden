@@ -239,6 +239,7 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
             + cards.picture("languages", alts.get("languages_alt", "Top languages card"))
         )
     render.update_readme(regions)
+    render.update_month_index()
 
 
 def write_entry(ledger: Ledger, when: datetime) -> str | None:

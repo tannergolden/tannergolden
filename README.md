@@ -29,6 +29,10 @@ _Build it so the right way is the only easy way._
 [![Context: Automation](assets/badges/static/context.svg)](./)
 [![License: MIT](assets/badges/static/license.svg)](./LICENSE)
 
+<!-- AVAILABILITY:BEGIN -->
+
+<!-- AVAILABILITY:END -->
+
 </div>
 
 ---
@@ -136,7 +140,7 @@ Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY). Terms
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:05 EDT on Sunday, September 20, 2026.
+Last updated 19:14 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

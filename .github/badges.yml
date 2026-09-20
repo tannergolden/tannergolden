@@ -56,6 +56,13 @@ badges:
     link: ./LICENSE
 
   # --- Live: gold label, traffic-light message, rewritten by the workflow ---
+  - name: availability
+    label: Availability
+    message: Not Available
+    label_color: gold
+    message_color: red
+    icon: pulse
+    link: https://github.com/tannergolden/tannergolden
   - name: dispatches
     label: Workflow
     message: Passing

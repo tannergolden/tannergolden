@@ -51,6 +51,34 @@ and scheduled, and every one of them is authored by me.
 
 ---
 
+## 🟢 Availability
+
+One badge on this page is set by a person rather than by a source. The
+[Availability workflow](.github/workflows/availability.yml) runs from the
+Actions tab, offers three choices, and commits the one picked:
+
+| Choice              | Badge reads      | Colour |
+| :------------------ | :--------------- | :----- |
+| 🟢 Open to role     | `Open to role`   | green  |
+| 🟡 Open to consult  | `Open to consult` | yellow |
+| 🔴 Not Available    | `Not Available`  | red    |
+
+A `workflow_dispatch` choice input is single select, so this is one pick
+rather than a combination. The badge is drawn by the emblems kit like every
+other image here, and its URL carries a hash of its bytes, because GitHub
+proxies images by URL and a status that changed would otherwise keep showing
+the old colour for hours.
+
+**Unset renders nothing.** Until somebody picks, the region is empty and no
+badge appears. A profile that silently claims to be looking for work, or not
+to be, is worse than one that says nothing, and nothing else in this
+repository writes this line.
+
+Running it twice with the same choice commits nothing, so the page carries no
+empty commits from a second look at the dropdown.
+
+---
+
 ## 🎲 The Randomness
 
 The wait between dispatches is drawn from an **exponential distribution** with a
@@ -258,7 +286,7 @@ generated. The hand-written parts live in three places:
 
 | File                       | What it holds                                                          |
 | :------------------------- | :--------------------------------------------------------------------- |
-| `README.md`                | Everything outside the five marked regions                             |
+| `README.md`                | Everything outside the six marked regions                              |
 | [`profile.json`](profile.json) | The phrases the typing header cycles through                            |
 | [`.github/badges.yml`](.github/badges.yml) | Every badge, the stack included; `make badges` renders them             |
 

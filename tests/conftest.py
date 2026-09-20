@@ -18,6 +18,9 @@ prose before
 old typing
 <!-- TYPING:END -->
 
+<!-- AVAILABILITY:BEGIN -->
+<!-- AVAILABILITY:END -->
+
 <!-- DISPATCHES:BEGIN -->
 old dispatches
 <!-- DISPATCHES:END -->

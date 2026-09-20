@@ -27,8 +27,10 @@ from zoneinfo import ZoneInfo
 
 import phrasing
 from config import (
+    ASSETS_DIR,
     AUTHOR_EMAIL,
     AUTHOR_NAME,
+    AVAILABILITY_FILE,
     DISPATCH_DIR,
     DISPLAY_TIMEZONE,
     ENTRIES_COLLAPSED,
@@ -453,6 +455,80 @@ def render_modules_region(modules: dict) -> str:
             f"> {fence}",
         ]
     )
+
+
+# The three states, keyed by what the workflow's dropdown sends: the badge
+# message, and the palette token that carries its meaning. One pick, and the
+# badge says exactly that. The emoji the dropdown shows are the health colours
+# these tokens already render, so the badge carries the same signal without
+# spending a character on it.
+AVAILABILITY = {
+    "role": ("Open to role", "green"),
+    "consult": ("Open to consult", "yellow"),
+    "none": ("Not Available", "red"),
+}
+
+AVAILABILITY_BADGE = f"{ASSETS_DIR}/badges/dynamic/availability.svg"
+
+
+def load_availability() -> str:
+    """The committed state, or the empty string when it has never been set."""
+    try:
+        with open(AVAILABILITY_FILE, encoding="utf-8") as handle:
+            loaded = json.load(handle)
+    except (OSError, ValueError):
+        return ""
+    state = loaded.get("state") if isinstance(loaded, dict) else None
+    return state if state in AVAILABILITY else ""
+
+
+def availability_badge_set(state: str) -> str:
+    """The `--set` argument the emblems kit takes for this badge."""
+    message, colour = AVAILABILITY[state]
+    return f"availability={message}:{colour}"
+
+
+def save_availability(state: str) -> None:
+    if state not in AVAILABILITY:
+        raise ValueError(f"unknown availability state: {state!r}")
+    Path(AVAILABILITY_FILE).parent.mkdir(parents=True, exist_ok=True)
+    with open(AVAILABILITY_FILE, "w", encoding="utf-8") as handle:
+        json.dump({"state": state}, handle, indent=2)
+        handle.write("\n")
+
+
+def render_availability_region(state: str) -> str:
+    """The badge, or nothing at all.
+
+    An unset status renders as empty rather than as a guess. A profile that
+    silently claims to be looking for work, or not to be, is worse than one
+    that says nothing, and this badge is only ever set by hand.
+    """
+    if state not in AVAILABILITY:
+        return ""
+    message = AVAILABILITY[state][0]
+    return (
+        f"[![Availability: {message}]"
+        f"({AVAILABILITY_BADGE}?v={_tag(AVAILABILITY_BADGE)})](./)"
+    )
+
+
+def availability_commit_message(state: str) -> str:
+    """A hand-triggered change to the page, so it reads like one."""
+    label = AVAILABILITY[state][0].lower()
+    header = fit_subject("docs", "availability", phrasing.emoji_for("docs"),
+                         f"{phrasing.verb_for('availability')} {label}")
+    body = phrasing.one_of(
+        f"The profile now reads {label}.",
+        f"{label.capitalize()}, as of this commit.",
+        f"The availability line says {label} from here.",
+    )
+    body += (
+        " Set by hand from the Actions tab and nothing else writes this line,"
+        " so it is current until it is changed again."
+    )
+    return "\n".join([header, "", wrap_body(body), "",
+                       f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>"]) + "\n"
 
 
 def render_updated_line(when: datetime) -> str:

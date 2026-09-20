@@ -1,0 +1,69 @@
+# The one line on the profile a person sets rather than a source.
+#
+# Run it from the Actions tab, pick a status, and the page says so. It takes
+# the same commit path as every generated commit here: authored by the account
+# owner, committed by the Actions identity, held to the same commit standard.
+#
+# EGRESS. The harden step audits rather than blocks, per the action's own
+# guidance. This job reaches github.com only, to clone and to push.
+
+name: '🟢 Availability'
+
+on:
+  workflow_dispatch:
+    inputs:
+      status:
+        description: 'What the profile should say'
+        type: choice
+        options:
+          - '🟢 Open to role'
+          - '🟡 Open to consult'
+          - '🔴 Not Available'
+        required: true
+
+# Shares the writing group with the dispatch workflow so the two never commit
+# beside each other. A dispatch run that is asleep holds it, and this queues.
+concurrency:
+  group: profile-write
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  set:
+    name: '🟢 Set the availability line'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # commit the line and push it
+    env:
+      GIT_COMMITTER_NAME: github-actions[bot]
+      GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+      # A rehearsal anywhere but the default branch commits and stops, for the
+      # same reason a dispatch does: the state file would conflict at merge.
+      DISPATCH_NO_PUSH: ${{ github.ref_name != github.event.repository.default_branch && '1' || '' }}
+    steps:
+      - name: '🛡️ Harden Runner'
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864eb7d2fad2276b3cc9 # v2.13.1
+        with:
+          egress-policy: audit
+
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true # zizmor: ignore[artipacked] - this job pushes
+
+      - name: '🟢 Set the availability line'
+        env:
+          # The dropdown's label travels through env, never interpolated into
+          # the script body: a ${{ }} expansion inside run is an injection sink.
+          AVAILABILITY_CHOICE: ${{ inputs.status }}
+        run: |
+          case "$AVAILABILITY_CHOICE" in
+            *'Open to role'*)    STATUS=role ;;
+            *'Open to consult'*) STATUS=consult ;;
+            *'Not Available'*)   STATUS=none ;;
+            *) echo "::error::unrecognised choice: $AVAILABILITY_CHOICE"; exit 1 ;;
+          esac
+          python3 src/dispatches.py --mode availability --status "$STATUS"

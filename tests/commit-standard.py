@@ -26,6 +26,7 @@ import pytest
 
 import phrasing
 from render import (
+    availability_commit_message,
     commit_message,
     failure_commit_message,
     readme_commit_message,
@@ -194,6 +195,7 @@ KINDS = {
 
 MESSAGES = {name: commit_message(item) for name, item in KINDS.items()}
 MESSAGES["readme"] = readme_commit_message(now(), ["the cards"])
+MESSAGES["availability"] = availability_commit_message("role")
 MESSAGES["ci-failed"] = failure_commit_message("RuntimeError: the wiki is down", now())
 MESSAGES["ci-passing"] = recovery_commit_message()
 

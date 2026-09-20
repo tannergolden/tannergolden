@@ -51,6 +51,7 @@ VERBS = {
     "hn": ("read", "follow", "note", "surface"),
     "trending": ("star", "watch", "track", "clone"),
     "lobsters": ("read", "bookmark", "keep", "queue"),
+    "availability": ("show", "mark", "post", "set"),
     "readme": ("refresh", "redraw", "update"),
 }
 

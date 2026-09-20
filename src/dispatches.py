@@ -175,7 +175,8 @@ def mark_passing() -> None:
         push()
 
 
-def render_badges(month_count: int, status: str = "Passing", color: str = "green") -> None:
+def render_badges(month_count: int, status: str = "Passing", color: str = "green",
+                  availability: str = "") -> None:
     """Re-render the committed badges through the emblems kit, when it is present.
 
     The workflow checks the kit out beside this repository; locally, point
@@ -191,6 +192,9 @@ def render_badges(month_count: int, status: str = "Passing", color: str = "green
             sys.executable, kit, "--root", ".", "--data", ".github/badges.yml", "--out", "assets/badges",
             "--set", f"dispatches={status}:{color}",
             "--set", f"month={render.month_badge_message(month_count)}:green",
+            # Unset renders nothing on the page, so the file keeps whatever
+            # badges.yml declares and no reader ever sees it.
+            *(["--set", render.availability_badge_set(availability)] if availability else []),
         ],
         capture_output=True, text=True, check=False,
     )
@@ -211,9 +215,10 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
     recent = render.load_recent()
     month_count = render.dispatches_this_month(when)
     # Badges first: the page embeds each one with a tag of its bytes.
-    render_badges(month_count, *status)
+    render_badges(month_count, *status, availability=render.load_availability())
     profile = load_profile()
     regions = {
+        "AVAILABILITY": render.render_availability_region(render.load_availability()),
         "DISPATCHES": render.render_dispatches_region(recent, when, month_count),
         "UPDATED": render.render_updated_line(when),
         "TYPING": cards.picture("typing", " / ".join(profile.get("phrases") or ["engineering"])),
@@ -228,6 +233,26 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
         )
     render.update_readme(regions)
     render.update_month_index()
+
+
+def set_availability(state: str | None) -> int:
+    """Write the availability line, commit it and push.
+
+    The one thing on this page a person sets rather than a source. It takes
+    the same commit path as everything else, so it is authored by the account
+    owner, committed by the Actions identity and held to the same standard.
+    """
+    if state not in render.AVAILABILITY:
+        print(f"::error::unknown availability state: {state!r}")
+        return 1
+    if render.load_availability() == state:
+        print(f"availability is already {state}; nothing to commit.")
+        return 0
+    render.save_availability(state)
+    render_page(now(), with_modules=False)
+    if commit(render.availability_commit_message(state), paths=[README, STATE_DIR]):
+        push()
+    return 0
 
 
 def write_dispatch(ledger: Ledger, when: datetime) -> str | None:
@@ -391,7 +416,12 @@ def tick() -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--mode", choices=["tick", "dispatch", "refresh", "render", "check", "probe"], default="tick")
+    parser.add_argument(
+        "--mode",
+        choices=["tick", "dispatch", "refresh", "render", "check", "probe", "availability"],
+        default="tick",
+    )
+    parser.add_argument("--status", choices=sorted(render.AVAILABILITY), default=None)
     args = parser.parse_args()
 
     if args.mode == "probe":
@@ -399,15 +429,18 @@ def main() -> int:
 
     if args.mode == "check":
         document = Path(README).read_text(encoding="utf-8")
-        for name in ("TYPING", "DISPATCHES", "MODULES", "CARDS", "UPDATED"):
+        for name in ("TYPING", "AVAILABILITY", "DISPATCHES", "MODULES", "CARDS", "UPDATED"):
             render.read_region(document, name)
-        print("README.md: all five regions intact")
+        print("README.md: all six regions intact")
         return 0
 
     if args.mode == "render":
         render_page(now())
         print("README.md re-rendered from state")
         return 0
+
+    if args.mode == "availability":
+        return set_availability(args.status)
 
     try:
         return run_writing_mode(args.mode)

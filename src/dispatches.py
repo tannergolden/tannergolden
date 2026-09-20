@@ -161,14 +161,7 @@ def mark_failed(exc: BaseException) -> None:
     """
     discard_partial_work()
     render_page(now(), with_modules=False, status=("Failing", "red"))
-    reason = clean(f"{type(exc).__name__}: {exc}")[:240]
-    body = render.wrap_body(
-        f"The run that started at {render.local(now()):%H:%M %Z on %A, %B %d} failed with "
-        f"{reason}. The badge on the page says so until a run succeeds; nothing "
-        f"fetched is in this commit."
-    )
-    message = f"ci(dispatches): \U0001F6A8 mark the last run as failed\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
-    if commit(message, paths=BADGE_PATHS):
+    if commit(render.failure_commit_message(f"{type(exc).__name__}: {exc}", now()), paths=BADGE_PATHS):
         push()
 
 
@@ -178,12 +171,7 @@ def mark_passing() -> None:
     if not status or status == "Passing":
         return
     render_page(now(), with_modules=False)
-    body = render.wrap_body(
-        "An earlier run failed and left the badge red. This run succeeded, so the "
-        "badge says so again. Nothing fetched is in this commit."
-    )
-    message = f"ci(dispatches): \U0001F552 mark the run passing again\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
-    if commit(message, paths=BADGE_PATHS):
+    if commit(render.recovery_commit_message(), paths=BADGE_PATHS):
         push()
 
 
@@ -403,7 +391,7 @@ def tick() -> int:
         if next_dispatch <= next_refresh:
             message = write_dispatch(ledger, moment)
             if message is None:
-                # Leave the schedule alone: the entry is still due, and the
+                # Leave the schedule alone: the dispatch is still due, and the
                 # next run tries again. Stop here so this run cannot spin.
                 return 0
             schedule.reschedule_dispatch(after=moment)
@@ -447,7 +435,7 @@ def main() -> int:
 
 def run_writing_mode(mode: str) -> int:
     if mode == "refresh":
-        # A forced refresh moves the next one the same way a forced entry
+        # A forced refresh moves the next one the same way a forced dispatch
         # does, so the tick after it does not repeat the work an hour later.
         schedule = Schedule()
         moment = now()

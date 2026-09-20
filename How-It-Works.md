@@ -103,10 +103,27 @@ field records that a machine performed the write, so the object is honest
 about both.
 
 Because the author is a person, these commits are not exempt from the commit
-gate in [tannergolden/standards](https://github.com/tannergolden/standards):
-scope required, lowercase subject after an optional emoji, no dash from
-U+2013 to U+2015 anywhere in the message, a body on every commit, a subject
-under 72 characters. The test suite proves every generated message passes it.
+gate in [tannergolden/standards](https://github.com/tannergolden/standards),
+and they hold to the whole of
+[Conventional-Commits.md](https://github.com/tannergolden/standards/blob/Development/docs/distribution/Conventional-Commits.md)
+rather than the part a gate can check. Two test files keep them there:
+`tests/commit-message.py` carries the gate itself, ported, and
+`tests/commit-standard.py` carries the rules the document states and nothing
+enforces, each test naming the section it comes from.
+
+| The standard asks for                            | Every generated commit                                                       |
+| :----------------------------------------------- | :---------------------------------------------------------------------------- |
+| A type from the list, and a required scope       | `feat(unicode)`, `docs(rfc)`, `test(sequence)`, `chore(release)`              |
+| A lowercase subject, imperative, under 72        | Opens with a verb: add, record, solve, continue, note, mark, revisit, correct |
+| One emoji from the row for that type             | Checked against the mapping table, per type                                  |
+| A body on every commit, wrapped at 72            | The dispatch itself, wrapped                                                 |
+| Footers after the body                           | `Source`, `Attribution`, `License`, `Signed-off-by`, in one block            |
+| No dash from U+2013 to U+2015                    | Removed on ingest, before the text can reach a message                       |
+| No AI trailer where no AI contributed            | A generated dispatch carries none                                            |
+
+The footers are one block with no blank line before the sign-off, because git
+parses only the last paragraph as trailers, and provenance in a paragraph of
+its own would not be read as trailers at all.
 
 ---
 
@@ -185,6 +202,8 @@ exception nobody wrote down is a discrepancy somebody will find.
 | A repository holds a stub; the logic lives in `standards`          | The logic lives here, in `src/`                                     | This is a profile, not a pipeline, and its workflow is not reusable by anything else; publishing it from `standards` would bloat a library other repos consume |
 | The rulesets and the standard stubs are applied                     | Neither is applied                                                  | The ruleset would refuse the push above; the stubs gate code this repository does not have. `checks.yml` runs the same lint and tests a contributor runs      |
 | A commit's type carries the intent of the change                   | The type is a genre label for the content                           | Stated above. The exception holds only while this repository cuts no releases and runs no changelog tooling                                                   |
+| A body explains why the change was made, and why this way          | A dispatch body carries the dispatch                                | The why would be the same sentence on every commit of a kind, which is the restatement the standard itself warns against. The footers carry what a reader cannot recover: source, licence, attribution |
+| The body is wrapped at 72 characters                               | A reproduced program is not                                         | A snippet rewrapped is a snippet corrupted. Prose wraps; a fenced block is left as it came and capped at fifteen lines                                          |
 
 Everything else holds: the commit gate, the body on every commit, the
 sign-off, the frontmatter, the header and footer, the em dash ban in every

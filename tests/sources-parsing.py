@@ -249,7 +249,7 @@ def test_release_turns_an_age_into_a_version(repo, fake_net, seeded):
     ]))
     entry = sources.fetch_release(ledger(repo), TODAY)
     assert entry is not None and entry.identifier == "Q171477"
-    assert entry.subject == "v35.0.0, Linux turns 35"
+    assert entry.subject == "note v35.0.0, Linux turns 35"
     assert entry.body == "Family of Unix-like operating systems, released on this date in 1991. It is 35 today, which is the only version number an anniversary gets."
     assert entry.license == "CC0-1.0" and entry.source_url == "https://www.wikidata.org/wiki/Q171477"
     from urllib.parse import unquote_plus

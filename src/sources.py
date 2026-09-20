@@ -588,7 +588,9 @@ def fetch_release(ledger: Ledger, today: date) -> Dispatch | None:
         kind="release",
         commit_type="chore",
         emoji="\U0001F9F9",
-        subject=f"{version}, {turns}",
+        # Imperative mood, like every other kind: the standard asks for a
+        # verb and "Linux turns 35" is not one.
+        subject=f"note {version}, {turns}",
         title=turns,
         body=body,
         identifier=qid,

@@ -93,7 +93,7 @@ def test_a_failed_run_turns_the_badge_red_and_a_good_one_turns_it_back(badge_rep
 
     dispatches.mark_failed(RuntimeError("boom \u2014 with a dash"))
     assert dispatches.badge_status() == "Failing"
-    assert subjects()[0] == "ci(dispatches): \U0001F6A8 mark the last run as failed"
+    assert subjects()[0] == "ci(dispatches): \u2699\ufe0f mark the last run as failed"
     body = subprocess.run(["git", "log", "-1", "--format=%b"], capture_output=True, text=True, check=True).stdout
     assert "RuntimeError: boom - with a dash" in body and "\u2014" not in body
     changed = subprocess.run(["git", "show", "--stat", "--format=", "HEAD"], capture_output=True, text=True, check=True).stdout

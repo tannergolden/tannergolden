@@ -111,8 +111,36 @@ def commit_message(entry: Dispatch) -> str:
     if entry.attribution:
         provenance.append(f"Attribution: {clean(entry.attribution)}")
     provenance.append(f"License: {clean(entry.license)}")
-    parts += ["", *provenance, "", f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>"]
+    # One block, no blank line before the sign-off: git parses only the last
+    # paragraph as trailers, so provenance in a paragraph of its own would
+    # not be read as trailers at all.
+    parts += ["", *provenance, f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>"]
     return "\n".join(parts) + "\n"
+
+
+def failure_commit_message(reason: str, when: datetime) -> str:
+    """The commit that turns the badge red. Its own message, so it can be tested."""
+    body = wrap_body(
+        f"The run that started at {local(when):%H:%M %Z on %A, %B %d} failed with "
+        f"{clean(reason)[:240]}. The badge on the page says so until a run "
+        f"succeeds; nothing fetched is in this commit."
+    )
+    return (
+        f"ci(dispatches): \u2699\ufe0f mark the last run as failed\n\n{body}\n\n"
+        f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>\n"
+    )
+
+
+def recovery_commit_message() -> str:
+    """The commit that turns the badge back, after an earlier run left it red."""
+    body = wrap_body(
+        "An earlier run failed and left the badge red. This run succeeded, so the "
+        "badge says so again. Nothing fetched is in this commit."
+    )
+    return (
+        f"ci(dispatches): \U0001F552 mark the run passing again\n\n{body}\n\n"
+        f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>\n"
+    )
 
 
 def readme_commit_message(when: datetime, changed: list) -> str:

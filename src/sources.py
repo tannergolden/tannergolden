@@ -18,6 +18,7 @@ Every string that leaves a fetcher has been through `text.clean()`.
 from __future__ import annotations
 
 import hashlib
+import html
 import random
 import re
 import urllib.parse
@@ -28,7 +29,7 @@ from typing import Callable
 import net
 from config import REPRODUCE_ROSETTA_CODE
 from state import Ledger
-from text import clamp_snippet, clean
+from text import clamp_snippet, clean, is_clean
 
 _RNG = random.SystemRandom()
 
@@ -82,12 +83,21 @@ def _year_of(value: str) -> str:
 
 UCD = "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
 UCD_BLOCKS = "https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt"
+UCD_AGE = "https://www.unicode.org/Public/UCD/latest/ucd/DerivedAge.txt"
+
+CATEGORY_NAMES = {
+    "Lu": "an uppercase letter", "Ll": "a lowercase letter", "Lt": "a titlecase letter",
+    "Lo": "a letter", "Nd": "a decimal digit", "Nl": "a letter-like numeral", "No": "a number",
+    "Pc": "a connector", "Pd": "a dash", "Ps": "an opening bracket", "Pe": "a closing bracket",
+    "Pi": "an opening quotation mark", "Pf": "a closing quotation mark", "Po": "a punctuation mark",
+    "Sm": "a mathematical symbol", "Sc": "a currency symbol", "Sk": "a modifier symbol", "So": "a symbol",
+}
 
 # Blocks whose characters render in the fonts a browser ships with. Drawing
 # from these four times in five keeps the glyph visible on the page; the fifth
 # draw ranges over everything printable, so the long tail still appears.
 PREFERRED_BLOCKS = {
-    "Latin-1 Supplement", "Latin Extended-A", "Latin Extended-B", "IPA Extensions",
+    "Basic Latin", "Latin-1 Supplement", "Latin Extended-A", "Latin Extended-B", "IPA Extensions",
     "Greek and Coptic", "Cyrillic", "Armenian", "Hebrew", "Arabic", "Runic", "Ogham",
     "General Punctuation", "Currency Symbols", "Letterlike Symbols", "Number Forms",
     "Arrows", "Mathematical Operators", "Miscellaneous Technical", "Control Pictures",
@@ -120,11 +130,35 @@ def _unicode_blocks() -> list:
     return blocks
 
 
+def _codepoint_key(item: tuple) -> str:
+    return f"{item[0]:04X}"
+
+
 def _block_of(blocks: list, codepoint: int) -> str:
     for low, high, name in blocks:
         if low <= codepoint <= high:
             return name
     return "Unassigned"
+
+
+def _unicode_ages() -> list:
+    """(low, high, version) from DerivedAge.txt: the Unicode version each range arrived in."""
+    text = net.get_text(UCD_AGE) or ""
+    ages = []
+    for line in text.splitlines():
+        match = re.match(r"^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*([0-9.]+)", line)
+        if match:
+            low = int(match.group(1), 16)
+            high = int(match.group(2), 16) if match.group(2) else low
+            ages.append((low, high, match.group(3)))
+    return ages
+
+
+def _age_of(ages: list, codepoint: int) -> str:
+    for low, high, version in ages:
+        if low <= codepoint <= high:
+            return version
+    return ""
 
 
 def fetch_unicode(ledger: Ledger, today: date) -> Entry | None:
@@ -134,6 +168,7 @@ def fetch_unicode(ledger: Ledger, today: date) -> Entry | None:
     blocks = _unicode_blocks()
 
     printable = []
+    categories = {}
     for line in text.splitlines():
         fields = line.split(";")
         if len(fields) < 3:
@@ -141,32 +176,47 @@ def fetch_unicode(ledger: Ledger, today: date) -> Entry | None:
         name, category = fields[1], fields[2]
         if category not in PRINTABLE_CATEGORIES or UNINTERESTING_NAME.match(name):
             continue
-        printable.append((int(fields[0], 16), name))
+        codepoint = int(fields[0], 16)
+        if not is_clean(chr(codepoint)):
+            # A dash the commit gate bans, or an invisible: the sanitiser
+            # would rewrite the glyph, and an entry about a character it
+            # cannot show is wrong about the one thing it is for.
+            continue
+        printable.append((codepoint, name))
+        categories[codepoint] = category
     if not printable:
         return None
 
     preferred = [item for item in printable if _block_of(blocks, item[0]) in PREFERRED_BLOCKS]
     pool = preferred if preferred and _RNG.random() < 0.8 else printable
-    chosen = _first_unseen(ledger, "unicode", _shuffled(pool)[:400], key=lambda item: f"{item[0]:04X}")
+    chosen = _first_unseen(ledger, "unicode", _shuffled(pool)[:400], key=_codepoint_key)
+    if chosen is None:
+        # The preferred blocks, or a sample of them, are used up: draw from
+        # everything printable rather than report an empty source.
+        chosen = _first_unseen(ledger, "unicode", _shuffled(printable), key=_codepoint_key)
     if chosen is None:
         return None
 
     codepoint, name = chosen
     glyph = chr(codepoint)
     block = _block_of(blocks, codepoint)
+    version = _age_of(_unicode_ages(), codepoint)
     hexname = f"U+{codepoint:04X}"
     name = clean(name)
+    what = CATEGORY_NAMES.get(categories.get(codepoint, ""), "a character")
+    body = f"{hexname} {name} is {what} in the {block} block"
+    body += f", in Unicode since version {version}." if version else "."
+    body += (
+        f" It renders as {glyph}. In UTF-8 it is the byte sequence "
+        f"{glyph.encode('utf-8').hex(' ').upper()}; in HTML, the entity &#x{codepoint:X};."
+    )
     return Entry(
         kind="unicode",
         commit_type="feat",
         emoji="✨",
         subject=f"add {hexname} {glyph} {name}",
         title=f"{hexname} {glyph} {name}",
-        body=(
-            f"{hexname} is {name}, a character in the {block} block. "
-            f"It renders as {glyph} and was chosen at random from every code point "
-            f"with a descriptive name in the Unicode Character Database."
-        ),
+        body=body,
         identifier=f"{codepoint:04X}",
         source_name="Unicode Character Database",
         source_url=f"https://util.unicode.org/UnicodeJsps/character.jsp?a={codepoint:04X}",
@@ -197,6 +247,36 @@ FAMOUS_RFCS = [
 ]
 
 
+def _html_to_text(value: str) -> str:
+    """The RFC Editor's abstracts arrive as HTML paragraphs; keep the breaks, drop the tags."""
+    text = re.sub(r"</p>\s*<p[^>]*>", "\n\n", value, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "", text)
+    return html.unescape(text)
+
+
+def _rfc_numbers(value) -> list:
+    """RFC numbers out of whatever shape the record uses: 'RFC2068', 2068, or a list of either."""
+    items = value if isinstance(value, list) else ([value] if value else [])
+    found = []
+    for item in items:
+        match = re.search(r"\d+", str(item))
+        if match:
+            found.append(int(match.group()))
+    return sorted(set(found))
+
+
+def _rfc_list(numbers: list) -> str:
+    names = [f"RFC {n}" for n in numbers[:6]]
+    if len(numbers) > 6:
+        names.append(f"{len(numbers) - 6} more")
+    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def _ordinal(n: int) -> str:
+    suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
 def fetch_rfc(ledger: Ledger, today: date) -> Entry | None:
     famous = [n for n in FAMOUS_RFCS if not ledger.seen("rfc", str(n))]
     candidates: list = []
@@ -215,7 +295,7 @@ def fetch_rfc(ledger: Ledger, today: date) -> Entry | None:
         if title.lower() in ("not issued", ""):
             continue
         year = _year_of(str(meta.get("pub_date", "")))
-        abstract = clean(str(meta.get("abstract", "") or ""), allow_newlines=True)
+        abstract = clean(_html_to_text(str(meta.get("abstract", "") or "")), allow_newlines=True)
         authors = ", ".join(clean(str(a)) for a in (meta.get("authors") or []) if a)
         status = clean(str(meta.get("status", "") or "")).lower()
         published = clean(str(meta.get("pub_date", "") or "")) or year
@@ -226,6 +306,17 @@ def fetch_rfc(ledger: Ledger, today: date) -> Entry | None:
         if status:
             opener += f", with the status {status}"
         opener += "."
+        relations = []
+        for key, phrase in (("obsoletes", "obsoletes"), ("obsoleted_by", "is obsoleted by"), ("updates", "updates"), ("updated_by", "is updated by")):
+            numbers = _rfc_numbers(meta.get(key))
+            if numbers:
+                relations.append(f"{phrase} {_rfc_list(numbers)}")
+        if relations:
+            opener += " It " + "; it ".join(relations) + "."
+        pages = re.search(r"\d+", str(meta.get("page_count", "") or ""))
+        if pages and int(pages.group()) > 0:
+            count = int(pages.group())
+            opener += f" It runs to {count} page{'s' if count != 1 else ''}."
         body = opener + ("\n\n" + abstract if abstract else "")
 
         return Entry(
@@ -296,22 +387,35 @@ def fetch_xkcd(ledger: Ledger, today: date) -> Entry | None:
 OEIS_SEARCH = "https://oeis.org/search"
 
 
+# How many sequences each keyword covers, near enough. The search endpoint
+# returns a bare array of ten with no total, so the random offset is drawn
+# against these and shrinks when a page comes back empty.
+OEIS_POOL = {"nice": 8000, "core": 170}
+
+
+def _oeis_results(payload) -> list:
+    """The records in a search response, whichever shape the endpoint answers.
+
+    Today it is a bare JSON array, `null` when nothing matches. The older
+    envelope, `{"count": N, "results": [...]}`, is read the same way.
+    """
+    if isinstance(payload, dict):
+        payload = payload.get("results")
+    return [r for r in (payload or []) if isinstance(r, dict)] if isinstance(payload, list) else []
+
+
 def fetch_sequence(ledger: Ledger, today: date) -> Entry | None:
     keyword = "core" if _RNG.random() < 0.25 else "nice"
-    first = net.get_json(OEIS_SEARCH, {"q": f"keyword:{keyword}", "fmt": "json", "start": 0})
-    if not isinstance(first, dict):
-        return None
-    results = first.get("results") or []
-    count = int(first.get("count") or len(results) or 0)
-    if count <= 0:
-        return None
+    ceiling = OEIS_POOL[keyword]
 
-    for _ in range(4):
-        offset = _RNG.randrange(0, count)
+    for _ in range(5):
+        offset = _RNG.randrange(0, max(ceiling, 1))
         page = net.get_json(OEIS_SEARCH, {"q": f"keyword:{keyword}", "fmt": "json", "start": offset})
-        if not isinstance(page, dict):
+        candidates = _oeis_results(page)
+        if not candidates:
+            # Past the end: the pool is smaller than assumed. Draw lower.
+            ceiling = max(offset // 2, 10)
             continue
-        candidates = [r for r in (page.get("results") or []) if isinstance(r, dict)]
         chosen = _first_unseen(ledger, "sequence", _shuffled(candidates), key=lambda r: r.get("number"))
         if chosen is None:
             continue
@@ -465,10 +569,11 @@ SELECT DISTINCT ?item ?itemLabel ?itemDescription ?date ?links WHERE {{
 """
 
 BORN_QUERY = """
-SELECT DISTINCT ?item ?itemLabel ?itemDescription ?dob ?links WHERE {{
+SELECT DISTINCT ?item ?itemLabel ?itemDescription ?dob ?dod ?links WHERE {{
   VALUES ?occupation {{ wd:Q82594 wd:Q5482740 wd:Q183888 wd:Q210167 }}
   ?item wdt:P31 wd:Q5 ; wdt:P106 ?occupation ; wdt:P569 ?dob ; wikibase:sitelinks ?links ;
         p:P569/psv:P569 [ wikibase:timeValue ?dob ; wikibase:timePrecision 11 ] .
+  OPTIONAL {{ ?item wdt:P570 ?dod . }}
   FILTER(MONTH(?dob) = {month} && DAY(?dob) = {day} && ?links >= 3)
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
 }} ORDER BY DESC(?links) LIMIT 80
@@ -476,7 +581,9 @@ SELECT DISTINCT ?item ?itemLabel ?itemDescription ?dob ?links WHERE {{
 
 
 def _sparql(query: str) -> list:
-    payload = net.get_json(WDQS, {"query": query, "format": "json"})
+    # The query service allows sixty seconds, and a scan of every dated item
+    # for one calendar day can need a fair share of them.
+    payload = net.get_json(WDQS, {"query": query, "format": "json"}, timeout=65)
     if not isinstance(payload, dict):
         return []
     rows = []
@@ -515,7 +622,7 @@ def fetch_release(ledger: Ledger, today: date) -> Entry | None:
     turns = f"{label} turns {age}" if age > 0 else f"{label} is released"
     body = f"{label}{', ' + description if description else ''}, was released on this date in {year}."
     if age > 0:
-        body += f" That makes it {age} today, which is the major version number above: age is the only semver these anniversaries get."
+        body += f" It is {age} today, which is the only version number an anniversary gets."
     return Entry(
         kind="release",
         commit_type="chore",
@@ -540,8 +647,13 @@ def fetch_born(ledger: Ledger, today: date) -> Entry | None:
     name = clean(chosen["itemLabel"])
     description = clean(chosen.get("itemDescription", ""))
     year = _year_of(chosen.get("dob", ""))
+    died = _year_of(chosen.get("dod", ""))
     qid = _qid(chosen["item"])
-    body = f"{name}{', ' + description if description else ''}, was born on this date" + (f" in {year}." if year else ".")
+    body = f"{name}{', ' + description if description else ''}, was born on this date" + (f" in {year}" if year else "") + "."
+    if year and died and int(died) >= int(year):
+        body += f" They died in {died}."
+    elif year and today.year > int(year):
+        body += f" Today is the {_ordinal(today.year - int(year))} anniversary of that."
     return Entry(
         kind="born",
         commit_type="docs",
@@ -649,8 +761,7 @@ def fetch_falsehood(ledger: Ledger, today: date) -> Entry | None:
         emoji="\U0001F41B",
         subject=f"correct what programmers believe about {topic or title}",
         title=title,
-        body=(blurb or f"A catalogue of things programmers believe about {topic or 'the world'} that are not so.")
-        + " Each one is an assumption that held on the machine it was written on and failed on the next.",
+        body=blurb or f"A catalogue of things programmers believe about {topic or 'the world'} that are not so.",
         identifier=url,
         source_name="awesome-falsehood",
         source_url=url,

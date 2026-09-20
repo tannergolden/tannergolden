@@ -53,3 +53,17 @@ def test_nothing_fetched_can_reach_a_run_block():
     text = (ROOT / ".github/workflows/dispatches.yml").read_text(encoding="utf-8")
     for block in re.findall(r"^\s+run: (.*)$", text, flags=re.MULTILINE):
         assert "${{" not in block, block
+
+
+def test_every_writing_workflow_checks_out_the_badge_kit():
+    """render_badges warns and returns when the kit is missing.
+
+    That is the right behaviour for a local run, and silent breakage in CI:
+    the page would embed a badge whose image says one thing and whose alt
+    text says another. A run that can commit a badge must be able to draw it.
+    """
+    root = Path(__file__).resolve().parent.parent
+    for name in ("dispatches.yml", "availability.yml"):
+        text = (root / ".github/workflows" / name).read_text(encoding="utf-8")
+        assert "repository: tannergolden/emblems" in text, name
+        assert "EMBLEMS_KIT:" in text, name

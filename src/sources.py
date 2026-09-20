@@ -27,6 +27,7 @@ from datetime import date
 from typing import Callable
 
 import net
+import phrasing
 from config import REPRODUCE_ROSETTA_CODE
 from state import Ledger
 from text import clamp_snippet, clean, is_clean
@@ -208,10 +209,14 @@ def fetch_unicode(ledger: Ledger, today: date) -> Dispatch | None:
     hexname = f"U+{codepoint:04X}"
     name = clean(name)
     what = CATEGORY_NAMES.get(categories.get(codepoint, ""), "a character")
+    since = f" in Unicode since version {version}" if version else ""
     # The subject and the dispatch heading both carry the name already, so
     # the body opens with what the character is rather than repeating it.
-    body = f"{what[:1].upper()}{what[1:]} in the {block} block"
-    body += f", in Unicode since version {version}." if version else "."
+    body = phrasing.one_of(
+        f"{what[:1].upper()}{what[1:]} in the {block} block{since}.",
+        f"The {block} block holds this one, {what}{since}.",
+        f"{what[:1].upper()}{what[1:]}{since}, filed under {block}.",
+    )
     body += (
         f" It renders as {glyph}. In UTF-8 it is the byte sequence "
         f"{glyph.encode('utf-8').hex(' ').upper()}; in HTML, the entity &#x{codepoint:X};."
@@ -219,8 +224,8 @@ def fetch_unicode(ledger: Ledger, today: date) -> Dispatch | None:
     return Dispatch(
         kind="unicode",
         commit_type="feat",
-        emoji="✨",
-        subject=f"add {hexname} {glyph} {name}",
+        emoji=phrasing.emoji_for("feat"),
+        subject=f"{phrasing.verb_for('unicode')} {hexname} {glyph} {name}",
         title=f"{hexname} {glyph} {name}",
         body=body,
         identifier=f"{codepoint:04X}",
@@ -301,12 +306,18 @@ def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
         status = clean(str(meta.get("status", "") or "")).lower()
         published = clean(str(meta.get("pub_date", "") or "")) or year
 
-        said = []
-        if published:
-            said.append(f"Published in {published}")
-        if status:
-            said.append(f"with the status {status}")
-        opener = ", ".join(said) + "." if said else "One of the Request for Comments series."
+        if published and status:
+            opener = phrasing.one_of(
+                f"Published in {published}, with the status {status}.",
+                f"{published}, status {status}.",
+                f"Carries the status {status}, published in {published}.",
+            )
+        elif published:
+            opener = f"Published in {published}."
+        elif status:
+            opener = f"Carries the status {status}."
+        else:
+            opener = "One of the Request for Comments series."
         relations = []
         for key, phrase in (("obsoletes", "obsoletes"), ("obsoleted_by", "is obsoleted by"), ("updates", "updates"), ("updated_by", "is updated by")):
             numbers = _rfc_numbers(meta.get(key))
@@ -323,8 +334,8 @@ def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
         return Dispatch(
             kind="rfc",
             commit_type="docs",
-            emoji="\U0001F4DD",
-            subject=f"record RFC {n}, {title}",
+            emoji=phrasing.emoji_for("docs"),
+            subject=f"{phrasing.verb_for('rfc')} RFC {n}, {title}",
             title=f"RFC {n}: {title}",
             body=body,
             identifier=str(n),
@@ -385,11 +396,16 @@ def fetch_sequence(ledger: Ledger, today: date) -> Dispatch | None:
         return Dispatch(
             kind="sequence",
             commit_type="test",
-            emoji="\U0001F9EA",
-            subject=f"continue {puzzle}",
+            emoji=phrasing.emoji_for("test"),
+            subject=f"{phrasing.verb_for('sequence')} {puzzle}",
             title=f"{puzzle}, what comes next?",
             body=(
-                f"The next term is {answer}. This is {a_number}, {name}"
+                phrasing.one_of(
+                    f"The next term is {answer}.",
+                    f"{answer} comes next.",
+                    f"It continues {answer}.",
+                )
+                + f" This is {a_number}, {name}"
                 + ("" if name.endswith(".") else ".")
             ),
             spoiler=True,
@@ -474,19 +490,24 @@ def fetch_rosetta(ledger: Ledger, today: date) -> Dispatch | None:
         highlight, code = solutions[language]
         snippet, trimmed = clamp_snippet(code)
         again = task in used_tasks
-        verb = "rewrite" if again else "solve"
+        verb = phrasing.verb_for("rosetta-again" if again else "rosetta")
         title = clean(task)
         slug = urllib.parse.quote(task.replace(" ", "_"), safe="_/")
         permalink = f"{ROSETTA_PAGE}?title={slug}&oldid={revid}" if revid else f"https://rosettacode.org/wiki/{slug}"
         count = len(solutions)
-        body = f"Rosetta Code carries {count} solution{'s' if count != 1 else ''} to this task. This is the {clean(language)} one"
+        plural = "s" if count != 1 else ""
+        body = phrasing.one_of(
+            f"Rosetta Code carries {count} solution{plural} to this task. This is the {clean(language)} one",
+            f"One of {count} solution{plural} the task has on Rosetta Code, this one in {clean(language)}",
+            f"{count} language{plural} solve this task on Rosetta Code. Here it is in {clean(language)}",
+        )
         body += ", shown again in a language this page has not used for it before." if again else "."
         if not REPRODUCE_ROSETTA_CODE:
             body += " The code is at the link; this entry cites rather than reproduces it."
         return Dispatch(
             kind="rosetta",
             commit_type="refactor",
-            emoji="♻️",
+            emoji=phrasing.emoji_for("refactor"),
             subject=f"{verb} {title} in {clean(language)}",
             title=f"{title}, {'now' if again else 'solved'} in {clean(language)}",
             body=body,
@@ -549,8 +570,8 @@ def fetch_bug(ledger: Ledger, today: date) -> Dispatch | None:
     return Dispatch(
         kind="bug",
         commit_type="fix",
-        emoji="\U0001F41B",
-        subject=f"revisit {name}",
+        emoji=phrasing.emoji_for("fix"),
+        subject=f"{phrasing.verb_for('bug')} {name}",
         title=name,
         body=excerpt,
         identifier=identifier,
@@ -593,8 +614,8 @@ def fetch_falsehood(ledger: Ledger, today: date) -> Dispatch | None:
     return Dispatch(
         kind="falsehood",
         commit_type="fix",
-        emoji="\U0001F41B",
-        subject=f"correct what programmers believe about {topic or title}",
+        emoji=phrasing.emoji_for("fix"),
+        subject=f"{phrasing.verb_for('falsehood')} what programmers believe about {topic or title}",
         title=title,
         body=blurb or f"A catalogue of things programmers believe about {topic or 'the world'} that are not so.",
         identifier=url,

@@ -25,6 +25,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import phrasing
 from config import (
     AUTHOR_EMAIL,
     AUTHOR_NAME,
@@ -147,12 +148,19 @@ def readme_commit_message(when: datetime, changed: list) -> str:
     stamp = local(when).strftime("%A, %B %d, %Y at %H:%M %Z")
     what = ", ".join(changed) if changed else "the page"
     body = wrap_body(
-        f"Refreshed {what} on {stamp}. The moment was drawn from the same "
-        "exponential distribution as a dispatch, so this lands at an "
-        "unremarkable hour rather than on a cron boundary. Nothing outside the "
-        "marked regions was read or written."
+        phrasing.one_of(
+            f"Refreshed {what} on {stamp}.",
+            f"{what[:1].upper()}{what[1:]}, as of {stamp}.",
+            f"On {stamp}, this run refreshed {what}.",
+        )
+        + " The moment was drawn from the same exponential distribution as a "
+        "dispatch, so this lands at an unremarkable hour rather than on a cron "
+        "boundary. Nothing outside the marked regions was read or written."
     )
-    return f"chore(readme): \U0001F9F9 refresh the page\n\n{body}\n\nSigned-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>\n"
+    return (
+        f"chore(readme): {phrasing.emoji_for('chore')} {phrasing.verb_for('readme')} the page\n\n"
+        f"{body}\n\nSigned-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>\n"
+    )
 
 
 # --- the archive ------------------------------------------------------------------

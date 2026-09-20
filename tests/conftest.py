@@ -116,9 +116,11 @@ def seeded(monkeypatch):
     import random
 
     import modules
+    import phrasing
     import sources
 
     rng = random.Random(7)  # noqa: S311 - a test seed
     monkeypatch.setattr(sources, "_RNG", rng)
+    monkeypatch.setattr(phrasing, "_RNG", rng)
     monkeypatch.setattr(modules, "_RNG", rng)
     return rng

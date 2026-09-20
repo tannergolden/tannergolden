@@ -125,6 +125,22 @@ The footers are one block with no blank line before the sign-off, because git
 parses only the last paragraph as trailers, and provenance in a paragraph of
 its own would not be read as trailers at all.
 
+**The wording varies, inside those rules.** Every dispatch of a kind used to
+open with the same verb and wear the same emoji, so a screen of `git log`
+read as one sentence with the nouns swapped: add, add, add, add. The content
+was never repeated; the sentence around it always was.
+[`src/phrasing.py`](src/phrasing.py) holds a pool of bare imperatives per
+kind, the three emoji the mapping table lists for each type, and several
+phrasings for the opening clause of a body. All three are drawn from the
+same entropy source as the timing.
+
+Widening a pool is the obvious way to break the standard by accident, so the
+test redraws every kind eighty times and runs all seven rules over every
+result. It also asserts that the emoji pools are exactly the mapping table's
+rows and that every verb is a bare imperative, and that the two commits the
+workflow writes about itself do **not** vary: those are status markers, and a
+person greps for them.
+
 ---
 
 ## 📚 The Sources

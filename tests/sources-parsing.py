@@ -14,6 +14,7 @@ from __future__ import annotations
 import re
 from datetime import date
 
+import phrasing
 import sources
 from state import Ledger
 
@@ -60,13 +61,15 @@ def test_unicode_picks_a_printable_named_character(repo, fake_net, seeded):
         led.remember("unicode", used)
     entry = sources.fetch_unicode(led, TODAY)
     assert entry is not None and entry.identifier == "2603"
-    assert entry.subject == "add U+2603 ☃ SNOWMAN"
-    # The heading and the subject both carry the name; the body says what it is.
-    assert entry.body == (
-        "A symbol in the Miscellaneous Symbols block, in Unicode since version 1.1. "
-        "It renders as ☃. In UTF-8 it is the byte sequence E2 98 83; in HTML, the entity &#x2603;."
-    )
+    verb, _, rest = entry.subject.partition(" ")
+    assert verb in phrasing.VERBS["unicode"]
+    assert rest == "U+2603 ☃ SNOWMAN"
+    # The heading and the subject both carry the name, so the body says what it
+    # is instead, in one of several phrasings. The facts are the invariant.
     assert not entry.body.startswith("U+2603")
+    for fact in ("Miscellaneous Symbols", "version 1.1", "renders as ☃",
+                 "E2 98 83", "&#x2603;", "symbol"):
+        assert fact in entry.body, fact
     assert_well_formed(entry)
 
 
@@ -105,9 +108,11 @@ def test_rfc_reads_the_editor_record(repo, fake_net, seeded):
     entry = sources.fetch_rfc(ledger(repo), TODAY)
     assert entry is not None
     n = int(entry.identifier)
-    assert entry.subject.startswith(f"record RFC {n}, Title Of {n} - With A Dash")
-    assert entry.body.startswith("Published in April 1998, with the status informational.")
+    verb, _, rest = entry.subject.partition(" ")
+    assert verb in phrasing.VERBS["rfc"]
+    assert rest.startswith(f"RFC {n}, Title Of {n} - With A Dash")
     assert not entry.body.startswith(f"RFC {n}")
+    assert "April 1998" in entry.body and "informational" in entry.body
     assert "It is obsoleted by RFC 7168 and RFC 7169; it updates RFC 2068. It runs to 10 pages." in entry.body
     assert entry.body.endswith(f"The abstract of {n}.\n\nSecond & last.") and "<p>" not in entry.body
     assert entry.attribution == "L. Masinter"
@@ -135,7 +140,8 @@ def test_sequence_shows_eight_terms_and_answers_with_the_ninth(repo, fake_net, s
     led.remember("sequence", "40")
     entry = sources.fetch_sequence(led, TODAY)
     assert entry is not None and entry.identifier == "45"
-    assert entry.subject == "continue 0, 1, 1, 2, 3, 5, 8, 13"
+    verb, _, rest = entry.subject.partition(" ")
+    assert verb in phrasing.VERBS["sequence"] and rest == "0, 1, 1, 2, 3, 5, 8, 13"
     assert entry.title == "0, 1, 1, 2, 3, 5, 8, 13, what comes next?"
     # The question is the title and the answer is the body, which the
     # page folds away so the page still poses a puzzle.
@@ -206,9 +212,11 @@ def test_rosetta_extracts_every_solution_and_cites_the_revision(repo, fake_net, 
     languages = {i.split("|", 1)[1] for i in seen}
     assert {"COBOL", "Zig`x", "Python", "C sharp"} <= languages
     cobol = next(e for i, e in seen.items() if i.endswith("|COBOL"))
-    # The tail differs once the task has been shown before, which it has
-    # by the time this loop reaches COBOL.
-    assert cobol.body.startswith("Rosetta Code carries 4 solutions to this task. This is the COBOL one")
+    # Three phrasings, and a different tail once the task has been shown
+    # before, which it has by the time this loop reaches COBOL. What every
+    # phrasing carries is the count and the language.
+    assert "4 " in cobol.body and "COBOL" in cobol.body
+    assert "Rosetta Code" in cobol.body
     assert cobol.code.startswith("       IDENTIFICATION DIVISION.")
     assert cobol.code_language == "cobol"
     assert cobol.source_url.endswith("index.php?title=FizzBuzz&oldid=12345") or "Sorting_algorithms/Bubble_sort&oldid=12345" in cobol.source_url
@@ -226,7 +234,8 @@ def test_rosetta_revisits_a_task_in_a_new_language(repo, fake_net, seeded):
     led.remember("rosetta", "Sorting algorithms/Bubble sort|COBOL")
     entry = sources.fetch_rosetta(led, TODAY)
     assert entry is not None and entry.identifier.split("|")[1] != "COBOL"
-    assert entry.subject.startswith("rewrite ") and ", now in " in entry.title
+    assert entry.subject.split(" ")[0] in phrasing.VERBS["rosetta-again"]
+    assert ", now in " in entry.title
 
 
 def test_rosetta_can_cite_without_reproducing(repo, fake_net, seeded, monkeypatch):
@@ -259,7 +268,8 @@ def test_bug_reads_the_list_and_strips_the_markup(repo, fake_net, seeded):
     assert {e.title for e in seen} == {"Mars Climate Orbiter", "Therac-25"}
     orbiter = next(e for e in seen if e.title == "Mars Climate Orbiter")
     assert orbiter.body == "The Mars Climate Orbiter was lost in 1999 because one team used pound-force seconds while another used newton-seconds. It burned up."
-    assert orbiter.subject == "revisit Mars Climate Orbiter"
+    verb, _, rest = orbiter.subject.partition(" ")
+    assert verb in phrasing.VERBS["bug"] and rest == "Mars Climate Orbiter"
     assert orbiter.source_url.endswith("oldid=777")
     assert led.retired == {"bug"}  # the third call found nothing left and retired the kind
     for entry in seen:
@@ -282,7 +292,9 @@ def test_falsehood_reads_the_list(repo, fake_net, seeded):
     entry = sources.fetch_falsehood(led, TODAY)
     assert entry is not None
     assert entry.identifier == "https://infiniteundo.com/post/25326999628/"
-    assert entry.subject == "correct what programmers believe about Time"
+    verb, _, rest = entry.subject.partition(" ")
+    assert verb in phrasing.VERBS["falsehood"]
+    assert rest == "what programmers believe about Time"
     assert entry.body == "A classic - with a dash."
     led.remember("falsehood", entry.identifier)
     assert sources.fetch_falsehood(led, TODAY) is None and led.retired == {"falsehood"}

@@ -94,4 +94,9 @@ def test_body_is_wrapped_at_72():
 def test_refresh_message_passes_too():
     message = readme_commit_message(now(), ["the cards", "the Show HN post"])
     assert problems_for(message) == []
-    assert message.startswith("chore(readme): \U0001F9F9 refresh the page\n\n")
+    import phrasing
+
+    header = message.split("\n", 1)[0]
+    emoji, _, subject = header.removeprefix("chore(readme): ").partition(" ")
+    assert emoji in phrasing.EMOJI["chore"]
+    assert subject.split(" ")[0] in phrasing.VERBS["readme"] and subject.endswith(" the page")

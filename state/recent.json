@@ -1,5 +1,13 @@
 [
   {
+    "at": "2026-09-20T13:28:32.755631+00:00",
+    "type": "docs",
+    "scope": "xkcd",
+    "title": "xkcd 1983: Clutter",
+    "path": "journal/2026/09.md",
+    "anchor": "entry-20260920-092832"
+  },
+  {
     "at": "2026-09-20T13:28:30.938244+00:00",
     "type": "test",
     "scope": "sequence",

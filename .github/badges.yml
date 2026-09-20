@@ -61,7 +61,7 @@ badges:
     link: https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml
   - name: month
     label: Entries
-    message: '1 this month'
+    message: '2 this month'
     label_color: gold
     message_color: green
     icon: commit

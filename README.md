@@ -57,13 +57,14 @@ follows.
 <!-- JOURNAL:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=0268edf2)](journal/2026/09.md)
+[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=1228ef48)](journal/2026/09.md)
 
 | Time | Commit | Entry |
 | :--- | :--- | :--- |
+| 09:28 | `docs(xkcd)` | [xkcd 1983: Clutter](journal/2026/09.md#entry-20260920-092832) |
 | 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](journal/2026/09.md#entry-20260920-092830) |
 
-[Full journal](journal/) · [How it works](How-It-Works.md) · 1 entry in September
+[Full journal](journal/) · [How it works](How-It-Works.md) · 2 entries in September
 <!-- JOURNAL:END -->
 
 <!-- MODULES:BEGIN -->

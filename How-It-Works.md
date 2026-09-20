@@ -33,6 +33,12 @@ again. When nothing is due, the run ends in seconds.
 A moment already in the past, because GitHub skipped or delayed a cron, is
 handled at once. The entry lands late rather than never.
 
+The workflow can also be run by hand from the Actions tab: `tick` does what
+the cron does, `entry` writes one entry now, `refresh` rewrites the page now.
+Run on any branch but the default one, it does everything except push, and
+reports the commits it made in the run summary, so a change can be rehearsed
+before it merges.
+
 There is no bot. The commits are made by GitHub Actions, in a workflow I wrote
 and scheduled, and every one of them is authored by me.
 

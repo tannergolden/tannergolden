@@ -4,6 +4,7 @@
 """The entry point the workflow runs. One run handles whatever is due this hour.
 
     python3 src/journal.py --mode tick      # the hourly run (default)
+    python3 src/journal.py --mode entry     # write one entry now, whatever the schedule says
     python3 src/journal.py --mode refresh   # refresh the page now, on demand
     python3 src/journal.py --mode render    # re-render the page from state, offline
     python3 src/journal.py --mode check     # verify the page's regions, write nothing
@@ -83,6 +84,7 @@ def push() -> None:
     branch = git("rev-parse", "--abbrev-ref", "HEAD").strip()
     if os.environ.get("JOURNAL_NO_PUSH") == "1":
         print(f"push skipped by JOURNAL_NO_PUSH (branch {branch})")
+        report_unpushed(branch)
         return
     delay = 2
     for attempt in range(1, 6):
@@ -97,6 +99,22 @@ def push() -> None:
                 raise
             time.sleep(delay)
             delay *= 2
+
+
+def report_unpushed(branch: str) -> None:
+    """Write the commits a rehearsal made, but did not push, to the run summary.
+
+    A dispatch on a branch other than the default one does everything except
+    push, so the maintainer reads the result here rather than merging state
+    files that the hourly runs on the default branch have moved on from.
+    """
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary:
+        return
+    log = git("log", "--stat", "--format=full", f"origin/{branch}..HEAD", check=False)
+    with open(summary, "a", encoding="utf-8") as handle:
+        handle.write("### \U0001F4D3 Rehearsal: committed locally, not pushed\n\n")
+        handle.write("```text\n" + (log.strip() or "nothing to report") + "\n```\n")
 
 
 # --- badges -----------------------------------------------------------------------
@@ -266,7 +284,7 @@ def tick() -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--mode", choices=["tick", "refresh", "render", "check"], default="tick")
+    parser.add_argument("--mode", choices=["tick", "entry", "refresh", "render", "check"], default="tick")
     args = parser.parse_args()
 
     if args.mode == "check":
@@ -282,7 +300,30 @@ def main() -> int:
         return 0
 
     if args.mode == "refresh":
-        if commit(refresh_page(Ledger(), now())):
+        # A forced refresh moves the next one the same way a forced entry
+        # does, so the tick after it does not repeat the work an hour later.
+        schedule = Schedule()
+        moment = now()
+        message = refresh_page(Ledger(), moment)
+        schedule.reschedule_refresh(after=moment)
+        if commit(message):
+            push()
+        return 0
+
+    if args.mode == "entry":
+        # One entry, now. The next moment is still drawn from the
+        # distribution, so a forced entry moves the schedule the same way a
+        # random one does rather than leaving a stale due time behind it.
+        schedule = Schedule()
+        moment = now()
+        message = write_entry(Ledger(), moment)
+        if message is None:
+            return 1
+        # The refresh is left alone on purpose. On a fresh deployment it has
+        # no moment yet, which reads as due, so the next tick refreshes the
+        # page within the hour rather than after a full draw.
+        schedule.reschedule_entry(after=moment)
+        if commit(message):
             push()
         return 0
 

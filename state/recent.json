@@ -1,5 +1,13 @@
 [
   {
+    "at": "2026-09-20T17:27:40.021536+00:00",
+    "type": "test",
+    "scope": "sequence",
+    "title": "0, 1, 5, 14, 30, 55, 91, 140, what comes next?",
+    "path": "dispatches/2026/September.md",
+    "anchor": "dispatch-20260920-132740"
+  },
+  {
     "at": "2026-09-20T13:28:34.271291+00:00",
     "type": "feat",
     "scope": "unicode",

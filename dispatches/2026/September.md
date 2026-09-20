@@ -48,3 +48,22 @@ since version 3.1. It renders as 𐌰. In UTF-8 it is the byte sequence F0
 Source: [Unicode Character Database](https://util.unicode.org/UnicodeJsps/character.jsp?a=10330) · License: Unicode-3.0
 
 ---
+## Sunday, September 20, 2026
+
+<a name="dispatch-20260920-132740"></a>
+
+### 🧫 0, 1, 5, 14, 30, 55, 91, 140, what comes next?
+
+`test(sequence)` · 13:27 EDT
+
+<details>
+<summary>The answer</summary>
+
+204 comes next. This is A000330, Square pyramidal numbers: a(n) = 0^2 +
+1^2 + 2^2 + ... + n^2 = n*(n+1)*(2*n+1)/6.
+
+</details>
+
+_[OEIS](https://oeis.org/A000330) · CC-BY-SA-4.0_
+
+---

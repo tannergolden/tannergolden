@@ -65,14 +65,15 @@ account follows.
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=3465b94a)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
+| 13:27 | `test(sequence)` | [0, 1, 5, 14, 30, 55, 91, 140, what comes next?](dispatches/2026/September.md#dispatch-20260920-132740) |
 | 09:28 | `feat(unicode)` | [U+10330 𐌰 GOTHIC LETTER AHSA](dispatches/2026/September.md#dispatch-20260920-092834) |
 | 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](dispatches/2026/September.md#dispatch-20260920-092830) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 2 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 3 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -148,7 +149,7 @@ Dispatch sources: Unicode · RFC Editor · OEIS (CC BY-SA) · Rosetta Code (GFDL
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 10:14 EDT on Sunday, September 20, 2026.
+Last updated 13:27 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

@@ -31,7 +31,7 @@ How the entries are chosen, timed and attributed is in [How it works](../How-It-
 <!-- MONTHS:BEGIN -->
 | Month | Entries |
 | :--- | ---: |
-| [September 2026](2026/09.md) | 2 |
+| [September 2026](2026/09.md) | 3 |
 <!-- MONTHS:END -->
 
 ---

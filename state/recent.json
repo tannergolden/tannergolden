@@ -1,5 +1,13 @@
 [
   {
+    "at": "2026-09-20T13:28:34.271291+00:00",
+    "type": "feat",
+    "scope": "unicode",
+    "title": "U+10330 𐌰 GOTHIC LETTER AHSA",
+    "path": "journal/2026/09.md",
+    "anchor": "entry-20260920-092834"
+  },
+  {
     "at": "2026-09-20T13:28:32.755631+00:00",
     "type": "docs",
     "scope": "xkcd",

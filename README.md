@@ -48,12 +48,8 @@ pinned to commit SHAs, and rules a gate checks on every change.
 
 ## 📡 Dispatches
 
-What changed in the last two weeks, at intervals nobody chose: a release worth upgrading to, an
-advisory worth patching, a version about to stop getting fixes, a standard just published, a post
-worth the click. Primary sources only, and a quiet week shows a quiet page rather than filler.
-
-A workflow assembles this from sources I do not control and commits it unattended, authored by me.
-[How it works](How-It-Works.md).
+Developer news, at intervals nobody chose. A workflow assembles it from
+sources I do not control and commits it unattended, authored by me. [How it works](How-It-Works.md).
 
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026

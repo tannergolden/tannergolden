@@ -1,5 +1,5 @@
 <!--
-title: '👋 HI, I'M TANNER GOLDEN'
+title: "👋 HI, I'M TANNER GOLDEN"
 description: 'Profile README for @tannergolden: what I work on, a journal this page writes for itself, the core repositories and how they fit together, and how to get in touch.'
 tags: [profile, ai-research, systems-engineering, automation]
 category: profile
@@ -19,8 +19,8 @@ _Build it so the right way is the only easy way._
 
 <!-- TYPING:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/typing-dark.svg?v=cee58506">
-  <img alt="AI research &amp; systems engineering / reproducible by construction / least-privilege CI, pinned to the SHA / standards that outlast their author" src="assets/typing-light.svg?v=03f89dbb">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/typing-dark.svg?v=b2d8e081">
+  <img alt="AI research &amp; systems engineering / reproducible by construction / least-privilege CI, pinned to the SHA / standards that outlast their author" src="assets/typing-light.svg?v=3654606b">
 </picture>
 <!-- TYPING:END -->
 
@@ -57,7 +57,7 @@ follows.
 <!-- JOURNAL:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Journal workflow status](assets/badges/dynamic/journal.svg)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg)](journal/2026/09.md)
+[![Journal workflow status](assets/badges/dynamic/journal.svg)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg)](journal/)
 
 _No entries yet. The first one lands at a random moment within the next twelve hours or so; nothing here is on a schedule._
 
@@ -129,7 +129,7 @@ Rosetta Code (GFDL) · Wikipedia (CC BY-SA) · tldr-pages (CC BY) · Hacker News
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 01:56 EDT on Sunday, September 20, 2026.
+Last updated 02:54 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

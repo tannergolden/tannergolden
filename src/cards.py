@@ -65,6 +65,29 @@ def _svg_header(width: int, height: int, title: str, theme: dict) -> str:
 
 # --- the typing header ----------------------------------------------------------
 
+def _keyframes(index: int, phrase: str, slot: float, cycle: float, char: float) -> tuple:
+    """The shared timeline for one phrase: (keyTimes, typed widths).
+
+    The clip rectangle and the cursor both follow these, so they are computed
+    once and the two cannot drift apart. Consecutive equal times collapse,
+    which is what keeps the first phrase's opening frame from repeating and
+    the last phrase's closing frame from running past 1.0.
+    """
+    type_seconds, hold_seconds = 1.6, 2.2
+    start = (index * slot) / cycle
+    typed = (index * slot + type_seconds) / cycle
+    held = (index * slot + type_seconds + hold_seconds) / cycle
+    erased = ((index + 1) * slot) / cycle
+    width = len(phrase) * char + 2
+    keys, values = [], []
+    for time, value in [(0.0, 0.0), (start, 0.0), (typed, width), (held, width), (erased, 0.0), (1.0, 0.0)]:
+        if keys and abs(time - keys[-1]) < 1e-9:
+            continue
+        keys.append(time)
+        values.append(value)
+    return keys, values, start, erased
+
+
 def typing_svg(phrases: list, theme: dict) -> str:
     """Phrases typed and erased in turn, in pure SMIL, looping in sync.
 
@@ -77,44 +100,24 @@ def typing_svg(phrases: list, theme: dict) -> str:
     font_size = 20
     char = font_size * 0.61
     height = 40
-    longest = max(len(p) for p in phrases)
-    width = int(longest * char) + 24
-
-    type_seconds = 1.6
-    hold_seconds = 2.2
-    erase_seconds = 0.9
-    slot = type_seconds + hold_seconds + erase_seconds
+    width = int(max(len(p) for p in phrases) * char) + 24
+    slot = 1.6 + 2.2 + 0.9  # type, hold, erase
     cycle = slot * len(phrases)
+    dur = f'dur="{cycle:.1f}s" repeatCount="indefinite"'
 
+    frames = [_keyframes(i, p, slot, cycle, char) for i, p in enumerate(phrases)]
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="t">',
         f"<title id=\"t\">{escape(' / '.join(phrases))}</title>",
         "<defs>",
     ]
-    for index, phrase in enumerate(phrases):
-        start = (index * slot) / cycle
-        typed = (index * slot + type_seconds) / cycle
-        held = (index * slot + type_seconds + hold_seconds) / cycle
-        erased = ((index + 1) * slot) / cycle
-        text_width = len(phrase) * char + 2
-        frames = [(0.0, 0.0), (start, 0.0), (typed, text_width), (held, text_width), (erased, 0.0), (1.0, 0.0)]
-        keys, values = [], []
-        for time, value in frames:
-            if keys and abs(time - keys[-1]) < 1e-9:
-                continue
-            keys.append(time)
-            values.append(value)
+    for index, (keys, values, _, _) in enumerate(frames):
         key_times = ";".join(f"{k:.4f}" for k in keys)
         widths = ";".join(f"{v:.1f}" for v in values)
-        visible = ";".join("1" if 0 < v else "0" for v in values)
         out.append(
             f'<clipPath id="c{index}"><rect x="0" y="0" width="0" height="{height}">'
-            f'<animate attributeName="width" values="{widths}" keyTimes="{key_times}" dur="{cycle:.1f}s" repeatCount="indefinite"/>'
+            f'<animate attributeName="width" values="{widths}" keyTimes="{key_times}" {dur}/>'
             "</rect></clipPath>"
-        )
-        out.append(f'<!-- cursor keyframes for phrase {index} -->')
-        out.append(
-            f'<g id="k{index}" data-x="{widths}" data-keys="{key_times}" data-visible="{visible}"/>'
         )
     out.append("</defs>")
     out.append(f'<style>text{{font-family:{FONT};font-size:{font_size}px;fill:{theme["ink"]}}}</style>')
@@ -123,26 +126,14 @@ def typing_svg(phrases: list, theme: dict) -> str:
         out.append(f'<text x="8" y="27" clip-path="url(#c{index})">{escape(phrase)}</text>')
 
     # The cursor follows the typed width of whichever phrase is active.
-    for index, phrase in enumerate(phrases):
-        start = (index * slot) / cycle
-        typed = (index * slot + type_seconds) / cycle
-        held = (index * slot + type_seconds + hold_seconds) / cycle
-        erased = ((index + 1) * slot) / cycle
-        text_width = len(phrase) * char + 2
-        frames = [(0.0, 0.0), (start, 0.0), (typed, text_width), (held, text_width), (erased, 0.0), (1.0, 0.0)]
-        keys, xs, on = [], [], []
-        for time, value in frames:
-            if keys and abs(time - keys[-1]) < 1e-9:
-                continue
-            keys.append(time)
-            xs.append(value + 9)
-            on.append("1" if start <= time < erased or (index == 0 and time == 0.0) else "0")
+    for index, (keys, values, start, erased) in enumerate(frames):
         key_times = ";".join(f"{k:.4f}" for k in keys)
+        xs = ";".join(f"{v + 9:.1f}" for v in values)
+        on = ";".join("1" if start <= k < erased or (index == 0 and k == 0.0) else "0" for k in keys)
         out.append(
-            f'<g opacity="0"><animate attributeName="opacity" values="{";".join(on)}" keyTimes="{key_times}" '
-            f'calcMode="discrete" dur="{cycle:.1f}s" repeatCount="indefinite"/>'
+            f'<g opacity="0"><animate attributeName="opacity" values="{on}" keyTimes="{key_times}" calcMode="discrete" {dur}/>'
             f'<rect y="9" width="{int(char * 0.8)}" height="{font_size + 2}" fill="{theme["ink"]}">'
-            f'<animate attributeName="x" values="{";".join(f"{x:.1f}" for x in xs)}" keyTimes="{key_times}" dur="{cycle:.1f}s" repeatCount="indefinite"/>'
+            f'<animate attributeName="x" values="{xs}" keyTimes="{key_times}" {dur}/>'
             '<animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" repeatCount="indefinite"/>'
             "</rect></g>"
         )

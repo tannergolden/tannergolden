@@ -83,6 +83,39 @@ def test_the_state_round_trips_through_its_own_file(repo):
         render.save_availability("looking")
 
 
+def test_the_body_carries_a_why_and_not_a_restatement(repo):
+    """The Body Is Not Optional, from the commit standard.
+
+    "fix login bug" is the document's Bad example because it restates the
+    type and the scope without adding anything. A generated body is the
+    easiest place in a repository to make exactly that mistake, and no gate
+    checks for it: commit-check.py reads the header and never the body.
+
+    Both whys this commit can give are real. Why the status is stated at
+    all, since nothing on the page implies it, and why a workflow writes it
+    rather than a person, since the region is rewritten on every render.
+    """
+    for state in render.AVAILABILITY:
+        for _ in range(40):
+            message = render.availability_commit_message(state)
+            header, _, rest = message.partition("\n\n")
+            body = rest.rsplit("\n\nSigned-off-by:", 1)[0]
+
+            # Two paragraphs: what this is for, and why it is written this way.
+            assert body.count("\n\n") == 1, body
+            assert len(body.split()) > 30, "a body this short cannot be a why"
+
+            # The subject's own verb must not be the body's opening move.
+            verb = header.split(" ")[2]
+            assert not body.lower().startswith(verb), body
+
+            # Flattened, because the body is wrapped at 72 and a phrase
+            # worth asserting on is longer than what fits on one line.
+            flat = " ".join(body.split())
+            assert any(w in flat for w in ("infer", "only its author knows", "invites the reader")), flat
+            assert "render" in flat and ("workflow" in flat or "region" in flat), flat
+
+
 def test_the_commit_message_holds_to_the_house_standard(repo):
     from importlib.util import module_from_spec, spec_from_file_location
 

@@ -514,20 +514,43 @@ def render_availability_region(state: str) -> str:
 
 
 def availability_commit_message(state: str) -> str:
-    """A hand-triggered change to the page, so it reads like one."""
+    """A hand-triggered change to the page, so it reads like one.
+
+    The body carries a why rather than a restatement, per The Body Is Not
+    Optional in the commit standard. The what is already in the subject,
+    and a body that repeats it is the failure that section is written
+    against. Two whys are available to a generated commit here, and both
+    are real: why the status is stated at all, and why a workflow writes
+    it rather than a person editing the page.
+    """
     label = AVAILABILITY[state][0].lower()
     header = fit_subject("docs", "availability", phrasing.emoji_for("docs"),
                          f"{phrasing.verb_for('availability')} {label}")
-    body = phrasing.one_of(
-        f"The profile now reads {label}.",
-        f"{label.capitalize()}, as of this commit.",
-        f"The availability line says {label} from here.",
+    why = phrasing.one_of(
+        f"The badge now reads {label}. Nobody can infer that from the rest "
+        "of this page: commit activity says nothing about whether its author "
+        "is looking for work, and a reader guessing from it would be wrong "
+        "in both directions.",
+        f"{label.capitalize()}, from this commit. Everything else here "
+        "reports what other people published; this line reports something "
+        "only its author knows, which is why it is picked from a dropdown "
+        "rather than derived from anything.",
+        f"The availability badge now reads {label}. It is stated rather "
+        "than left unsaid, because a profile silent on this invites the "
+        "reader to guess, and a guess is wrong about as often as it is "
+        "right.",
     )
-    body += (
-        " Set by hand from the Actions tab and nothing else writes this line,"
-        " so it is current until it is changed again."
+    how = phrasing.one_of(
+        "The workflow writes it rather than a person editing the page, "
+        "because the availability region is machine owned and the next "
+        "render would discard a hand edit.",
+        "It goes through the workflow because a hand edit inside a "
+        "machine-owned region survives exactly until the next render.",
+        "A person picks the value and the workflow writes it, since "
+        "anything typed into that region directly is overwritten the next "
+        "time the page is rendered.",
     )
-    return "\n".join([header, "", wrap_body(body), "",
+    return "\n".join([header, "", wrap_body(f"{why}\n\n{how}"), "",
                        f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>"]) + "\n"
 
 

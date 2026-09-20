@@ -48,11 +48,19 @@ pinned to commit SHAs, and rules a gate checks on every change.
 
 ## 📡 Dispatches
 
-This section is kept by GitHub Actions. At moments drawn from an exponential distribution, never
-on a schedule, a workflow sends one dispatch to the [archive](dispatches/) and commits it. Every
-commit is authored by me and made by the workflow; [How it works](How-It-Works.md) has the details,
-the randomness, and the places this repository departs from the standards the rest of the account
-follows.
+Small pieces of the computing record, sent at intervals nobody chose: a character and what it
+encodes, an RFC and what it settled, a task solved in a language you have probably never written,
+a failure worth remembering.
+
+It is for two readers. One is a developer who would rather find something worth knowing than
+another static profile. The other is anyone weighing whether I build automation that holds up
+unattended, because that is what this is: a workflow assembling a public page from sources I do not
+control, committing the result with nobody pressing anything. The page is the argument, not a
+description of one.
+
+Every commit is authored by me and made by the workflow. [How it works](How-It-Works.md) has the
+randomness, the sources, and the places this repository departs from the standards the rest of the
+account follows.
 
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026

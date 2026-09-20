@@ -48,22 +48,12 @@ pinned to commit SHAs, and rules a gate checks on every change.
 
 ## 📡 Dispatches
 
-What actually changed this week, sent at intervals nobody chose: a release worth upgrading to, an
+What changed in the last two weeks, at intervals nobody chose: a release worth upgrading to, an
 advisory worth patching, a version about to stop getting fixes, a standard just published, a post
-worth the click. Straight from the primary record each time, never from a feed about a feed.
+worth the click. Primary sources only, and a quiet week shows a quiet page rather than filler.
 
-It is for two readers. One is a developer who would rather find something worth knowing than
-another static profile, and who does not need a sixth newsletter to find it. The other is anyone
-weighing whether I build automation that holds up unattended, because that is what this is: a
-workflow assembling a public page from sources I do not control, committing the result with nobody
-pressing anything. The page is the argument, not a description of one.
-
-Nothing is filler. Every source carries a freshness window, so a fetcher with nothing recent
-returns nothing rather than reaching back for something old, and a quiet week shows a quiet page.
-
-Every commit is authored by me and made by the workflow. [How it works](How-It-Works.md) has the
-randomness, the sources, and the places this repository departs from the standards the rest of the
-account follows.
+A workflow assembles this from sources I do not control and commits it unattended, authored by me.
+[How it works](How-It-Works.md).
 
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026

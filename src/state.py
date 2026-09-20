@@ -121,10 +121,9 @@ class Ledger:
     """Every identifier ever used, so nothing appears twice.
 
     Keyed by kind, and the identifier is whatever uniquely names the item at
-    its source: an RFC number, a Unicode code point, a Rosetta Code task
-    and language pair. Storing the source's
-    own identifier rather than a hash of the rendered text means an item stays
-    recognised after its wiki page is reworded.
+    its source: an RFC number, a GHSA advisory id, a repository and tag.
+    Storing the source's own identifier rather than a hash of the rendered
+    text means an item stays recognised after its release notes are edited.
     """
 
     def __init__(self, path: str = LEDGER_FILE) -> None:
@@ -133,7 +132,8 @@ class Ledger:
         self._used: dict[str, set[str]] = {
             kind: set(map(str, ids)) for kind, ids in data.items() if isinstance(ids, list)
         }
-        self._retired: set[str] = set(map(str, data.get("_retired", []) or []))
+        # Written by an earlier design in which a kind could run out. Dropped
+        # on the next save; popped here so it is never read back as a kind.
         self._used.pop("_retired", None)
 
     def seen(self, kind: str, identifier: str) -> bool:
@@ -141,19 +141,6 @@ class Ledger:
 
     def remember(self, kind: str, identifier: str) -> None:
         self._used.setdefault(kind, set()).add(str(identifier))
-
-    def retire(self, kind: str) -> None:
-        """Mark a kind as having run out, so the picker stops offering it.
-
-        Two kinds draw on finite hand-curated lists rather than on a growing
-        corpus. When one is exhausted it retires rather than repeating itself,
-        and the remaining weight redistributes across what is left.
-        """
-        self._retired.add(kind)
-
-    @property
-    def retired(self) -> set[str]:
-        return set(self._retired)
 
     def count(self, kind: str) -> int:
         return len(self._used.get(kind, set()))
@@ -163,6 +150,4 @@ class Ledger:
 
     def save(self) -> None:
         payload: dict = {kind: sorted(ids) for kind, ids in self._used.items() if ids}
-        if self._retired:
-            payload["_retired"] = sorted(self._retired)
         _write(self.path, payload)

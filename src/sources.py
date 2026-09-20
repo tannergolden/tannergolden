@@ -2,35 +2,37 @@
 # SPDX-License-Identifier: MIT
 """The five kinds of dispatch, and the picker that chooses between them.
 
-Each fetcher returns one `Dispatch` the ledger has never seen, or None when its
-source is down, empty for today, or exhausted. None is an ordinary answer: the
-picker moves to the next kind, and a run in which every source fails writes
+Each fetcher returns one `Dispatch` the ledger has never seen, or None when
+its source is down or has nothing new. None is an ordinary answer: the picker
+moves to the next kind, and a run in which every source comes back empty writes
 nothing and leaves the schedule untouched, so the next run tries again.
 
-Nothing here is hand-written content. Every kind draws on a corpus that is
-either enormous or still growing, which is what lets the ledger promise that
-no item will ever appear twice: the promise costs nothing while the well is
-deeper than the lifetime of the page.
+Every kind reports something that changed recently. A release from two years
+ago is not news, so each fetcher carries a freshness window and returns None
+rather than reach back for filler: a quiet week is a quiet page.
+
+Nothing here is hand-written. Every source keeps producing, which is what
+lets the ledger promise that no item appears twice without the well ever
+running dry.
 
 Every string that leaves a fetcher has been through `text.clean()`.
 """
 
 from __future__ import annotations
 
-import hashlib
 import html
+import os
 import random
 import re
 import urllib.parse
 from dataclasses import dataclass, field
-from datetime import date
-from typing import Callable
+from datetime import date, datetime, timedelta, timezone
 
 import net
 import phrasing
-from config import REPRODUCE_ROSETTA_CODE
+from config import NEWS_WINDOW_DAYS
 from state import Ledger
-from text import clamp_snippet, clean, is_clean
+from text import clean
 
 _RNG = random.SystemRandom()
 
@@ -39,8 +41,8 @@ _RNG = random.SystemRandom()
 class Dispatch:
     """One dispatch, ready to be rendered into a commit and a page row."""
 
-    kind: str  # the ledger key and the scope: unicode, rfc, rosetta, ...
-    commit_type: str  # feat, fix, docs, refactor, test, chore
+    kind: str  # the ledger key and the scope: release, advisory, eol, ...
+    commit_type: str  # feat, security, chore, docs
     emoji: str  # one emoji from the house mapping for that type
     subject: str  # lowercase imperative, without the type(scope) prefix
     title: str  # the short form shown in the page's table
@@ -50,9 +52,6 @@ class Dispatch:
     source_url: str
     license: str  # an SPDX identifier, or a short description when none fits
     attribution: str = ""  # authors or contributors, when the source names them
-    code: str | None = None
-    code_language: str | None = None
-    code_trimmed: bool = False
     extra_links: list = field(default_factory=list)  # (label, url) pairs
 
     @property
@@ -68,190 +67,237 @@ def _shuffled(items: list) -> list:
     return items
 
 
-def _first_unseen(ledger: Ledger, kind: str, candidates: list, key: Callable) -> object | None:
-    for candidate in candidates:
-        if not ledger.seen(kind, str(key(candidate))):
-            return candidate
+# --- feat(release): a new version of a tool people actually run ------------------
+
+GITHUB_API = "https://api.github.com"
+
+# Curated, not scraped. Every entry is a tool a working developer either runs
+# or depends on, and every one cuts GitHub releases rather than bare tags, so
+# `/releases/latest` answers. A repository that stops publishing releases
+# answers 404 and is skipped, which is why the list can go stale safely.
+WATCHLIST = (
+    ("golang/go", "Go"), ("rust-lang/rust", "Rust"), ("python/cpython", "CPython"),
+    ("nodejs/node", "Node.js"), ("denoland/deno", "Deno"), ("oven-sh/bun", "Bun"),
+    ("ziglang/zig", "Zig"), ("JuliaLang/julia", "Julia"), ("elixir-lang/elixir", "Elixir"),
+    ("microsoft/TypeScript", "TypeScript"), ("llvm/llvm-project", "LLVM"),
+    ("kubernetes/kubernetes", "Kubernetes"), ("moby/moby", "Docker Engine"),
+    ("docker/compose", "Docker Compose"), ("hashicorp/terraform", "Terraform"),
+    ("etcd-io/etcd", "etcd"), ("grafana/grafana", "Grafana"),
+    ("prometheus/prometheus", "Prometheus"), ("redis/redis", "Redis"),
+    ("valkey-io/valkey", "Valkey"), ("duckdb/duckdb", "DuckDB"),
+    ("elastic/elasticsearch", "Elasticsearch"), ("apache/kafka", "Kafka"),
+    ("neovim/neovim", "Neovim"), ("helix-editor/helix", "Helix"), ("zed-industries/zed", "Zed"),
+    ("astral-sh/ruff", "Ruff"), ("astral-sh/uv", "uv"), ("psf/black", "Black"),
+    ("pytest-dev/pytest", "pytest"), ("vitejs/vite", "Vite"), ("pnpm/pnpm", "pnpm"),
+    ("facebook/react", "React"), ("vuejs/core", "Vue"), ("sveltejs/svelte", "Svelte"),
+    ("angular/angular", "Angular"), ("denoland/fresh", "Fresh"),
+    ("rails/rails", "Rails"), ("django/django", "Django"), ("fastapi/fastapi", "FastAPI"),
+    ("pallets/flask", "Flask"), ("spring-projects/spring-boot", "Spring Boot"),
+    ("pytorch/pytorch", "PyTorch"), ("huggingface/transformers", "Transformers"),
+    ("ollama/ollama", "Ollama"), ("ggml-org/llama.cpp", "llama.cpp"),
+    ("curl/curl", "curl"), ("openssl/openssl", "OpenSSL"),
+    ("caddyserver/caddy", "Caddy"), ("traefik/traefik", "Traefik"),
+    ("cli/cli", "GitHub CLI"), ("jqlang/jq", "jq"), ("BurntSushi/ripgrep", "ripgrep"),
+    ("sharkdp/fd", "fd"), ("starship/starship", "Starship"), ("tmux/tmux", "tmux"),
+)
+
+# Release notes are Markdown written by whoever cut the release, so the first
+# paragraph is taken and the rest dropped.
+HEADLINE = re.compile(r"^\s*(?:#{1,6}\s*)?(?P<line>[^\n#*\-][^\n]{20,})", re.MULTILINE)
+
+
+def _fresh(stamp: str, days: int = NEWS_WINDOW_DAYS) -> bool:
+    """True when an ISO timestamp is inside the window that still counts as news."""
+    try:
+        when = datetime.fromisoformat(clean(stamp).replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=timezone.utc)
+    return timedelta(0) <= datetime.now(timezone.utc) - when <= timedelta(days=days)
+
+
+def _age(stamp: str) -> str:
+    when = datetime.fromisoformat(clean(stamp).replace("Z", "+00:00"))
+    days = (datetime.now(timezone.utc) - when).days
+    return "today" if days < 1 else ("yesterday" if days == 1 else f"{days} days ago")
+
+
+def fetch_release(ledger: Ledger, today: date) -> Dispatch | None:
+    headers = net.github_headers(os.environ.get("GITHUB_TOKEN"))
+    for repo, product in _shuffled(list(WATCHLIST))[:8]:
+        release = net.get_json_with_headers(f"{GITHUB_API}/repos/{repo}/releases/latest", None, headers)
+        if not isinstance(release, dict) or release.get("draft") or release.get("prerelease"):
+            continue
+        tag = clean(str(release.get("tag_name") or ""))
+        published = str(release.get("published_at") or "")
+        if not tag or not _fresh(published) or ledger.seen("release", f"{repo}@{tag}"):
+            continue
+
+        version = tag.lstrip("vV") if tag[:1] in "vV" and tag[1:2].isdigit() else tag
+        headline = HEADLINE.search(clean(str(release.get("body") or ""), allow_newlines=True))
+        body = phrasing.one_of(
+            f"{product} {version} was published {_age(published)}.",
+            f"{product} cut {version} {_age(published)}.",
+            f"A new {product}: {version}, {_age(published)}.",
+        )
+        if headline:
+            note = clean(headline.group("line"))
+            body += " " + (note if len(note) <= 300 else note[:299].rsplit(" ", 1)[0] + "\u2026")
+        return Dispatch(
+            kind="release",
+            commit_type="feat",
+            emoji=phrasing.emoji_for("feat"),
+            subject=f"{phrasing.verb_for('release')} {product} {version}",
+            title=f"{product} {version}",
+            body=body,
+            identifier=f"{repo}@{tag}",
+            source_name=repo,
+            source_url=str(release.get("html_url") or f"https://github.com/{repo}/releases"),
+            license="Release metadata, reported as fact",
+        )
     return None
 
 
-def _year_of(value: str) -> str:
-    match = re.search(r"\b(\d{4})\b", value or "")
-    return match.group(1) if match else ""
+# --- security(advisory): something to patch this week ----------------------------
+
+ADVISORIES = f"{GITHUB_API}/advisories"
 
 
-# --- feat(unicode) -----------------------------------------------------------
-
-UCD = "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
-UCD_BLOCKS = "https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt"
-UCD_AGE = "https://www.unicode.org/Public/UCD/latest/ucd/DerivedAge.txt"
-
-CATEGORY_NAMES = {
-    "Lu": "an uppercase letter", "Ll": "a lowercase letter", "Lt": "a titlecase letter",
-    "Lo": "a letter", "Nd": "a decimal digit", "Nl": "a letter-like numeral", "No": "a number",
-    "Pc": "a connector", "Pd": "a dash", "Ps": "an opening bracket", "Pe": "a closing bracket",
-    "Pi": "an opening quotation mark", "Pf": "a closing quotation mark", "Po": "a punctuation mark",
-    "Sm": "a mathematical symbol", "Sc": "a currency symbol", "Sk": "a modifier symbol", "So": "a symbol",
-}
-
-# Blocks whose characters render in the fonts a browser ships with. Drawing
-# from these four times in five keeps the glyph visible on the page; the fifth
-# draw ranges over everything printable, so the long tail still appears.
-PREFERRED_BLOCKS = {
-    "Basic Latin", "Latin-1 Supplement", "Latin Extended-A", "Latin Extended-B", "IPA Extensions",
-    "Greek and Coptic", "Cyrillic", "Armenian", "Hebrew", "Arabic", "Runic", "Ogham",
-    "General Punctuation", "Currency Symbols", "Letterlike Symbols", "Number Forms",
-    "Arrows", "Mathematical Operators", "Miscellaneous Technical", "Control Pictures",
-    "Optical Character Recognition", "Enclosed Alphanumerics", "Box Drawing",
-    "Block Elements", "Geometric Shapes", "Miscellaneous Symbols", "Dingbats",
-    "Miscellaneous Mathematical Symbols-A", "Supplemental Arrows-A", "Braille Patterns",
-    "Supplemental Arrows-B", "Miscellaneous Mathematical Symbols-B",
-    "Supplemental Mathematical Operators", "Miscellaneous Symbols and Arrows",
-    "Mahjong Tiles", "Domino Tiles", "Playing Cards", "Enclosed Alphanumeric Supplement",
-    "Miscellaneous Symbols and Pictographs", "Emoticons", "Ornamental Dingbats",
-    "Transport and Map Symbols", "Alchemical Symbols", "Geometric Shapes Extended",
-    "Supplemental Arrows-C", "Supplemental Symbols and Pictographs", "Chess Symbols",
-    "Symbols and Pictographs Extended-A", "Symbols for Legacy Computing",
-}
-
-# Names that are algorithmic rather than descriptive carry nothing to read.
-UNINTERESTING_NAME = re.compile(
-    r"^(<|CJK |TANGUT|NUSHU|KHITAN|HANGUL SYLLABLE|VARIATION SELECTOR|PRIVATE USE|SURROGATE|EGYPTIAN HIEROGLYPH-|CUNEIFORM (SIGN|NUMERIC)|LINEAR [AB] (SIGN|IDEOGRAM)|ANATOLIAN HIEROGLYPH)"
-)
-PRINTABLE_CATEGORIES = ("Lu", "Ll", "Lt", "Lo", "Nd", "Nl", "No", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po", "Sm", "Sc", "Sk", "So")
-
-
-def _unicode_blocks() -> list:
-    text = net.get_text(UCD_BLOCKS) or ""
-    blocks = []
-    for line in text.splitlines():
-        match = re.match(r"^([0-9A-F]+)\.\.([0-9A-F]+); (.+)$", line)
-        if match:
-            blocks.append((int(match.group(1), 16), int(match.group(2), 16), match.group(3).strip()))
-    return blocks
-
-
-def _codepoint_key(item: tuple) -> str:
-    return f"{item[0]:04X}"
-
-
-def _block_of(blocks: list, codepoint: int) -> str:
-    for low, high, name in blocks:
-        if low <= codepoint <= high:
-            return name
-    return "Unassigned"
-
-
-def _unicode_ages() -> list:
-    """(low, high, version) from DerivedAge.txt: the Unicode version each range arrived in."""
-    text = net.get_text(UCD_AGE) or ""
-    ages = []
-    for line in text.splitlines():
-        match = re.match(r"^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*([0-9.]+)", line)
-        if match:
-            low = int(match.group(1), 16)
-            high = int(match.group(2), 16) if match.group(2) else low
-            ages.append((low, high, match.group(3)))
-    return ages
-
-
-def _age_of(ages: list, codepoint: int) -> str:
-    for low, high, version in ages:
-        if low <= codepoint <= high:
-            return version
-    return ""
-
-
-def fetch_unicode(ledger: Ledger, today: date) -> Dispatch | None:
-    text = net.get_text(UCD)
-    if not text:
-        return None
-    blocks = _unicode_blocks()
-
-    printable = []
-    categories = {}
-    for line in text.splitlines():
-        fields = line.split(";")
-        if len(fields) < 3:
-            continue
-        name, category = fields[1], fields[2]
-        if category not in PRINTABLE_CATEGORIES or UNINTERESTING_NAME.match(name):
-            continue
-        codepoint = int(fields[0], 16)
-        if not is_clean(chr(codepoint)):
-            # A dash the commit gate bans, or an invisible: the sanitiser
-            # would rewrite the glyph, and an entry about a character it
-            # cannot show is wrong about the one thing it is for.
-            continue
-        printable.append((codepoint, name))
-        categories[codepoint] = category
-    if not printable:
+def fetch_advisory(ledger: Ledger, today: date) -> Dispatch | None:
+    headers = net.github_headers(os.environ.get("GITHUB_TOKEN"))
+    severity = phrasing.one_of("critical", "critical", "high")
+    found = net.get_json_with_headers(
+        ADVISORIES,
+        {"type": "reviewed", "severity": severity, "sort": "published", "direction": "desc", "per_page": 50},
+        headers,
+    )
+    if not isinstance(found, list):
         return None
 
-    preferred = [item for item in printable if _block_of(blocks, item[0]) in PREFERRED_BLOCKS]
-    pool = preferred if preferred and _RNG.random() < 0.8 else printable
-    chosen = _first_unseen(ledger, "unicode", _shuffled(pool)[:400], key=_codepoint_key)
-    if chosen is None:
-        # The preferred blocks, or a sample of them, are used up: draw from
-        # everything printable rather than report an empty source.
-        chosen = _first_unseen(ledger, "unicode", _shuffled(printable), key=_codepoint_key)
-    if chosen is None:
+    for item in _shuffled([a for a in found if isinstance(a, dict)]):
+        ghsa = clean(str(item.get("ghsa_id") or ""))
+        published = str(item.get("published_at") or "")
+        if not ghsa or not _fresh(published) or ledger.seen("advisory", ghsa):
+            continue
+        affected = [v for v in (item.get("vulnerabilities") or []) if isinstance(v, dict)]
+        package = ""
+        ecosystem = ""
+        versions = ""
+        if affected:
+            named = (affected[0].get("package") or {}) if isinstance(affected[0].get("package"), dict) else {}
+            package = clean(str(named.get("name") or ""))
+            ecosystem = clean(str(named.get("ecosystem") or ""))
+            versions = clean(str(affected[0].get("vulnerable_version_range") or ""))
+        summary = clean(str(item.get("summary") or ""))
+        cve = clean(str(item.get("cve_id") or ""))
+
+        where = f"{package} ({ecosystem})" if package and ecosystem else (package or "a reviewed package")
+        body = phrasing.one_of(
+            f"{severity.capitalize()} severity in {where}, published {_age(published)}.",
+            f"Published {_age(published)}: a {severity} severity advisory against {where}.",
+            f"{where} carries a {severity} severity advisory, {_age(published)}.",
+        )
+        if summary:
+            body += f" {summary}" + ("" if summary.endswith(".") else ".")
+        if versions:
+            body += f" Affected: {versions}."
+        if cve:
+            body += f" Tracked as {cve}."
+        return Dispatch(
+            kind="advisory",
+            commit_type="security",
+            emoji=phrasing.emoji_for("security"),
+            subject=f"{phrasing.verb_for('advisory')} the {severity} advisory in {package or ghsa}",
+            title=f"{ghsa}: {package or 'a reviewed package'}",
+            body=body,
+            identifier=ghsa,
+            source_name="GitHub Security Advisories",
+            source_url=str(item.get("html_url") or f"https://github.com/advisories/{ghsa}"),
+            license="Advisory metadata, reported as fact",
+        )
+    return None
+
+
+# --- chore(eol): a version that stops getting fixes --------------------------------
+
+EOL_ALL = "https://endoflife.date/api/all.json"
+EOL_PRODUCT = "https://endoflife.date/api/{product}.json"
+
+
+def _eol_cycles(payload) -> list:
+    """The cycle records, whichever shape the API answers.
+
+    The long-lived endpoint returns a bare array of cycles. The newer one
+    wraps them in {"result": {"releases": [...]}}, so both are unwrapped here
+    rather than pinning a version of somebody else's API.
+    """
+    if isinstance(payload, dict):
+        payload = (payload.get("result") or {}).get("releases", payload.get("releases"))
+    return [c for c in (payload or []) if isinstance(c, dict)] if isinstance(payload, list) else []
+
+
+def fetch_eol(ledger: Ledger, today: date) -> Dispatch | None:
+    products = net.get_json(EOL_ALL)
+    names = [clean(str(p)) for p in products if isinstance(p, str)] if isinstance(products, list) else []
+    if not names:
         return None
 
-    codepoint, name = chosen
-    glyph = chr(codepoint)
-    block = _block_of(blocks, codepoint)
-    version = _age_of(_unicode_ages(), codepoint)
-    hexname = f"U+{codepoint:04X}"
-    name = clean(name)
-    what = CATEGORY_NAMES.get(categories.get(codepoint, ""), "a character")
-    since = f" in Unicode since version {version}" if version else ""
-    # The subject and the dispatch heading both carry the name already, so
-    # the body opens with what the character is rather than repeating it.
-    body = phrasing.one_of(
-        f"{what[:1].upper()}{what[1:]} in the {block} block{since}.",
-        f"The {block} block holds this one, {what}{since}.",
-        f"{what[:1].upper()}{what[1:]}{since}, filed under {block}.",
-    )
-    body += (
-        f" It renders as {glyph}. In UTF-8 it is the byte sequence "
-        f"{glyph.encode('utf-8').hex(' ').upper()}; in HTML, the entity &#x{codepoint:X};."
-    )
-    return Dispatch(
-        kind="unicode",
-        commit_type="feat",
-        emoji=phrasing.emoji_for("feat"),
-        subject=f"{phrasing.verb_for('unicode')} {hexname} {glyph} {name}",
-        title=f"{hexname} {glyph} {name}",
-        body=body,
-        identifier=f"{codepoint:04X}",
-        source_name="Unicode Character Database",
-        source_url=f"https://util.unicode.org/UnicodeJsps/character.jsp?a={codepoint:04X}",
-        license="Unicode-3.0",
-    )
+    for product in _shuffled(names)[:10]:
+        cycles = _eol_cycles(net.get_json(EOL_PRODUCT.format(product=urllib.parse.quote(product, safe=""))))
+        for cycle in cycles:
+            eol = cycle.get("eol") if not isinstance(cycle.get("eol"), bool) else None
+            name = clean(str(cycle.get("cycle") or cycle.get("name") or ""))
+            if not eol or not name:
+                continue
+            try:
+                when = date.fromisoformat(clean(str(eol)))
+            except ValueError:
+                continue
+            days = (when - today).days
+            # A window either side: what is about to stop getting fixes, and
+            # what just did. Anything further out is a calendar entry.
+            if not -NEWS_WINDOW_DAYS <= days <= 90 or ledger.seen("eol", f"{product}-{name}"):
+                continue
+
+            label = product.replace("-", " ").title()
+            latest = clean(str(cycle.get("latest") or ""))
+            timing = (
+                "reaches end of life today" if days == 0
+                else (f"reaches end of life in {days} days" if days > 0 else f"reached end of life {-days} days ago")
+            )
+            body = phrasing.one_of(
+                f"{label} {name} {timing}.",
+                f"{timing.capitalize()}: {label} {name}.",
+                f"{label} {name}, and it {timing}.",
+            )
+            body += f" The last release on that line was {latest}." if latest else ""
+            body += " After that date it stops receiving fixes, security ones included."
+            return Dispatch(
+                kind="eol",
+                commit_type="chore",
+                emoji=phrasing.emoji_for("chore"),
+                subject=f"{phrasing.verb_for('eol')} {label} {name} at end of life",
+                title=f"{label} {name}, {timing}",
+                body=body,
+                identifier=f"{product}-{name}",
+                source_name="endoflife.date",
+                source_url=f"https://endoflife.date/{product}",
+                license="CC-BY-4.0",
+            )
+    return None
 
 
-# --- docs(rfc) ----------------------------------------------------------------
+# --- docs(rfc): a standard published this year ----------------------------------------
 
 RFC_JSON = "https://www.rfc-editor.org/rfc/rfc{n}.json"
 RFC_PAGE = "https://www.rfc-editor.org/rfc/rfc{n}"
-RFC_CEILING = 9800
 
-# A preference, not a list of content: half of all draws come from here while
-# it lasts, because the point of an RFC entry is the one somebody has heard
-# of. The other half ranges over the whole series, and once these are used
-# up every draw does.
-FAMOUS_RFCS = [
-    1, 114, 675, 748, 791, 793, 821, 822, 959, 968, 1034, 1035, 1121, 1122, 1123,
-    1149, 1180, 1216, 1217, 1321, 1437, 1438, 1855, 1918, 1925, 1945, 2026, 2045,
-    2100, 2119, 2321, 2322, 2323, 2324, 2325, 2396, 2460, 2549, 2606, 2616, 2795,
-    3091, 3092, 3093, 3164, 3251, 3252, 3339, 3514, 3986, 4041, 4042, 4122, 4180,
-    4287, 4291, 4634, 4648, 5000, 5241, 5242, 5246, 5321, 5322, 5424, 5513, 5514,
-    5841, 5984, 6214, 6217, 6238, 6265, 6455, 6585, 6592, 6749, 6797, 6902, 6919,
-    6921, 7159, 7168, 7169, 7230, 7231, 7469, 7511, 7514, 7519, 7540, 7807, 8135,
-    8136, 8140, 8174, 8200, 8259, 8367, 8446, 8565, 8771, 8774, 8962, 9000, 9110,
-    9111, 9112, 9113, 9114, 9225, 9226, 9401, 9402, 9405, 9457, 9562,
-]
+# Where the series had reached when this was written. A number past the end
+# answers 404, which walks the working ceiling down, so the constant going
+# stale costs one wasted request rather than a broken kind.
+RFC_CEILING = 9820
+RFC_RECENT = 250
 
 
 def _html_to_text(value: str) -> str:
@@ -261,72 +307,35 @@ def _html_to_text(value: str) -> str:
     return html.unescape(text)
 
 
-def _rfc_numbers(value) -> list:
-    """RFC numbers out of whatever shape the record uses: 'RFC2068', 2068, or a list of either."""
-    items = value if isinstance(value, list) else ([value] if value else [])
-    found = []
-    for item in items:
-        match = re.search(r"\d+", str(item))
-        if match:
-            found.append(int(match.group()))
-    return sorted(set(found))
-
-
-def _rfc_list(numbers: list) -> str:
-    names = [f"RFC {n}" for n in numbers[:6]]
-    if len(numbers) > 6:
-        names.append(f"{len(numbers) - 6} more")
-    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
-
-
 def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
-    famous = [n for n in FAMOUS_RFCS if not ledger.seen("rfc", str(n))]
-    candidates: list = []
-    if famous and _RNG.random() < 0.5:
-        candidates = _shuffled(famous)[:6]
-    while len(candidates) < 8:
-        n = _RNG.randint(1, RFC_CEILING)
-        if not ledger.seen("rfc", str(n)) and n not in candidates:
-            candidates.append(n)
-
-    for n in candidates:
+    ceiling = RFC_CEILING
+    for _ in range(10):
+        n = _RNG.randint(max(ceiling - RFC_RECENT, 1), ceiling)
+        if ledger.seen("rfc", str(n)):
+            continue
         meta = net.get_json(RFC_JSON.format(n=n))
         if not isinstance(meta, dict) or not meta.get("title"):
+            # Past the end of the series, or never issued. Walk down.
+            ceiling = max(n - 1, 1)
             continue
         title = clean(str(meta.get("title", "")))
-        if title.lower() in ("not issued", ""):
+        published = clean(str(meta.get("pub_date", "") or ""))
+        if title.lower() in ("not issued", "") or not published:
             continue
-        year = _year_of(str(meta.get("pub_date", "")))
+        year = re.search(r"\b(\d{4})\b", published)
+        if not year or today.year - int(year.group(1)) > 2:
+            continue
+
+        status = clean(str(meta.get("status", "") or "")).lower()
         abstract = clean(_html_to_text(str(meta.get("abstract", "") or "")), allow_newlines=True)
         authors = ", ".join(clean(str(a)) for a in (meta.get("authors") or []) if a)
-        status = clean(str(meta.get("status", "") or "")).lower()
-        published = clean(str(meta.get("pub_date", "") or "")) or year
-
-        if published and status:
-            opener = phrasing.one_of(
-                f"Published in {published}, with the status {status}.",
-                f"{published}, status {status}.",
-                f"Carries the status {status}, published in {published}.",
-            )
-        elif published:
-            opener = f"Published in {published}."
-        elif status:
-            opener = f"Carries the status {status}."
-        else:
-            opener = "One of the Request for Comments series."
-        relations = []
-        for key, phrase in (("obsoletes", "obsoletes"), ("obsoleted_by", "is obsoleted by"), ("updates", "updates"), ("updated_by", "is updated by")):
-            numbers = _rfc_numbers(meta.get(key))
-            if numbers:
-                relations.append(f"{phrase} {_rfc_list(numbers)}")
-        if relations:
-            opener += " It " + "; it ".join(relations) + "."
-        pages = re.search(r"\d+", str(meta.get("page_count", "") or ""))
-        if pages and int(pages.group()) > 0:
-            count = int(pages.group())
-            opener += f" It runs to {count} page{'s' if count != 1 else ''}."
-        body = opener + ("\n\n" + abstract if abstract else "")
-
+        body = phrasing.one_of(
+            f"Published in {published}" + (f", with the status {status}." if status else "."),
+            f"{published}" + (f", status {status}." if status else "."),
+            f"The series reached this one in {published}" + (f", as {status}." if status else "."),
+        )
+        if abstract:
+            body += "\n\n" + abstract
         return Dispatch(
             kind="rfc",
             commit_type="docs",
@@ -343,264 +352,82 @@ def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
     return None
 
 
-# --- refactor(rosetta) ----------------------------------------------------------
+# --- docs(lobsters): what the quiet end of the internet is reading ----------------------
 
-ROSETTA_API = "https://rosettacode.org/w/api.php"
-ROSETTA_PAGE = "https://rosettacode.org/w/index.php"
-HEADER = re.compile(r"^==\s*\{\{header\|([^}|]+)(?:\|[^}]*)?\}\}\s*==\s*$", re.MULTILINE)
-CODE_BLOCK = re.compile(
-    r"<(?:syntaxhighlight|lang)(?:\s+lang=\"?([^\">\s]+)\"?|\s+([^>\s]+))?[^>]*>(.*?)</(?:syntaxhighlight|lang)>",
-    re.DOTALL | re.IGNORECASE,
-)
+LOBSTERS = "https://lobste.rs/hottest.json"
+LOBSTERS_FLOOR = 15
 
 
-def _rosetta_tasks() -> list:
-    tasks: list = []
-    params = {
-        "action": "query", "list": "categorymembers", "cmtitle": "Category:Programming_Tasks",
-        "cmlimit": "500", "cmnamespace": "0", "format": "json",
-    }
-    for _ in range(6):
-        page = net.get_json(ROSETTA_API, params)
-        if not isinstance(page, dict):
-            break
-        tasks.extend(m.get("title") for m in page.get("query", {}).get("categorymembers", []) if m.get("title"))
-        cont = page.get("continue", {}).get("cmcontinue")
-        if not cont:
-            break
-        params = dict(params, cmcontinue=cont)
-    return tasks
-
-
-def _rosetta_solutions(task: str) -> tuple:
-    page = net.get_json(ROSETTA_API, {"action": "parse", "page": task, "prop": "wikitext|revid", "format": "json"})
-    if not isinstance(page, dict) or "parse" not in page:
-        return {}, 0
-    wikitext = page["parse"].get("wikitext", {}).get("*", "")
-    revid = int(page["parse"].get("revid") or 0)
-
-    solutions = {}
-    headers = list(HEADER.finditer(wikitext))
-    for index, match in enumerate(headers):
-        language = match.group(1).strip()
-        end = headers[index + 1].start() if index + 1 < len(headers) else len(wikitext)
-        block = CODE_BLOCK.search(wikitext[match.end():end])
-        if not block or "/" in language:
-            continue
-        code = block.group(3).strip("\n")
-        if code.strip():
-            solutions[language] = (block.group(1) or block.group(2) or language.lower(), code)
-    return solutions, revid
-
-
-def fetch_rosetta(ledger: Ledger, today: date) -> Dispatch | None:
-    tasks = _rosetta_tasks()
-    if not tasks:
+def fetch_lobsters(ledger: Ledger, today: date) -> Dispatch | None:
+    stories = net.get_json(LOBSTERS)
+    if not isinstance(stories, list):
         return None
-
-    # Two entries in five revisit a task already on the page in a language it
-    # has not been shown in, which is what makes the type honest: a refactor
-    # is the same thing done another way, and a running thread reads better
-    # than a scatter of unrelated programs.
-    used_tasks = sorted({pair.rsplit("|", 1)[0] for pair in ledger.used("rosetta")})
-    order = _shuffled(tasks)
-    if used_tasks and _RNG.random() < 0.4:
-        order = _shuffled(used_tasks) + order
-
-    for task in order[:5]:
-        solutions, revid = _rosetta_solutions(task)
-        languages = [lang for lang in solutions if not ledger.seen("rosetta", f"{task}|{lang}")]
-        if not languages:
+    for story in _shuffled([s for s in stories if isinstance(s, dict)]):
+        short_id = clean(str(story.get("short_id") or ""))
+        score = int(story.get("score") or 0)
+        url = str(story.get("url") or "")
+        comments = str(story.get("comments_url") or "")
+        if not short_id or score < LOBSTERS_FLOOR or ledger.seen("lobsters", short_id):
             continue
-        language = _RNG.choice(languages)
-        highlight, code = solutions[language]
-        snippet, trimmed = clamp_snippet(code)
-        again = task in used_tasks
-        verb = phrasing.verb_for("rosetta-again" if again else "rosetta")
-        title = clean(task)
-        slug = urllib.parse.quote(task.replace(" ", "_"), safe="_/")
-        permalink = f"{ROSETTA_PAGE}?title={slug}&oldid={revid}" if revid else f"https://rosettacode.org/wiki/{slug}"
-        count = len(solutions)
-        plural = "s" if count != 1 else ""
+        if not url.startswith("https://"):
+            url = comments if comments.startswith("https://") else ""
+        if not url:
+            continue
+
+        title = clean(str(story.get("title") or ""))
+        tags = [clean(str(t)) for t in (story.get("tags") or []) if t]
+        domain = urllib.parse.urlsplit(url).netloc.lower().removeprefix("www.")
+        submitter = clean(str((story.get("submitter_user") or {}).get("username") or "")) if isinstance(story.get("submitter_user"), dict) else clean(str(story.get("submitter_user") or ""))
         body = phrasing.one_of(
-            f"Rosetta Code carries {count} solution{plural} to this task. This is the {clean(language)} one",
-            f"One of {count} solution{plural} the task has on Rosetta Code, this one in {clean(language)}",
-            f"{count} language{plural} solve this task on Rosetta Code. Here it is in {clean(language)}",
+            f"{score} points on Lobsters, from {domain}.",
+            f"From {domain}, sitting at {score} points on Lobsters.",
+            f"Lobsters has it at {score} points; the source is {domain}.",
         )
-        body += ", shown again in a language this page has not used for it before." if again else "."
-        if not REPRODUCE_ROSETTA_CODE:
-            body += " The code is at the link; this entry cites rather than reproduces it."
+        if tags:
+            body += " Tagged " + ", ".join(tags[:4]) + "."
         return Dispatch(
-            kind="rosetta",
-            commit_type="refactor",
-            emoji=phrasing.emoji_for("refactor"),
-            subject=f"{verb} {title} in {clean(language)}",
-            title=f"{title}, {'now' if again else 'solved'} in {clean(language)}",
+            kind="lobsters",
+            commit_type="docs",
+            emoji=phrasing.emoji_for("docs"),
+            subject=f"{phrasing.verb_for('lobsters')} {title}",
+            title=title,
             body=body,
-            identifier=f"{task}|{language}",
-            source_name="Rosetta Code",
-            source_url=permalink,
-            license="GFDL-1.2-only",
-            attribution="Rosetta Code contributors",
-            code=snippet if REPRODUCE_ROSETTA_CODE else None,
-            code_language=clean(highlight).lower() if REPRODUCE_ROSETTA_CODE else None,
-            code_trimmed=trimmed,
+            identifier=short_id,
+            source_name="Lobsters",
+            source_url=url,
+            license="Title and score, reported as fact",
+            attribution=f"submitted by {submitter}" if submitter else "",
+            extra_links=[("discussion", comments)] if comments.startswith("https://") else [],
         )
     return None
-
-
-
-# --- fix(bug): Wikipedia -----------------------------------------------------------
-
-WIKIPEDIA_API = "https://en.wikipedia.org/w/api.php"
-BUG_PAGE = "List of software bugs"
-WIKI_LINK = re.compile(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]")
-WIKI_MARKUP = re.compile(r"'{2,}|<[^>]+>|\{\{[^}]*\}\}|<ref[^/]*/>|<ref.*?</ref>", re.DOTALL)
-
-
-def _strip_wikitext(text: str) -> str:
-    text = re.sub(r"<ref[^>]*>.*?</ref>", "", text, flags=re.DOTALL)
-    text = WIKI_MARKUP.sub("", text)
-    text = WIKI_LINK.sub(lambda m: m.group(2) or m.group(1), text)
-    return clean(text)
-
-
-def fetch_bug(ledger: Ledger, today: date) -> Dispatch | None:
-    page = net.get_json(WIKIPEDIA_API, {"action": "parse", "page": BUG_PAGE, "prop": "wikitext|revid", "format": "json"})
-    if not isinstance(page, dict) or "parse" not in page:
-        return None
-    wikitext = page["parse"].get("wikitext", {}).get("*", "")
-    revid = page["parse"].get("revid", 0)
-
-    items = []
-    for line in wikitext.splitlines():
-        if not line.startswith("*") or line.startswith("**"):
-            continue
-        raw = line.lstrip("* ").strip()
-        first_link = WIKI_LINK.search(raw)
-        prose = _strip_wikitext(raw)
-        if len(prose) < 40:
-            continue
-        anchor = first_link.group(1) if first_link else prose[:60]
-        items.append((hashlib.sha1(anchor.encode("utf-8")).hexdigest()[:12], anchor, prose))  # noqa: S324 - an identifier, not a credential
-
-    chosen = _first_unseen(ledger, "bug", _shuffled(items), key=lambda item: item[0])
-    if chosen is None:
-        if items:
-            ledger.retire("bug")
-        return None
-
-    identifier, anchor, prose = chosen
-    excerpt = prose if len(prose) <= 400 else prose[:399].rsplit(". ", 1)[0] + "."
-    name = clean(anchor.split("(")[0])
-    return Dispatch(
-        kind="bug",
-        commit_type="fix",
-        emoji=phrasing.emoji_for("fix"),
-        subject=f"{phrasing.verb_for('bug')} {name}",
-        title=name,
-        body=excerpt,
-        identifier=identifier,
-        source_name="Wikipedia, List of software bugs",
-        source_url=f"https://en.wikipedia.org/w/index.php?title=List_of_software_bugs&oldid={revid}",
-        license="CC-BY-SA-4.0",
-        attribution="Wikipedia contributors",
-    )
-
-
-# --- fix(falsehood): awesome-falsehood ----------------------------------------------
-
-FALSEHOOD_LIST = "https://raw.githubusercontent.com/kdeldycke/awesome-falsehood/main/readme.md"
-LIST_ITEM = re.compile(r"^\s*[-*]\s+\[([^\]]+)\]\(([^)]+)\)\s*[-:\u2013\u2014]?\s*(.*)$")
-
-
-def fetch_falsehood(ledger: Ledger, today: date) -> Dispatch | None:
-    text = net.get_text(FALSEHOOD_LIST)
-    if not text:
-        return None
-
-    items = []
-    for line in text.splitlines():
-        match = LIST_ITEM.match(line)
-        if not match:
-            continue
-        title, url, blurb = match.group(1), match.group(2), match.group(3)
-        if "falsehood" not in title.lower() or not url.startswith("https://"):
-            continue
-        items.append((url, clean(title), clean(blurb)))
-
-    chosen = _first_unseen(ledger, "falsehood", _shuffled(items), key=lambda item: item[0])
-    if chosen is None:
-        if items:
-            ledger.retire("falsehood")
-        return None
-
-    url, title, blurb = chosen
-    topic = re.sub(r"^falsehoods?\s+(programmers|developers|people)?\s*(believe|think)?\s*(about)?\s*", "", title, flags=re.IGNORECASE).strip(" .")
-    return Dispatch(
-        kind="falsehood",
-        commit_type="fix",
-        emoji=phrasing.emoji_for("fix"),
-        subject=f"{phrasing.verb_for('falsehood')} what programmers believe about {topic or title}",
-        title=title,
-        body=blurb or f"A catalogue of things programmers believe about {topic or 'the world'} that are not so.",
-        identifier=url,
-        source_name="awesome-falsehood",
-        source_url=url,
-        license="CC0-1.0 (the list); the article itself is not reproduced",
-        extra_links=[("the list", "https://github.com/kdeldycke/awesome-falsehood")],
-    )
 
 
 # --- the picker -------------------------------------------------------------------
 
 FETCHERS: dict = {
-    "rosetta": fetch_rosetta,
-    "unicode": fetch_unicode,
+    "release": fetch_release,
+    "advisory": fetch_advisory,
+    "eol": fetch_eol,
     "rfc": fetch_rfc,
-    "bug": fetch_bug,
-    "falsehood": fetch_falsehood,
+    "lobsters": fetch_lobsters,
 }
 
-COMMON = ("rosetta", "unicode", "rfc")
-RARE = ("bug", "falsehood")
-RARE_SHARE = 0.05  # the two rare kinds together, while their lists last
+KINDS = ("release", "advisory", "eol", "rfc", "lobsters")
 
 
-def weights(retired: set) -> dict:
-    """The draw weights: seven common kinds share what the rare pair does not take."""
-    rare = [k for k in RARE if k not in retired]
-    common = [k for k in COMMON if k not in retired]
-    result = {}
-    rare_total = RARE_SHARE if rare else 0.0
-    for kind in rare:
-        result[kind] = rare_total / len(rare)
-    for kind in common:
-        result[kind] = (1.0 - rare_total) / len(common)
-    return result
+def draw_order() -> list:
+    """The kinds in the order they will be tried.
 
-
-def draw_order(retired: set) -> list:
-    """Kinds in the order they will be tried: a weighted draw without replacement."""
-    remaining = weights(retired)
-    order = []
-    while remaining:
-        total = sum(remaining.values())
-        point = _RNG.random() * total
-        chosen = next(iter(remaining))
-        for kind, weight in remaining.items():
-            point -= weight
-            chosen = kind
-            if point <= 0:
-                break
-        order.append(chosen)
-        del remaining[chosen]
-    return order
+    An earlier design weighted this, because two kinds drew on finite lists
+    that had to be rationed. Every source here keeps producing, so the five
+    are equals and the order is a plain shuffle.
+    """
+    return _shuffled(list(KINDS))
 
 
 def pick_dispatch(ledger: Ledger, today: date) -> Dispatch | None:
-    """Try each kind in weighted order until one yields an entry."""
-    for kind in draw_order(ledger.retired):
+    """Try each kind in turn until one yields an entry."""
+    for kind in draw_order():
         try:
             entry = FETCHERS[kind](ledger, today)
         except Exception as exc:

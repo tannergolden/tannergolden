@@ -55,19 +55,13 @@ BODY_WRAP = 72
 ENTRIES_VISIBLE = 3
 ENTRIES_COLLAPSED = 10
 
-# A borrowed snippet stops here. Three things at once: it keeps a quotation a
-# quotation rather than a reproduction, it stays under the 20-line threshold
-# where the styling standard demands a collapsible block, and it keeps a
-# commit body readable in `git log`.
-MAX_SNIPPET_LINES = 15
-MAX_SNIPPET_CHARS = 800
+# --- Freshness -------------------------------------------------------------
 
-# --- Provenance ------------------------------------------------------------
-
-# Flip to False and `refactor(rosetta)` cites the task without reproducing
-# the code. The kind survives, the GFDL exposure does not. Nothing else in
-# this repository reproduces a copyleft work, so this is the whole switch.
-REPRODUCE_ROSETTA_CODE = os.environ.get("DISPATCH_ROSETTA_CODE", "1") != "0"
+# How old an item may be and still count as news. Every fetcher applies this
+# and returns None rather than reach further back, so a quiet week shows a
+# quiet page instead of filler. Fourteen days covers a weekend, a holiday and
+# a run of failed fetches without ever letting last month onto the page.
+NEWS_WINDOW_DAYS = int(os.environ.get("DISPATCH_NEWS_WINDOW_DAYS", "14"))
 
 # --- Identity --------------------------------------------------------------
 

@@ -26,6 +26,10 @@ HN_SHOW = "https://hacker-news.firebaseio.com/v0/showstories.json"
 HN_ITEM = "https://hacker-news.firebaseio.com/v0/item/{id}.json"
 GITHUB_SEARCH = "https://api.github.com/search/issues"
 TLDR_INDEX = "https://raw.githubusercontent.com/tldr-pages/tldr/main/pages/common/{name}.md"
+# The tree, not the contents listing: the contents endpoint stops at a
+# thousand files without saying so, and pages/common holds nearly twice
+# that, so half the commands would never have been drawn.
+TLDR_TREE = "https://api.github.com/repos/tldr-pages/tldr/git/trees/main:pages/common"
 TLDR_LIST = "https://api.github.com/repos/tldr-pages/tldr/contents/pages/common"
 
 
@@ -68,10 +72,7 @@ def good_first_issue(ledger: Ledger, languages: list) -> dict | None:
         return None
     language = _RNG.choice(languages)
     query = f'label:"good first issue" state:open no:assignee language:"{language}" comments:<5'
-    headers = {"Accept": "application/vnd.github+json"}
-    token = os.environ.get("GITHUB_TOKEN")
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
+    headers = net.github_headers(os.environ.get("GITHUB_TOKEN"))
     payload = net.get_json_with_headers(GITHUB_SEARCH, {"q": query, "sort": "updated", "order": "desc", "per_page": 30}, headers)
     if not isinstance(payload, dict):
         return None
@@ -94,12 +95,26 @@ def good_first_issue(ledger: Ledger, languages: list) -> dict | None:
     return None
 
 
+def _tldr_names() -> list:
+    headers = net.github_headers(os.environ.get("GITHUB_TOKEN"))
+    tree = net.get_json_with_headers(TLDR_TREE, None, headers)
+    entries = tree.get("tree") if isinstance(tree, dict) else None
+    if not isinstance(entries, list):
+        listing = net.get_json_with_headers(TLDR_LIST, None, headers)
+        entries = listing if isinstance(listing, list) else []
+    names = []
+    for entry in entries:
+        name = str(entry.get("path") or entry.get("name") or "") if isinstance(entry, dict) else ""
+        if name.endswith(".md") and "/" not in name:
+            names.append(name[:-3])
+    return names
+
+
 def terminal_tip(ledger: Ledger) -> dict | None:
     """One command and one example from tldr-pages, CC BY 4.0."""
-    listing = net.get_json(TLDR_LIST)
-    if not isinstance(listing, list):
+    names = _tldr_names()
+    if not names:
         return None
-    names = [e["name"][:-3] for e in listing if isinstance(e, dict) and str(e.get("name", "")).endswith(".md")]
     _RNG.shuffle(names)
     for name in names[:12]:
         if ledger.seen("tip", name):

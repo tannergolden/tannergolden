@@ -144,10 +144,7 @@ def typing_svg(phrases: list, theme: dict) -> str:
 # --- the account's numbers --------------------------------------------------------
 
 def _headers(token: str | None) -> dict:
-    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    return headers
+    return net.github_headers(token)
 
 
 def _linguist_colors() -> dict:

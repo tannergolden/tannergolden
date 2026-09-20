@@ -55,6 +55,19 @@ COMMENT_DELIMITERS = re.compile(r"<!--+|--+>")
 # Runs of backticks, used to size a fence that cannot be escaped from.
 BACKTICK_RUN = re.compile(r"`+")
 
+# What a fence's info string may carry. CommonMark says a backtick fence's
+# info string may not contain a backtick; one there means the fence never
+# opens and the whole snippet renders as Markdown. A language name is only
+# ever letters, digits and a little punctuation, so that is all that passes.
+_INFO_STRING = re.compile(r"[^0-9a-z+#._-]")
+
+# A mention or an issue reference. Pushed in a commit message, `@name`
+# notifies that account and `fixes #12` closes that issue, so a wiki edit
+# could make this repository do either. The sign is swapped for its
+# fullwidth twin, which reads the same and links to nothing.
+_MENTION = re.compile(r"(?<![\w.])@(?=[A-Za-z0-9])")
+_REFERENCE = re.compile(r"(?<!&)#(?=\d)")
+
 
 def clean(value: str, *, allow_newlines: bool = False) -> str:
     """Return `value` fit to be written into a commit message or Markdown.
@@ -68,8 +81,16 @@ def clean(value: str, *, allow_newlines: bool = False) -> str:
 
     text = unicodedata.normalize("NFC", value)
     text = TROJAN.sub("", text)
-    text = COMMENT_DELIMITERS.sub("", text)
+    # To a fixpoint: removing an inner delimiter can glue its neighbours
+    # into a new one ("--<!-->" is "-->" after one pass).
+    while True:
+        stripped = COMMENT_DELIMITERS.sub("", text)
+        if stripped == text:
+            break
+        text = stripped
     text = BANNED_DASHES.sub(" - ", text)
+    text = _MENTION.sub("\uff20", text)
+    text = _REFERENCE.sub("\uff03", text)
 
     # Whitespace controls become spaces first, so two words a newline or a
     # tab separated stay two words. Every other control character is dropped,
@@ -150,6 +171,12 @@ def safe_url(url: str) -> str:
     text = TROJAN.sub("", text)
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Cc").strip()
     return urllib.parse.quote(text, safe="%:/?#[]@!$&*+,;=~-._")
+
+
+def fence_info(language: str | None) -> str:
+    """The info string after a fence: a language name reduced to what one can be."""
+    first = (language or "").lower().split()
+    return _INFO_STRING.sub("", first[0] if first else "")[:32]
 
 
 def fence_for(code: str) -> str:

@@ -142,8 +142,13 @@ is treated as hostile until it has been through [`src/text.py`](src/text.py).
 Comment delimiters are removed, so no paragraph can close a page region early.
 A borrowed snippet is fenced with more backticks than it contains, so it
 cannot end its own block. Bidirectional overrides and zero-width characters
-are stripped. Commit messages are written to a file and passed to `git
-commit -F`, never through a shell.
+are stripped. A language name is cut down to what a language name can be
+before it follows a fence, since a backtick there would stop the fence
+from opening. A mention or an issue reference in fetched text is defused,
+because a commit message can notify an account or close an issue and a
+wiki edit must not be able to make this repository do either. Commit
+messages are written to a file and passed to `git commit -F`, never
+through a shell.
 
 ---
 

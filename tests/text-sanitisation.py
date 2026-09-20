@@ -19,6 +19,25 @@ def test_comment_delimiters_cannot_survive():
     out = clean(hostile)
     assert "<!--" not in out and "-->" not in out
     assert "JOURNAL:END" in out  # the words are harmless once they cannot form a comment
+    # Removing an inner delimiter must not glue a new one together.
+    for glued in ("--<!-->", "<-->!--", "x --<!--> y", "<!<!---->--"):
+        assert is_clean(clean(glued)), (glued, clean(glued))
+
+
+def test_mentions_and_references_are_defused():
+    out = clean("ping @octocat, fixes #12, see owner/repo#7, but C# and a@b.c stay")
+    assert "@octocat" not in out and "#12" not in out and "repo#7" not in out
+    assert "\uff20octocat" in out and "\uff0312" in out and "repo\uff037" in out
+    assert "C# " in out and "a@b.c" in out
+
+
+def test_fence_info_admits_only_a_language_name():
+    from text import fence_info
+
+    assert fence_info("Zig`x") == "zigx"
+    assert fence_info("c++") == "c++" and fence_info("C#") == "c#" and fence_info("objective-c") == "objective-c"
+    assert fence_info("python ```\n<b>") == "python"
+    assert fence_info(None) == ""
 
 
 def test_trojan_source_is_stripped():

@@ -50,6 +50,15 @@ def test_second_entry_is_appended_not_rewritten(repo, moment):
     assert second.startswith(first)
 
 
+def test_a_backtick_in_the_language_cannot_break_the_fence(repo, moment):
+    hostile = "<a href=\"https://phish.example/\">verify</a>\n## injected\n[x](https://phish.example)"
+    entry = make_entry(kind="rosetta", commit_type="refactor", code=hostile, code_language="Zig`x", license="GFDL-1.2-only")
+    append_journal(entry, moment)
+    text = Path("journal/2026/09.md").read_text(encoding="utf-8")
+    assert "\n```zigx\n" + hostile + "\n```\n" in text
+    assert "```Zig`x" not in text
+
+
 def test_code_entry_is_fenced_and_attributed(repo, moment):
     entry = make_entry(kind="rosetta", commit_type="refactor", code="print('hi') ```", code_language="python", license="GFDL-1.2-only", attribution="Rosetta Code contributors")
     append_journal(entry, moment)

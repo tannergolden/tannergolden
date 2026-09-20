@@ -35,7 +35,7 @@ from config import (
     STATE_DIR,
 )
 from sources import Entry
-from text import clean, fence_for, fit_subject, md_block, md_inline, safe_url, wrap_body
+from text import clean, fence_for, fence_info, fit_subject, md_block, md_inline, safe_url, wrap_body
 
 RECENT_FILE = f"{STATE_DIR}/recent.json"
 MODULES_FILE = f"{STATE_DIR}/modules.json"
@@ -102,7 +102,7 @@ def commit_message(entry: Entry) -> str:
 
     if entry.code:
         fence = fence_for(entry.code)
-        parts += ["", f"{fence}{entry.code_language or ''}", entry.code, fence]
+        parts += ["", f"{fence}{fence_info(entry.code_language)}", entry.code, fence]
         if entry.code_trimmed:
             parts += ["", "The listing is cut to quotation length; the full program is at the source."]
 
@@ -176,7 +176,7 @@ def render_journal_entry(entry: Entry, when: datetime) -> str:
     ]
     if entry.code:
         fence = fence_for(entry.code)
-        lines += ["", f"{fence}{entry.code_language or ''}", entry.code, fence]
+        lines += ["", f"{fence}{fence_info(entry.code_language)}", entry.code, fence]
         if entry.code_trimmed:
             lines += ["", "_Cut to quotation length; the full program is at the source._"]
 

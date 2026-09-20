@@ -44,9 +44,10 @@ jobs:
       DISPATCH_NO_PUSH: ${{ github.ref_name != github.event.repository.default_branch && '1' || '' }}
     steps:
       - name: '🛡️ Harden Runner'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864eb7d2fad2276b3cc9 # v2.13.1
+        uses: tannergolden/standards/actions/harden@v1
         with:
           egress-policy: audit
+          notice: '🟢 Availability: sets the status badge a person picked from the dropdown.'
 
       - name: '📥 Checkout'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -107,13 +107,50 @@ def test_empty_state_renders_a_sentence_not_a_hole(repo, moment):
     assert render_modules_region({}) == "_The daily modules fill in on the first refresh._"
 
 
-def test_modules_render_with_escaping(repo):
+def test_the_two_link_modules_are_escaped(repo):
     region = render_modules_region({
-        "hn": {"title": "A | pipe <b>", "url": "https://x.example/", "points": 12, "domain": "x.example", "discussion": "https://news.ycombinator.com/item?id=1"},
-        "tip": {"command": "jq", "description": "pull one field", "example": "jq '.a'", "url": "https://tldr.example/jq"},
+        "hn": {"title": "A | pipe <b>", "url": "https://x.example/", "points": 12,
+               "domain": "x.example", "discussion": "https://news.ycombinator.com/item?id=1"},
     })
     assert "A \\| pipe &lt;b>" in region
-    assert "> [!TIP]" in region and "> jq '.a'" in region
+
+
+def test_the_tip_renders_the_tool_the_intent_and_the_line(repo):
+    region = render_modules_region({"tip": {
+        "command": "git bisect", "summary": "Use binary search to find the commit that introduced a bug.",
+        "description": "Start a bisect session on a commit range",
+        "example": "git bisect start <bad_commit> <good_commit>",
+        "url": "https://tldr.example/git-bisect",
+    }})
+    assert "> [!TIP]\n> **git bisect** · Use binary search" in region
+    assert "· [tldr](https://tldr.example/git-bisect)" in region
+    assert "> Start a bisect session on a commit range:" in region
+    assert "> git bisect start <bad_commit> <good_commit>" in region
+    assert "> ```bash" in region
+
+
+def test_the_tip_renders_without_a_summary(repo):
+    """A page whose description block is only the "More information" line."""
+    region = render_modules_region({"tip": {
+        "command": "jq", "summary": "", "description": "Pull one field",
+        "example": "jq '.a'", "url": "https://tldr.example/jq",
+    }})
+    assert "> [!TIP]\n> **jq** · [tldr](" in region
+
+
+def test_a_hostile_tip_cannot_become_structure(repo):
+    """tldr is a wiki: a page is whatever its last contributor wrote."""
+    region = render_modules_region({"tip": {
+        "command": "x | y <b>", "summary": "A [link](https://phish.example)",
+        "description": "does <!-- MODULES:END --> things",
+        "example": "x ``` && echo pwned",
+        "url": "https://tldr.example/x",
+    }})
+    assert "x \\| y &lt;b>" in region
+    assert "\\[link\\](https://phish.example)" in region
+    assert "<!--" not in region and "-->" not in region
+    # The fence outgrows the backticks inside it, so the block cannot be left.
+    assert "> ````bash" in region and region.rstrip().endswith("> ````")
 
 
 def test_dispatch_prose_cannot_become_structure(repo, moment):

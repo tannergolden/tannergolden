@@ -63,12 +63,19 @@ _MENTION = re.compile(r"(?<![\w.])@(?=[A-Za-z0-9])")
 _REFERENCE = re.compile(r"(?<!&)#(?=\d)")
 
 
-def clean(value: str, *, allow_newlines: bool = False) -> str:
+def clean(value: str, *, allow_newlines: bool = False, command: bool = False) -> str:
     """Return `value` fit to be written into a commit message or Markdown.
 
     Every fetched string passes through here. The order matters: dashes are
     replaced before whitespace is collapsed, so the spaced hyphen that
     replaces them does not leave a double space behind.
+
+    With `command=True` the mention and reference defusing is skipped, because
+    `user@host` and `#!/bin/sh` are ordinary characters in a command line and
+    swapping them for their fullwidth twins would make the line wrong. Nothing
+    cleaned this way reaches a commit message, which is the only surface where
+    an `@` notifies and a `#` closes; the terminal tip is rendered into a
+    fenced block on the page and nowhere else.
     """
     if not value:
         return ""
@@ -84,8 +91,9 @@ def clean(value: str, *, allow_newlines: bool = False) -> str:
         text = stripped
     text = BANNED_DASHES.sub(" - ", text)
 
-    text = _MENTION.sub("\uff20", text)
-    text = _REFERENCE.sub("\uff03", text)
+    if not command:
+        text = _MENTION.sub("\uff20", text)
+        text = _REFERENCE.sub("\uff03", text)
 
     # Whitespace controls become spaces first, so two words a newline or a
     # tab separated stay two words. Every other control character is dropped,

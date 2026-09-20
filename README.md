@@ -80,10 +80,12 @@ _No dispatches yet. The first lands at a random moment within the next twelve ho
 🧩 **First issue** [Kesavaraja67/telex#36](https://github.com/Kesavaraja67/telex/issues/36) · GFI-5 - Document the risk/review model in the README · Python
 
 > [!TIP]
-> **docker-compose-down**: Stop and remove all containers and networks ([tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/docker-compose-down.md))
+> **sed** · Edit text in a scriptable manner. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/sed.md)
+>
+> Replace all apple (basic regex) occurrences with mango (basic regex) in all input lines and print the result to stdout:
 >
 > ```bash
-> docker compose down
+> <command> | sed 's/apple/mango/g'
 > ```
 <!-- MODULES:END -->
 
@@ -148,7 +150,7 @@ RFC Editor · Lobsters · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 15:17 EDT on Sunday, September 20, 2026.
+Last updated 15:44 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

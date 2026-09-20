@@ -429,6 +429,7 @@ def save_modules(modules: dict) -> None:
 
 
 def render_modules_region(modules: dict) -> str:
+    """The three daily modules: two one-line links, then the terminal tip."""
     lines = []
     hn = modules.get("hn")
     if hn:
@@ -447,24 +448,30 @@ def render_modules_region(modules: dict) -> str:
     blocks = ["  \n".join(lines)] if lines else []
 
     tip = modules.get("tip")
-    if tip:
-        example = clean(tip["example"])
-        fence = fence_for(example)
-        blocks.append(
-            "\n".join(
-                [
-                    "> [!TIP]",
-                    f"> **{md_inline(tip['command'])}**: {md_inline(tip['description'])} "
-                    f"([tldr]({safe_url(tip['url'])}))",
-                    ">",
-                    f"> {fence}bash",
-                    f"> {example}",
-                    f"> {fence}",
-                ]
-            )
+    if not tip:
+        return "\n\n".join(blocks) if blocks else "_The daily modules fill in on the first refresh._"
+
+    example = clean(tip["example"], command=True)
+    fence = fence_for(example)
+    header = f"> **{md_inline(tip['command'])}**"
+    summary = tip.get("summary")
+    if summary:
+        header += f" · {md_inline(summary)}"
+    header += f" · [tldr]({safe_url(tip['url'])})"
+    blocks.append(
+        "\n".join(
+            [
+                "> [!TIP]",
+                header,
+                ">",
+                f"> {md_inline(tip['description'])}:",
+                ">",
+                f"> {fence}bash",
+                f"> {example}",
+                f"> {fence}",
+            ]
         )
-    if not blocks:
-        return "_The daily modules fill in on the first refresh._"
+    )
     return "\n\n".join(blocks)
 
 

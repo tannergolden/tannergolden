@@ -1,4 +1,12 @@
 {
+  "tip": {
+    "id": "sed",
+    "command": "sed",
+    "summary": "Edit text in a scriptable manner.",
+    "description": "Replace all apple (basic regex) occurrences with mango (basic regex) in all input lines and print the result to stdout",
+    "example": "<command> | sed 's/apple/mango/g'",
+    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/sed.md"
+  },
   "hn": {
     "id": "49775418",
     "title": "Airmash - HTML5 Multiplayer Missile Warfare",
@@ -14,12 +22,5 @@
     "title": "GFI-5 - Document the risk/review model in the README",
     "url": "https://github.com/Kesavaraja67/telex/issues/36",
     "language": "Python"
-  },
-  "tip": {
-    "id": "docker-compose-down",
-    "command": "docker-compose-down",
-    "description": "Stop and remove all containers and networks",
-    "example": "docker compose down",
-    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/docker-compose-down.md"
   }
 }

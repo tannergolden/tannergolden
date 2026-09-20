@@ -6,6 +6,7 @@
     "https://github.com/Kesavaraja67/telex/issues/36"
   ],
   "tip": [
-    "docker-compose-down"
+    "docker-compose-down",
+    "sed"
   ]
 }

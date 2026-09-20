@@ -68,6 +68,9 @@ def test_code_entry_is_fenced_and_attributed(repo, moment):
 
 
 def test_recent_index_and_page_rows(repo, moment):
+    Path("assets/badges/dynamic").mkdir(parents=True)
+    for name in ("journal", "month"):
+        Path(f"assets/badges/dynamic/{name}.svg").write_text(f"<svg>{name}</svg>", encoding="utf-8")
     for i in range(15):
         e = make_entry(identifier=str(i), title=f"entry {i}")
         path = append_journal(e, moment)
@@ -79,7 +82,8 @@ def test_recent_index_and_page_rows(repo, moment):
     assert region.startswith("### Sunday, September 20, 2026")
     assert region.count("| 13:05 |") == 13  # 3 visible + 10 collapsed
     assert "<details>" in region and "15 entries in September" in region
-    assert "assets/badges/dynamic/journal.svg" in region
+    assert re.search(r"assets/badges/dynamic/journal\.svg\?v=[0-9a-f]{8}\)", region)
+    assert re.search(r"assets/badges/dynamic/month\.svg\?v=[0-9a-f]{8}\)", region)
 
 
 def test_empty_state_renders_a_sentence_not_a_hole(repo, moment):
@@ -116,3 +120,19 @@ def test_tip_example_cannot_close_its_own_fence(repo):
 def test_month_badge_links_to_the_archive_before_the_first_entry(repo, moment):
     assert "(journal/)" in render_journal_region([], moment, 0)
     assert "(journal/2026/09.md)" in render_journal_region([], moment, 3)
+
+
+def test_month_index_is_regenerated_between_markers(repo, moment):
+    from datetime import datetime, timezone
+
+    from render import update_month_index
+
+    Path("journal").mkdir(exist_ok=True)
+    Path("journal/README.md").write_text("intro\n\n<!-- MONTHS:BEGIN -->\n_No entries yet._\n<!-- MONTHS:END -->\n\nouttro\n", encoding="utf-8")
+    assert update_month_index() is False  # nothing to list yet, and the placeholder already says so
+    append_journal(make_entry(identifier="1"), moment)
+    append_journal(make_entry(identifier="2"), moment)
+    append_journal(make_entry(identifier="3"), datetime(2026, 8, 2, 12, tzinfo=timezone.utc))
+    text = Path("journal/README.md").read_text(encoding="utf-8")
+    assert text.startswith("intro\n\n<!-- MONTHS:BEGIN -->\n| Month | Entries |\n| :--- | ---: |\n| [September 2026](2026/09.md) | 2 |\n| [August 2026](2026/08.md) | 1 |\n<!-- MONTHS:END -->")
+    assert text.endswith("\n\nouttro\n")

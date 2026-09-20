@@ -34,10 +34,17 @@ A moment already in the past, because GitHub skipped or delayed a cron, is
 handled at once. The entry lands late rather than never.
 
 The workflow can also be run by hand from the Actions tab: `tick` does what
-the cron does, `entry` writes one entry now, `refresh` rewrites the page now.
-Run on any branch but the default one, it does everything except push, and
-reports the commits it made in the run summary, so a change can be rehearsed
-before it merges.
+the cron does, `entry` writes one entry now, `refresh` rewrites the page now,
+and `probe` tries every source and every module once and reports what each
+would have written, without writing anything. Run on any branch but the
+default one, the writing modes do everything except push, and report the
+commits they made in the run summary, so a change can be rehearsed before it
+merges.
+
+The journal badge on the page is written by the run itself, so it can go red.
+A run that fails turns it red in a commit of its own, carrying nothing
+fetched, and the next run that succeeds turns it back. A badge that cannot
+go red is decoration.
 
 There is no bot. The commits are made by GitHub Actions, in a workflow I wrote
 and scheduled, and every one of them is authored by me.
@@ -183,6 +190,22 @@ exception nobody wrote down is a discrepancy somebody will find.
 Everything else holds: the commit gate, the body on every commit, the
 sign-off, the frontmatter, the header and footer, the em dash ban in every
 file, the pinned actions, the hardened runner, the least-privilege token.
+
+---
+
+## ✏️ Where The Words Come From
+
+Nothing generated is written by hand, and nothing written by hand is
+generated. The hand-written parts live in three places:
+
+| File                       | What it holds                                                          |
+| :------------------------- | :--------------------------------------------------------------------- |
+| `README.md`                | Everything outside the five marked regions                             |
+| [`profile.json`](profile.json) | The phrases the typing header cycles through, and the languages the good-first-issue search covers |
+| [`.github/badges.yml`](.github/badges.yml) | Every badge, the stack included; `make badges` renders them             |
+
+The journal archive keeps its own index, [`journal/README.md`](journal/README.md),
+with a month table the run regenerates between markers each time it writes.
 
 ---
 

@@ -17,6 +17,7 @@ without parsing Markdown back into data.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -56,22 +57,22 @@ def _markers(name: str) -> tuple:
     return f"<!-- {name}:BEGIN -->", f"<!-- {name}:END -->"
 
 
-def replace_region(document: str, name: str, content: str) -> str:
+def replace_region(document: str, name: str, content: str, *, document_name: str = README) -> str:
     begin, end = _markers(name)
     start = document.find(begin)
     stop = document.find(end)
     if start < 0 or stop < 0 or stop < start:
-        raise ValueError(f"README.md has no intact {name} region; refusing to write")
+        raise ValueError(f"{document_name} has no intact {name} region; refusing to write")
     start += len(begin)
     return f"{document[:start]}\n{content.strip()}\n{document[stop:]}"
 
 
-def read_region(document: str, name: str) -> str:
+def read_region(document: str, name: str, *, document_name: str = README) -> str:
     begin, end = _markers(name)
     start = document.find(begin)
     stop = document.find(end)
     if start < 0 or stop < 0:
-        raise ValueError(f"README.md has no intact {name} region")
+        raise ValueError(f"{document_name} has no intact {name} region")
     return document[start + len(begin) : stop].strip()
 
 
@@ -190,6 +191,36 @@ def render_journal_entry(entry: Entry, when: datetime) -> str:
     return "\n".join(lines)
 
 
+MONTH_FILE = re.compile(r"^(\d{4})/(\d{2})\.md$")
+
+
+def update_month_index() -> bool:
+    """Regenerate the month table in journal/README.md from the files on disk.
+
+    Machine-owned between MONTHS markers, like the page's regions: the
+    prose around it is written by hand and never touched.
+    """
+    rows = []
+    for path in sorted(Path(JOURNAL_DIR).glob("*/*.md"), reverse=True):
+        match = MONTH_FILE.match(path.relative_to(JOURNAL_DIR).as_posix())
+        if not match:
+            continue
+        year, month = int(match.group(1)), int(match.group(2))
+        count = path.read_text(encoding="utf-8").count('<a name="entry-')
+        label = datetime(year, month, 1, tzinfo=ZoneInfo(DISPLAY_TIMEZONE)).strftime("%B %Y")
+        rows.append(f"| [{label}]({match.group(1)}/{match.group(2)}.md) | {count} |")
+    table = "| Month | Entries |\n| :--- | ---: |\n" + "\n".join(rows) if rows else "_No entries yet._"
+    index = Path(JOURNAL_DIR) / "README.md"
+    if not index.exists():
+        return False
+    original = index.read_text(encoding="utf-8")
+    updated = replace_region(original, "MONTHS", table, document_name=str(index))
+    if updated != original:
+        index.write_text(updated, encoding="utf-8")
+        return True
+    return False
+
+
 def append_journal(entry: Entry, when: datetime) -> str:
     path = Path(journal_path(when))
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -206,6 +237,7 @@ def append_journal(entry: Entry, when: datetime) -> str:
         )
     with open(path, "a", encoding="utf-8") as handle:
         handle.write(render_journal_entry(entry, when))
+    update_month_index()
     return str(path)
 
 
@@ -265,15 +297,28 @@ def _row(item: dict) -> str:
     return f"| {when:%H:%M} | `{item['type']}({item['scope']})` | [{md_inline(item['title'])}]({link}) |"
 
 
+def _tag(path: str) -> str:
+    """Eight hex characters of a file's hash, so a rewritten image gets a new URL.
+
+    GitHub's image proxy caches by URL. Without this a badge turned red by a
+    failed run could keep showing green for hours.
+    """
+    try:
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:8]
+    except OSError:
+        return "0"
+
+
 def render_journal_region(recent: list, when: datetime, month_count: int) -> str:
     stamp = local(when)
     heading = f"### {stamp:%A, %B} {stamp.day}, {stamp:%Y}"
     # The month file does not exist until the month's first entry, so the badge
     # points at the archive until then rather than at a page that is not there.
     month_target = journal_path(when) if month_count else f"{JOURNAL_DIR}/"
+    status_badge, month_badge = "assets/badges/dynamic/journal.svg", "assets/badges/dynamic/month.svg"
     badges = (
-        f"[![Journal workflow status](assets/badges/dynamic/journal.svg)]({REPO_URL}/actions/workflows/journal.yml) "
-        f"[![Entries this month](assets/badges/dynamic/month.svg)]({month_target})"
+        f"[![Journal workflow status]({status_badge}?v={_tag(status_badge)})]({REPO_URL}/actions/workflows/journal.yml) "
+        f"[![Entries this month]({month_badge}?v={_tag(month_badge)})]({month_target})"
     )
     table_head = "| Time | Commit | Entry |\n| :--- | :--- | :--- |"
 

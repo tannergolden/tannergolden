@@ -6,6 +6,7 @@
     python3 src/journal.py --mode tick      # the hourly run (default)
     python3 src/journal.py --mode entry     # write one entry now, whatever the schedule says
     python3 src/journal.py --mode refresh   # refresh the page now, on demand
+    python3 src/journal.py --mode probe     # try every source and module, write nothing
     python3 src/journal.py --mode render    # re-render the page from state, offline
     python3 src/journal.py --mode check     # verify the page's regions, write nothing
 
@@ -27,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -47,6 +49,9 @@ from config import (
     STATE_DIR,
 )
 from state import Ledger, Schedule, now
+from text import clean, fit_subject
+
+BADGE_DATA = ".github/badges.yml"
 
 PROFILE_FILE = "profile.json"
 COMMIT_PATHS = [README, JOURNAL_DIR, STATE_DIR, ASSETS_DIR, ".github/badges.yml"]
@@ -61,9 +66,9 @@ def git(*args: str, env: dict | None = None, check: bool = True) -> str:
     return result.stdout
 
 
-def commit(message: str) -> bool:
+def commit(message: str, paths: list | None = None) -> bool:
     """Stage the machine-owned paths and commit them with the message, from a file."""
-    existing = [p for p in COMMIT_PATHS if Path(p).exists()]
+    existing = [p for p in (paths or COMMIT_PATHS) if Path(p).exists()]
     git("add", "--", *existing)
     if not git("diff", "--cached", "--name-only").strip():
         print("nothing to commit")
@@ -119,6 +124,69 @@ def report_unpushed(branch: str) -> None:
 
 # --- badges -----------------------------------------------------------------------
 
+def badge_status() -> str:
+    """What the journal badge currently says, read back from the data file."""
+    try:
+        text = Path(BADGE_DATA).read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    block = re.search(r"- name: journal\n((?:[ \t]+\S.*\n){1,8})", text)
+    if not block:
+        return ""
+    message = re.search(r"^\s+message:\s*['\"]?([^'\"\n]+?)['\"]?\s*$", block.group(1), flags=re.MULTILINE)
+    return message.group(1).strip() if message else ""
+
+
+BADGE_PATHS = [README, ".github/badges.yml", "assets/badges"]
+
+
+def discard_partial_work() -> None:
+    """Throw away whatever the failed run wrote, so none of it can be committed.
+
+    A run that dies halfway has appended to the journal, touched the ledger
+    and half-rendered the page. The failure commit must carry none of that,
+    only the badge, so the tracked files go back to HEAD and anything new
+    under the machine-owned paths is removed.
+    """
+    git("restore", "--source=HEAD", "--staged", "--worktree", "--", *COMMIT_PATHS, check=False)
+    git("clean", "-fdq", "--", JOURNAL_DIR, STATE_DIR, ASSETS_DIR, check=False)
+
+
+def mark_failed(exc: BaseException) -> None:
+    """Turn the journal badge red and commit that, so the page tells the truth.
+
+    A badge that cannot go red is decoration. This one goes red the moment
+    a run fails, in a commit of its own that carries nothing fetched, and
+    the next run that succeeds turns it back.
+    """
+    discard_partial_work()
+    render_page(now(), with_modules=False, status=("Failing", "red"))
+    reason = clean(f"{type(exc).__name__}: {exc}")[:240]
+    body = render.wrap_body(
+        f"The run that started at {render.local(now()):%H:%M %Z on %A, %B %d} failed with "
+        f"{reason}. The badge on the page says so until a run succeeds; nothing "
+        f"fetched is in this commit."
+    )
+    message = f"ci(journal): \U0001F6A8 mark the last run as failed\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
+    if commit(message, paths=BADGE_PATHS):
+        push()
+
+
+def mark_passing() -> None:
+    """After a run that did no work, clear a red badge left by an earlier failure."""
+    status = badge_status()
+    if not status or status == "Passing":
+        return
+    render_page(now(), with_modules=False)
+    body = render.wrap_body(
+        "An earlier run failed and left the badge red. This run succeeded, so the "
+        "badge says so again. Nothing fetched is in this commit."
+    )
+    message = f"ci(journal): \U0001F552 mark the run passing again\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
+    if commit(message, paths=BADGE_PATHS):
+        push()
+
+
 def render_badges(month_count: int, status: str = "Passing", color: str = "green") -> None:
     """Re-render the committed badges through the emblems kit, when it is present.
 
@@ -151,9 +219,11 @@ def load_profile() -> dict:
         return {}
 
 
-def render_page(when: datetime, *, with_modules: bool = True) -> None:
+def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("Passing", "green")) -> None:
     recent = render.load_recent()
     month_count = render.entries_this_month(when)
+    # Badges first: the page embeds each one with a tag of its bytes.
+    render_badges(month_count, *status)
     profile = load_profile()
     regions = {
         "JOURNAL": render.render_journal_region(recent, when, month_count),
@@ -169,7 +239,6 @@ def render_page(when: datetime, *, with_modules: bool = True) -> None:
             + cards.picture("languages", alts.get("languages_alt", "Top languages card"))
         )
     render.update_readme(regions)
-    render_badges(month_count)
 
 
 def write_entry(ledger: Ledger, when: datetime) -> str | None:
@@ -226,6 +295,67 @@ def refresh_page(ledger: Ledger, when: datetime) -> str:
     return render.readme_commit_message(when, changed)
 
 
+def probe() -> int:
+    """Try every source and every module once, print what each would have written, change nothing.
+
+    A throwaway ledger, no files, no commits. The one run that answers "do
+    the adapters still work" without waiting for a random moment to find
+    out, and the first thing to dispatch after a change to sources.py.
+    """
+    rows = []
+    with tempfile.TemporaryDirectory() as scratch:
+        ledger = Ledger(f"{scratch}/ledger.json")
+        today = render.local(now()).date()
+        for kind, fetcher in sources.FETCHERS.items():
+            try:
+                entry = fetcher(ledger, today)
+            except Exception as exc:
+                rows.append((kind, "error", clean(repr(exc))[:160]))
+                continue
+            if entry is None:
+                rows.append((kind, "empty", "nothing available today"))
+            else:
+                rows.append((kind, "ok", fit_subject(entry.commit_type, entry.scope, entry.emoji, entry.subject)))
+
+        profile = load_profile()
+        languages = list(profile.get("issue_languages") or [])
+        for name, call in (
+            ("show hn", lambda: modules.show_hn(ledger)),
+            ("first issue", lambda: modules.good_first_issue(ledger, languages)),
+            ("tip", lambda: modules.terminal_tip(ledger)),
+        ):
+            try:
+                found = call()
+            except Exception as exc:
+                rows.append((name, "error", clean(repr(exc))[:160]))
+                continue
+            rows.append((name, "ok", clean(str(found.get("title") or found.get("command")))[:120]) if found else (name, "empty", "nothing new"))
+
+        login = os.environ.get("GITHUB_REPOSITORY_OWNER") or profile.get("login") or "tannergolden"
+        try:
+            stats = cards.github_stats(login, os.environ.get("GITHUB_TOKEN"))
+        except Exception as exc:
+            rows.append(("stats", "error", clean(repr(exc))[:160]))
+        else:
+            if stats:
+                rows.append(("stats", "ok", f"{stats['public_repos']} public repositories, {len(stats['languages'])} languages, commits {stats['commits']}"))
+            else:
+                rows.append(("stats", "empty", "the API returned nothing"))
+
+    width = max(len(r[0]) for r in rows)
+    lines = [f"{kind.ljust(width)}  {status:5}  {detail}" for kind, status, detail in rows]
+    print("\n".join(lines))
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with open(summary, "a", encoding="utf-8") as handle:
+            handle.write("### \U0001F50D Probe: every source and module, nothing written\n\n")
+            handle.write("| Source | Result | Would have written |\n| :--- | :--- | :--- |\n")
+            for kind, status, detail in rows:
+                mark = {"ok": "\u2705", "empty": "\u26aa", "error": "\u274c"}[status]
+                handle.write(f"| {kind} | {mark} {status} | {render.md_inline(detail)} |\n")
+    return 1 if any(status == "error" for _, status, _ in rows) else 0
+
+
 def sleep_until(moment: datetime) -> None:
     while True:
         remaining = (moment - now()).total_seconds()
@@ -264,6 +394,7 @@ def tick() -> int:
         due = min(next_entry, next_refresh)
         if due > deadline:
             print(f"nothing due before {deadline.isoformat(timespec='seconds')}; next entry {next_entry.isoformat(timespec='seconds')}")
+            mark_passing()
             return 0
 
         sleep_until(due)
@@ -284,8 +415,11 @@ def tick() -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--mode", choices=["tick", "entry", "refresh", "render", "check"], default="tick")
+    parser.add_argument("--mode", choices=["tick", "entry", "refresh", "render", "check", "probe"], default="tick")
     args = parser.parse_args()
+
+    if args.mode == "probe":
+        return probe()
 
     if args.mode == "check":
         document = Path(README).read_text(encoding="utf-8")
@@ -299,7 +433,19 @@ def main() -> int:
         print("README.md re-rendered from state")
         return 0
 
-    if args.mode == "refresh":
+    try:
+        return run_writing_mode(args.mode)
+    except Exception as exc:
+        print(f"::error::{type(exc).__name__}: {exc}")
+        try:
+            mark_failed(exc)
+        except Exception as inner:
+            print(f"::warning::could not mark the failure on the page: {inner!r}")
+        raise
+
+
+def run_writing_mode(mode: str) -> int:
+    if mode == "refresh":
         # A forced refresh moves the next one the same way a forced entry
         # does, so the tick after it does not repeat the work an hour later.
         schedule = Schedule()
@@ -310,18 +456,18 @@ def main() -> int:
             push()
         return 0
 
-    if args.mode == "entry":
+    if mode == "entry":
         # One entry, now. The next moment is still drawn from the
         # distribution, so a forced entry moves the schedule the same way a
         # random one does rather than leaving a stale due time behind it.
+        # The refresh is left alone on purpose. On a fresh deployment it has
+        # no moment yet, which reads as due, so the next tick refreshes the
+        # page within the hour rather than after a full draw.
         schedule = Schedule()
         moment = now()
         message = write_entry(Ledger(), moment)
         if message is None:
             return 1
-        # The refresh is left alone on purpose. On a fresh deployment it has
-        # no moment yet, which reads as due, so the next tick refreshes the
-        # page within the hour rather than after a full draw.
         schedule.reschedule_entry(after=moment)
         if commit(message):
             push()

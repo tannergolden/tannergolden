@@ -287,7 +287,6 @@ generated. The hand-written parts live in three places:
 | File                       | What it holds                                                          |
 | :------------------------- | :--------------------------------------------------------------------- |
 | `README.md`                | Everything outside the six marked regions                              |
-| [`profile.json`](profile.json) | The phrases the typing header cycles through                            |
 | [`.github/badges.yml`](.github/badges.yml) | Every badge, the stack included; `make badges` renders them             |
 
 The archive keeps its own index, [`dispatches/README.md`](dispatches/README.md),

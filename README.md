@@ -17,13 +17,6 @@ category: profile
 
 _Build it so the right way is the only easy way._
 
-<!-- TYPING:BEGIN -->
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/typing-dark.svg?v=b2d8e081">
-  <img alt="AI research &amp; systems engineering / reproducible by construction / least-privilege CI, pinned to the SHA / standards that outlast their author" src="assets/typing-light.svg?v=3654606b">
-</picture>
-<!-- TYPING:END -->
-
 [![Status: Active](assets/badges/static/status.svg)](./)
 [![Role: Profile](assets/badges/static/role.svg)](./)
 [![Context: Automation](assets/badges/static/context.svg)](./)
@@ -140,7 +133,7 @@ Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY). Terms
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:22 EDT on Sunday, September 20, 2026.
+Last updated 19:28 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

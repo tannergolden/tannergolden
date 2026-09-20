@@ -15,7 +15,7 @@ def test_replace_touches_only_the_region(repo):
     before = Path("README.md").read_text(encoding="utf-8")
     after = replace_region(before, "DISPATCHES", "new dispatches")
     assert read_region(after, "DISPATCHES") == "new dispatches"
-    assert read_region(after, "TYPING") == "old typing"
+    assert read_region(after, "MODULES") == "old modules"
     head, _, _ = before.partition("<!-- DISPATCHES:BEGIN -->")
     assert after.startswith(head)
     _, _, tail = before.partition("<!-- DISPATCHES:END -->")

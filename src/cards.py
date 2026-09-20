@@ -1,11 +1,10 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The three images on the page, drawn as SVG and committed.
+"""The two cards on the page, drawn as SVG and committed.
 
-Nothing on the page is fetched from an image service at render time. The
-typing header is written from `profile.json`; the two cards are drawn from
-what the GitHub API says about the account's public repositories. Each comes
-in a light and a dark variant, and the page switches between them with a
+Nothing on the page is fetched from an image service at render time. Both
+are drawn from what the GitHub API says about the account's public
+repositories. Each comes in a light and a dark variant, and the page switches between them with a
 `<picture>` element, because a media query inside an image is honoured by
 browsers but not by every proxy in between.
 
@@ -61,84 +60,6 @@ def _svg_header(width: int, height: int, title: str, theme: dict) -> str:
         f'<rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="6" '
         f'fill="{theme["surface"]}" stroke="{theme["border"]}"/>\n'
     )
-
-
-# --- the typing header ----------------------------------------------------------
-
-def _keyframes(index: int, phrase: str, slot: float, cycle: float, char: float) -> tuple:
-    """The shared timeline for one phrase: (keyTimes, typed widths).
-
-    The clip rectangle and the cursor both follow these, so they are computed
-    once and the two cannot drift apart. Consecutive equal times collapse,
-    which is what keeps the first phrase's opening frame from repeating and
-    the last phrase's closing frame from running past 1.0.
-    """
-    type_seconds, hold_seconds = 1.6, 2.2
-    start = (index * slot) / cycle
-    typed = (index * slot + type_seconds) / cycle
-    held = (index * slot + type_seconds + hold_seconds) / cycle
-    erased = ((index + 1) * slot) / cycle
-    width = len(phrase) * char + 2
-    keys, values = [], []
-    for time, value in [(0.0, 0.0), (start, 0.0), (typed, width), (held, width), (erased, 0.0), (1.0, 0.0)]:
-        if keys and abs(time - keys[-1]) < 1e-9:
-            continue
-        keys.append(time)
-        values.append(value)
-    return keys, values, start, erased
-
-
-def typing_svg(phrases: list, theme: dict) -> str:
-    """Phrases typed and erased in turn, in pure SMIL, looping in sync.
-
-    A clip rectangle over each phrase grows from zero to the phrase's width
-    and shrinks back, on one shared cycle, so the phrases never overlap and
-    the loop never drifts. The cursor is a rectangle whose x follows the same
-    keyframes, blinking on a separate one-second cycle of its own.
-    """
-    phrases = [p for p in phrases if p][:4] or ["engineering"]
-    font_size = 20
-    char = font_size * 0.61
-    height = 40
-    width = int(max(len(p) for p in phrases) * char) + 24
-    slot = 1.6 + 2.2 + 0.9  # type, hold, erase
-    cycle = slot * len(phrases)
-    dur = f'dur="{cycle:.1f}s" repeatCount="indefinite"'
-
-    frames = [_keyframes(i, p, slot, cycle, char) for i, p in enumerate(phrases)]
-    out = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="t">',
-        f"<title id=\"t\">{escape(' / '.join(phrases))}</title>",
-        "<defs>",
-    ]
-    for index, (keys, values, _, _) in enumerate(frames):
-        key_times = ";".join(f"{k:.4f}" for k in keys)
-        widths = ";".join(f"{v:.1f}" for v in values)
-        out.append(
-            f'<clipPath id="c{index}"><rect x="0" y="0" width="0" height="{height}">'
-            f'<animate attributeName="width" values="{widths}" keyTimes="{key_times}" {dur}/>'
-            "</rect></clipPath>"
-        )
-    out.append("</defs>")
-    out.append(f'<style>text{{font-family:{FONT};font-size:{font_size}px;fill:{theme["ink"]}}}</style>')
-
-    for index, phrase in enumerate(phrases):
-        out.append(f'<text x="8" y="27" clip-path="url(#c{index})">{escape(phrase)}</text>')
-
-    # The cursor follows the typed width of whichever phrase is active.
-    for index, (keys, values, start, erased) in enumerate(frames):
-        key_times = ";".join(f"{k:.4f}" for k in keys)
-        xs = ";".join(f"{v + 9:.1f}" for v in values)
-        on = ";".join("1" if start <= k < erased or (index == 0 and k == 0.0) else "0" for k in keys)
-        out.append(
-            f'<g opacity="0"><animate attributeName="opacity" values="{on}" keyTimes="{key_times}" calcMode="discrete" {dur}/>'
-            f'<rect y="9" width="{int(char * 0.8)}" height="{font_size + 2}" fill="{theme["ink"]}">'
-            f'<animate attributeName="x" values="{xs}" keyTimes="{key_times}" {dur}/>'
-            '<animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" repeatCount="indefinite"/>'
-            "</rect></g>"
-        )
-    out.append("</svg>")
-    return "\n".join(out) + "\n"
 
 
 # --- the account's numbers --------------------------------------------------------
@@ -331,14 +252,6 @@ def content_tag(path: str) -> str:
         return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:8]
     except OSError:
         return "0"
-
-
-def write_typing(profile: dict) -> list:
-    phrases = list(profile.get("phrases") or [])
-    return [
-        _write(f"{ASSETS_DIR}/typing-{scheme}.svg", typing_svg(phrases, theme))
-        for scheme, theme in THEMES.items()
-    ]
 
 
 def write_cards(stats: dict) -> dict:

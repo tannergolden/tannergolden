@@ -1,0 +1,376 @@
+# SPDX-FileCopyrightText: 2026 Tanner Golden
+# SPDX-License-Identifier: MIT
+"""Everything that writes Markdown: the commit message, the journal, the page.
+
+THE PAGE IS EDITED ONLY BETWEEN MARKERS. Four regions of README.md are bounded
+by HTML comments of the form `<!-- NAME:BEGIN -->` and `<!-- NAME:END -->`,
+the same shape as the AUTO-INDEX markers in tannergolden/standards. Text
+inside them is machine-owned and rewritten whole; text outside them is never
+read, let alone changed. A missing marker is an error, not an invitation to
+guess where the region went.
+
+The journal is append-only. One file per month, an entry added at the end,
+and nothing above it ever rewritten. `state/recent.json` is a small rolling
+index of the newest entries kept alongside so the page can be rendered
+without parsing Markdown back into data.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+from config import (
+    AUTHOR_EMAIL,
+    AUTHOR_NAME,
+    DISPLAY_TIMEZONE,
+    ENTRIES_COLLAPSED,
+    ENTRIES_VISIBLE,
+    JOURNAL_DIR,
+    README,
+    STATE_DIR,
+)
+from sources import Entry
+from text import clean, fence_for, fit_subject, md_inline, wrap_body
+
+RECENT_FILE = f"{STATE_DIR}/recent.json"
+MODULES_FILE = f"{STATE_DIR}/modules.json"
+REPO_URL = "https://github.com/tannergolden/tannergolden"
+
+
+def local(when: datetime) -> datetime:
+    return when.astimezone(ZoneInfo(DISPLAY_TIMEZONE))
+
+
+def zone_abbreviation(when: datetime) -> str:
+    return local(when).strftime("%Z")
+
+
+# --- regions -----------------------------------------------------------------
+
+def _markers(name: str) -> tuple:
+    return f"<!-- {name}:BEGIN -->", f"<!-- {name}:END -->"
+
+
+def replace_region(document: str, name: str, content: str) -> str:
+    begin, end = _markers(name)
+    start = document.find(begin)
+    stop = document.find(end)
+    if start < 0 or stop < 0 or stop < start:
+        raise ValueError(f"README.md has no intact {name} region; refusing to write")
+    start += len(begin)
+    return f"{document[:start]}\n{content.strip()}\n{document[stop:]}"
+
+
+def read_region(document: str, name: str) -> str:
+    begin, end = _markers(name)
+    start = document.find(begin)
+    stop = document.find(end)
+    if start < 0 or stop < 0:
+        raise ValueError(f"README.md has no intact {name} region")
+    return document[start + len(begin) : stop].strip()
+
+
+def update_readme(regions: dict) -> bool:
+    """Rewrite the named regions; return whether the file changed."""
+    original = Path(README).read_text(encoding="utf-8")
+    updated = original
+    for name, content in regions.items():
+        updated = replace_region(updated, name, content)
+    if updated != original:
+        Path(README).write_text(updated, encoding="utf-8")
+        return True
+    return False
+
+
+# --- the commit message --------------------------------------------------------
+
+def commit_message(entry: Entry) -> str:
+    """The full message: house-conformant header, prose body, code, provenance, sign-off.
+
+    Built as a string and written to a file for `git commit -F`; it is never
+    passed through a shell. The trailer block ends with the author's sign-off
+    because the author is a person and this is their standing certification
+    for a generator they wrote and scheduled.
+    """
+    header = fit_subject(entry.commit_type, entry.scope, entry.emoji, entry.subject)
+    parts = [header, "", wrap_body(entry.body)]
+
+    if entry.code:
+        fence = fence_for(entry.code)
+        parts += ["", f"{fence}{entry.code_language or ''}", entry.code, fence]
+        if entry.code_trimmed:
+            parts += ["", "The listing is cut to quotation length; the full program is at the source."]
+
+    provenance = [f"Source: {entry.source_url}"]
+    if entry.attribution:
+        provenance.append(f"Attribution: {clean(entry.attribution)}")
+    provenance.append(f"License: {clean(entry.license)}")
+    parts += ["", *provenance, "", f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>"]
+    return "\n".join(parts) + "\n"
+
+
+def readme_commit_message(when: datetime, changed: list) -> str:
+    stamp = local(when).strftime("%A, %B %d, %Y at %H:%M %Z")
+    what = ", ".join(changed) if changed else "the page"
+    body = wrap_body(
+        f"Refreshed {what} on {stamp}. The moment was drawn from the same "
+        "exponential distribution as a journal entry, so this lands at an "
+        "unremarkable hour rather than on a cron boundary. Nothing outside the "
+        "marked regions was read or written."
+    )
+    return f"chore(readme): \U0001F9F9 refresh the page\n\n{body}\n\nSigned-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>\n"
+
+
+# --- the journal ------------------------------------------------------------------
+
+JOURNAL_FRONTMATTER = """<!--
+title: '\U0001F4D3 JOURNAL, {month_name} {year}'
+description: 'Every entry the workflow wrote in {month_name} {year}, in the order it wrote them, each with its source and license.'
+tags: [journal, generated, {year}, {month_slug}]
+category: journal
+-->
+
+<!-- markdownlint-disable MD041 -->
+
+<div align="center">
+
+# \U0001F4D3 JOURNAL, {month_name_upper} {year}
+
+<a name="top"></a>
+
+**One entry per commit, added at a moment nobody scheduled.**
+
+_Appended, never rewritten._
+
+</div>
+
+---
+
+"""
+
+
+def journal_path(when: datetime) -> str:
+    stamp = local(when)
+    return f"{JOURNAL_DIR}/{stamp:%Y}/{stamp:%m}.md"
+
+
+def entry_anchor(when: datetime) -> str:
+    return f"entry-{local(when):%Y%m%d-%H%M%S}"
+
+
+def render_journal_entry(entry: Entry, when: datetime) -> str:
+    stamp = local(when)
+    lines = [
+        f'<a name="{entry_anchor(when)}"></a>',
+        "",
+        f"### {stamp:%H:%M} {stamp:%Z} · `{entry.commit_type}({entry.scope})`",
+        "",
+        f"**{clean(entry.title)}**",
+        "",
+        wrap_body(entry.body),
+    ]
+    if entry.code:
+        fence = fence_for(entry.code)
+        lines += ["", f"{fence}{entry.code_language or ''}", entry.code, fence]
+        if entry.code_trimmed:
+            lines += ["", "_Cut to quotation length; the full program is at the source._"]
+
+    provenance = f"Source: [{clean(entry.source_name)}]({entry.source_url})"
+    if entry.attribution:
+        provenance += f" · {clean(entry.attribution)}"
+    provenance += f" · License: {clean(entry.license)}"
+    for label, url in entry.extra_links:
+        provenance += f" · [{clean(label)}]({url})"
+    lines += ["", provenance, "", "---", ""]
+    return "\n".join(lines)
+
+
+def append_journal(entry: Entry, when: datetime) -> str:
+    path = Path(journal_path(when))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not path.exists():
+        stamp = local(when)
+        path.write_text(
+            JOURNAL_FRONTMATTER.format(
+                year=stamp.year,
+                month_name=stamp.strftime("%B"),
+                month_name_upper=stamp.strftime("%B").upper(),
+                month_slug=stamp.strftime("%B").lower(),
+            ),
+            encoding="utf-8",
+        )
+    with open(path, "a", encoding="utf-8") as handle:
+        handle.write(render_journal_entry(entry, when))
+    return str(path)
+
+
+# --- the rolling index ----------------------------------------------------------------
+
+def load_recent() -> list:
+    try:
+        with open(RECENT_FILE, encoding="utf-8") as handle:
+            loaded = json.load(handle)
+    except (OSError, ValueError):
+        return []
+    return loaded if isinstance(loaded, list) else []
+
+
+def record_recent(entry: Entry, when: datetime, path: str) -> list:
+    recent = load_recent()
+    recent.insert(
+        0,
+        {
+            "at": when.isoformat(),
+            "type": entry.commit_type,
+            "scope": entry.scope,
+            "title": clean(entry.title),
+            "path": path,
+            "anchor": entry_anchor(when),
+        },
+    )
+    recent = recent[: ENTRIES_VISIBLE + ENTRIES_COLLAPSED + 5]
+    Path(RECENT_FILE).parent.mkdir(parents=True, exist_ok=True)
+    with open(RECENT_FILE, "w", encoding="utf-8") as handle:
+        json.dump(recent, handle, indent=2, ensure_ascii=False)
+        handle.write("\n")
+    return recent
+
+
+def entries_this_month(when: datetime) -> int:
+    month = local(when).strftime("%Y-%m")
+    count = 0
+    for item in load_recent():
+        try:
+            if local(datetime.fromisoformat(item["at"])).strftime("%Y-%m") == month:
+                count += 1
+        except (KeyError, ValueError):
+            continue
+    # The rolling index is capped, so a busy month is counted from the file.
+    path = Path(journal_path(when))
+    if path.exists():
+        count = max(count, path.read_text(encoding="utf-8").count('<a name="entry-'))
+    return count
+
+
+# --- the page regions -------------------------------------------------------------------
+
+def _row(item: dict) -> str:
+    when = local(datetime.fromisoformat(item["at"]))
+    link = f"{item['path']}#{item['anchor']}"
+    return f"| {when:%H:%M} | `{item['type']}({item['scope']})` | [{md_inline(item['title'])}]({link}) |"
+
+
+def render_journal_region(recent: list, when: datetime, month_count: int) -> str:
+    stamp = local(when)
+    heading = f"### {stamp:%A, %B} {stamp.day}, {stamp:%Y}"
+    badges = (
+        f"[![Journal workflow status](assets/badges/dynamic/journal.svg)]({REPO_URL}/actions/workflows/journal.yml) "
+        f"[![Entries this month](assets/badges/dynamic/month.svg)]({journal_path(when)})"
+    )
+    table_head = "| Time | Commit | Entry |\n| :--- | :--- | :--- |"
+
+    visible = recent[:ENTRIES_VISIBLE]
+    earlier = recent[ENTRIES_VISIBLE : ENTRIES_VISIBLE + ENTRIES_COLLAPSED]
+
+    lines = [heading, "", badges, ""]
+    if visible:
+        lines += [table_head, *[_row(item) for item in visible]]
+    else:
+        lines += [
+            "_No entries yet. The first one lands at a random moment within the "
+            "next twelve hours or so; nothing here is on a schedule._"
+        ]
+    if earlier:
+        lines += [
+            "",
+            "<details>",
+            "<summary>Earlier entries</summary>",
+            "",
+            table_head,
+            *[_row(item) for item in earlier],
+            "",
+            "</details>",
+        ]
+    lines += [
+        "",
+        f"[Full journal]({JOURNAL_DIR}/) · [How it works](How-It-Works.md) · "
+        f"{month_count} {'entry' if month_count == 1 else 'entries'} in {stamp:%B}",
+    ]
+    return "\n".join(lines)
+
+
+def load_modules() -> dict:
+    try:
+        with open(MODULES_FILE, encoding="utf-8") as handle:
+            loaded = json.load(handle)
+    except (OSError, ValueError):
+        return {}
+    return loaded if isinstance(loaded, dict) else {}
+
+
+def save_modules(modules: dict) -> None:
+    Path(MODULES_FILE).parent.mkdir(parents=True, exist_ok=True)
+    with open(MODULES_FILE, "w", encoding="utf-8") as handle:
+        json.dump(modules, handle, indent=2, ensure_ascii=False)
+        handle.write("\n")
+
+
+def render_modules_region(modules: dict) -> str:
+    lines = []
+    hn = modules.get("hn")
+    if hn:
+        lines.append(
+            f"\U0001F4F0 **Show HN** [{md_inline(hn['title'])}]({hn['url']}) · "
+            f"{int(hn.get('points', 0))} points · {md_inline(hn.get('domain', ''))} · "
+            f"[discuss]({hn['discussion']})"
+        )
+    issue = modules.get("issue")
+    if issue:
+        lines.append(
+            f"\U0001F9E9 **First issue** [{md_inline(issue['repo'])}#{int(issue['number'])}]({issue['url']}) · "
+            f"{md_inline(issue['title'])} · {md_inline(issue.get('language', ''))}"
+        )
+    tip = modules.get("tip")
+    if tip:
+        lines += [
+            "",
+            "> [!TIP]",
+            f"> **{md_inline(tip['command'])}**: {md_inline(tip['description'])} "
+            f"([tldr]({tip['url']}))",
+            ">",
+            "> ```bash",
+            f"> {clean(tip['example'])}",
+            "> ```",
+        ]
+    if not lines:
+        return "_The daily modules fill in on the first refresh._"
+    # Two trailing spaces keep the module lines on separate rendered lines.
+    return "  \n".join(line if line else "" for line in lines)
+
+
+def render_updated_line(when: datetime) -> str:
+    stamp = local(when)
+    return f"Last updated {stamp:%H:%M} {stamp:%Z} on {stamp:%A, %B} {stamp.day}, {stamp:%Y}."
+
+
+def month_badge_message(count: int) -> str:
+    return f"{count} this month"
+
+
+def git_env_for_commit() -> dict:
+    """Author is the person; committer is the Actions identity, set by the workflow."""
+    env = dict(os.environ)
+    env["GIT_AUTHOR_NAME"] = AUTHOR_NAME
+    env["GIT_AUTHOR_EMAIL"] = AUTHOR_EMAIL
+    env.setdefault("GIT_COMMITTER_NAME", "github-actions[bot]")
+    env.setdefault("GIT_COMMITTER_EMAIL", "41898282+github-actions[bot]@users.noreply.github.com")
+    return env
+
+
+def month_label(when: datetime) -> str:
+    return re.sub(r"\s+", " ", local(when).strftime("%B %Y"))

@@ -1,0 +1,43 @@
+# --- Ruff Configuration ---
+#
+# The rule set is declared EXPLICITLY rather than left to ruff's defaults,
+# because those defaults move between releases and an undeclared linter
+# means CI can start failing on a commit that changed nothing.
+#
+# Ruff itself is pinned in the workflow. This file pins WHAT it checks.
+#
+# ---
+
+target-version = "py39"
+line-length = 100
+
+[lint]
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "W",   # pycodestyle warnings
+  "I",   # import sorting
+  "UP",  # pyupgrade
+  "B",   # bugbear: likely bugs rather than style
+  "DTZ", # timezone-naive datetimes, which silently mis-key dated records
+  "S",   # bandit: security findings
+  "RUF", # ruff's own rules
+]
+ignore = [
+  # These scripts print operational messages by design; that is their interface.
+  "T201",
+  # Every subprocess call site passes an argument list rather than a shell
+  # string, which is the risk this rule exists to flag. Building a git
+  # command out of a shell string is exactly what this repository must never
+  # do, because the content it commits comes from the open internet.
+  "S603",
+  "S607",
+]
+
+[lint.per-file-ignores]
+# The width ceiling is advisory in long help text and error messages, where
+# breaking a sentence hurts the reader more than the width does.
+"src/*.py" = ["E501"]
+# Tests assert, which is what `assert` is for; bandit's S101 exists for
+# production code where a stripped optimization would remove the check.
+"tests/*.py" = ["E501", "S101", "S106", "S108"]

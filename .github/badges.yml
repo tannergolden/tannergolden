@@ -66,7 +66,7 @@ badges:
     link: https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml
   - name: month
     label: This month
-    message: '1'
+    message: '0'
     label_color: gold
     message_color: green
     icon: commit

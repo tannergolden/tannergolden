@@ -28,9 +28,7 @@ commit type, the text, and its source and license. The page shows the newest; th
 How dispatches are chosen, timed and attributed is in [How it works](../How-It-Works.md).
 
 <!-- MONTHS:BEGIN -->
-| Month | Dispatches |
-| :--- | ---: |
-| [September 2026](2026/September.md) | 1 |
+_Nothing sent yet._
 <!-- MONTHS:END -->
 
 ---

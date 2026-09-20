@@ -165,6 +165,10 @@ fourteen days by default: long enough to survive a weekend, a holiday and a run
 of failed fetches, short enough that last month never reaches the page. A quiet
 week is a quiet page, and that is the honest outcome.
 
+An item whose date will not parse is not treated as an old one. The two are
+different answers, and collapsing them would take a whole kind dark the day a
+source renames a field rather than show one stale entry.
+
 The five are equals in the draw, because none of them is a finite list that can
 be used up. If a source is down or has nothing new, the next kind is tried, and
 if all five come back empty the run writes nothing and leaves the moment in the

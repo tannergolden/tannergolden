@@ -145,6 +145,36 @@ def test_advisory_names_the_package_the_range_and_the_cve(repo, fake_net, seeded
         assert fact in entry.body, fact
 
 
+def test_a_go_module_path_does_not_eat_the_whole_subject(repo, fake_net, seeded):
+    """The case a real run produced, and the subject it truncated to nothing.
+
+    `security(advisory): ...surface the critical advisory in
+    github.com/kcp-dev/kcp` is 78 characters, so the ceiling cut it at
+    "in" and the git log line named no package at all. The host goes.
+    """
+    fake_net.json("https://api.github.com/advisories", [advisory(
+        vulnerabilities=[{"package": {"name": "github.com/kcp-dev/kcp", "ecosystem": "go"},
+                          "vulnerable_version_range": "< 0.31.4"}])])
+    entry = sources.fetch_advisory(ledger(repo), TODAY)
+    assert entry is not None
+    assert_well_formed(entry)
+
+    from render import commit_message
+    header = commit_message(entry).split("\n", 1)[0]
+    assert "kcp-dev/kcp" in header, header
+    assert not header.endswith("\u2026"), header
+    # The page has no ceiling, so it keeps the name the advisory gave.
+    assert "github.com/kcp-dev/kcp" in entry.title
+    assert "github.com/kcp-dev/kcp" in entry.body
+
+
+def test_a_package_name_keeps_every_segment_that_is_not_a_host(repo, fake_net, seeded):
+    assert sources._package_label("@babel/core") == "@babel/core"
+    assert sources._package_label("left-pad") == "left-pad"
+    assert sources._package_label("org.apache.commons:commons-text") == "org.apache.commons:commons-text"
+    assert sources._package_label("github.com/kcp-dev/kcp") == "kcp-dev/kcp"
+
+
 def test_advisory_survives_an_entry_with_no_affected_package(repo, fake_net, seeded):
     fake_net.json("https://api.github.com/advisories", [advisory(vulnerabilities=[], cve_id="", summary="")])
     entry = sources.fetch_advisory(ledger(repo), TODAY)
@@ -271,6 +301,7 @@ def story(**overrides) -> dict:
         "score": 42,
         "comments_url": "https://lobste.rs/s/abc123/a-thing",
         "tags": ["programming", "practices"],
+        "created_at": ago(1),
         "submitter_user": {"username": "someone"},
     }
     payload.update(overrides)
@@ -289,6 +320,24 @@ def test_lobsters_reports_the_score_the_domain_and_the_tags(repo, fake_net, seed
     assert "programming, practices" in entry.body
     assert entry.attribution == "submitted by someone"
     assert entry.extra_links == [("discussion", "https://lobste.rs/s/abc123/a-thing")]
+
+
+def test_lobsters_will_not_offer_a_demonstrably_old_story(repo, fake_net, seeded):
+    """The hottest list is current by construction. This is the guard for when it is not."""
+    fake_net.json(sources.LOBSTERS, [story(created_at=ago(120))])
+    assert sources.fetch_lobsters(ledger(repo), TODAY) is None
+
+    fake_net.jsons.clear()
+    fake_net.json(sources.LOBSTERS, [story(created_at=ago(2))])
+    assert sources.fetch_lobsters(ledger(repo), TODAY) is not None
+
+
+def test_lobsters_still_offers_a_story_whose_date_it_cannot_read(repo, fake_net, seeded):
+    """A guard, not the mechanism: an unparseable date must not take the kind dark."""
+    for bad in ("", "not a date", None):
+        fake_net.jsons.clear()
+        fake_net.json(sources.LOBSTERS, [story(created_at=bad)])
+        assert sources.fetch_lobsters(ledger(repo), TODAY) is not None, bad
 
 
 def test_lobsters_ignores_anything_under_the_score_floor(repo, fake_net, seeded):

@@ -106,19 +106,36 @@ WATCHLIST = (
 HEADLINE = re.compile(r"^\s*(?:#{1,6}\s*)?(?P<line>[^\n#*\-][^\n]{20,})", re.MULTILINE)
 
 
-def _fresh(stamp: str, days: int = NEWS_WINDOW_DAYS) -> bool:
-    """True when an ISO timestamp is inside the window that still counts as news."""
+def _moment(stamp: str) -> datetime | None:
+    """An ISO timestamp as an aware datetime, or None when it will not parse.
+
+    Separate from `_fresh` because the two answers a caller needs are not the
+    same: a source that reports no readable date is not a source reporting an
+    old one, and treating them alike takes a whole kind dark on a field rename.
+    """
     try:
         when = datetime.fromisoformat(clean(stamp).replace("Z", "+00:00"))
     except ValueError:
-        return False
-    if when.tzinfo is None:
-        when = when.replace(tzinfo=timezone.utc)
-    return timedelta(0) <= datetime.now(timezone.utc) - when <= timedelta(days=days)
+        return None
+    return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
+
+
+def _stale(stamp: str, days: int = NEWS_WINDOW_DAYS) -> bool:
+    """True only when a date reads AND falls outside the window. Unreadable is not stale."""
+    when = _moment(stamp)
+    return when is not None and not timedelta(0) <= datetime.now(timezone.utc) - when <= timedelta(days=days)
+
+
+def _fresh(stamp: str, days: int = NEWS_WINDOW_DAYS) -> bool:
+    """True when an ISO timestamp reads and is inside the window that counts as news."""
+    return _moment(stamp) is not None and not _stale(stamp, days)
 
 
 def _age(stamp: str) -> str:
-    when = datetime.fromisoformat(clean(stamp).replace("Z", "+00:00"))
+    """How long ago, in words. Callers reach this past a freshness check."""
+    when = _moment(stamp)
+    if when is None:
+        return "recently"
     days = (datetime.now(timezone.utc) - when).days
     return "today" if days < 1 else ("yesterday" if days == 1 else f"{days} days ago")
 
@@ -162,6 +179,21 @@ def fetch_release(ledger: Ledger, today: date) -> Dispatch | None:
 # --- security(advisory): something to patch this week ----------------------------
 
 ADVISORIES = f"{GITHUB_API}/advisories"
+
+
+def _package_label(package: str) -> str:
+    """A package name short enough to leave room for the rest of the subject.
+
+    A Go module path carries its host, so `github.com/kcp-dev/kcp` spends
+    eleven characters saying where GitHub is before it says what broke, and
+    the subject ceiling then cuts the sentence at "the critical advisory
+    in". The host goes; an npm scope like @babel/core has no dot in its
+    first segment and is left alone.
+    """
+    parts = [part for part in package.split("/") if part]
+    if len(parts) > 1 and "." in parts[0]:
+        parts = parts[1:]
+    return "/".join(parts)
 
 
 def fetch_advisory(ledger: Ledger, today: date) -> Dispatch | None:
@@ -208,7 +240,7 @@ def fetch_advisory(ledger: Ledger, today: date) -> Dispatch | None:
             kind="advisory",
             commit_type="security",
             emoji=phrasing.emoji_for("security"),
-            subject=f"{phrasing.verb_for('advisory')} the {severity} advisory in {package or ghsa}",
+            subject=f"{phrasing.verb_for('advisory')} the {severity} advisory in {_package_label(package) or ghsa}",
             title=f"{ghsa}: {package or 'a reviewed package'}",
             body=body,
             identifier=ghsa,
@@ -368,6 +400,11 @@ def fetch_lobsters(ledger: Ledger, today: date) -> Dispatch | None:
         url = str(story.get("url") or "")
         comments = str(story.get("comments_url") or "")
         if not short_id or score < LOBSTERS_FLOOR or ledger.seen("lobsters", short_id):
+            continue
+        # The hottest list is current by construction, so this is a guard
+        # against an outlier rather than the mechanism: a story with no
+        # readable date is still offered, one demonstrably old is not.
+        if _stale(str(story.get("created_at") or "")):
             continue
         if not url.startswith("https://"):
             url = comments if comments.startswith("https://") else ""

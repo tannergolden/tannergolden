@@ -29,7 +29,9 @@ rest.
 How the entries are chosen, timed and attributed is in [How it works](../How-It-Works.md).
 
 <!-- MONTHS:BEGIN -->
-_No entries yet._
+| Month | Entries |
+| :--- | ---: |
+| [September 2026](2026/09.md) | 1 |
 <!-- MONTHS:END -->
 
 ---

@@ -57,11 +57,13 @@ follows.
 <!-- JOURNAL:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Journal workflow status](assets/badges/dynamic/journal.svg)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg)](journal/)
+[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=0268edf2)](journal/2026/09.md)
 
-_No entries yet. The first one lands at a random moment within the next twelve hours or so; nothing here is on a schedule._
+| Time | Commit | Entry |
+| :--- | :--- | :--- |
+| 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](journal/2026/09.md#entry-20260920-092830) |
 
-[Full journal](journal/) · [How it works](How-It-Works.md) · 0 entries in September
+[Full journal](journal/) · [How it works](How-It-Works.md) · 1 entry in September
 <!-- JOURNAL:END -->
 
 <!-- MODULES:BEGIN -->
@@ -129,7 +131,7 @@ Rosetta Code (GFDL) · Wikipedia (CC BY-SA) · tldr-pages (CC BY) · Hacker News
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 02:54 EDT on Sunday, September 20, 2026.
+Last updated 09:28 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

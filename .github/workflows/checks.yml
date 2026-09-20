@@ -41,6 +41,16 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: '🏷️ Checkout the badge kit'
+        # The badge tests render through the real kit, at the same commit
+        # the journal workflow uses. They skip when it is absent.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: tannergolden/emblems
+          ref: 5b00d969c0ea1c963ff949de2554da5dbe5ab7d0 # Development, 2026-09-20
+          path: .emblems
+          persist-credentials: false
+
       - name: '🧰 Install the pinned tools'
         run: make setup
 
@@ -48,6 +58,8 @@ jobs:
         run: make lint
 
       - name: '🧪 Test'
+        env:
+          EMBLEMS_KIT: .emblems/src/badge-kit.py
         run: make test
 
       - name: '📄 Verify the page regions'

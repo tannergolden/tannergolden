@@ -1,6 +1,6 @@
 <!--
 title: "👋 HI, I'M TANNER GOLDEN"
-description: 'Profile README for @tannergolden: what I work on, the dispatches this page sends itself, the core repositories and how they fit together, and how to get in touch.'
+description: "Profile README for @tannergolden: what I work on, the developer news this page posts by itself, how the repositories fit together, and how to reach me."
 tags: [profile, ai-research, systems-engineering, automation]
 category: profile
 -->
@@ -13,9 +13,9 @@ category: profile
 
 <a name="top"></a>
 
-**The standards and automation that keep a result reproducible after its author moves on.**
+**I build the automation and standards that keep things working after the person who built them moves on.**
 
-_Build it so the right way is the only easy way._
+_If the right way is the easy way, people take it._
 
 [![Status: Active](assets/badges/static/status.svg)](./)
 [![Role: Profile](assets/badges/static/role.svg)](./)
@@ -32,21 +32,21 @@ _Build it so the right way is the only easy way._
 
 ## 💡 About
 
-I work at the boundary between AI research and the systems that make it hold up: the pipelines,
-guardrails, and standards that decide whether a result can be reproduced next week, on another
-machine, by someone who was not there the first time.
+I work on the plumbing that makes AI research hold up. Pipelines, guardrails, the standards that
+decide whether a result still runs next week, on a different machine, for someone who wasn't there
+the first time.
 
-Research code accumulates quiet assumptions about the machine it was written on, and those
-assumptions surface late. I build the environments and documentation standards that surface them
-early. The recurring concerns are least-privilege continuous integration, third-party actions
-pinned to commit SHAs, and rules a gate checks on every change.
+Research code quietly picks up assumptions about the machine it was written on, and you usually
+find out too late. My job is to surface them early. In practice that means CI with the smallest
+permissions that work, third-party actions pinned to a commit SHA instead of a tag, and rules
+something actually checks on every change rather than rules people are asked to remember.
 
 ---
 
 ## 📡 Dispatch
 
-Developer news, assembled by a workflow from sources I do not control and committed unattended,
-authored by me. [How it works](How-It-Works.md).
+Developer news a workflow finds and commits on its own. I wrote it, I don't run it.
+[How it works](How-It-Works.md).
 
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
@@ -77,7 +77,7 @@ authored by me. [How it works](How-It-Works.md).
 
 ## 📦 Repositories
 
-These are one system rather than a portfolio; each repository has a single job.
+Not a portfolio. These fit together as one system, and each one does a single job.
 
 | Repository                                                     | What it is                                                                            |
 | :------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
@@ -89,14 +89,16 @@ These are one system rather than a portfolio; each repository has a single job.
 | [`dotfiles`](https://github.com/tannergolden/dotfiles)         | Shell, editor, and toolchain configuration, installed the same way everywhere         |
 | [`tannergolden`](https://github.com/tannergolden/tannergolden) | This file, and the workflow that keeps it current                                     |
 
-A repository that runs a pipeline holds a short trigger stub, and the logic, the configuration, and
-the standards it uses live in `standards` and are pulled in by reference: called, never copied. A
-trigger has nothing in it to go stale, so nothing downstream ages. This repository is the documented
-exception: a profile, not a pipeline, and its one workflow lives here.
+When one of these runs a pipeline, all it holds is a short trigger. The logic, the config and the
+standards live in `standards` and get called from there, never copied in. So there's nothing in the
+trigger to go stale, and fixing something once fixes it everywhere. This repo is the exception, and
+it's written down as one: it's a profile rather than a pipeline, so its workflow lives here.
 
 ---
 
 ## 🧰 Stack
+
+What I reach for most. Mostly boring choices, picked because they are boring.
 
 | Area           | Tools                                                                                                                                                                                                                                          |
 | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -124,21 +126,22 @@ exception: a profile, not a pipeline, and its one workflow lives here.
 | **Website**  | [tannergolden.com](https://www.tannergolden.com)             |
 | **LinkedIn** | [in/tannergolden](https://www.linkedin.com/in/tannergolden/) |
 
-Open to conversations about AI infrastructure, reproducibility, and developer tooling.
+Happy to talk about AI infrastructure, reproducibility, or developer tooling. The badge at the
+top says whether I'm looking for work right now.
 
 ---
 
-Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY). Terms in
-[`NOTICE`](NOTICE). Every image on this page is a committed file; nothing is fetched from an image
-service.
+Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY), with the full terms in
+[`NOTICE`](NOTICE). Every image here is a file in this repo, so loading the page fetches nothing
+from an image service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:28 EDT on Sunday, September 20, 2026.
+Last updated 19:33 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">
 
-**Built to outlast the attention that built it.**
+**Built to keep working after I stop paying attention to it.**
 
 [↑ Back to Top](#top)
 

@@ -30,7 +30,7 @@ _Build it so the right way is the only easy way._
 [![License: MIT](assets/badges/static/license.svg)](./LICENSE)
 
 <!-- AVAILABILITY:BEGIN -->
-[![Availability: Open to role](assets/badges/dynamic/availability.svg?v=1bcb23b0)](./)
+[![Availability: Open to role](assets/badges/dynamic/availability.svg?v=6beb1507)](./)
 <!-- AVAILABILITY:END -->
 
 </div>
@@ -140,7 +140,7 @@ Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY). Terms
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:17 EDT on Sunday, September 20, 2026.
+Last updated 19:20 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

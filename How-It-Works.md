@@ -13,7 +13,7 @@ category: docs
 
 <a name="top"></a>
 
-**A page that writes itself, at moments nobody scheduled, from sources that never run dry.**
+**A page that writes itself, at moments nobody scheduled, from what changed this week.**
 
 _Random by construction. Attributed by default._
 
@@ -113,8 +113,8 @@ enforces, each test naming the section it comes from.
 
 | The standard asks for                            | Every generated commit                                                       |
 | :----------------------------------------------- | :---------------------------------------------------------------------------- |
-| A type from the list, and a required scope       | `feat(unicode)`, `docs(rfc)`, `refactor(rosetta)`, `fix(bug)`                |
-| A lowercase subject, imperative, under 72        | Opens with a verb: add, record, solve, continue, note, mark, revisit, correct |
+| A type from the list, and a required scope       | `feat(release)`, `security(advisory)`, `chore(eol)`, `docs(rfc)`             |
+| A lowercase subject, imperative, under 72        | Opens with a verb: note, flag, mark, record, read, surface, watch, cite      |
 | One emoji from the row for that type             | Checked against the mapping table, per type                                  |
 | A body on every commit, wrapped at 72            | The dispatch itself, wrapped                                                 |
 | Footers after the body                           | `Source`, `Attribution`, `License`, `Signed-off-by`, in one block            |
@@ -127,7 +127,7 @@ its own would not be read as trailers at all.
 
 **The wording varies, inside those rules.** Every dispatch of a kind used to
 open with the same verb and wear the same emoji, so a screen of `git log`
-read as one sentence with the nouns swapped: add, add, add, add. The content
+read as one sentence with the nouns swapped: note, note, note, note. The content
 was never repeated; the sentence around it always was.
 [`src/phrasing.py`](src/phrasing.py) holds a pool of bare imperatives per
 kind, the three emoji the mapping table lists for each type, and several
@@ -145,62 +145,79 @@ person greps for them.
 
 ## 📚 The Sources
 
-Every kind draws on a corpus that is either enormous or still growing. That is
-what lets the ledger in [`state/ledger.json`](state/ledger.json) promise that
-no item appears twice: the identifier of everything ever used is recorded, and
-the promise costs nothing while the well is deeper than the lifetime of the
-page.
+Five sources, each one a primary record rather than a feed about a feed:
+the release a project actually cut, the advisory that was actually reviewed,
+the date support actually ends. Nothing here aggregates somebody else's
+aggregation.
 
-| Commit                | Content                                                 | Source                     | License                     |
-| :-------------------- | :------------------------------------------------------ | :------------------------- | :-------------------------- |
-| `refactor(rosetta)`   | One task, one language, the code                        | Rosetta Code               | GFDL 1.2, this version only |
-| `feat(unicode)`       | A character with a name worth reading                   | Unicode Character Database | Unicode License v3          |
-| `docs(rfc)`           | An RFC, what it did, and when                           | RFC Editor                 | Freely reproducible         |
-| `fix(bug)`, rare      | A famous software failure                               | Wikipedia                  | CC BY-SA 4.0                |
-| `fix(falsehood)`, rare | A catalogue of things programmers believe               | awesome-falsehood          | CC0 1.0 (the list)          |
+| Commit               | Content                                                | Source                      | License                     |
+| :------------------- | :------------------------------------------------------ | :-------------------------- | :-------------------------- |
+| `feat(release)`      | A new version of a tool people run                      | GitHub Releases             | Metadata, reported as fact  |
+| `security(advisory)` | A reviewed high or critical advisory, with the range    | GitHub Security Advisories  | Metadata, reported as fact  |
+| `chore(eol)`         | A version about to stop getting fixes, or that just did | endoflife.date              | CC BY 4.0                   |
+| `docs(rfc)`          | A standard published this year, and its abstract        | RFC Editor                  | Freely reproducible         |
+| `docs(lobsters)`     | What the quiet end of the internet is reading           | Lobsters                    | Title and score, as fact    |
 
-Every kind tells a reader something they did not know. Three earlier ones did
-not: a release anniversary and a computing birthday, which only said that a
-thing happened on a date, and an integer sequence puzzle, which asked rather
-than told.
-The two rare kinds together take one draw in twenty, and each retires when its
-list is used up. If a source is down or empty, the next kind is tried, and if
-every source fails the run writes nothing and leaves the moment in the past for
-the next run to catch.
+**Every kind carries a freshness window.** A release from two years ago is not
+news, so a fetcher whose source has nothing recent returns nothing rather than
+reaching back for filler. `DISPATCH_NEWS_WINDOW_DAYS` sets the window, at
+fourteen days by default: long enough to survive a weekend, a holiday and a run
+of failed fetches, short enough that last month never reaches the page. A quiet
+week is a quiet page, and that is the honest outcome.
 
-The commit type is a genre label: `feat(unicode)` adds nothing to any
-software, and `fix(bug)` fixes nothing. This repository cuts no releases and
-runs no changelog generator, which is the only reason that joke is free.
+The five are equals in the draw, because none of them is a finite list that can
+be used up. If a source is down or has nothing new, the next kind is tried, and
+if all five come back empty the run writes nothing and leaves the moment in the
+past for the next run to catch. The ledger in
+[`state/ledger.json`](state/ledger.json) records the identifier of everything
+ever sent, so the same release, advisory, RFC or story never appears twice.
+
+The commit type is a genre label rather than a claim about this repository:
+`feat(release)` adds no feature here, and `security(advisory)` patches nothing
+here. This repository cuts no releases and runs no changelog generator, which
+is the only reason that is free.
+
+**The curated watchlist.** `feat(release)` reads GitHub's `releases/latest` for
+roughly sixty repositories named in [`src/sources.py`](src/sources.py):
+languages, runtimes, databases, editors, CI and the tools underneath them. It
+is curated rather than scraped, because "most starred" is a popularity contest
+and "trending" is a marketing surface. A repository that stops publishing
+releases answers 404 and is skipped, so the list can go stale without breaking
+anything.
 
 ---
 
 ## 🛡️ Text From The Open Internet
 
-Four of the nine sources are wikis anyone can edit, and every fetched string
-is treated as hostile until it has been through [`src/text.py`](src/text.py).
-Comment delimiters are removed, so no paragraph can close a page region early.
-A borrowed snippet is fenced with more backticks than it contains, so it
-cannot end its own block. Bidirectional overrides and zero-width characters
-are stripped. A language name is cut down to what a language name can be
-before it follows a fence, since a backtick there would stop the fence
-from opening. A mention or an issue reference in fetched text is defused,
-because a commit message can notify an account or close an issue and a
-wiki edit must not be able to make this repository do either. Commit
-messages are written to a file and passed to `git commit -F`, never
-through a shell.
+Release notes, advisory summaries and story titles are written by whoever
+published them, so every fetched string is treated as hostile until it has been
+through [`src/text.py`](src/text.py). Comment delimiters are removed, so no
+paragraph can close a page region early. Bidirectional overrides and zero-width
+characters are stripped. Markdown specials are escaped rather than deleted, so
+a title that looks like a link is shown as text instead of becoming one. A
+mention or an issue reference in fetched text is defused, because a commit
+message can notify an account or close an issue and a release note must not be
+able to make this repository do either. Commit messages are written to a file
+and passed to `git commit -F`, never through a shell.
+
+Nothing fetched is reproduced as code any more. An earlier design borrowed
+program listings from a wiki and had to fence them against their own backticks;
+that whole path is gone, and with it the only place where untrusted text was
+written into the page unescaped.
 
 ---
 
 ## ⚖️ Licensing
 
-The code here is MIT. The dispatches reproduce or derive from the sources
-above, each one names its source and license, and [`NOTICE`](NOTICE) carries the
-terms in full. Two sources are share-alike and one is GFDL; those entries are
-available under those licenses, marked individually, and nothing else in the
-repository is affected by them. Rosetta Code snippets are capped at fifteen
-lines and cite the exact wiki revision they came from. Setting
-`DISPATCH_ROSETTA_CODE=0` makes that kind cite without reproducing, which
-removes the GFDL exposure entirely.
+The code here is MIT. What the dispatches carry is mostly fact rather than
+expression: a version number, a date, a severity, a score. Three sources are
+named and linked anyway, because attribution costs nothing and a reader should
+be able to check. One is share-alike: endoflife.date is CC BY 4.0, and those
+entries are marked individually. [`NOTICE`](NOTICE) carries the terms in full.
+
+No copyleft source is reproduced here at all. An earlier design quoted GFDL
+program listings, which meant this repository had to carry the GFDL text and
+a switch to turn the exposure off; both are gone.
 
 ---
 
@@ -208,7 +225,7 @@ removes the GFDL exposure entirely.
 
 Every other repository on this account follows
 [tannergolden/standards](https://github.com/tannergolden/standards) by
-reference. This one departs from it in five places, listed here because an
+reference. This one departs from it in six places, listed here because an
 exception nobody wrote down is a discrepancy somebody will find.
 
 | The standard says                                                  | This repository does                                                | Why                                                                                                                                                          |
@@ -219,7 +236,6 @@ exception nobody wrote down is a discrepancy somebody will find.
 | The rulesets and the standard stubs are applied                     | Neither is applied                                                  | The ruleset would refuse the push above; the stubs gate code this repository does not have. `checks.yml` runs the same lint and tests a contributor runs      |
 | A commit's type carries the intent of the change                   | The type is a genre label for the content                           | Stated above. The exception holds only while this repository cuts no releases and runs no changelog tooling                                                   |
 | A body explains why the change was made, and why this way          | A dispatch body carries the dispatch                                | The why would be the same sentence on every commit of a kind, which is the restatement the standard itself warns against. The footers carry what a reader cannot recover: source, licence, attribution |
-| The body is wrapped at 72 characters                               | A reproduced program is not                                         | A snippet rewrapped is a snippet corrupted. Prose wraps; a fenced block is left as it came and capped at fifteen lines                                          |
 
 Everything else holds: the commit gate, the body on every commit, the
 sign-off, the frontmatter, the header and footer, the em dash ban in every

@@ -6,33 +6,32 @@ under the MIT License in LICENSE.
 
 The dispatches under dispatches/ are generated from third-party sources. Each
 one names its source, its license and, where the source names them, its
-authors, and links to the exact page or revision it came from. A dispatch
-derived from a share-alike or GFDL source is available under that source's
-license, one by one, and nothing else in this repository is affected by those
-terms.
+authors, and links to the exact page it came from. Most of what a dispatch
+carries is fact rather than expression: a version number, a date, a severity,
+a score. Where a source is share-alike, the dispatches derived from it are
+available under that license, one by one, and nothing else in this repository
+is affected by those terms.
 
 Source                        License                               What a dispatch reproduces
 ----------------------------  ------------------------------------  ------------------------------------------------
-Unicode Character Database    Unicode License v3                    Code points, names, blocks.
-                              https://www.unicode.org/license.txt
+GitHub Releases               Facts via the REST API                Product name, tag, publication date and the
+                                                                    first paragraph of the release notes, linked
+                                                                    to the release.
+GitHub Security Advisories    Facts via the REST API                GHSA and CVE identifiers, severity, package,
+                                                                    ecosystem, affected version range and the
+                                                                    one-line summary, linked to the advisory.
+endoflife.date                CC BY 4.0                             Product, cycle, end-of-life date and latest
+                              https://creativecommons.org/licenses/by/4.0/   release on that line, attributed and
+                                                                    linked. Those entries are CC BY 4.0.
 RFC Editor                    IETF Trust Legal Provisions           Titles, dates, status, abstracts. RFCs may be
                               https://trustee.ietf.org/documents/trust-legal-provisions/   freely reproduced.
-Rosetta Code                  GFDL 1.2, this version only           Task names and code snippets of at most fifteen
-                              https://www.gnu.org/licenses/old-licenses/fdl-1.2.html   lines, attributed to Rosetta Code
-                                                                    contributors and linked to the revision used.
-                                                                    Those entries are GFDL-1.2-only. Set
-                                                                    DISPATCH_ROSETTA_CODE=0 to cite without reproducing.
-Wikipedia                     CC BY-SA 4.0                          Short attributed excerpts from "List of software
-                              https://creativecommons.org/licenses/by-sa/4.0/   bugs", linked to the revision used. Those
-                                                                    entries are CC BY-SA 4.0.
-awesome-falsehood             CC0 1.0 (the list)                    Article titles and links from the list. The
-                              https://github.com/kdeldycke/awesome-falsehood   articles themselves are not reproduced.
+Lobsters                      Facts via the official JSON           Story titles, scores, tags, submitter names,
+                                                                    domains and links.
 tldr-pages                    CC BY 4.0                             One command description and one example, with
                               https://github.com/tldr-pages/tldr/blob/main/LICENSE.md   a link to the page.
 Hacker News                   Facts via the official API            Titles, points, domains and links.
 GitHub                        Facts via the REST and GraphQL API    Issue titles and links; the account's public
                                                                     repository, star, follower and language counts.
 
-The full text of each license is at the URL beside it. GFDL 1.2 asks that its
-text accompany a document it covers; add LICENSES/GFDL-1.2-only.txt to this
-repository to carry it, or set DISPATCH_ROSETTA_CODE=0 and no entry will need it.
+The full text of each license is at the URL beside it. No copyleft source is
+reproduced here, so no license text needs to accompany this repository.

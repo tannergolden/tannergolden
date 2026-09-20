@@ -48,15 +48,18 @@ pinned to commit SHAs, and rules a gate checks on every change.
 
 ## 📡 Dispatches
 
-Small pieces of the computing record, sent at intervals nobody chose: a character and what it
-encodes, an RFC and what it settled, a task solved in a language you have probably never written,
-a failure worth remembering.
+What actually changed this week, sent at intervals nobody chose: a release worth upgrading to, an
+advisory worth patching, a version about to stop getting fixes, a standard just published, a post
+worth the click. Straight from the primary record each time, never from a feed about a feed.
 
 It is for two readers. One is a developer who would rather find something worth knowing than
-another static profile. The other is anyone weighing whether I build automation that holds up
-unattended, because that is what this is: a workflow assembling a public page from sources I do not
-control, committing the result with nobody pressing anything. The page is the argument, not a
-description of one.
+another static profile, and who does not need a sixth newsletter to find it. The other is anyone
+weighing whether I build automation that holds up unattended, because that is what this is: a
+workflow assembling a public page from sources I do not control, committing the result with nobody
+pressing anything. The page is the argument, not a description of one.
+
+Nothing is filler. Every source carries a freshness window, so a fetcher with nothing recent
+returns nothing rather than reaching back for something old, and a quiet week shows a quiet page.
 
 Every commit is authored by me and made by the workflow. [How it works](How-It-Works.md) has the
 randomness, the sources, and the places this repository departs from the standards the rest of the
@@ -65,13 +68,11 @@ account follows.
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=2f7904e7)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=c8694d5f)](dispatches/)
 
-| Time | Commit | Dispatch |
-| :--- | :--- | :--- |
-| 09:28 | `feat(unicode)` | [U+10330 𐌰 GOTHIC LETTER AHSA](dispatches/2026/September.md#dispatch-20260920-092834) |
+_No dispatches yet. The first lands at a random moment within the next twelve hours or so; nothing here is on a schedule._
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 1 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 0 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -141,13 +142,13 @@ Open to conversations about AI infrastructure, reproducibility, and developer to
 
 ---
 
-Dispatch sources: Unicode · RFC Editor · Rosetta Code (GFDL) · Wikipedia (CC BY-SA) ·
-awesome-falsehood · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
+Dispatch sources: GitHub Releases · GitHub Security Advisories · endoflife.date (CC BY) ·
+RFC Editor · Lobsters · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
 [`NOTICE`](NOTICE). Every image on this page is a committed file; nothing is fetched from an image
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 14:59 EDT on Sunday, September 20, 2026.
+Last updated 15:17 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

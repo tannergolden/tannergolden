@@ -2,11 +2,17 @@
   "advisory": [
     "GHSA-c8w2-fgvx-vhv4"
   ],
+  "link": [
+    "github.com/Tencent/WeMM-Embedding"
+  ],
   "rfc": [
     "9792"
   ],
   "tip": [
     "docker-compose-down",
     "sed"
+  ],
+  "trending": [
+    "Tencent/WeMM-Embedding"
   ]
 }

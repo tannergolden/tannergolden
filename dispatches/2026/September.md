@@ -58,3 +58,17 @@ and OSPFv3.
 _[RFC Editor](https://www.rfc-editor.org/rfc/rfc9792) · R. Chen, D. Zhao, P. Psenak, K. Talaulikar, L. Gong · IETF Trust Legal Provisions; RFCs may be freely reproduced_
 
 ---
+<a name="dispatch-20260920-190522"></a>
+
+### ✨ Tencent/WeMM-Embedding
+
+`feat(trending)` · 19:05 EDT
+
+1635 stars on a repository first pushed 26 days ago. WeMM-Embedding is a
+family of universal multimodal embedding models by the WeChat Vision
+Team at Tencent, supporting multimodal understanding and retrieval.
+Written in Python.
+
+_[GitHub](https://github.com/Tencent/WeMM-Embedding) · Repository metadata, reported as fact_
+
+---

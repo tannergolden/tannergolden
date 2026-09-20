@@ -1,5 +1,13 @@
 [
   {
+    "at": "2026-09-20T23:05:22.494580+00:00",
+    "type": "feat",
+    "scope": "trending",
+    "title": "Tencent/WeMM-Embedding",
+    "path": "dispatches/2026/September.md",
+    "anchor": "dispatch-20260920-190522"
+  },
+  {
     "at": "2026-09-20T22:41:18.729251+00:00",
     "type": "docs",
     "scope": "rfc",

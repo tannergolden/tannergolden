@@ -54,14 +54,15 @@ authored by me. [How it works](How-It-Works.md).
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=3465b94a)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
+| 19:05 | `feat(trending)` | [Tencent/WeMM-Embedding](dispatches/2026/September.md#dispatch-20260920-190522) |
 | 18:41 | `docs(rfc)` | [RFC 9792: Prefix Flag Extension for OSPFv2 and OSPFv3](dispatches/2026/September.md#dispatch-20260920-184118) |
 | 18:38 | `security(advisory)` | [GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp](dispatches/2026/September.md#dispatch-20260920-183803) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 2 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 3 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -135,7 +136,7 @@ Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY). Terms
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:03 EDT on Sunday, September 20, 2026.
+Last updated 19:05 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

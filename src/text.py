@@ -69,12 +69,16 @@ _MENTION = re.compile(r"(?<![\w.])@(?=[A-Za-z0-9])")
 _REFERENCE = re.compile(r"(?<!&)#(?=\d)")
 
 
-def clean(value: str, *, allow_newlines: bool = False) -> str:
+def clean(value: str, *, allow_newlines: bool = False, code: bool = False) -> str:
     """Return `value` fit to be written into a commit message or Markdown.
 
     Every fetched string passes through here. The order matters: dashes are
     replaced before whitespace is collapsed, so the spaced hyphen that
     replaces them does not leave a double space behind.
+
+    With `code=True` whitespace is kept exactly as it came, tabs included,
+    because indentation is part of a program. Only the invisible characters,
+    the comment delimiters and the banned dashes go.
     """
     if not value:
         return ""
@@ -89,6 +93,13 @@ def clean(value: str, *, allow_newlines: bool = False) -> str:
             break
         text = stripped
     text = BANNED_DASHES.sub(" - ", text)
+
+    if code:
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        text = "".join(ch for ch in text if ch in "\n\t" or unicodedata.category(ch) != "Cc")
+        return "\n".join(line.rstrip() for line in text.split("\n")).strip("\n")
+
+    # Prose only: a decorator in a program is not a mention.
     text = _MENTION.sub("\uff20", text)
     text = _REFERENCE.sub("\uff03", text)
 
@@ -120,8 +131,10 @@ def is_clean(value: str) -> bool:
 
 # Characters that would otherwise start Markdown syntax inside a table cell or
 # a link label: a pipe ends the cell, brackets end the label, and the rest
-# begin emphasis, strikethrough or code. The backslash goes first so a
-# backslash already in the text cannot pair with one this adds.
+# begin emphasis, strikethrough or code. The backtick stays in the set: an
+# unmatched one in a title can pair with a backtick in the next line of the
+# same paragraph and turn two links into one code span. The backslash goes
+# first so one already in the text cannot pair with one this adds.
 _INLINE_SPECIALS = re.compile(r"([\\|\[\]*_`~])")
 
 # A line opening with one of these is a heading, a quote, a table row, a
@@ -147,7 +160,8 @@ def md_block(value: str) -> str:
     """Escape wrapped prose so no fetched line can become structure or a link.
 
     Applied to the journal only. A commit message is plain text, and the same
-    backslashes there would be noise in `git log`.
+    backslashes there would be noise in `git log`. An ampersand is escaped so
+    an entity the prose quotes (the Unicode entries do) is shown, not rendered.
     """
     lines = []
     for line in value.split("\n"):
@@ -155,7 +169,7 @@ def md_block(value: str) -> str:
         line = _RULE_LINE.sub(r"\1\\\2", line)
         line = _BLOCK_OPENERS.sub(r"\1\\\2", line)
         line = _ORDERED_OPENER.sub(r"\1\\\2", line)
-        lines.append(line.replace("[", "\\[").replace("<", "&lt;"))
+        lines.append(line.replace("&", "&amp;").replace("[", "\\[").replace("<", "&lt;"))
     return "\n".join(lines)
 
 
@@ -195,7 +209,7 @@ def clamp_snippet(code: str) -> tuple[str, bool]:
     Returns the snippet and whether anything was removed, so the caller can
     say so rather than silently presenting a fragment as the whole.
     """
-    text = clean(code, allow_newlines=True)
+    text = clean(code, code=True)
     lines = text.split("\n")
     trimmed = False
 

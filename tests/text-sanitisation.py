@@ -56,6 +56,15 @@ def test_fence_outgrows_any_backtick_run():
     assert fence_for("has ````` five") == "``````"
 
 
+def test_snippet_keeps_its_indentation():
+    code = "       IDENTIFICATION DIVISION.\n\tPROGRAM-ID. X.\r\n    y = 1  \n"
+    text, trimmed = clamp_snippet(code)
+    assert text == "       IDENTIFICATION DIVISION.\n\tPROGRAM-ID. X.\n    y = 1" and not trimmed
+    assert clean("a \u2014 b <!-- c\x00", code=True) == "a  -  b  c"
+    # A decorator is not a mention and an issue number in a comment is not a reference.
+    assert clean("@property\ndef f():  # see #12", code=True) == "@property\ndef f():  # see #12"
+
+
 def test_snippet_is_capped_and_reports_it():
     long = "\n".join(f"line {i}" for i in range(40))
     text, trimmed = clamp_snippet(long)
@@ -73,6 +82,7 @@ def test_inline_escaping_covers_link_labels_and_emphasis():
 
     assert md_inline("U+005D ] RIGHT SQUARE BRACKET") == "U+005D \\] RIGHT SQUARE BRACKET"
     assert md_inline("a_b *c* `d` [e]") == "a\\_b \\*c\\* \\`d\\` \\[e\\]"
+    assert md_block("the entity &#x2603; and R&D") == "the entity &amp;#x2603; and R&amp;D"
     assert md_block("# of things\n> quoted\n- item\n1. first\nplain [x](y) <b>") == (
         "\\# of things\n\\> quoted\n\\- item\n1\\. first\nplain \\[x](y) &lt;b>"
     )

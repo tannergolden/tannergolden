@@ -35,8 +35,8 @@ handled at once. The entry lands late rather than never.
 
 The workflow can also be run by hand from the Actions tab: `tick` does what
 the cron does, `dispatch` sends one dispatch now, `refresh` rewrites the page now,
-and `probe` tries every source and every module once and reports what each
-would have written, without writing anything. Run on any branch but the
+and `probe` tries every source and the terminal tip once and reports what
+each would have written, without writing anything. Run on any branch but the
 default one, the writing modes do everything except push, and report the
 commits they made in the run summary, so a change can be rehearsed before it
 merges.
@@ -77,7 +77,7 @@ A cron can only fire on a lattice, and a fixed wait after each entry is also a
 lattice, just an offset one. Sleeping to the second inside an hourly run is
 what turns a schedule into a moment.
 
-The page refresh (the date line, the three daily modules, the two cards) is
+The page refresh (the date line, the terminal tip, the two cards) is
 drawn the same way, with a mean of one day, so it also lands at an
 unremarkable hour.
 
@@ -251,7 +251,7 @@ generated. The hand-written parts live in three places:
 | File                       | What it holds                                                          |
 | :------------------------- | :--------------------------------------------------------------------- |
 | `README.md`                | Everything outside the five marked regions                             |
-| [`profile.json`](profile.json) | The phrases the typing header cycles through, and the languages the good-first-issue search covers |
+| [`profile.json`](profile.json) | The phrases the typing header cycles through                            |
 | [`.github/badges.yml`](.github/badges.yml) | Every badge, the stack included; `make badges` renders them             |
 
 The archive keeps its own index, [`dispatches/README.md`](dispatches/README.md),

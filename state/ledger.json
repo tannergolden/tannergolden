@@ -1,10 +1,4 @@
 {
-  "hn": [
-    "49775418"
-  ],
-  "issue": [
-    "https://github.com/Kesavaraja67/telex/issues/36"
-  ],
   "tip": [
     "docker-compose-down",
     "sed"

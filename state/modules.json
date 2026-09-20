@@ -6,21 +6,5 @@
     "description": "Replace all apple (basic regex) occurrences with mango (basic regex) in all input lines and print the result to stdout",
     "example": "<command> | sed 's/apple/mango/g'",
     "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/sed.md"
-  },
-  "hn": {
-    "id": "49775418",
-    "title": "Airmash - HTML5 Multiplayer Missile Warfare",
-    "url": "https://airma.sh/",
-    "points": 2,
-    "domain": "airma.sh",
-    "discussion": "https://news.ycombinator.com/item?id=49775418"
-  },
-  "issue": {
-    "id": "https://github.com/Kesavaraja67/telex/issues/36",
-    "repo": "Kesavaraja67/telex",
-    "number": 36,
-    "title": "GFI-5 - Document the risk/review model in the README",
-    "url": "https://github.com/Kesavaraja67/telex/issues/36",
-    "language": "Python"
   }
 }

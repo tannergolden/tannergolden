@@ -258,14 +258,6 @@ def refresh_page(ledger: Ledger, when: datetime) -> str:
     changed = []
 
     current = render.load_modules()
-    hn = modules.show_hn(ledger)
-    if hn:
-        current["hn"] = hn
-        changed.append("the Show HN post")
-    issue = modules.good_first_issue(ledger, list(profile.get("issue_languages") or []))
-    if issue:
-        current["issue"] = issue
-        changed.append("the good first issue")
     tip = modules.terminal_tip(ledger)
     if tip:
         current["tip"] = tip
@@ -307,18 +299,12 @@ def probe() -> int:
                 rows.append((kind, "ok", fit_subject(entry.commit_type, entry.scope, entry.emoji, entry.subject)))
 
         profile = load_profile()
-        languages = list(profile.get("issue_languages") or [])
-        for name, call in (
-            ("show hn", lambda: modules.show_hn(ledger)),
-            ("first issue", lambda: modules.good_first_issue(ledger, languages)),
-            ("tip", lambda: modules.terminal_tip(ledger)),
-        ):
-            try:
-                found = call()
-            except Exception as exc:
-                rows.append((name, "error", clean(repr(exc))[:160]))
-                continue
-            rows.append((name, "ok", clean(str(found.get("title") or found.get("command")))[:120]) if found else (name, "empty", "nothing new"))
+        try:
+            tip = modules.terminal_tip(ledger)
+        except Exception as exc:
+            rows.append(("tip", "error", clean(repr(exc))[:160]))
+        else:
+            rows.append(("tip", "ok", clean(str(tip["command"]))[:120]) if tip else ("tip", "empty", "nothing new"))
 
         login = os.environ.get("GITHUB_REPOSITORY_OWNER") or profile.get("login") or "tannergolden"
         try:

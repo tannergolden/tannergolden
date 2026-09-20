@@ -1,12 +1,15 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The three daily modules: a Show HN post, a good first issue, a terminal tip.
+"""The terminal tip: one command from tldr-pages, and one way to use it.
 
 It refreshes with the page rather than with the dispatches, and shares their
 ledger so a command shows once and never again. It returns a small dict the
 renderer knows how to lay out, or None when the source has nothing new, in
 which case the previous value stays on the page: a module that cannot refresh
 shows yesterday's command rather than a hole.
+
+Two modules used to sit beside it, a Show HN post and a good first issue.
+Both were link-dumps in a page that had stopped being about link-dumps.
 """
 
 from __future__ import annotations
@@ -14,7 +17,6 @@ from __future__ import annotations
 import os
 import random
 import re
-import urllib.parse
 
 import net
 from state import Ledger
@@ -22,9 +24,6 @@ from text import clean
 
 _RNG = random.SystemRandom()
 
-HN_SHOW = "https://hacker-news.firebaseio.com/v0/showstories.json"
-HN_ITEM = "https://hacker-news.firebaseio.com/v0/item/{id}.json"
-GITHUB_SEARCH = "https://api.github.com/search/issues"
 TLDR_PAGE = "https://raw.githubusercontent.com/tldr-pages/tldr/main/pages/common/{name}.md"
 # The tree, not the contents listing: the contents endpoint stops at a
 # thousand files without saying so, and pages/common holds nearly twice
@@ -89,68 +88,6 @@ def _summary(page: str) -> str:
             break
         return clean(text.replace("`", ""))
     return ""
-
-
-def show_hn(ledger: Ledger) -> dict | None:
-    ids = net.get_json(HN_SHOW)
-    if not isinstance(ids, list):
-        return None
-    for story_id in ids[:30]:
-        if ledger.seen("hn", str(story_id)):
-            continue
-        item = net.get_json(HN_ITEM.format(id=story_id))
-        if not isinstance(item, dict) or item.get("type") != "story" or not item.get("title"):
-            continue
-        url = str(item.get("url") or f"https://news.ycombinator.com/item?id={story_id}")
-        if not url.startswith("https://"):
-            continue
-        title = clean(str(item["title"]))
-        title = re.sub(r"^show hn:\s*", "", title, flags=re.IGNORECASE)
-        domain = urllib.parse.urlsplit(url).netloc.lower().removeprefix("www.")
-        ledger.remember("hn", str(story_id))
-        return {
-            "id": str(story_id),
-            "title": title,
-            "url": url,
-            "points": int(item.get("score") or 0),
-            "domain": clean(domain),
-            "discussion": f"https://news.ycombinator.com/item?id={story_id}",
-        }
-    return None
-
-
-def good_first_issue(ledger: Ledger, languages: list) -> dict | None:
-    """One open, unassigned, recently touched good-first-issue in a stack language.
-
-    Authenticated with the workflow token when present, which is the only
-    thing the token is used for outside pushing: search is rate-limited hard
-    for anonymous callers.
-    """
-    if not languages:
-        return None
-    language = _RNG.choice(languages)
-    query = f'label:"good first issue" state:open no:assignee language:"{language}" comments:<5'
-    headers = net.github_headers(os.environ.get("GITHUB_TOKEN"))
-    payload = net.get_json_with_headers(GITHUB_SEARCH, {"q": query, "sort": "updated", "order": "desc", "per_page": 30}, headers)
-    if not isinstance(payload, dict):
-        return None
-    for item in payload.get("items") or []:
-        if not isinstance(item, dict) or item.get("pull_request"):
-            continue
-        url = str(item.get("html_url") or "")
-        match = re.match(r"https://github\.com/([^/]+/[^/]+)/issues/(\d+)$", url)
-        if not match or ledger.seen("issue", url):
-            continue
-        ledger.remember("issue", url)
-        return {
-            "id": url,
-            "repo": clean(match.group(1)),
-            "number": int(match.group(2)),
-            "title": clean(str(item.get("title") or "")),
-            "url": url,
-            "language": clean(language),
-        }
-    return None
 
 
 def _tldr_names() -> list:

@@ -104,15 +104,7 @@ def test_recent_index_and_page_rows(repo, moment):
 def test_empty_state_renders_a_sentence_not_a_hole(repo, moment):
     region = render_dispatches_region([], moment, 0)
     assert "No dispatches yet" in region
-    assert render_modules_region({}) == "_The daily modules fill in on the first refresh._"
-
-
-def test_the_two_link_modules_are_escaped(repo):
-    region = render_modules_region({
-        "hn": {"title": "A | pipe <b>", "url": "https://x.example/", "points": 12,
-               "domain": "x.example", "discussion": "https://news.ycombinator.com/item?id=1"},
-    })
-    assert "A \\| pipe &lt;b>" in region
+    assert render_modules_region({}) == "_The terminal tip fills in on the first refresh._"
 
 
 def test_the_tip_renders_the_tool_the_intent_and_the_line(repo):
@@ -122,7 +114,7 @@ def test_the_tip_renders_the_tool_the_intent_and_the_line(repo):
         "example": "git bisect start <bad_commit> <good_commit>",
         "url": "https://tldr.example/git-bisect",
     }})
-    assert "> [!TIP]\n> **git bisect** · Use binary search" in region
+    assert region.startswith("> [!TIP]\n> **git bisect** · Use binary search")
     assert "· [tldr](https://tldr.example/git-bisect)" in region
     assert "> Start a bisect session on a commit range:" in region
     assert "> git bisect start <bad_commit> <good_commit>" in region
@@ -135,7 +127,7 @@ def test_the_tip_renders_without_a_summary(repo):
         "command": "jq", "summary": "", "description": "Pull one field",
         "example": "jq '.a'", "url": "https://tldr.example/jq",
     }})
-    assert "> [!TIP]\n> **jq** · [tldr](" in region
+    assert region.startswith("> [!TIP]\n> **jq** · [tldr](")
 
 
 def test_a_hostile_tip_cannot_become_structure(repo):

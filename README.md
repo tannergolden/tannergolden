@@ -76,9 +76,6 @@ _No dispatches yet. The first lands at a random moment within the next twelve ho
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
-📰 **Show HN** [Airmash - HTML5 Multiplayer Missile Warfare](https://airma.sh/) · 2 points · airma.sh · [discuss](https://news.ycombinator.com/item?id=49775418)  
-🧩 **First issue** [Kesavaraja67/telex#36](https://github.com/Kesavaraja67/telex/issues/36) · GFI-5 - Document the risk/review model in the README · Python
-
 > [!TIP]
 > **sed** · Edit text in a scriptable manner. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/sed.md)
 >
@@ -145,7 +142,7 @@ Open to conversations about AI infrastructure, reproducibility, and developer to
 ---
 
 Dispatch sources: GitHub Releases · GitHub Security Advisories · endoflife.date (CC BY) ·
-RFC Editor · Lobsters · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
+RFC Editor · Lobsters · tldr-pages (CC BY) · GitHub. Terms in
 [`NOTICE`](NOTICE). Every image on this page is a committed file; nothing is fetched from an image
 service.
 

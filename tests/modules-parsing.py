@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The three daily modules and the stats fetch, against recorded API shapes.
+"""The terminal tip and the stats fetch, against recorded API shapes.
 
 TAR_PAGE is the tldr format as it is actually written today: a heading that
 is the real command, a summary block ending in a "More information" line,
@@ -201,35 +201,6 @@ def test_terminal_tip_falls_back_to_the_contents_listing(repo, fake_net, seeded)
 
 def test_a_source_that_is_down_answers_none(repo, fake_net, seeded):
     assert modules.terminal_tip(Ledger("state/ledger.json")) is None
-
-
-def test_show_hn_strips_the_prefix_and_skips_what_it_has_shown(repo, fake_net, seeded):
-    fake_net.json(modules.HN_SHOW, [11, 12]).json(
-        "https://hacker-news.firebaseio.com/v0/item/11.json",
-        {"type": "story", "title": "Show HN: Foo \u2013 a thing", "url": "https://www.foo.example/x?y", "score": 42},
-    ).json("https://hacker-news.firebaseio.com/v0/item/12.json", {"type": "story", "title": "Show HN: Bar", "score": 3})
-    led = Ledger("state/ledger.json")
-    led.remember("hn", "11")
-    found = modules.show_hn(led)
-    assert found == {
-        "id": "12", "title": "Bar", "url": "https://news.ycombinator.com/item?id=12", "points": 3,
-        "domain": "news.ycombinator.com", "discussion": "https://news.ycombinator.com/item?id=12",
-    }
-    led2 = Ledger("state/ledger.json")
-    first = modules.show_hn(led2)
-    assert first["title"] == "Foo - a thing" and first["domain"] == "foo.example"
-
-
-def test_good_first_issue_filters_to_real_issues_on_github(repo, fake_net, seeded, monkeypatch):
-    monkeypatch.setenv("GITHUB_TOKEN", "x")
-    fake_net.json(modules.GITHUB_SEARCH, {"items": [
-        {"html_url": "https://github.com/o/r/pull/1", "title": "a pull request", "pull_request": {}},
-        {"html_url": "https://github.com/o/r/issues/5", "title": "Fix the | thing"},
-    ]})
-    found = modules.good_first_issue(Ledger("state/ledger.json"), ["Python"])
-    assert found == {"id": "https://github.com/o/r/issues/5", "repo": "o/r", "number": 5, "title": "Fix the | thing", "url": "https://github.com/o/r/issues/5", "language": "Python"}
-    assert 'label%3A%22good+first+issue%22' in fake_net.requests[0] and "language%3A%22Python%22" in fake_net.requests[0]
-    assert modules.good_first_issue(Ledger("state/ledger.json"), []) is None
 
 
 def test_github_stats_sums_public_repositories(repo, fake_net):

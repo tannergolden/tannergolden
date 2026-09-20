@@ -429,27 +429,10 @@ def save_modules(modules: dict) -> None:
 
 
 def render_modules_region(modules: dict) -> str:
-    """The three daily modules: two one-line links, then the terminal tip."""
-    lines = []
-    hn = modules.get("hn")
-    if hn:
-        lines.append(
-            f"\U0001F4F0 **Show HN** [{md_inline(hn['title'])}]({safe_url(hn['url'])}) · "
-            f"{int(hn.get('points', 0))} points · {md_inline(hn.get('domain', ''))} · "
-            f"[discuss]({safe_url(hn['discussion'])})"
-        )
-    issue = modules.get("issue")
-    if issue:
-        lines.append(
-            f"\U0001F9E9 **First issue** [{md_inline(issue['repo'])}#{int(issue['number'])}]({safe_url(issue['url'])}) · "
-            f"{md_inline(issue['title'])} · {md_inline(issue.get('language', ''))}"
-        )
-    # Two trailing spaces keep the module lines on separate rendered lines.
-    blocks = ["  \n".join(lines)] if lines else []
-
+    """The terminal tip: what the tool is, what this invocation does, the line."""
     tip = modules.get("tip")
     if not tip:
-        return "\n\n".join(blocks) if blocks else "_The daily modules fill in on the first refresh._"
+        return "_The terminal tip fills in on the first refresh._"
 
     example = clean(tip["example"], command=True)
     fence = fence_for(example)
@@ -458,21 +441,18 @@ def render_modules_region(modules: dict) -> str:
     if summary:
         header += f" · {md_inline(summary)}"
     header += f" · [tldr]({safe_url(tip['url'])})"
-    blocks.append(
-        "\n".join(
-            [
-                "> [!TIP]",
-                header,
-                ">",
-                f"> {md_inline(tip['description'])}:",
-                ">",
-                f"> {fence}bash",
-                f"> {example}",
-                f"> {fence}",
-            ]
-        )
+    return "\n".join(
+        [
+            "> [!TIP]",
+            header,
+            ">",
+            f"> {md_inline(tip['description'])}:",
+            ">",
+            f"> {fence}bash",
+            f"> {example}",
+            f"> {fence}",
+        ]
     )
-    return "\n\n".join(blocks)
 
 
 def render_updated_line(when: datetime) -> str:

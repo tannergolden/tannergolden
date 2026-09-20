@@ -27,11 +27,11 @@ RFC Editor                    IETF Trust Legal Provisions           Titles, date
                               https://trustee.ietf.org/documents/trust-legal-provisions/   freely reproduced.
 Lobsters                      Facts via the official JSON           Story titles, scores, tags, submitter names,
                                                                     domains and links.
-tldr-pages                    CC BY 4.0                             One command description and one example, with
-                              https://github.com/tldr-pages/tldr/blob/main/LICENSE.md   a link to the page.
-Hacker News                   Facts via the official API            Titles, points, domains and links.
-GitHub                        Facts via the REST and GraphQL API    Issue titles and links; the account's public
-                                                                    repository, star, follower and language counts.
+tldr-pages                    CC BY 4.0                             One command, its one-line summary, and one
+                              https://github.com/tldr-pages/tldr/blob/main/LICENSE.md   example with its description, linked
+                                                                    to the page.
+GitHub                        Facts via the REST and GraphQL API    The account's public repository, star,
+                                                                    follower and language counts.
 
 The full text of each license is at the URL beside it. No copyleft source is
 reproduced here, so no license text needs to accompany this repository.

@@ -39,8 +39,6 @@ def snapshot(root):
 
 def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys):
     monkeypatch.setattr(sources, "FETCHERS", {"rfc": good, "eol": empty, "lobsters": broken})
-    monkeypatch.setattr(modules, "show_hn", lambda ledger: {"title": "Foo"})
-    monkeypatch.setattr(modules, "good_first_issue", lambda ledger, langs: None)
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: {"command": "jq"})
     monkeypatch.setattr(cards, "github_stats", lambda login, token: {"public_repos": 7, "languages": {"Python": 1}, "commits": 412})
     summary = repo / "summary.md"
@@ -49,10 +47,13 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
 
     assert dispatches.probe() == 1  # one source raised
     out = capsys.readouterr().out
-    assert "rfc          ok     docs(rfc): \U0001F4DD record RFC 1, Host Software" in out
-    assert "eol          empty  nothing available today" in out
-    assert "lobsters     error  RuntimeError('the wiki is down" in out and "\u2014" not in out
-    assert "show hn      ok     Foo" in out and "first issue  empty" in out and "stats        ok     7 public repositories, 1 languages, commits 412" in out
+    # The name column is padded to the widest row, so match on the rest.
+    rows = {line.split("  ")[0]: line.split("  ", 1)[1].strip() for line in out.splitlines() if line.strip()}
+    assert rows["rfc"] == "ok     docs(rfc): \U0001F4DD record RFC 1, Host Software"
+    assert rows["eol"] == "empty  nothing available today"
+    assert rows["lobsters"].startswith("error  RuntimeError('the wiki is down") and "\u2014" not in out
+    assert rows["tip"] == "ok     jq"
+    assert rows["stats"] == "ok     7 public repositories, 1 languages, commits 412"
 
     after = snapshot(repo)
     assert {k: v for k, v in after.items() if k != "summary.md"} == before
@@ -62,8 +63,6 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
 
 def test_probe_is_clean_when_everything_answers(repo, monkeypatch):
     monkeypatch.setattr(sources, "FETCHERS", {"rfc": good})
-    monkeypatch.setattr(modules, "show_hn", lambda ledger: None)
-    monkeypatch.setattr(modules, "good_first_issue", lambda ledger, langs: None)
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
     monkeypatch.setattr(cards, "github_stats", lambda login, token: None)
     assert dispatches.probe() == 0

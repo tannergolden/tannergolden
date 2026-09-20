@@ -2,6 +2,9 @@
   "advisory": [
     "GHSA-c8w2-fgvx-vhv4"
   ],
+  "rfc": [
+    "9792"
+  ],
   "tip": [
     "docker-compose-down",
     "sed"

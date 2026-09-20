@@ -1,5 +1,13 @@
 [
   {
+    "at": "2026-09-20T22:41:18.729251+00:00",
+    "type": "docs",
+    "scope": "rfc",
+    "title": "RFC 9792: Prefix Flag Extension for OSPFv2 and OSPFv3",
+    "path": "dispatches/2026/September.md",
+    "anchor": "dispatch-20260920-184118"
+  },
+  {
     "at": "2026-09-20T22:38:03.501830+00:00",
     "type": "security",
     "scope": "advisory",

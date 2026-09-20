@@ -101,19 +101,34 @@ def test_the_commit_message_holds_to_the_house_standard(repo):
             assert render.AVAILABILITY[state][0].lower() in message
 
 
-def test_setting_the_same_status_twice_commits_once(repo, monkeypatch):
-    """A no-op run must not put an empty commit on the page."""
-    calls = []
+def test_a_no_op_run_stages_nothing_and_pushes_nothing(repo, monkeypatch):
+    """Whether anything changed is git's question, asked by staging it.
+
+    An earlier version answered it from the state file and returned before
+    rendering, which meant a badge left stale by a failed run could never be
+    redrawn by picking the same status again.
+    """
+    pushes = []
     monkeypatch.setattr(dispatches, "render_page", lambda *a, **k: None)
-    monkeypatch.setattr(dispatches, "commit", lambda *a, **k: calls.append(a) or True)
-    monkeypatch.setattr(dispatches, "push", lambda: None)
+    monkeypatch.setattr(dispatches, "push", lambda: pushes.append(1))
+    staged = iter([True, False])  # what git would say: something, then nothing
+    monkeypatch.setattr(dispatches, "commit", lambda *a, **k: next(staged))
 
     assert dispatches.set_availability("role") == 0
-    assert len(calls) == 1
+    assert pushes == [1]
     assert dispatches.set_availability("role") == 0
-    assert len(calls) == 1, "a second identical run committed again"
-    assert dispatches.set_availability("none") == 0
-    assert len(calls) == 2
+    assert pushes == [1], "a run with nothing staged pushed anyway"
+
+
+def test_the_badge_is_in_the_paths_the_run_can_commit(repo, monkeypatch):
+    """The badge lives under assets; a run that redraws it must stage it."""
+    seen = {}
+    monkeypatch.setattr(dispatches, "render_page", lambda *a, **k: None)
+    monkeypatch.setattr(dispatches, "push", lambda: None)
+    monkeypatch.setattr(dispatches, "commit", lambda msg, paths=None: seen.update(paths=paths) or False)
+    dispatches.set_availability("role")
+    assert "assets" in seen["paths"], seen["paths"]
+    assert Path(render.AVAILABILITY_BADGE).parts[0] in seen["paths"]
 
 
 def test_an_unknown_status_changes_nothing(repo, monkeypatch):

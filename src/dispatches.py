@@ -245,13 +245,16 @@ def set_availability(state: str | None) -> int:
     if state not in render.AVAILABILITY:
         print(f"::error::unknown availability state: {state!r}")
         return 1
-    if render.load_availability() == state:
-        print(f"availability is already {state}; nothing to commit.")
-        return 0
     render.save_availability(state)
     render_page(now(), with_modules=False)
-    if commit(render.availability_commit_message(state), paths=[README, STATE_DIR]):
+    # The badge lives under assets, so a run that redraws it has to be able
+    # to stage it. Whether anything actually changed is git's question, not
+    # one this asks first: picking the same status twice then commits
+    # nothing, and a badge left stale by an earlier failure is redrawn.
+    if commit(render.availability_commit_message(state), paths=[README, STATE_DIR, ASSETS_DIR]):
         push()
+    else:
+        print(f"availability is already {state}, and its badge is current.")
     return 0
 
 

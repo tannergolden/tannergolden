@@ -35,6 +35,13 @@ def test_trojan_source_is_stripped():
     assert clean("ab‮cd​⁦e﻿") == "abcde"
 
 
+def test_prose_lines_do_not_keep_leading_whitespace():
+    """An RFC abstract arrives with its paragraphs indented; a page shows the space."""
+    assert clean("A para.\n\n This one is indented.\n  So is this.", allow_newlines=True) == (
+        "A para.\n\nThis one is indented.\nSo is this."
+    )
+
+
 def test_control_characters_and_whitespace_collapse():
     assert clean("a\x00b\x07c   d\n\te") == "abc d e"
     assert clean("foo\nbar\tbaz") == "foo bar baz"

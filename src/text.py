@@ -107,7 +107,7 @@ def clean(value: str, *, allow_newlines: bool = False, command: bool = False) ->
     if allow_newlines:
         text = re.sub(r"[ \t]+", " ", text)
         text = re.sub(r"\n{3,}", "\n\n", text)
-        return "\n".join(line.rstrip() for line in text.split("\n")).strip()
+        return "\n".join(line.strip() for line in text.split("\n")).strip()
 
     return re.sub(r"\s+", " ", text).strip()
 

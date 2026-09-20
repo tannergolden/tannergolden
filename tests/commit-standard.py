@@ -73,13 +73,6 @@ def dispatch(**overrides) -> Dispatch:
 
 # One of every kind the picker can draw, in the shape its fetcher builds.
 KINDS = {
-    "release": dispatch(kind="release", commit_type="chore", emoji="\U0001F9F9",
-                        subject="note v35.0.0, Linux turns 35", title="Linux turns 35",
-                        body="Family of Unix-like operating systems, released on this date in 1991.",
-                        license="CC0-1.0"),
-    "born": dispatch(kind="born", commit_type="docs", emoji="\U0001F4DD",
-                     subject="mark the birthday of Ada Lovelace, 1815", title="Ada Lovelace, born 1815",
-                     body="English mathematician. Born on this date in 1815, died in 1852.", license="CC0-1.0"),
     "rosetta": dispatch(kind="rosetta", commit_type="refactor", emoji="♻️",
                         subject="solve FizzBuzz in COBOL", title="FizzBuzz, solved in COBOL",
                         body="Rosetta Code carries 82 solutions to this task. This is the COBOL one.",

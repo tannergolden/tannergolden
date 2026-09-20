@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The eight kinds of dispatch, and the picker that chooses between them.
+"""The six kinds of dispatch, and the picker that chooses between them.
 
 Each fetcher returns one `Dispatch` the ledger has never seen, or None when its
 source is down, empty for today, or exhausted. None is an ordinary answer: the
@@ -278,11 +278,6 @@ def _rfc_list(numbers: list) -> str:
     return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
 
 
-def _ordinal(n: int) -> str:
-    suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
-    return f"{n}{suffix}"
-
-
 def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
     famous = [n for n in FAMOUS_RFCS if not ledger.seen("rfc", str(n))]
     candidates: list = []
@@ -508,134 +503,6 @@ def fetch_rosetta(ledger: Ledger, today: date) -> Dispatch | None:
 
 
 
-# --- chore(release) and docs(born): Wikidata -------------------------------------
-
-WDQS = "https://query.wikidata.org/sparql"
-
-# Both queries take the TRUTHY date (wdt:, the best-ranked statement, never a
-# deprecated one) and then insist that statement carries DAY precision
-# (wikibase:timePrecision 11). A date Wikidata knows only to the year is
-# stored as January the first, so without the precision clause New Year's
-# Day would celebrate everything ever dated by year; without the truthy
-# clause a demoted regional release date would count as the release.
-RELEASE_QUERY = """
-SELECT DISTINCT ?item ?itemLabel ?itemDescription ?date ?links WHERE {{
-  VALUES ?class {{ wd:Q7889 wd:Q7397 wd:Q9135 wd:Q9143 wd:Q166142 }}
-  ?item wdt:P31 ?class ; wdt:P577 ?date ; wikibase:sitelinks ?links ;
-        p:P577/psv:P577 [ wikibase:timeValue ?date ; wikibase:timePrecision 11 ] .
-  FILTER(MONTH(?date) = {month} && DAY(?date) = {day} && ?links >= 5)
-  SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
-}} ORDER BY DESC(?links) LIMIT 80
-"""
-
-BORN_QUERY = """
-SELECT DISTINCT ?item ?itemLabel ?itemDescription ?dob ?dod ?links WHERE {{
-  VALUES ?occupation {{ wd:Q82594 wd:Q5482740 wd:Q183888 wd:Q210167 }}
-  ?item wdt:P31 wd:Q5 ; wdt:P106 ?occupation ; wdt:P569 ?dob ; wikibase:sitelinks ?links ;
-        p:P569/psv:P569 [ wikibase:timeValue ?dob ; wikibase:timePrecision 11 ] .
-  OPTIONAL {{ ?item wdt:P570 ?dod . }}
-  FILTER(MONTH(?dob) = {month} && DAY(?dob) = {day} && ?links >= 3)
-  SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
-}} ORDER BY DESC(?links) LIMIT 80
-"""
-
-
-def _sparql(query: str) -> list:
-    # The query service allows sixty seconds, and a scan of every dated item
-    # for one calendar day can need a fair share of them.
-    payload = net.get_json(WDQS, {"query": query, "format": "json"}, timeout=65)
-    if not isinstance(payload, dict):
-        return []
-    rows = []
-    for binding in payload.get("results", {}).get("bindings", []):
-        rows.append({key: value.get("value", "") for key, value in binding.items()})
-    return rows
-
-
-def _qid(uri: str) -> str:
-    return uri.rsplit("/", 1)[-1]
-
-
-def _weighted_by_links(rows: list) -> list:
-    """Order rows by a weighted shuffle, so the famous lead without the obscure never appearing."""
-    keyed = []
-    for row in rows:
-        links = max(int(float(row.get("links", "1") or 1)), 1)
-        keyed.append((_RNG.random() ** (1.0 / links), row))
-    keyed.sort(key=lambda pair: pair[0], reverse=True)
-    return [row for _, row in keyed]
-
-
-def fetch_release(ledger: Ledger, today: date) -> Dispatch | None:
-    rows = _sparql(RELEASE_QUERY.format(month=today.month, day=today.day))
-    rows = [r for r in rows if r.get("itemLabel") and not r["itemLabel"].startswith("Q")]
-    chosen = _first_unseen(ledger, "release", _weighted_by_links(rows), key=lambda r: _qid(r["item"]))
-    if chosen is None:
-        return None
-
-    label = clean(chosen["itemLabel"])
-    description = clean(chosen.get("itemDescription", ""))
-    year = int(_year_of(chosen.get("date", "")) or today.year)
-    age = today.year - year
-    qid = _qid(chosen["item"])
-    version = f"v{age}.0.0"
-    turns = f"{label} turns {age}" if age > 0 else f"{label} is released"
-    opening = f"{description[:1].upper()}{description[1:]}, released" if description else "Released"
-    body = f"{opening} on this date in {year}."
-    if age > 0:
-        body += f" It is {age} today, which is the only version number an anniversary gets."
-    return Dispatch(
-        kind="release",
-        commit_type="chore",
-        emoji="\U0001F9F9",
-        # Imperative mood, like every other kind: the standard asks for a
-        # verb and "Linux turns 35" is not one.
-        subject=f"note {version}, {turns}",
-        title=turns,
-        body=body,
-        identifier=qid,
-        source_name="Wikidata",
-        source_url=f"https://www.wikidata.org/wiki/{qid}",
-        license="CC0-1.0",
-    )
-
-
-def fetch_born(ledger: Ledger, today: date) -> Dispatch | None:
-    rows = _sparql(BORN_QUERY.format(month=today.month, day=today.day))
-    rows = [r for r in rows if r.get("itemLabel") and not r["itemLabel"].startswith("Q")]
-    chosen = _first_unseen(ledger, "born", _weighted_by_links(rows), key=lambda r: _qid(r["item"]))
-    if chosen is None:
-        return None
-
-    name = clean(chosen["itemLabel"])
-    description = clean(chosen.get("itemDescription", ""))
-    year = _year_of(chosen.get("dob", ""))
-    died = _year_of(chosen.get("dod", ""))
-    qid = _qid(chosen["item"])
-    said = []
-    if description:
-        said.append(f"{description[:1].upper()}{description[1:]}.")
-    if not year:
-        said.append("Born on this date.")
-    elif died and int(died) >= int(year):
-        said.append(f"Born on this date in {year}, died in {died}.")
-    else:
-        said.append(f"Born on this date in {year}, {_ordinal(today.year - int(year))} anniversary today.")
-    body = " ".join(said)
-    return Dispatch(
-        kind="born",
-        commit_type="docs",
-        emoji="\U0001F4DD",
-        subject=f"mark the birthday of {name}" + (f", {year}" if year else ""),
-        title=f"{name}, born {year}" if year else name,
-        body=body,
-        identifier=qid,
-        source_name="Wikidata",
-        source_url=f"https://www.wikidata.org/wiki/{qid}",
-        license="CC0-1.0",
-    )
-
-
 # --- fix(bug): Wikipedia -----------------------------------------------------------
 
 WIKIPEDIA_API = "https://en.wikipedia.org/w/api.php"
@@ -741,8 +608,6 @@ def fetch_falsehood(ledger: Ledger, today: date) -> Dispatch | None:
 # --- the picker -------------------------------------------------------------------
 
 FETCHERS: dict = {
-    "release": fetch_release,
-    "born": fetch_born,
     "rosetta": fetch_rosetta,
     "unicode": fetch_unicode,
     "rfc": fetch_rfc,
@@ -751,7 +616,7 @@ FETCHERS: dict = {
     "falsehood": fetch_falsehood,
 }
 
-COMMON = ("release", "born", "rosetta", "unicode", "rfc", "sequence")
+COMMON = ("rosetta", "unicode", "rfc", "sequence")
 RARE = ("bug", "falsehood")
 RARE_SHARE = 0.05  # the two rare kinds together, while their lists last
 

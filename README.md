@@ -142,13 +142,13 @@ Open to conversations about AI infrastructure, reproducibility, and developer to
 
 ---
 
-Dispatch sources: Wikidata (CC0) · Unicode · RFC Editor · OEIS (CC BY-SA) · Rosetta Code (GFDL) ·
-Wikipedia (CC BY-SA) · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
+Dispatch sources: Unicode · RFC Editor · OEIS (CC BY-SA) · Rosetta Code (GFDL) · Wikipedia
+(CC BY-SA) · awesome-falsehood · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
 [`NOTICE`](NOTICE). Every image on this page is a committed file; nothing is fetched from an image
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 10:05 EDT on Sunday, September 20, 2026.
+Last updated 10:14 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

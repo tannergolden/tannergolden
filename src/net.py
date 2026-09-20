@@ -6,8 +6,8 @@ Stdlib only, matching the rest of this account's tooling: the workflow runs on
 a bare `python3` with nothing to install and nothing to cache.
 
 Three behaviours are deliberate. Requests carry a descriptive User-Agent,
-because Wikidata rejects a request without one and every other source here is
-a volunteer project entitled to know who is calling. Responses are read
+because the Wikimedia APIs reject a request without one and every other source
+here is a volunteer project entitled to know who is calling. Responses are read
 through a size ceiling, so a source that starts returning a gigabyte cannot
 take the runner down with it. And a failure returns None rather than raising,
 because a source being down is an ordinary Tuesday: the caller falls back to

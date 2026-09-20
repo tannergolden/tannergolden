@@ -137,8 +137,6 @@ page.
 
 | Commit                | Content                                                 | Source                     | License                     |
 | :-------------------- | :------------------------------------------------------ | :------------------------- | :-------------------------- |
-| `chore(release)`      | Software and games released on this date                | Wikidata                   | CC0 1.0                     |
-| `docs(born)`          | Computing people born on this date                      | Wikidata                   | CC0 1.0                     |
 | `refactor(rosetta)`   | One task, one language, the code                        | Rosetta Code               | GFDL 1.2, this version only |
 | `feat(unicode)`       | A character with a name worth reading                   | Unicode Character Database | Unicode License v3          |
 | `docs(rfc)`           | An RFC, what it did, and when                           | RFC Editor                 | Freely reproducible         |
@@ -146,11 +144,13 @@ page.
 | `fix(bug)`, rare      | A famous software failure                               | Wikipedia                  | CC BY-SA 4.0                |
 | `fix(falsehood)`, rare | A catalogue of things programmers believe               | awesome-falsehood          | CC0 1.0 (the list)          |
 
+Every kind either tells a reader something or asks them something. Two earlier
+ones did neither, a software release anniversary and a computing birthday, and
+they are gone: knowing that a thing happened on a date is not knowing anything.
 The two rare kinds together take one draw in twenty, and each retires when its
-list is used up. `docs(born)` is offered only on a date somebody qualifying was
-born; otherwise another kind is drawn. If a source is down or empty, the next
-kind is tried, and if every source fails the run writes nothing and leaves the
-moment in the past for the next run to catch.
+list is used up. If a source is down or empty, the next kind is tried, and if
+every source fails the run writes nothing and leaves the moment in the past for
+the next run to catch.
 
 The commit type is a genre label: `feat(unicode)` adds nothing to any
 software, and `fix(bug)` fixes nothing. This repository cuts no releases and

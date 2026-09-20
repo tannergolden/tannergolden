@@ -81,9 +81,9 @@ AUTHOR_EMAIL = os.environ.get(
     "DISPATCH_AUTHOR_EMAIL", "24684994+tannergolden@users.noreply.github.com"
 )
 
-# Sent on every outbound request. Wikidata rejects a request without one, and
-# every other source here is a volunteer project entitled to know who is
-# calling and where to complain.
+# Sent on every outbound request. The Wikimedia APIs reject a request without
+# one, and every other source here is a volunteer project entitled to know who
+# is calling and where to complain.
 USER_AGENT = (
     "tannergolden-dispatches/1.0 (+https://github.com/tannergolden/tannergolden; "
     "one request per source, at most a few times a day)"

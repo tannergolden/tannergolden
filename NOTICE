@@ -13,8 +13,6 @@ terms.
 
 Source                        License                               What a dispatch reproduces
 ----------------------------  ------------------------------------  ------------------------------------------------
-Wikidata                      CC0 1.0                               Labels, descriptions, dates. Public domain.
-                              https://creativecommons.org/publicdomain/zero/1.0/
 Unicode Character Database    Unicode License v3                    Code points, names, blocks.
                               https://www.unicode.org/license.txt
 RFC Editor                    IETF Trust Legal Provisions           Titles, dates, status, abstracts. RFCs may be

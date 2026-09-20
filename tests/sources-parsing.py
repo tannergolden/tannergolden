@@ -236,45 +236,6 @@ def test_rosetta_can_cite_without_reproducing(repo, fake_net, seeded, monkeypatc
     assert entry is not None and entry.code is None and "cites rather than reproduces" in entry.body
 
 
-# --- chore(release), docs(born): Wikidata ------------------------------------------
-
-def bindings(rows):
-    return {"results": {"bindings": [{k: {"value": v} for k, v in row.items()} for row in rows]}}
-
-
-def test_release_turns_an_age_into_a_version(repo, fake_net, seeded):
-    fake_net.json(sources.WDQS, bindings([
-        {"item": "http://www.wikidata.org/entity/Q171477", "itemLabel": "Linux", "itemDescription": "family of Unix-like operating systems", "date": "1991-09-17T00:00:00Z", "links": "200"},
-        {"item": "http://www.wikidata.org/entity/Q999", "itemLabel": "Q999", "date": "2001-09-17T00:00:00Z", "links": "9"},
-    ]))
-    entry = sources.fetch_release(ledger(repo), TODAY)
-    assert entry is not None and entry.identifier == "Q171477"
-    assert entry.subject == "note v35.0.0, Linux turns 35"
-    assert entry.body == "Family of Unix-like operating systems, released on this date in 1991. It is 35 today, which is the only version number an anniversary gets."
-    assert entry.license == "CC0-1.0" and entry.source_url == "https://www.wikidata.org/wiki/Q171477"
-    from urllib.parse import unquote_plus
-
-    query = unquote_plus(fake_net.requests[0])
-    assert "wikibase:timePrecision 11" in query and "wdt:P577 ?date" in query
-    assert_well_formed(entry)
-
-
-def test_born_reads_the_years_of_a_life(repo, fake_net, seeded):
-    fake_net.json(sources.WDQS, bindings([
-        {"item": "http://www.wikidata.org/entity/Q7259", "itemLabel": "Ada Lovelace", "itemDescription": "English mathematician", "dob": "1815-12-10T00:00:00Z", "dod": "1852-11-27T00:00:00Z", "links": "150"},
-    ]))
-    entry = sources.fetch_born(ledger(repo), TODAY)
-    assert entry is not None
-    assert entry.subject == "mark the birthday of Ada Lovelace, 1815"
-    assert entry.body == "English mathematician. Born on this date in 1815, died in 1852."
-    assert_well_formed(entry)
-
-
-def test_born_is_empty_on_a_day_nobody_qualifies(repo, fake_net, seeded):
-    fake_net.json(sources.WDQS, bindings([]))
-    assert sources.fetch_born(ledger(repo), TODAY) is None
-
-
 # --- fix(bug): Wikipedia ------------------------------------------------------------
 
 BUG_WIKITEXT = """== Space ==

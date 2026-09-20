@@ -1,0 +1,101 @@
+# NOT installed from tannergolden/standards, and not a stub. This is the one
+# workflow this profile runs, and How-It-Works.md records the three places it
+# departs from those standards and why: a scheduled job that pushes to the
+# default branch, a cron on a minute other than 00, and logic living here
+# rather than being called by reference.
+#
+# WHAT ONE RUN DOES. It reads state/schedule.json. If a journal entry or a
+# page refresh is due inside the coming hour, it sleeps until that exact
+# second, does it, draws the next moment from an exponential distribution
+# using the operating system's entropy source, and looks again. A moment
+# already past, because a cron was skipped, is handled at once. When nothing
+# is due, the run ends in seconds. The mean wait between entries is one
+# number in src/config.py.
+#
+# The cron fires at :17 rather than :00 deliberately. GitHub's scheduler is
+# most congested on the hour and runs there are delayed or dropped most
+# often; the minute is arbitrary, the avoidance is not.
+#
+# EGRESS. The harden step audits rather than blocks, per the action's own
+# guidance: audit first, then block with the allowlist the audit reveals.
+# The endpoints this job is expected to reach, for that allowlist:
+#   api.github.com, raw.githubusercontent.com, github.com,
+#   www.unicode.org, www.rfc-editor.org, xkcd.com, oeis.org,
+#   rosettacode.org, query.wikidata.org, en.wikipedia.org,
+#   hacker-news.firebaseio.com
+
+name: '🕒 Journal'
+
+on:
+  schedule:
+    - cron: '17 * * * *' # hourly, off the hour: the run decides whether anything is due
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'tick handles what is due this hour; refresh rewrites the page now'
+        type: choice
+        options: [tick, refresh]
+        default: tick
+
+concurrency:
+  # One writer, ever. A run that is asleep waiting for its moment holds the
+  # group, and the next hourly run queues behind it rather than committing
+  # beside it. Never cancelled: cancelling a sleeping run would lose the
+  # moment it was waiting for.
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+# The ceiling for every job below. Written out rather than inherited, because a
+# repository set to read-only caps every write scope the same invisible way.
+permissions: {}
+
+jobs:
+  write:
+    # The page renders from the default branch, so that is the only branch a
+    # scheduled run may write. Resolved at run time rather than named here.
+    if: ${{ github.event_name != 'workflow_dispatch' || github.ref_name == github.event.repository.default_branch }}
+    runs-on: ubuntu-latest
+    # A run sleeps up to an hour; the margin covers a slow source afterwards.
+    timeout-minutes: 80
+    permissions:
+      contents: write # commit the entry and push it
+    env:
+      # AUTHOR AND COMMITTER ARE DIFFERENT PEOPLE ON PURPOSE. The author is the
+      # account owner, set in src/config.py, which is what the contribution
+      # graph reads. The committer is the Actions identity, so the commit
+      # object also records that a machine performed the write.
+      GIT_COMMITTER_NAME: github-actions[bot]
+      GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+    steps:
+      - name: '🛡️ Harden Runner'
+        uses: tannergolden/standards/actions/harden@v1
+        with:
+          egress-policy: audit
+          notice: '🕒 Journal: writes whatever is due this hour, at the second it is due.'
+
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The full history: a rebase before push needs the merge base, and
+          # a shallow clone cannot supply one once the branch has moved.
+          fetch-depth: 0
+          # The push at the end of the run uses this token. A read-only job
+          # would drop it; this one exists to write.
+          persist-credentials: true # zizmor: ignore[artipacked] - this job pushes
+
+      - name: '🏷️ Checkout the badge kit'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: tannergolden/emblems
+          ref: 5b00d969c0ea1c963ff949de2554da5dbe5ab7d0 # Development, 2026-09-20
+          path: .emblems
+          persist-credentials: false
+
+      - name: '📓 Write what is due'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOURNAL_MODE: ${{ inputs.mode || 'tick' }}
+          EMBLEMS_KIT: .emblems/src/badge-kit.py
+        # Inputs travel through env, never interpolated into the script body:
+        # a ${{ }} expansion inside run is a shell-injection sink.
+        run: python3 src/journal.py --mode "$JOURNAL_MODE"

@@ -1,6 +1,15 @@
 {
+  "hn": [
+    "49775418"
+  ],
+  "issue": [
+    "https://github.com/Kesavaraja67/telex/issues/36"
+  ],
   "sequence": [
     "217"
+  ],
+  "tip": [
+    "docker-compose-down"
   ],
   "unicode": [
     "10330"

@@ -69,7 +69,15 @@ follows.
 <!-- JOURNAL:END -->
 
 <!-- MODULES:BEGIN -->
-_The daily modules fill in on the first refresh._
+📰 **Show HN** [Airmash - HTML5 Multiplayer Missile Warfare](https://airma.sh/) · 2 points · airma.sh · [discuss](https://news.ycombinator.com/item?id=49775418)  
+🧩 **First issue** [Kesavaraja67/telex#36](https://github.com/Kesavaraja67/telex/issues/36) · GFI-5 - Document the risk/review model in the README · Python
+
+> [!TIP]
+> **docker-compose-down**: Stop and remove all containers and networks ([tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/docker-compose-down.md))
+>
+> ```bash
+> docker compose down
+> ```
 <!-- MODULES:END -->
 
 ---
@@ -105,12 +113,12 @@ exception: a profile, not a pipeline, and its one workflow lives here.
 
 <!-- CARDS:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg?v=7574aa03">
-  <img alt="GitHub statistics for tannergolden: n/a public repositories, n/a stars, n/a followers, n/a commits and n/a pull requests in 2026." src="assets/stats-light.svg?v=d47f8e7c">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg?v=809d4bda">
+  <img alt="GitHub statistics for tannergolden: 5 public repositories, 0 stars, 11 followers, 775 commits and 0 pull requests in 2026." src="assets/stats-light.svg?v=a95d2feb">
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/languages-dark.svg?v=478f6e36">
-  <img alt="Top languages across public repositories: no data yet." src="assets/languages-light.svg?v=6139e4a2">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/languages-dark.svg?v=e3f6adf8">
+  <img alt="Top languages across public repositories: Python 87.6%, Shell 10.7%, Makefile 0.9%, JavaScript 0.8%." src="assets/languages-light.svg?v=d8c13bb2">
 </picture>
 <!-- CARDS:END -->
 

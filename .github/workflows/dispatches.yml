@@ -4,7 +4,7 @@
 # default branch, a cron on a minute other than 00, and logic living here
 # rather than being called by reference.
 #
-# WHAT ONE RUN DOES. It reads state/schedule.json. If a journal entry or a
+# WHAT ONE RUN DOES. It reads state/schedule.json. If a dispatch or a
 # page refresh is due inside the coming hour, it sleeps until that exact
 # second, does it, draws the next moment from an exponential distribution
 # using the operating system's entropy source, and looks again. A moment
@@ -24,7 +24,7 @@
 #   rosettacode.org, query.wikidata.org, en.wikipedia.org,
 #   hacker-news.firebaseio.com
 
-name: '🕒 Journal'
+name: '📡 Dispatches'
 
 on:
   schedule:
@@ -32,9 +32,9 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'tick: what is due this hour. entry: one entry now. refresh: the page now. probe: try every source, write nothing'
+        description: 'tick: what is due this hour. dispatch: one dispatch now. refresh: the page now. probe: try every source, write nothing'
         type: choice
-        options: [tick, entry, refresh, probe]
+        options: [tick, dispatch, refresh, probe]
         default: tick
 
 concurrency:
@@ -52,12 +52,12 @@ permissions: {}
 
 jobs:
   write:
-    name: '📓 Write what is due'
+    name: '📡 Send what is due'
     # No branch guard, deliberately. A scheduled run only ever fires on the
     # default branch, which is the branch the page renders from; GitHub
     # enforces that. A manual dispatch on any other branch is a REHEARSAL:
     # it fetches, writes and commits exactly as a real run would, and then
-    # does not push (JOURNAL_NO_PUSH below), reporting the commits it made
+    # does not push (DISPATCH_NO_PUSH below), reporting the commits it made
     # in the run summary instead. Pushing them would put state files on a
     # branch that the hourly runs on the default branch keep moving, and
     # every one of them would conflict at merge.
@@ -78,13 +78,13 @@ jobs:
       # github.event.repository is NOT present on a schedule event, and a
       # bare comparison would have read as 'not the default branch' on
       # every hourly run and never pushed anything.
-      JOURNAL_NO_PUSH: ${{ github.event_name == 'workflow_dispatch' && github.ref_name != github.event.repository.default_branch && '1' || '' }}
+      DISPATCH_NO_PUSH: ${{ github.event_name == 'workflow_dispatch' && github.ref_name != github.event.repository.default_branch && '1' || '' }}
     steps:
       - name: '🛡️ Harden Runner'
         uses: tannergolden/standards/actions/harden@v1
         with:
           egress-policy: audit
-          notice: '🕒 Journal: writes whatever is due this hour, at the second it is due.'
+          notice: '📡 Dispatches: sends whatever is due this hour, at the second it is due.'
 
       - name: '📥 Checkout'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -104,11 +104,11 @@ jobs:
           path: .emblems
           persist-credentials: false
 
-      - name: '📓 Write what is due'
+      - name: '📡 Send what is due'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JOURNAL_MODE: ${{ inputs.mode || 'tick' }}
+          DISPATCH_MODE: ${{ inputs.mode || 'tick' }}
           EMBLEMS_KIT: .emblems/src/badge-kit.py
         # Inputs travel through env, never interpolated into the script body:
         # a ${{ }} expansion inside run is a shell-injection sink.
-        run: python3 src/journal.py --mode "$JOURNAL_MODE"
+        run: python3 src/dispatches.py --mode "$DISPATCH_MODE"

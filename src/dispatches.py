@@ -3,12 +3,12 @@
 # SPDX-License-Identifier: MIT
 """The entry point the workflow runs. One run handles whatever is due this hour.
 
-    python3 src/journal.py --mode tick      # the hourly run (default)
-    python3 src/journal.py --mode entry     # write one entry now, whatever the schedule says
-    python3 src/journal.py --mode refresh   # refresh the page now, on demand
-    python3 src/journal.py --mode probe     # try every source and module, write nothing
-    python3 src/journal.py --mode render    # re-render the page from state, offline
-    python3 src/journal.py --mode check     # verify the page's regions, write nothing
+    python3 src/dispatches.py --mode tick      # the hourly run (default)
+    python3 src/dispatches.py --mode dispatch  # send one dispatch now, whatever the schedule says
+    python3 src/dispatches.py --mode refresh   # refresh the page now, on demand
+    python3 src/dispatches.py --mode probe     # try every source and module, write nothing
+    python3 src/dispatches.py --mode render    # re-render the page from state, offline
+    python3 src/dispatches.py --mode check     # verify the page's regions, write nothing
 
 HOW A TICK WORKS. The schedule file holds two moments: when the next entry is
 due and when the next page refresh is due. The run reads both, and if either
@@ -43,8 +43,8 @@ import sources
 from config import (
     ASSETS_DIR,
     BOOTSTRAP_ENTRIES,
+    DISPATCH_DIR,
     HORIZON_SECONDS,
-    JOURNAL_DIR,
     README,
     STATE_DIR,
 )
@@ -54,7 +54,7 @@ from text import clean, fit_subject
 BADGE_DATA = ".github/badges.yml"
 
 PROFILE_FILE = "profile.json"
-COMMIT_PATHS = [README, JOURNAL_DIR, STATE_DIR, ASSETS_DIR, ".github/badges.yml"]
+COMMIT_PATHS = [README, DISPATCH_DIR, STATE_DIR, ASSETS_DIR, ".github/badges.yml"]
 
 
 # --- git ------------------------------------------------------------------------
@@ -87,8 +87,8 @@ def commit(message: str, paths: list | None = None) -> bool:
 def push() -> None:
     """Rebase onto whatever landed meanwhile, then push. Retried, never forced."""
     branch = git("rev-parse", "--abbrev-ref", "HEAD").strip()
-    if os.environ.get("JOURNAL_NO_PUSH") == "1":
-        print(f"push skipped by JOURNAL_NO_PUSH (branch {branch})")
+    if os.environ.get("DISPATCH_NO_PUSH") == "1":
+        print(f"push skipped by DISPATCH_NO_PUSH (branch {branch})")
         report_unpushed(branch)
         return
     delay = 2
@@ -125,12 +125,12 @@ def report_unpushed(branch: str) -> None:
 # --- badges -----------------------------------------------------------------------
 
 def badge_status() -> str:
-    """What the journal badge currently says, read back from the data file."""
+    """What the dispatch badge currently says, read back from the data file."""
     try:
         text = Path(BADGE_DATA).read_text(encoding="utf-8")
     except OSError:
         return ""
-    block = re.search(r"- name: journal\n((?:[ \t]+\S.*\n){1,8})", text)
+    block = re.search(r"- name: dispatches\n((?:[ \t]+\S.*\n){1,8})", text)
     if not block:
         return ""
     message = re.search(r"^\s+message:\s*['\"]?([^'\"\n]+?)['\"]?\s*$", block.group(1), flags=re.MULTILINE)
@@ -143,17 +143,17 @@ BADGE_PATHS = [README, ".github/badges.yml", "assets/badges"]
 def discard_partial_work() -> None:
     """Throw away whatever the failed run wrote, so none of it can be committed.
 
-    A run that dies halfway has appended to the journal, touched the ledger
+    A run that dies halfway has appended to the archive, touched the ledger
     and half-rendered the page. The failure commit must carry none of that,
     only the badge, so the tracked files go back to HEAD and anything new
     under the machine-owned paths is removed.
     """
     git("restore", "--source=HEAD", "--staged", "--worktree", "--", *COMMIT_PATHS, check=False)
-    git("clean", "-fdq", "--", JOURNAL_DIR, STATE_DIR, ASSETS_DIR, check=False)
+    git("clean", "-fdq", "--", DISPATCH_DIR, STATE_DIR, ASSETS_DIR, check=False)
 
 
 def mark_failed(exc: BaseException) -> None:
-    """Turn the journal badge red and commit that, so the page tells the truth.
+    """Turn the dispatch badge red and commit that, so the page tells the truth.
 
     A badge that cannot go red is decoration. This one goes red the moment
     a run fails, in a commit of its own that carries nothing fetched, and
@@ -167,7 +167,7 @@ def mark_failed(exc: BaseException) -> None:
         f"{reason}. The badge on the page says so until a run succeeds; nothing "
         f"fetched is in this commit."
     )
-    message = f"ci(journal): \U0001F6A8 mark the last run as failed\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
+    message = f"ci(dispatches): \U0001F6A8 mark the last run as failed\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
     if commit(message, paths=BADGE_PATHS):
         push()
 
@@ -182,7 +182,7 @@ def mark_passing() -> None:
         "An earlier run failed and left the badge red. This run succeeded, so the "
         "badge says so again. Nothing fetched is in this commit."
     )
-    message = f"ci(journal): \U0001F552 mark the run passing again\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
+    message = f"ci(dispatches): \U0001F552 mark the run passing again\n\n{body}\n\nSigned-off-by: {render.AUTHOR_NAME} <{render.AUTHOR_EMAIL}>\n"
     if commit(message, paths=BADGE_PATHS):
         push()
 
@@ -201,7 +201,7 @@ def render_badges(month_count: int, status: str = "Passing", color: str = "green
     result = subprocess.run(
         [
             sys.executable, kit, "--root", ".", "--data", ".github/badges.yml", "--out", "assets/badges",
-            "--set", f"journal={status}:{color}",
+            "--set", f"dispatches={status}:{color}",
             "--set", f"month={render.month_badge_message(month_count)}:green",
         ],
         capture_output=True, text=True, check=False,
@@ -221,12 +221,12 @@ def load_profile() -> dict:
 
 def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("Passing", "green")) -> None:
     recent = render.load_recent()
-    month_count = render.entries_this_month(when)
+    month_count = render.dispatches_this_month(when)
     # Badges first: the page embeds each one with a tag of its bytes.
     render_badges(month_count, *status)
     profile = load_profile()
     regions = {
-        "JOURNAL": render.render_journal_region(recent, when, month_count),
+        "DISPATCHES": render.render_dispatches_region(recent, when, month_count),
         "UPDATED": render.render_updated_line(when),
         "TYPING": cards.picture("typing", " / ".join(profile.get("phrases") or ["engineering"])),
     }
@@ -242,21 +242,21 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
     render.update_month_index()
 
 
-def write_entry(ledger: Ledger, when: datetime) -> str | None:
-    """Write one entry to the journal, the index, the ledger and the page.
+def write_dispatch(ledger: Ledger, when: datetime) -> str | None:
+    """Write one dispatch to the archive, the index, the ledger and the page.
 
     Returns the commit message for it, or None when every source came back
     empty. Nothing is committed here: the caller draws the next moment first,
-    so the schedule lands in the same commit as the entry it follows and one
-    random moment is exactly one commit.
+    so the schedule lands in the same commit as the dispatch it follows and
+    one random moment is exactly one commit.
     """
     today = render.local(when).date()
-    entry = sources.pick_entry(ledger, today)
+    entry = sources.pick_dispatch(ledger, today)
     if entry is None:
-        print("::warning::every source came back empty; skipping this entry until the next run.")
+        print("::warning::every source came back empty; skipping this dispatch until the next run.")
         return None
 
-    path = render.append_journal(entry, when)
+    path = render.append_dispatch(entry, when)
     render.record_recent(entry, when, path)
     ledger.remember(entry.kind, entry.identifier)
     ledger.save()
@@ -378,35 +378,35 @@ def tick() -> int:
         # for half a day, then draw the first moments and start the process.
         print(f"no schedule yet: bootstrapping {BOOTSTRAP_ENTRIES} entries and a refresh")
         for _ in range(BOOTSTRAP_ENTRIES):
-            message = write_entry(ledger, now())
+            message = write_dispatch(ledger, now())
             if message and commit(message):
                 push()
         moment = now()
         message = refresh_page(ledger, moment)
-        schedule.reschedule_entry(after=moment)
+        schedule.reschedule_dispatch(after=moment)
         schedule.reschedule_refresh(after=moment)
         if commit(message):
             push()
         return 0
 
     while True:
-        next_entry = schedule.next_entry
+        next_dispatch = schedule.next_dispatch
         next_refresh = schedule.next_refresh
-        due = min(next_entry, next_refresh)
+        due = min(next_dispatch, next_refresh)
         if due > deadline:
-            print(f"nothing due before {deadline.isoformat(timespec='seconds')}; next entry {next_entry.isoformat(timespec='seconds')}")
+            print(f"nothing due before {deadline.isoformat(timespec='seconds')}; next entry {next_dispatch.isoformat(timespec='seconds')}")
             mark_passing()
             return 0
 
         sleep_until(due)
         moment = now()
-        if next_entry <= next_refresh:
-            message = write_entry(ledger, moment)
+        if next_dispatch <= next_refresh:
+            message = write_dispatch(ledger, moment)
             if message is None:
                 # Leave the schedule alone: the entry is still due, and the
                 # next run tries again. Stop here so this run cannot spin.
                 return 0
-            schedule.reschedule_entry(after=moment)
+            schedule.reschedule_dispatch(after=moment)
         else:
             message = refresh_page(ledger, moment)
             schedule.reschedule_refresh(after=moment)
@@ -416,7 +416,7 @@ def tick() -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--mode", choices=["tick", "entry", "refresh", "render", "check", "probe"], default="tick")
+    parser.add_argument("--mode", choices=["tick", "dispatch", "refresh", "render", "check", "probe"], default="tick")
     args = parser.parse_args()
 
     if args.mode == "probe":
@@ -424,7 +424,7 @@ def main() -> int:
 
     if args.mode == "check":
         document = Path(README).read_text(encoding="utf-8")
-        for name in ("TYPING", "JOURNAL", "MODULES", "CARDS", "UPDATED"):
+        for name in ("TYPING", "DISPATCHES", "MODULES", "CARDS", "UPDATED"):
             render.read_region(document, name)
         print("README.md: all five regions intact")
         return 0
@@ -457,19 +457,19 @@ def run_writing_mode(mode: str) -> int:
             push()
         return 0
 
-    if mode == "entry":
-        # One entry, now. The next moment is still drawn from the
-        # distribution, so a forced entry moves the schedule the same way a
-        # random one does rather than leaving a stale due time behind it.
+    if mode == "dispatch":
+        # One dispatch, now. The next moment is still drawn from the
+        # distribution, so a forced dispatch moves the schedule the same way
+        # a random one does rather than leaving a stale due time behind it.
         # The refresh is left alone on purpose. On a fresh deployment it has
         # no moment yet, which reads as due, so the next tick refreshes the
         # page within the hour rather than after a full draw.
         schedule = Schedule()
         moment = now()
-        message = write_entry(Ledger(), moment)
+        message = write_dispatch(Ledger(), moment)
         if message is None:
             return 1
-        schedule.reschedule_entry(after=moment)
+        schedule.reschedule_dispatch(after=moment)
         if commit(message):
             push()
         return 0

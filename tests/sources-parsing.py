@@ -138,7 +138,7 @@ def test_sequence_shows_eight_terms_and_answers_with_the_ninth(repo, fake_net, s
     assert entry.subject == "continue 0, 1, 1, 2, 3, 5, 8, 13"
     assert entry.title == "0, 1, 1, 2, 3, 5, 8, 13, what comes next?"
     # The question is the title and the answer is the body, which the
-    # journal folds away so the page still poses a puzzle.
+    # page folds away so the page still poses a puzzle.
     assert entry.body == "The next term is 21. This is A000045, Fibonacci numbers: F(n) = F(n-1) + F(n-2) with F(0) = 0 and F(1) = 1."
     assert entry.spoiler is True
     assert "0, 1, 1, 2, 3, 5, 8, 13" not in entry.body
@@ -343,11 +343,11 @@ def test_picker_falls_through_a_failing_source_to_the_next(repo, fake_net, seede
 
     def works(ledger, today):
         calls.append("works")
-        return sources.Entry(kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 1, Host Software", title="RFC 1", body="b", identifier="1", source_name="RFC Editor", source_url="https://www.rfc-editor.org/rfc/rfc1", license="freely reproducible",)
+        return sources.Dispatch(kind="rfc", commit_type="docs", emoji="\U0001F4DD", subject="record RFC 1, Host Software", title="RFC 1", body="b", identifier="1", source_name="RFC Editor", source_url="https://www.rfc-editor.org/rfc/rfc1", license="freely reproducible",)
 
     monkeypatch.setattr(sources, "FETCHERS", {"a": boom, "b": empty, "c": works})
     monkeypatch.setattr(sources, "COMMON", ("a", "b", "c"))
     monkeypatch.setattr(sources, "RARE", ())
-    entry = sources.pick_entry(ledger(repo), TODAY)
+    entry = sources.pick_dispatch(ledger(repo), TODAY)
     assert entry is not None and entry.identifier == "1"
     assert set(calls) == {"boom", "empty", "works"}

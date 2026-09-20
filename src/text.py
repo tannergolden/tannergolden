@@ -159,7 +159,7 @@ def md_inline(value: str) -> str:
 def md_block(value: str) -> str:
     """Escape wrapped prose so no fetched line can become structure or a link.
 
-    Applied to the journal only. A commit message is plain text, and the same
+    Applied to the archive only. A commit message is plain text, and the same
     backslashes there would be noise in `git log`. An ampersand is escaped so
     an entity the prose quotes (the Unicode entries do) is shown, not rendered.
     """

@@ -1,4 +1,4 @@
-# --- Developer Entry Points ---
+# --- Developer Dispatch Points ---
 #
 # WHAT BELONGS HERE: the commands a person or a gate runs. No logic. Every
 # target is a one-line call into `src/`, so this file cannot drift away from
@@ -34,10 +34,10 @@ test: ## Run the test suite
 	python3 -m pytest
 
 check: ## Verify README.md still carries every machine-owned region
-	python3 src/journal.py --mode check
+	python3 src/dispatches.py --mode check
 
 render: ## Re-render the page from committed state, without the network
-	python3 src/journal.py --mode render
+	python3 src/dispatches.py --mode render
 
 badges: ## Render .github/badges.yml into committed SVGs via the emblems kit
 	python3 $(EMBLEMS_KIT) --root . --data .github/badges.yml --out assets/badges

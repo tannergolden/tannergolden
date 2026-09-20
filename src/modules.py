@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 """The three daily modules: a Show HN post, a good first issue, a terminal tip.
 
-These refresh with the page rather than with the journal, and they share its
+These refresh with the page rather than with the dispatches, and they share its
 ledger so a post, an issue or a tip shows once and never again. Each returns a
 small dict the renderer knows how to lay out, or None when the source has
 nothing new, in which case the previous value stays on the page: a module

@@ -1,6 +1,6 @@
 <!--
 title: "👋 HI, I'M TANNER GOLDEN"
-description: 'Profile README for @tannergolden: what I work on, a journal this page writes for itself, the core repositories and how they fit together, and how to get in touch.'
+description: 'Profile README for @tannergolden: what I work on, the dispatches this page sends itself, the core repositories and how they fit together, and how to get in touch.'
 tags: [profile, ai-research, systems-engineering, automation]
 category: profile
 -->
@@ -46,26 +46,26 @@ pinned to commit SHAs, and rules a gate checks on every change.
 
 ---
 
-## 📓 Journal
+## 📡 Dispatches
 
 This section is kept by GitHub Actions. At moments drawn from an exponential distribution, never
-on a schedule, a workflow adds one entry to the [journal](journal/) and commits it. Every commit is
-authored by me and made by the workflow; [How it works](How-It-Works.md) has the details, the
-randomness, and the places this repository departs from the standards the rest of the account
+on a schedule, a workflow sends one dispatch to the [archive](dispatches/) and commits it. Every
+commit is authored by me and made by the workflow; [How it works](How-It-Works.md) has the details,
+the randomness, and the places this repository departs from the standards the rest of the account
 follows.
 
-<!-- JOURNAL:BEGIN -->
+<!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
 
-[![Journal workflow status](assets/badges/dynamic/journal.svg?v=53c7704a)](https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml) [![Entries this month](assets/badges/dynamic/month.svg?v=1228ef48)](journal/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=3465b94a)](dispatches/2026/September.md)
 
-| Time | Commit | Entry |
+| Time | Commit | Dispatch |
 | :--- | :--- | :--- |
-| 09:28 | `feat(unicode)` | [U+10330 𐌰 GOTHIC LETTER AHSA](journal/2026/September.md#entry-20260920-092834) |
-| 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](journal/2026/September.md#entry-20260920-092830) |
+| 09:28 | `feat(unicode)` | [U+10330 𐌰 GOTHIC LETTER AHSA](dispatches/2026/September.md#dispatch-20260920-092834) |
+| 09:28 | `test(sequence)` | [0, 1, 3, 6, 10, 15, 21, 28, what comes next?](dispatches/2026/September.md#dispatch-20260920-092830) |
 
-[Full journal](journal/) · [How it works](How-It-Works.md) · 2 entries in September
-<!-- JOURNAL:END -->
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 2 in September
+<!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
 📰 **Show HN** [Airmash - HTML5 Multiplayer Missile Warfare](https://airma.sh/) · 2 points · airma.sh · [discuss](https://news.ycombinator.com/item?id=49775418)  
@@ -134,13 +134,13 @@ Open to conversations about AI infrastructure, reproducibility, and developer to
 
 ---
 
-Journal sources: Wikidata (CC0) · Unicode · RFC Editor · OEIS (CC BY-SA) · Rosetta Code (GFDL) ·
+Dispatch sources: Wikidata (CC0) · Unicode · RFC Editor · OEIS (CC BY-SA) · Rosetta Code (GFDL) ·
 Wikipedia (CC BY-SA) · tldr-pages (CC BY) · Hacker News · GitHub. Terms in
 [`NOTICE`](NOTICE). Every image on this page is a committed file; nothing is fetched from an image
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 09:43 EDT on Sunday, September 20, 2026.
+Last updated 09:54 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

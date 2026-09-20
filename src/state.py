@@ -96,19 +96,19 @@ class Schedule:
     @property
     def is_fresh(self) -> bool:
         """True before the first run ever wrote a schedule."""
-        return not any(key in self._data for key in ("next_entry", "next_refresh"))
+        return not any(key in self._data for key in ("next_dispatch", "next_refresh"))
 
     @property
-    def next_entry(self) -> datetime:
-        return self._get("next_entry")
+    def next_dispatch(self) -> datetime:
+        return self._get("next_dispatch")
 
     @property
     def next_refresh(self) -> datetime:
         return self._get("next_refresh")
 
-    def reschedule_entry(self, *, after: datetime) -> datetime:
+    def reschedule_dispatch(self, *, after: datetime) -> datetime:
         when = after + draw_wait(MEAN_INTERVAL_HOURS)
-        self._set("next_entry", when)
+        self._set("next_dispatch", when)
         return when
 
     def reschedule_refresh(self, *, after: datetime) -> datetime:

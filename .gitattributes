@@ -18,13 +18,13 @@
 # WHAT LINGUIST COUNTS, AND WHY IT IS SET BY HAND HERE.
 #
 # This repository is a profile page that writes itself, so most of its bytes
-# are generated: journal entries, rendered badges and the cards. Left alone,
+# are generated: dispatches, rendered badges and the cards. Left alone,
 # Linguist would report the profile as whatever the generator happened to
 # emit most of, which says nothing about what the account works in.
 #
-# The journal is documentation, the badges and cards are generated assets,
+# The archive is documentation, the badges and cards are generated assets,
 # and the fixtures are test data. What remains counted is `src/`, which is
 # the only code a person here actually wrote.
-journal/**      linguist-documentation
+dispatches/**      linguist-documentation
 assets/**       linguist-generated
 state/*.json    linguist-generated

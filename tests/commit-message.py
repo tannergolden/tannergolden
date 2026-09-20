@@ -15,7 +15,7 @@ import re
 import pytest
 
 from render import commit_message, readme_commit_message
-from sources import Entry
+from sources import Dispatch
 from state import now
 
 DEFAULT_TYPES = "feat,fix,docs,style,refactor,perf,test,build,ci,chore,revert,security".split(",")
@@ -42,7 +42,7 @@ def problems_for(message: str, types=DEFAULT_TYPES, max_header: int = 72) -> lis
     return found
 
 
-def entry(**overrides) -> Entry:
+def entry(**overrides) -> Dispatch:
     base = dict(
         kind="rfc", commit_type="docs", emoji="\U0001F4DD",
         subject="record RFC 2324, Hyper Text Coffee Pot Control Protocol",
@@ -52,7 +52,7 @@ def entry(**overrides) -> Entry:
         license="freely reproducible", attribution="L. Masinter",
     )
     base.update(overrides)
-    return Entry(**base)
+    return Dispatch(**base)
 
 
 CASES = [
@@ -62,7 +62,7 @@ CASES = [
           body="The task, solved in COBOL.", code="       IDENTIFICATION DIVISION.\n       PROGRAM-ID. FIZZBUZZ.\n``` not a fence", code_language="cobol", code_trimmed=True, license="GFDL-1.2-only"),
     entry(kind="sequence", commit_type="test", emoji="\U0001F9EA", subject="continue 1, 1, 2, 3, 5, 8, 13, 21", title="1, 1, 2, 3, 5, 8, 13, 21, what comes next?", body="The next term is 34. This is A000045, Fibonacci numbers."),
     entry(kind="release", commit_type="chore", emoji="\U0001F9F9", subject="v35.0.0, Linux 0.01 turns 35", title="Linux 0.01 turns 35", body="Released in 1991 \u2013 thirty-five years ago."),
-    entry(kind="born", commit_type="docs", subject="mark the birthday of Ada Lovelace, 1815", title="Ada Lovelace, born 1815", body="Born on this date <!-- JOURNAL:END --> in 1815."),
+    entry(kind="born", commit_type="docs", subject="mark the birthday of Ada Lovelace, 1815", title="Ada Lovelace, born 1815", body="Born on this date <!-- DISPATCHES:END --> in 1815."),
     entry(kind="bug", commit_type="fix", emoji="\U0001F41B", subject="revisit Therac-25", title="Therac-25", body="A race condition \u2015 in the control software."),
     entry(kind="falsehood", commit_type="fix", emoji="\U0001F41B", subject="correct what programmers believe about time", title="Falsehoods programmers believe about time", body="Time is not monotonic."),
 ]

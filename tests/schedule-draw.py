@@ -27,17 +27,17 @@ def test_draws_are_not_a_lattice():
 def test_fresh_schedule_is_due_at_once(repo):
     schedule = Schedule("state/schedule.json")
     assert schedule.is_fresh
-    assert schedule.next_entry < now()
+    assert schedule.next_dispatch < now()
     assert schedule.next_refresh < now()
 
 
 def test_reschedule_persists_an_aware_utc_timestamp(repo):
     schedule = Schedule("state/schedule.json")
-    when = schedule.reschedule_entry(after=now())
+    when = schedule.reschedule_dispatch(after=now())
     assert when > now()
     stored = json.loads(Path("state/schedule.json").read_text(encoding="utf-8"))
-    assert stored["next_entry"].endswith("+00:00")
+    assert stored["next_dispatch"].endswith("+00:00")
     again = Schedule("state/schedule.json")
     assert not again.is_fresh
-    assert abs((again.next_entry - when).total_seconds()) < 1
-    assert again.next_entry - now() < timedelta(hours=12 * 8 + 1)
+    assert abs((again.next_dispatch - when).total_seconds()) < 1
+    assert again.next_dispatch - now() < timedelta(hours=12 * 8 + 1)

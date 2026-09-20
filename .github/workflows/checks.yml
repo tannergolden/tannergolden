@@ -3,7 +3,7 @@
 # tannergolden/standards is called here, because this repository is a
 # documented exception to those standards (How-It-Works.md).
 #
-# A push made by the journal workflow uses the built-in token, and GitHub
+# A push made by the dispatch workflow uses the built-in token, and GitHub
 # does not start workflows for pushes made with that token, so this runs on
 # a person's push and on a pull request, never on a generated commit. That
 # is the intended split: the content is checked by the code, the code is
@@ -34,7 +34,7 @@ jobs:
         uses: tannergolden/standards/actions/harden@v1
         with:
           egress-policy: audit
-          notice: '🚦 Lint and test the journal code.'
+          notice: '🚦 Lint and test the dispatch code.'
 
       - name: '📥 Checkout'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -43,7 +43,7 @@ jobs:
 
       - name: '🏷️ Checkout the badge kit'
         # The badge tests render through the real kit, at the same commit
-        # the journal workflow uses. They skip when it is absent.
+        # the dispatch workflow uses. They skip when it is absent.
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: tannergolden/emblems

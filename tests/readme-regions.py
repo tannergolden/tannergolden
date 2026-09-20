@@ -13,18 +13,18 @@ from render import read_region, replace_region, update_readme
 
 def test_replace_touches_only_the_region(repo):
     before = Path("README.md").read_text(encoding="utf-8")
-    after = replace_region(before, "JOURNAL", "new journal")
-    assert read_region(after, "JOURNAL") == "new journal"
+    after = replace_region(before, "DISPATCHES", "new dispatches")
+    assert read_region(after, "DISPATCHES") == "new dispatches"
     assert read_region(after, "TYPING") == "old typing"
-    head, _, _ = before.partition("<!-- JOURNAL:BEGIN -->")
+    head, _, _ = before.partition("<!-- DISPATCHES:BEGIN -->")
     assert after.startswith(head)
-    _, _, tail = before.partition("<!-- JOURNAL:END -->")
+    _, _, tail = before.partition("<!-- DISPATCHES:END -->")
     assert after.endswith(tail)
 
 
 def test_missing_marker_refuses_to_write(repo):
     with pytest.raises(ValueError):
-        replace_region("no markers here", "JOURNAL", "x")
+        replace_region("no markers here", "DISPATCHES", "x")
 
 
 def test_update_readme_reports_change(repo):

@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""Everything that writes Markdown: the commit message, the journal, the page.
+"""Everything that writes Markdown: the commit message, the archive, the page.
 
 THE PAGE IS EDITED ONLY BETWEEN MARKERS. Four regions of README.md are bounded
 by HTML comments of the form `<!-- NAME:BEGIN -->` and `<!-- NAME:END -->`,
@@ -9,7 +9,7 @@ inside them is machine-owned and rewritten whole; text outside them is never
 read, let alone changed. A missing marker is an error, not an invitation to
 guess where the region went.
 
-The journal is append-only. One file per month, an entry added at the end,
+The archive is append-only. One file per month, a dispatch added at the end,
 and nothing above it ever rewritten. `state/recent.json` is a small rolling
 index of the newest entries kept alongside so the page can be rendered
 without parsing Markdown back into data.
@@ -28,14 +28,14 @@ from zoneinfo import ZoneInfo
 from config import (
     AUTHOR_EMAIL,
     AUTHOR_NAME,
+    DISPATCH_DIR,
     DISPLAY_TIMEZONE,
     ENTRIES_COLLAPSED,
     ENTRIES_VISIBLE,
-    JOURNAL_DIR,
     README,
     STATE_DIR,
 )
-from sources import Entry
+from sources import Dispatch
 from text import clean, fence_for, fence_info, fit_subject, md_block, md_inline, safe_url, wrap_body
 
 RECENT_FILE = f"{STATE_DIR}/recent.json"
@@ -90,7 +90,7 @@ def update_readme(regions: dict) -> bool:
 
 # --- the commit message --------------------------------------------------------
 
-def commit_message(entry: Entry) -> str:
+def commit_message(entry: Dispatch) -> str:
     """The full message: house-conformant header, prose body, code, provenance, sign-off.
 
     Built as a string and written to a file for `git commit -F`; it is never
@@ -120,31 +120,31 @@ def readme_commit_message(when: datetime, changed: list) -> str:
     what = ", ".join(changed) if changed else "the page"
     body = wrap_body(
         f"Refreshed {what} on {stamp}. The moment was drawn from the same "
-        "exponential distribution as a journal entry, so this lands at an "
+        "exponential distribution as a dispatch, so this lands at an "
         "unremarkable hour rather than on a cron boundary. Nothing outside the "
         "marked regions was read or written."
     )
     return f"chore(readme): \U0001F9F9 refresh the page\n\n{body}\n\nSigned-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>\n"
 
 
-# --- the journal ------------------------------------------------------------------
+# --- the archive ------------------------------------------------------------------
 
-JOURNAL_FRONTMATTER = """<!--
-title: '\U0001F4D3 JOURNAL, {month_name} {year}'
-description: 'Every entry the workflow wrote in {month_name} {year}, in the order it wrote them, each with its source and license.'
-tags: [journal, generated, {year}, {month_slug}]
-category: journal
+DISPATCH_FRONTMATTER = """<!--
+title: '\U0001F4E1 DISPATCHES, {month_name} {year}'
+description: 'Every dispatch the workflow sent in {month_name} {year}, in the order it sent them, each with its source and license.'
+tags: [dispatches, generated, {year}, {month_slug}]
+category: dispatches
 -->
 
 <!-- markdownlint-disable MD041 -->
 
 <div align="center">
 
-# \U0001F4D3 JOURNAL, {month_name_upper} {year}
+# \U0001F4E1 DISPATCHES, {month_name_upper} {year}
 
 <a name="top"></a>
 
-**One entry per commit, added at a moment nobody scheduled.**
+**One dispatch per commit, sent at a moment nobody scheduled.**
 
 _Appended, never rewritten._
 
@@ -155,8 +155,8 @@ _Appended, never rewritten._
 """
 
 
-def journal_path(when: datetime) -> str:
-    """journal/2026/September.md, not journal/2026/09.md.
+def dispatch_path(when: datetime) -> str:
+    """dispatches/2026/September.md, not dispatches/2026/09.md.
 
     A month has a name and a reader knows it on sight; a two digit number
     is a sort key wearing a filename. Chronological order is recovered
@@ -164,11 +164,11 @@ def journal_path(when: datetime) -> str:
     below.
     """
     stamp = local(when)
-    return f"{JOURNAL_DIR}/{stamp:%Y}/{stamp:%B}.md"
+    return f"{DISPATCH_DIR}/{stamp:%Y}/{stamp:%B}.md"
 
 
-def entry_anchor(when: datetime) -> str:
-    return f"entry-{local(when):%Y%m%d-%H%M%S}"
+def dispatch_anchor(when: datetime) -> str:
+    return f"dispatch-{local(when):%Y%m%d-%H%M%S}"
 
 
 def day_heading(when: datetime) -> str:
@@ -176,18 +176,18 @@ def day_heading(when: datetime) -> str:
     return f"## {stamp:%A, %B} {stamp.day}, {stamp:%Y}"
 
 
-def render_journal_entry(entry: Entry, when: datetime) -> str:
+def render_dispatch(entry: Dispatch, when: datetime) -> str:
     """One entry: a heading that is the entry, then when and what, then why.
 
     The title is the heading rather than a bold line under one, so the
-    archive has a table of contents and every entry has a link of its own.
-    The day is carried by the heading above a run of entries, written once
-    per day, because a month of entries reading only "09:28" tells a
+    archive has a table of contents and every dispatch has a link of its own.
+    The day is carried by the heading above a run of dispatches, written
+    once per day, because a month of them reading only "09:28" tells a
     reader nothing about which September the 9:28 belongs to.
     """
     stamp = local(when)
     lines = [
-        f'<a name="{entry_anchor(when)}"></a>',
+        f'<a name="{dispatch_anchor(when)}"></a>',
         "",
         f"### {entry.emoji} {md_inline(entry.title)}",
         "",
@@ -220,24 +220,24 @@ MONTH_NUMBER = {datetime(2000, n, 1, tzinfo=timezone.utc).strftime("%B"): n for 
 
 
 def update_month_index() -> bool:
-    """Regenerate the month table in journal/README.md from the files on disk.
+    """Regenerate the month table in dispatches/README.md from the files on disk.
 
     Machine-owned between MONTHS markers, like the page's regions: the
     prose around it is written by hand and never touched.
     """
     months = []
-    for path in Path(JOURNAL_DIR).glob("*/*.md"):
-        match = MONTH_FILE.match(path.relative_to(JOURNAL_DIR).as_posix())
+    for path in Path(DISPATCH_DIR).glob("*/*.md"):
+        match = MONTH_FILE.match(path.relative_to(DISPATCH_DIR).as_posix())
         if not match or match.group(2) not in MONTH_NUMBER:
             continue
         months.append((int(match.group(1)), MONTH_NUMBER[match.group(2)], match.group(2), path))
     rows = []
     # Newest first, by the month a name means rather than by the name.
     for year, _, name, path in sorted(months, reverse=True):
-        count = path.read_text(encoding="utf-8").count('<a name="entry-')
+        count = path.read_text(encoding="utf-8").count('<a name="dispatch-')
         rows.append(f"| [{name} {year}]({year}/{name}.md) | {count} |")
-    table = "| Month | Entries |\n| :--- | ---: |\n" + "\n".join(rows) if rows else "_No entries yet._"
-    index = Path(JOURNAL_DIR) / "README.md"
+    table = "| Month | Dispatches |\n| :--- | ---: |\n" + "\n".join(rows) if rows else "_Nothing sent yet._"
+    index = Path(DISPATCH_DIR) / "README.md"
     if not index.exists():
         return False
     original = index.read_text(encoding="utf-8")
@@ -248,13 +248,13 @@ def update_month_index() -> bool:
     return False
 
 
-def append_journal(entry: Entry, when: datetime) -> str:
-    path = Path(journal_path(when))
+def append_dispatch(entry: Dispatch, when: datetime) -> str:
+    path = Path(dispatch_path(when))
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.exists():
         stamp = local(when)
         path.write_text(
-            JOURNAL_FRONTMATTER.format(
+            DISPATCH_FRONTMATTER.format(
                 year=stamp.year,
                 month_name=stamp.strftime("%B"),
                 month_name_upper=stamp.strftime("%B").upper(),
@@ -267,7 +267,7 @@ def append_journal(entry: Entry, when: datetime) -> str:
     with open(path, "a", encoding="utf-8") as handle:
         if not opened:
             handle.write(f"{heading}\n\n")
-        handle.write(render_journal_entry(entry, when))
+        handle.write(render_dispatch(entry, when))
     update_month_index()
     return str(path)
 
@@ -283,7 +283,7 @@ def load_recent() -> list:
     return loaded if isinstance(loaded, list) else []
 
 
-def record_recent(entry: Entry, when: datetime, path: str) -> list:
+def record_recent(entry: Dispatch, when: datetime, path: str) -> list:
     recent = load_recent()
     recent.insert(
         0,
@@ -293,7 +293,7 @@ def record_recent(entry: Entry, when: datetime, path: str) -> list:
             "scope": entry.scope,
             "title": clean(entry.title),
             "path": path,
-            "anchor": entry_anchor(when),
+            "anchor": dispatch_anchor(when),
         },
     )
     recent = recent[: ENTRIES_VISIBLE + ENTRIES_COLLAPSED + 5]
@@ -304,7 +304,7 @@ def record_recent(entry: Entry, when: datetime, path: str) -> list:
     return recent
 
 
-def entries_this_month(when: datetime) -> int:
+def dispatches_this_month(when: datetime) -> int:
     month = local(when).strftime("%Y-%m")
     count = 0
     for item in load_recent():
@@ -314,9 +314,9 @@ def entries_this_month(when: datetime) -> int:
         except (KeyError, ValueError):
             continue
     # The rolling index is capped, so a busy month is counted from the file.
-    path = Path(journal_path(when))
+    path = Path(dispatch_path(when))
     if path.exists():
-        count = max(count, path.read_text(encoding="utf-8").count('<a name="entry-'))
+        count = max(count, path.read_text(encoding="utf-8").count('<a name="dispatch-'))
     return count
 
 
@@ -325,7 +325,7 @@ def entries_this_month(when: datetime) -> int:
 def _row(item: dict, today: date | None = None) -> str:
     """A row in the page's table, dated only when the date is not the heading's.
 
-    Entries go quiet for more than a day about six times a year, so the
+    Dispatches go quiet for more than a day about six times a year, so the
     three shown are often not all from the day the heading names, and a
     bare "22:41" under today's date would be read as today.
     """
@@ -347,18 +347,18 @@ def _tag(path: str) -> str:
         return "0"
 
 
-def render_journal_region(recent: list, when: datetime, month_count: int) -> str:
+def render_dispatches_region(recent: list, when: datetime, month_count: int) -> str:
     stamp = local(when)
     heading = f"### {stamp:%A, %B} {stamp.day}, {stamp:%Y}"
     # The month file does not exist until the month's first entry, so the badge
     # points at the archive until then rather than at a page that is not there.
-    month_target = journal_path(when) if month_count else f"{JOURNAL_DIR}/"
-    status_badge, month_badge = "assets/badges/dynamic/journal.svg", "assets/badges/dynamic/month.svg"
+    month_target = dispatch_path(when) if month_count else f"{DISPATCH_DIR}/"
+    status_badge, month_badge = "assets/badges/dynamic/dispatches.svg", "assets/badges/dynamic/month.svg"
     badges = (
-        f"[![Journal workflow status]({status_badge}?v={_tag(status_badge)})]({REPO_URL}/actions/workflows/journal.yml) "
-        f"[![Entries this month]({month_badge}?v={_tag(month_badge)})]({month_target})"
+        f"[![Dispatch workflow status]({status_badge}?v={_tag(status_badge)})]({REPO_URL}/actions/workflows/dispatches.yml) "
+        f"[![Dispatches this month]({month_badge}?v={_tag(month_badge)})]({month_target})"
     )
-    table_head = "| Time | Commit | Entry |\n| :--- | :--- | :--- |"
+    table_head = "| Time | Commit | Dispatch |\n| :--- | :--- | :--- |"
 
     visible = recent[:ENTRIES_VISIBLE]
     earlier = recent[ENTRIES_VISIBLE : ENTRIES_VISIBLE + ENTRIES_COLLAPSED]
@@ -369,7 +369,7 @@ def render_journal_region(recent: list, when: datetime, month_count: int) -> str
         lines += [table_head, *[_row(item, today) for item in visible]]
     else:
         lines += [
-            "_No entries yet. The first one lands at a random moment within the "
+            "_No dispatches yet. The first lands at a random moment within the "
             "next twelve hours or so; nothing here is on a schedule._"
         ]
     if earlier:
@@ -385,8 +385,8 @@ def render_journal_region(recent: list, when: datetime, month_count: int) -> str
         ]
     lines += [
         "",
-        f"[Full journal]({JOURNAL_DIR}/) · [How it works](How-It-Works.md) · "
-        f"{month_count} {'entry' if month_count == 1 else 'entries'} in {stamp:%B}",
+        f"[All dispatches]({DISPATCH_DIR}/) · [How it works](How-It-Works.md) · "
+        f"{month_count} in {stamp:%B}",
     ]
     return "\n".join(lines)
 
@@ -453,7 +453,8 @@ def render_updated_line(when: datetime) -> str:
 
 
 def month_badge_message(count: int) -> str:
-    return f"{count} this month"
+    """Just the number. The badge's own label says what it counts."""
+    return str(count)
 
 
 def git_env_for_commit() -> dict:

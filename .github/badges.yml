@@ -16,7 +16,7 @@
 # STYLE IS SPLIT ON PURPOSE. The four identity badges in the header keep
 # `for-the-badge`, which is what the documentation standard specifies for a
 # header and what every other repository on this account wears. Everything
-# in the body, the two journal badges and the stack, is `flat-square`: those
+# in the body, the two live badges and the stack, is `flat-square`: those
 # sit inline with text and read as content rather than as a masthead.
 
 badges:
@@ -51,22 +51,22 @@ badges:
     link: ./LICENSE
 
   # --- Live: gold label, traffic-light message, rewritten by the workflow ---
-  - name: journal
-    label: Journal
+  - name: dispatches
+    label: Workflow
     message: Passing
     label_color: gold
     message_color: green
     icon: clock
     style: flat-square
-    link: https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml
+    link: https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml
   - name: month
-    label: Entries
-    message: '2 this month'
+    label: This month
+    message: '2'
     label_color: gold
     message_color: green
     icon: commit
     style: flat-square
-    link: ./journal/
+    link: ./dispatches/
 
   # --- Stack: black label, flat-square, body ------------------------------------
   - name: stack-python

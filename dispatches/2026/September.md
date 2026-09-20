@@ -1,19 +1,19 @@
 <!--
-title: '📓 JOURNAL, September 2026'
-description: 'Every entry the workflow wrote in September 2026, in the order it wrote them, each with its source and license.'
-tags: [journal, generated, 2026, september]
-category: journal
+title: '📡 DISPATCHES, September 2026'
+description: 'Every dispatch the workflow sent in September 2026, in the order it sent them, each with its source and license.'
+tags: [dispatches, generated, 2026, september]
+category: dispatches
 -->
 
 <!-- markdownlint-disable MD041 -->
 
 <div align="center">
 
-# 📓 JOURNAL, SEPTEMBER 2026
+# 📡 DISPATCHES, SEPTEMBER 2026
 
 <a name="top"></a>
 
-**One entry per commit, added at a moment nobody scheduled.**
+**One dispatch per commit, sent at a moment nobody scheduled.**
 
 _Appended, never rewritten._
 
@@ -21,7 +21,7 @@ _Appended, never rewritten._
 
 ---
 
-<a name="entry-20260920-092830"></a>
+<a name="dispatch-20260920-092830"></a>
 
 ### 09:28 EDT · `test(sequence)`
 
@@ -35,7 +35,7 @@ binomial(n+1,2) = n*(n+1)/2 = 0 + 1 + 2 + ... + n.
 Source: [OEIS](https://oeis.org/A000217) · License: CC-BY-SA-4.0
 
 ---
-<a name="entry-20260920-092834"></a>
+<a name="dispatch-20260920-092834"></a>
 
 ### 09:28 EDT · `feat(unicode)`
 

@@ -15,10 +15,10 @@ def test_dashes_become_spaced_hyphens():
 
 
 def test_comment_delimiters_cannot_survive():
-    hostile = "fine <!-- JOURNAL:END --> then <!-- whatever"
+    hostile = "fine <!-- DISPATCHES:END --> then <!-- whatever"
     out = clean(hostile)
     assert "<!--" not in out and "-->" not in out
-    assert "JOURNAL:END" in out  # the words are harmless once they cannot form a comment
+    assert "DISPATCHES:END" in out  # the words are harmless once they cannot form a comment
     # Removing an inner delimiter must not glue a new one together.
     for glued in ("--<!-->", "<-->!--", "x --<!--> y", "<!<!---->--"):
         assert is_clean(clean(glued)), (glued, clean(glued))

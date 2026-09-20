@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The nine kinds of journal entry, and the picker that chooses between them.
+"""The eight kinds of dispatch, and the picker that chooses between them.
 
-Each fetcher returns one `Entry` the ledger has never seen, or None when its
+Each fetcher returns one `Dispatch` the ledger has never seen, or None when its
 source is down, empty for today, or exhausted. None is an ordinary answer: the
 picker moves to the next kind, and a run in which every source fails writes
 nothing and leaves the schedule untouched, so the next run tries again.
@@ -35,15 +35,15 @@ _RNG = random.SystemRandom()
 
 
 @dataclass
-class Entry:
-    """One journal entry, ready to be rendered into a commit and a page row."""
+class Dispatch:
+    """One dispatch, ready to be rendered into a commit and a page row."""
 
     kind: str  # the ledger key and the scope: unicode, rfc, sequence, ...
     commit_type: str  # feat, fix, docs, refactor, test, chore
     emoji: str  # one emoji from the house mapping for that type
     subject: str  # lowercase imperative, without the type(scope) prefix
-    title: str  # the short form shown in the page's journal row
-    body: str  # prose for the commit body and the journal
+    title: str  # the short form shown in the page's table
+    body: str  # prose for the commit body and the archive
     identifier: str  # what the ledger records; unique at the source
     source_name: str
     source_url: str
@@ -54,7 +54,7 @@ class Entry:
     code_trimmed: bool = False
     # True when the body answers a question the title asks. The commit
     # carries it plainly, because a git log cannot hide anything; the
-    # journal folds it away so the puzzle is still a puzzle on the page.
+    # page folds it away so the puzzle is still a puzzle on the page.
     spoiler: bool = False
     extra_links: list = field(default_factory=list)  # (label, url) pairs
 
@@ -165,7 +165,7 @@ def _age_of(ages: list, codepoint: int) -> str:
     return ""
 
 
-def fetch_unicode(ledger: Ledger, today: date) -> Entry | None:
+def fetch_unicode(ledger: Ledger, today: date) -> Dispatch | None:
     text = net.get_text(UCD)
     if not text:
         return None
@@ -208,7 +208,7 @@ def fetch_unicode(ledger: Ledger, today: date) -> Entry | None:
     hexname = f"U+{codepoint:04X}"
     name = clean(name)
     what = CATEGORY_NAMES.get(categories.get(codepoint, ""), "a character")
-    # The subject and the journal heading both carry the name already, so
+    # The subject and the dispatch heading both carry the name already, so
     # the body opens with what the character is rather than repeating it.
     body = f"{what[:1].upper()}{what[1:]} in the {block} block"
     body += f", in Unicode since version {version}." if version else "."
@@ -216,7 +216,7 @@ def fetch_unicode(ledger: Ledger, today: date) -> Entry | None:
         f" It renders as {glyph}. In UTF-8 it is the byte sequence "
         f"{glyph.encode('utf-8').hex(' ').upper()}; in HTML, the entity &#x{codepoint:X};."
     )
-    return Entry(
+    return Dispatch(
         kind="unicode",
         commit_type="feat",
         emoji="✨",
@@ -283,7 +283,7 @@ def _ordinal(n: int) -> str:
     return f"{n}{suffix}"
 
 
-def fetch_rfc(ledger: Ledger, today: date) -> Entry | None:
+def fetch_rfc(ledger: Ledger, today: date) -> Dispatch | None:
     famous = [n for n in FAMOUS_RFCS if not ledger.seen("rfc", str(n))]
     candidates: list = []
     if famous and _RNG.random() < 0.5:
@@ -325,7 +325,7 @@ def fetch_rfc(ledger: Ledger, today: date) -> Entry | None:
             opener += f" It runs to {count} page{'s' if count != 1 else ''}."
         body = opener + ("\n\n" + abstract if abstract else "")
 
-        return Entry(
+        return Dispatch(
             kind="rfc",
             commit_type="docs",
             emoji="\U0001F4DD",
@@ -363,7 +363,7 @@ def _oeis_results(payload) -> list:
     return [r for r in (payload or []) if isinstance(r, dict)] if isinstance(payload, list) else []
 
 
-def fetch_sequence(ledger: Ledger, today: date) -> Entry | None:
+def fetch_sequence(ledger: Ledger, today: date) -> Dispatch | None:
     keyword = "core" if _RNG.random() < 0.25 else "nice"
     ceiling = OEIS_POOL[keyword]
 
@@ -387,7 +387,7 @@ def fetch_sequence(ledger: Ledger, today: date) -> Entry | None:
         name = clean(str(chosen.get("name", "")))
         a_number = f"A{number:06d}"
         puzzle = ", ".join(shown)
-        return Entry(
+        return Dispatch(
             kind="sequence",
             commit_type="test",
             emoji="\U0001F9EA",
@@ -456,7 +456,7 @@ def _rosetta_solutions(task: str) -> tuple:
     return solutions, revid
 
 
-def fetch_rosetta(ledger: Ledger, today: date) -> Entry | None:
+def fetch_rosetta(ledger: Ledger, today: date) -> Dispatch | None:
     tasks = _rosetta_tasks()
     if not tasks:
         return None
@@ -485,10 +485,10 @@ def fetch_rosetta(ledger: Ledger, today: date) -> Entry | None:
         permalink = f"{ROSETTA_PAGE}?title={slug}&oldid={revid}" if revid else f"https://rosettacode.org/wiki/{slug}"
         count = len(solutions)
         body = f"Rosetta Code carries {count} solution{'s' if count != 1 else ''} to this task. This is the {clean(language)} one"
-        body += ", shown again in a language the journal has not used for it before." if again else "."
+        body += ", shown again in a language this page has not used for it before." if again else "."
         if not REPRODUCE_ROSETTA_CODE:
             body += " The code is at the link; this entry cites rather than reproduces it."
-        return Entry(
+        return Dispatch(
             kind="rosetta",
             commit_type="refactor",
             emoji="♻️",
@@ -566,7 +566,7 @@ def _weighted_by_links(rows: list) -> list:
     return [row for _, row in keyed]
 
 
-def fetch_release(ledger: Ledger, today: date) -> Entry | None:
+def fetch_release(ledger: Ledger, today: date) -> Dispatch | None:
     rows = _sparql(RELEASE_QUERY.format(month=today.month, day=today.day))
     rows = [r for r in rows if r.get("itemLabel") and not r["itemLabel"].startswith("Q")]
     chosen = _first_unseen(ledger, "release", _weighted_by_links(rows), key=lambda r: _qid(r["item"]))
@@ -584,7 +584,7 @@ def fetch_release(ledger: Ledger, today: date) -> Entry | None:
     body = f"{opening} on this date in {year}."
     if age > 0:
         body += f" It is {age} today, which is the only version number an anniversary gets."
-    return Entry(
+    return Dispatch(
         kind="release",
         commit_type="chore",
         emoji="\U0001F9F9",
@@ -598,7 +598,7 @@ def fetch_release(ledger: Ledger, today: date) -> Entry | None:
     )
 
 
-def fetch_born(ledger: Ledger, today: date) -> Entry | None:
+def fetch_born(ledger: Ledger, today: date) -> Dispatch | None:
     rows = _sparql(BORN_QUERY.format(month=today.month, day=today.day))
     rows = [r for r in rows if r.get("itemLabel") and not r["itemLabel"].startswith("Q")]
     chosen = _first_unseen(ledger, "born", _weighted_by_links(rows), key=lambda r: _qid(r["item"]))
@@ -620,7 +620,7 @@ def fetch_born(ledger: Ledger, today: date) -> Entry | None:
     else:
         said.append(f"Born on this date in {year}, {_ordinal(today.year - int(year))} anniversary today.")
     body = " ".join(said)
-    return Entry(
+    return Dispatch(
         kind="born",
         commit_type="docs",
         emoji="\U0001F4DD",
@@ -649,7 +649,7 @@ def _strip_wikitext(text: str) -> str:
     return clean(text)
 
 
-def fetch_bug(ledger: Ledger, today: date) -> Entry | None:
+def fetch_bug(ledger: Ledger, today: date) -> Dispatch | None:
     page = net.get_json(WIKIPEDIA_API, {"action": "parse", "page": BUG_PAGE, "prop": "wikitext|revid", "format": "json"})
     if not isinstance(page, dict) or "parse" not in page:
         return None
@@ -677,7 +677,7 @@ def fetch_bug(ledger: Ledger, today: date) -> Entry | None:
     identifier, anchor, prose = chosen
     excerpt = prose if len(prose) <= 400 else prose[:399].rsplit(". ", 1)[0] + "."
     name = clean(anchor.split("(")[0])
-    return Entry(
+    return Dispatch(
         kind="bug",
         commit_type="fix",
         emoji="\U0001F41B",
@@ -698,7 +698,7 @@ FALSEHOOD_LIST = "https://raw.githubusercontent.com/kdeldycke/awesome-falsehood/
 LIST_ITEM = re.compile(r"^\s*[-*]\s+\[([^\]]+)\]\(([^)]+)\)\s*[-:\u2013\u2014]?\s*(.*)$")
 
 
-def fetch_falsehood(ledger: Ledger, today: date) -> Entry | None:
+def fetch_falsehood(ledger: Ledger, today: date) -> Dispatch | None:
     text = net.get_text(FALSEHOOD_LIST)
     if not text:
         return None
@@ -721,7 +721,7 @@ def fetch_falsehood(ledger: Ledger, today: date) -> Entry | None:
 
     url, title, blurb = chosen
     topic = re.sub(r"^falsehoods?\s+(programmers|developers|people)?\s*(believe|think)?\s*(about)?\s*", "", title, flags=re.IGNORECASE).strip(" .")
-    return Entry(
+    return Dispatch(
         kind="falsehood",
         commit_type="fix",
         emoji="\U0001F41B",
@@ -785,7 +785,7 @@ def draw_order(retired: set) -> list:
     return order
 
 
-def pick_entry(ledger: Ledger, today: date) -> Entry | None:
+def pick_dispatch(ledger: Ledger, today: date) -> Dispatch | None:
     """Try each kind in weighted order until one yields an entry."""
     for kind in draw_order(ledger.retired):
         try:

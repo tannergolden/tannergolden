@@ -18,9 +18,9 @@ prose before
 old typing
 <!-- TYPING:END -->
 
-<!-- JOURNAL:BEGIN -->
-old journal
-<!-- JOURNAL:END -->
+<!-- DISPATCHES:BEGIN -->
+old dispatches
+<!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
 <!-- MODULES:END -->

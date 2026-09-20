@@ -4,13 +4,14 @@ The code in this repository, meaning everything under src/, tests/ and
 .github/ together with the Makefile and the configuration files, is licensed
 under the MIT License in LICENSE.
 
-The journal under journal/ is generated from third-party sources. Each entry
-names its source, its license and, where the source names them, its authors,
-and links to the exact page or revision it came from. Entries derived from a
-share-alike or GFDL source are available under that source's license, entry
-by entry, and nothing else in this repository is affected by those terms.
+The dispatches under dispatches/ are generated from third-party sources. Each
+one names its source, its license and, where the source names them, its
+authors, and links to the exact page or revision it came from. A dispatch
+derived from a share-alike or GFDL source is available under that source's
+license, one by one, and nothing else in this repository is affected by those
+terms.
 
-Source                        License                               What the journal reproduces
+Source                        License                               What a dispatch reproduces
 ----------------------------  ------------------------------------  ------------------------------------------------
 Wikidata                      CC0 1.0                               Labels, descriptions, dates. Public domain.
                               https://creativecommons.org/publicdomain/zero/1.0/
@@ -25,7 +26,7 @@ Rosetta Code                  GFDL 1.2, this version only           Task names a
                               https://www.gnu.org/licenses/old-licenses/fdl-1.2.html   lines, attributed to Rosetta Code
                                                                     contributors and linked to the revision used.
                                                                     Those entries are GFDL-1.2-only. Set
-                                                                    JOURNAL_ROSETTA_CODE=0 to cite without reproducing.
+                                                                    DISPATCH_ROSETTA_CODE=0 to cite without reproducing.
 Wikipedia                     CC BY-SA 4.0                          Short attributed excerpts from "List of software
                               https://creativecommons.org/licenses/by-sa/4.0/   bugs", linked to the revision used. Those
                                                                     entries are CC BY-SA 4.0.
@@ -39,4 +40,4 @@ GitHub                        Facts via the REST and GraphQL API    Issue titles
 
 The full text of each license is at the URL beside it. GFDL 1.2 asks that its
 text accompany a document it covers; add LICENSES/GFDL-1.2-only.txt to this
-repository to carry it, or set JOURNAL_ROSETTA_CODE=0 and no entry will need it.
+repository to carry it, or set DISPATCH_ROSETTA_CODE=0 and no entry will need it.

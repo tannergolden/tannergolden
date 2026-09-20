@@ -23,9 +23,9 @@ _Random by construction. Attributed by default._
 
 ## 💡 What Runs
 
-One workflow, [`journal.yml`](.github/workflows/journal.yml), fires every hour at
+One workflow, [`dispatches.yml`](.github/workflows/dispatches.yml), fires every hour at
 seventeen minutes past. It reads [`state/schedule.json`](state/schedule.json),
-which holds two moments: when the next journal entry is due and when the next
+which holds two moments: when the next dispatch is due and when the next
 page refresh is due. If either falls inside the coming hour, the run sleeps
 until that exact second, does the work, draws the next moment, and looks
 again. When nothing is due, the run ends in seconds.
@@ -34,14 +34,14 @@ A moment already in the past, because GitHub skipped or delayed a cron, is
 handled at once. The entry lands late rather than never.
 
 The workflow can also be run by hand from the Actions tab: `tick` does what
-the cron does, `entry` writes one entry now, `refresh` rewrites the page now,
+the cron does, `dispatch` sends one dispatch now, `refresh` rewrites the page now,
 and `probe` tries every source and every module once and reports what each
 would have written, without writing anything. Run on any branch but the
 default one, the writing modes do everything except push, and report the
 commits they made in the run summary, so a change can be rehearsed before it
 merges.
 
-The journal badge on the page is written by the run itself, so it can go red.
+The dispatch badge on the page is written by the run itself, so it can go red.
 A run that fails turns it red in a commit of its own, carrying nothing
 fetched, and the next run that succeeds turns it back. A badge that cannot
 go red is decoration.
@@ -53,7 +53,7 @@ and scheduled, and every one of them is authored by me.
 
 ## 🎲 The Randomness
 
-The wait between entries is drawn from an **exponential distribution** with a
+The wait between dispatches is drawn from an **exponential distribution** with a
 mean of twelve hours, set once in [`src/config.py`](src/config.py). That is the
 waiting time of a Poisson process, and it is the only distribution with the
 property being bought here: it is memoryless. Knowing when the last entry
@@ -68,10 +68,10 @@ What twelve hours means in practice:
 
 | Question                                  | Answer                                  |
 | :---------------------------------------- | :-------------------------------------- |
-| Entries per day, on average               | Two                                     |
-| Days with no entry at all                 | About one in seven                      |
+| Dispatches per day, on average               | Two                                     |
+| Days with no dispatch at all                 | About one in seven                      |
 | Gaps longer than two days                 | About six a year                        |
-| Minutes between two entries, at the least | It has happened; it will happen again   |
+| Minutes between two dispatches, at the least | It has happened; it will happen again   |
 
 A cron can only fire on a lattice, and a fixed wait after each entry is also a
 lattice, just an offset one. Sleeping to the second inside an hourly run is
@@ -160,13 +160,13 @@ through a shell.
 
 ## ⚖️ Licensing
 
-The code here is MIT. The journal reproduces or derives from the sources above,
-each entry names its source and license, and [`NOTICE`](NOTICE) carries the
+The code here is MIT. The dispatches reproduce or derive from the sources
+above, each one names its source and license, and [`NOTICE`](NOTICE) carries the
 terms in full. Two sources are share-alike and one is GFDL; those entries are
 available under those licenses, marked individually, and nothing else in the
 repository is affected by them. Rosetta Code snippets are capped at fifteen
 lines and cite the exact wiki revision they came from. Setting
-`JOURNAL_ROSETTA_CODE=0` makes that kind cite without reproducing, which
+`DISPATCH_ROSETTA_CODE=0` makes that kind cite without reproducing, which
 removes the GFDL exposure entirely.
 
 ---
@@ -203,14 +203,14 @@ generated. The hand-written parts live in three places:
 | [`profile.json`](profile.json) | The phrases the typing header cycles through, and the languages the good-first-issue search covers |
 | [`.github/badges.yml`](.github/badges.yml) | Every badge, the stack included; `make badges` renders them             |
 
-The journal archive keeps its own index, [`journal/README.md`](journal/README.md),
+The archive keeps its own index, [`dispatches/README.md`](dispatches/README.md),
 with a month table the run regenerates between markers each time it writes.
 
 ---
 
 ## 🔗 See Also
 
-- The [journal](journal/), one file per month, appended and never rewritten.
+- The [archive](dispatches/), one file per month, appended and never rewritten.
 - [`NOTICE`](NOTICE), the source and license terms in full.
 - [tannergolden/emblems](https://github.com/tannergolden/emblems), which draws every badge on the page as a committed file, so the page makes no request to an image service.
 

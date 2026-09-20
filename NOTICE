@@ -1,0 +1,46 @@
+NOTICE
+
+The code in this repository, meaning everything under src/, tests/ and
+.github/ together with the Makefile and the configuration files, is licensed
+under the MIT License in LICENSE.
+
+The journal under journal/ is generated from third-party sources. Each entry
+names its source, its license and, where the source names them, its authors,
+and links to the exact page or revision it came from. Entries derived from a
+share-alike or GFDL source are available under that source's license, entry
+by entry, and nothing else in this repository is affected by those terms.
+
+Source                        License                               What the journal reproduces
+----------------------------  ------------------------------------  ------------------------------------------------
+Wikidata                      CC0 1.0                               Labels, descriptions, dates. Public domain.
+                              https://creativecommons.org/publicdomain/zero/1.0/
+Unicode Character Database    Unicode License v3                    Code points, names, blocks.
+                              https://www.unicode.org/license.txt
+RFC Editor                    IETF Trust Legal Provisions           Titles, dates, status, abstracts. RFCs may be
+                              https://trustee.ietf.org/documents/trust-legal-provisions/   freely reproduced.
+xkcd                          CC BY-NC 2.5                          Comic number, title, year and hover text, quoted
+                              https://creativecommons.org/licenses/by-nc/2.5/   with attribution to Randall Munroe. The images
+                                                                    are never reproduced. This is a personal page and
+                                                                    not a commercial use.
+OEIS                          CC BY-SA 4.0                          Sequence terms (facts) and the sequence name,
+                              https://oeis.org/wiki/The_OEIS_End-User_License_Agreement   attributed and linked. Those
+                                                                    entries are CC BY-SA 4.0.
+Rosetta Code                  GFDL 1.2, this version only           Task names and code snippets of at most fifteen
+                              https://www.gnu.org/licenses/old-licenses/fdl-1.2.html   lines, attributed to Rosetta Code
+                                                                    contributors and linked to the revision used.
+                                                                    Those entries are GFDL-1.2-only. Set
+                                                                    JOURNAL_ROSETTA_CODE=0 to cite without reproducing.
+Wikipedia                     CC BY-SA 4.0                          Short attributed excerpts from "List of software
+                              https://creativecommons.org/licenses/by-sa/4.0/   bugs", linked to the revision used. Those
+                                                                    entries are CC BY-SA 4.0.
+awesome-falsehood             CC0 1.0 (the list)                    Article titles and links from the list. The
+                              https://github.com/kdeldycke/awesome-falsehood   articles themselves are not reproduced.
+tldr-pages                    CC BY 4.0                             One command description and one example, with
+                              https://github.com/tldr-pages/tldr/blob/main/LICENSE.md   a link to the page.
+Hacker News                   Facts via the official API            Titles, points, domains and links.
+GitHub                        Facts via the REST and GraphQL API    Issue titles and links; the account's public
+                                                                    repository, star, follower and language counts.
+
+The full text of each license is at the URL beside it. GFDL 1.2 asks that its
+text accompany a document it covers; add LICENSES/GFDL-1.2-only.txt to this
+repository to carry it, or set JOURNAL_ROSETTA_CODE=0 and no entry will need it.

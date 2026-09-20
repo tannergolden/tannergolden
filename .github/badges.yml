@@ -1,0 +1,155 @@
+# The badges this page draws for itself, rendered by tannergolden/emblems into
+# assets/badges/. Edit this file, then `make badges`; the workflow re-renders
+# the two dynamic ones on every run through `--set`.
+#
+# Each entry:
+#   name           basename (kebab-case, unique); renders to static/<name>.svg,
+#                  or dynamic/<name>.svg for a gold (health) label
+#   label          left segment text
+#   message        right segment text
+#   label_color    palette token or '#RRGGBB' - static: black, dynamic-health: gold
+#   message_color  palette token or '#RRGGBB' - carries the semantic meaning
+#   icon           a key from the icon registry (optional)
+#   style          for-the-badge (default) | flat | flat-square
+#   link           where the badge points when embedded (reference only)
+#
+# STYLE IS SPLIT ON PURPOSE. The four identity badges in the header keep
+# `for-the-badge`, which is what the documentation standard specifies for a
+# header and what every other repository on this account wears. Everything
+# in the body, the two journal badges and the stack, is `flat-square`: those
+# sit inline with text and read as content rather than as a masthead.
+
+badges:
+  # --- Identity: black label, header, for-the-badge -------------------------
+  - name: status
+    label: Status
+    message: Active
+    label_color: black
+    message_color: green
+    icon: pulse
+    link: ./
+  - name: role
+    label: Role
+    message: Profile
+    label_color: black
+    message_color: pink
+    icon: book
+    link: ./
+  - name: context
+    label: Context
+    message: Automation
+    label_color: black
+    message_color: purple
+    icon: gear
+    link: ./
+  - name: license
+    label: License
+    message: MIT
+    label_color: black
+    message_color: yellow
+    icon: scale
+    link: ./LICENSE
+
+  # --- Live: gold label, traffic-light message, rewritten by the workflow ---
+  - name: journal
+    label: Journal
+    message: Passing
+    label_color: gold
+    message_color: green
+    icon: clock
+    style: flat-square
+    link: https://github.com/tannergolden/tannergolden/actions/workflows/journal.yml
+  - name: month
+    label: Entries
+    message: '0 this month'
+    label_color: gold
+    message_color: green
+    icon: commit
+    style: flat-square
+    link: ./journal/
+
+  # --- Stack: black label, flat-square, body ------------------------------------
+  - name: stack-python
+    label: Language
+    message: Python
+    label_color: black
+    message_color: azure
+    icon: code
+    style: flat-square
+  - name: stack-bash
+    label: Language
+    message: Bash
+    label_color: black
+    message_color: lime
+    icon: terminal
+    style: flat-square
+  - name: stack-javascript
+    label: Language
+    message: JavaScript
+    label_color: black
+    message_color: amber
+    icon: code
+    style: flat-square
+  - name: stack-actions
+    label: Tooling
+    message: GitHub Actions
+    label_color: black
+    message_color: indigo
+    icon: gear
+    style: flat-square
+  - name: stack-make
+    label: Tooling
+    message: Make
+    label_color: black
+    message_color: steel
+    icon: wrench
+    style: flat-square
+  - name: stack-ruff
+    label: Tooling
+    message: Ruff
+    label_color: black
+    message_color: plum
+    icon: check
+    style: flat-square
+  - name: stack-pytest
+    label: Tooling
+    message: pytest
+    label_color: black
+    message_color: teal
+    icon: flask
+    style: flat-square
+  - name: stack-prettier
+    label: Tooling
+    message: Prettier
+    label_color: black
+    message_color: rose
+    icon: sparkle
+    style: flat-square
+  - name: stack-codeql
+    label: Operations
+    message: CodeQL
+    label_color: black
+    message_color: navy
+    icon: shield
+    style: flat-square
+  - name: stack-dependabot
+    label: Operations
+    message: Dependabot
+    label_color: black
+    message_color: sky
+    icon: package
+    style: flat-square
+  - name: stack-gitleaks
+    label: Operations
+    message: Gitleaks
+    label_color: black
+    message_color: crimson
+    icon: key
+    style: flat-square
+  - name: stack-sbom
+    label: Operations
+    message: SBOM
+    label_color: black
+    message_color: forest
+    icon: layers
+    style: flat-square

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="475" height="40" viewBox="0 0 475 40" role="img" aria-labelledby="t">
+<title id="t">AI research &amp; systems engineering / reproducible by construction / least-privilege CI, pinned to the SHA / standards that outlast their author</title>
+<defs>
+<clipPath id="c0"><rect x="0" y="0" width="0" height="40"><animate attributeName="width" values="0.0;404.6;404.6;0.0;0.0" keyTimes="0.0000;0.0851;0.2021;0.2500;1.0000" dur="18.8s" repeatCount="indefinite"/></rect></clipPath>
+<!-- cursor keyframes for phrase 0 -->
+<g id="k0" data-x="0.0;404.6;404.6;0.0;0.0" data-keys="0.0000;0.0851;0.2021;0.2500;1.0000" data-visible="0;1;1;0;0"/>
+<clipPath id="c1"><rect x="0" y="0" width="0" height="40"><animate attributeName="width" values="0.0;0.0;343.6;343.6;0.0;0.0" keyTimes="0.0000;0.2500;0.3351;0.4521;0.5000;1.0000" dur="18.8s" repeatCount="indefinite"/></rect></clipPath>
+<!-- cursor keyframes for phrase 1 -->
+<g id="k1" data-x="0.0;0.0;343.6;343.6;0.0;0.0" data-keys="0.0000;0.2500;0.3351;0.4521;0.5000;1.0000" data-visible="0;0;1;1;0;0"/>
+<clipPath id="c2"><rect x="0" y="0" width="0" height="40"><animate attributeName="width" values="0.0;0.0;453.4;453.4;0.0;0.0" keyTimes="0.0000;0.5000;0.5851;0.7021;0.7500;1.0000" dur="18.8s" repeatCount="indefinite"/></rect></clipPath>
+<!-- cursor keyframes for phrase 2 -->
+<g id="k2" data-x="0.0;0.0;453.4;453.4;0.0;0.0" data-keys="0.0000;0.5000;0.5851;0.7021;0.7500;1.0000" data-visible="0;0;1;1;0;0"/>
+<clipPath id="c3"><rect x="0" y="0" width="0" height="40"><animate attributeName="width" values="0.0;0.0;429.0;429.0;0.0" keyTimes="0.0000;0.7500;0.8351;0.9521;1.0000" dur="18.8s" repeatCount="indefinite"/></rect></clipPath>
+<!-- cursor keyframes for phrase 3 -->
+<g id="k3" data-x="0.0;0.0;429.0;429.0;0.0" data-keys="0.0000;0.7500;0.8351;0.9521;1.0000" data-visible="0;0;1;1;0"/>
+</defs>
+<style>text{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;font-size:20px;fill:#ffffff}</style>
+<text x="8" y="27" clip-path="url(#c0)">AI research &amp; systems engineering</text>
+<text x="8" y="27" clip-path="url(#c1)">reproducible by construction</text>
+<text x="8" y="27" clip-path="url(#c2)">least-privilege CI, pinned to the SHA</text>
+<text x="8" y="27" clip-path="url(#c3)">standards that outlast their author</text>
+<g opacity="0"><animate attributeName="opacity" values="1;1;1;0;0" keyTimes="0.0000;0.0851;0.2021;0.2500;1.0000" calcMode="discrete" dur="18.8s" repeatCount="indefinite"/><rect y="9" width="9" height="22" fill="#ffffff"><animate attributeName="x" values="9.0;413.6;413.6;9.0;9.0" keyTimes="0.0000;0.0851;0.2021;0.2500;1.0000" dur="18.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" repeatCount="indefinite"/></rect></g>
+<g opacity="0"><animate attributeName="opacity" values="0;1;1;1;0;0" keyTimes="0.0000;0.2500;0.3351;0.4521;0.5000;1.0000" calcMode="discrete" dur="18.8s" repeatCount="indefinite"/><rect y="9" width="9" height="22" fill="#ffffff"><animate attributeName="x" values="9.0;9.0;352.6;352.6;9.0;9.0" keyTimes="0.0000;0.2500;0.3351;0.4521;0.5000;1.0000" dur="18.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" repeatCount="indefinite"/></rect></g>
+<g opacity="0"><animate attributeName="opacity" values="0;1;1;1;0;0" keyTimes="0.0000;0.5000;0.5851;0.7021;0.7500;1.0000" calcMode="discrete" dur="18.8s" repeatCount="indefinite"/><rect y="9" width="9" height="22" fill="#ffffff"><animate attributeName="x" values="9.0;9.0;462.4;462.4;9.0;9.0" keyTimes="0.0000;0.5000;0.5851;0.7021;0.7500;1.0000" dur="18.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" repeatCount="indefinite"/></rect></g>
+<g opacity="0"><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0.0000;0.7500;0.8351;0.9521;1.0000" calcMode="discrete" dur="18.8s" repeatCount="indefinite"/><rect y="9" width="9" height="22" fill="#ffffff"><animate attributeName="x" values="9.0;9.0;438.0;438.0;9.0" keyTimes="0.0000;0.7500;0.8351;0.9521;1.0000" dur="18.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" repeatCount="indefinite"/></rect></g>
+</svg>

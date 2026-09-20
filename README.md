@@ -46,10 +46,10 @@ pinned to commit SHAs, and rules a gate checks on every change.
 
 ---
 
-## 📡 Dispatches
+## 📡 Dispatch
 
-Developer news, at intervals nobody chose. A workflow assembles it from
-sources I do not control and commits it unattended, authored by me. [How it works](How-It-Works.md).
+Developer news, assembled by a workflow from sources I do not control and committed unattended,
+authored by me. [How it works](How-It-Works.md).
 
 <!-- DISPATCHES:BEGIN -->
 ### Sunday, September 20, 2026
@@ -130,13 +130,12 @@ Open to conversations about AI infrastructure, reproducibility, and developer to
 
 ---
 
-Dispatch sources: GitHub Releases · GitHub Security Advisories · endoflife.date (CC BY) ·
-RFC Editor · Lobsters · tldr-pages (CC BY) · GitHub. Terms in
+Dispatch sources: Hacker News · GitHub · Lobsters · tldr-pages (CC BY). Terms in
 [`NOTICE`](NOTICE). Every image on this page is a committed file; nothing is fetched from an image
 service.
 
 <!-- UPDATED:BEGIN -->
-Last updated 18:41 EDT on Sunday, September 20, 2026.
+Last updated 19:03 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

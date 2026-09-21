@@ -76,12 +76,6 @@ MASTHEAD_INK = {
     "light": "#067d17",  # 5.3:1 on white. Neon there is 1.4:1, invisible.
 }
 
-# Bigger than it looks like it should be, and that is the wrapping paying
-# for itself. Once a row fits a phone's column without scaling, the font and
-# the image grow together and the effective size on a phone barely moves:
-# 18px in a 339px image lands at 17.4 on a 328px column, 22px in a 408px one
-# lands at 17.7. The desktop reader is the one who notices, and they get a
-# masthead with presence rather than a caption.
 # The masthead's own stack, not the one the cards use. Everything here is
 # measured in cells, so which monospace actually resolves decides whether
 # the cursor lands against the text: the fonts that advance 0.600 to 0.602
@@ -105,18 +99,12 @@ PAD_Y = round(MASTHEAD_FONT_SIZE * 0.45)
 
 # Where a line breaks, if it breaks.
 #
-# GitHub scales a README image down to the column, and the column on a phone
-# is about 330 CSS pixels. Fifty-one cells across that column is seven pixels
-# a cell whatever the font says, so ONE ROW ON A PHONE IS ELEVEN PIXELS AND
-# NO SETTING HERE CHANGES IT. Wrapping at twenty-six was the only thing that
-# moved the number, and it moved it to twenty.
-#
-# It is set to the plate's own width anyway, so nothing wraps. A masthead
-# that breaks mid-sentence reads as a mistake on every screen, and that cost
-# falls on every reader rather than only on the ones holding a phone. What
-# made eleven pixels survivable was the lighting: the glow used to be laid
-# over the glyphs and is now only behind them, which is most of what the
-# screenshot was actually complaining about.
+# It is set to the plate's own width, so nothing wraps. A masthead that
+# breaks mid-sentence reads as a mistake on every screen, and that cost falls
+# on every reader rather than only on the ones holding a phone. What a phone
+# gets instead is nothing at all: below the breakpoint in `masthead_region`
+# the image is swapped for a blank, because the plate cannot be made to fit
+# there and a masthead scaled down is a smear of green.
 #
 # Lower this and the renderer wraps, balanced, onto as many rows as it
 # takes. A test holds that path open so it cannot rot while it is unused.
@@ -373,11 +361,11 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
     background is transparent, so the glow is only drawn on the dark variant,
     where a bloom reads as neon rather than as a smudge.
 
-    IT WRAPS. A line that fits on one row is a 570 pixel image, and GitHub
-    scales that down to a phone's column until the text is eleven pixels of
-    green smear. Wrapping at twenty six cells makes the image narrow enough
-    to need no scaling at all, which is the difference between a masthead a
-    phone can read and one it cannot.
+    ONE ROW. The plate is 34 cells and the generator only draws lines that
+    fit it, so nothing here wraps, though the renderer still can: lower
+    WRAP_CELLS and every line splits, balanced, onto as many rows as it
+    takes. Which reader gets this image at all is decided outside it, by the
+    media queries in `masthead_region`.
 
     THE GREETING RUNS ONCE. It is a greeting, and one that greets the same
     reader again every minute is a tic rather than a welcome. It types on its

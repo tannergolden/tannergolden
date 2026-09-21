@@ -20,10 +20,17 @@ BANNED_DASH = re.compile(f"[{chr(0x2013)}-{chr(0x2015)}]")
 LEADING_EMOJI = re.compile(r"^[^\sA-Za-z0-9]+️?\s")
 
 
-def test_the_space_is_large_enough_to_be_worth_generating():
-    """Lines are not the number that matters; a reader takes in the whole set."""
-    assert masthead.combinations() == 239
-    assert masthead.mastheads() == 320_264_964
+def test_the_thousandth_line_is_the_greeting():
+    """A round number is a promise, so it fails the day a pool drifts."""
+    assert masthead.combinations() + 1 == masthead.TOTAL_LINES == 1000
+    assert len(set(masthead.every_line())) == masthead.combinations(), "a line is duplicated"
+    assert masthead.GREETING not in set(masthead.every_line())
+
+
+def test_there_are_enough_frames_to_draw_the_set_from(repo):
+    """lines() samples distinct frames, so fewer frames than lines is a silent cap."""
+    assert len(masthead.FRAMES) >= masthead.LINES_PER_MASTHEAD
+    assert len(masthead.lines()) == masthead.LINES_PER_MASTHEAD + 1
 
 
 def test_every_line_that_can_be_drawn_fits_the_plate(repo):
@@ -37,7 +44,17 @@ def test_every_line_opens_with_an_emoji_and_then_words():
         assert LEADING_EMOJI.match(line), line
         rest = LEADING_EMOJI.sub("", line)
         assert rest[:1].isupper(), line
-        assert 3 <= len(rest.split()) <= 8, f"{len(rest.split())} words: {line}"
+        assert 4 <= len(rest.split()) <= 8, f"{len(rest.split())} words: {line}"
+
+
+def test_every_frame_earns_its_place():
+    """A frame whose slots are not interchangeable produces nonsense, and the
+    only defence is that each one is small enough to have been read."""
+    for frame in masthead.FRAMES:
+        assert frame.combinations() >= 4, frame.shape
+        assert frame.shape.count("{}") == len(frame.slots), frame.shape
+        for pool in frame.slots:
+            assert len(set(pool)) == len(pool), pool
 
 
 def test_no_line_carries_a_dash_the_house_bans():

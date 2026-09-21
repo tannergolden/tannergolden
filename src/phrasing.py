@@ -52,6 +52,7 @@ VERBS = {
     "trending": ("star", "watch", "track", "clone"),
     "lobsters": ("read", "bookmark", "keep", "queue"),
     "availability": ("show", "mark", "post", "set"),
+    "masthead": ("redraw", "retype", "recompose", "reprint"),
     "readme": ("refresh", "redraw", "update"),
 }
 

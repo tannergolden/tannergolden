@@ -67,12 +67,44 @@ is a generator nobody can vouch for.
 
 | | |
 | :--- | ---: |
-| Distinct lines | 239 |
-| Distinct mastheads (five drawn from ten frames) | **320,264,964** |
+| Lines, the greeting included | **1,000** exactly |
+| Frames | 15 |
+| Distinct mastheads (twelve drawn from fifteen frames) | 1.6 x 10^23 |
 | Words per line | 4 to 8 |
-| Widest line | 51 cells, 594px |
+| Widest line | 51 cells |
 | Greeting | 4.7 seconds, once |
-| Loop | 23.5 seconds, forever |
+| Loop | 56.4 seconds, forever |
+| Redrawn | every 12 hours |
+
+A thousand is a promise rather than an accident: the pools are sized to land
+on it, and a test fails the day one of them drifts.
+
+**Why twelve lines.** Dwell time on a web page follows a Weibull distribution
+with negative aging, per Nielsen Norman's reading of Liu, White and Dumais:
+the first ten seconds decide it, the next twenty thin the survivors, and only
+past about thirty seconds does the curve flatten. Cross-industry average time
+on a page is 52 to 54 seconds. Twelve lines is a 56-second loop, which
+outlasts that average. Past twenty the loop only serves a flat tail that no
+finite animation can serve anyway, at real CPU in every open tab.
+
+**The fifteen frames, by what they are for.**
+
+| | Frames | Lines |
+| :--- | :--- | ---: |
+| What the work is | 🔒 🚀 🕒 | 519 |
+| What it is for | ♻️ 📖 🧪 💤 | 197 |
+| Preferences, stated as preferences | 🧭 | 64 |
+| Where the effort goes | 🧹 ✂️ 📦 | 70 |
+| The supply-chain line the account enforces | 📌 | 35 |
+| The oldest joke in the trade, subverted | ⚙️ | 35 |
+| The page talking about itself | 🎲 🤖 | 79 |
+
+**Redrawn every twelve hours**, by
+[a workflow of its own](.github/workflows/masthead.yml). Every other schedule
+here is an exponential draw, because a dispatch arriving on the hour is one
+nobody believes is random. The masthead is not news and nothing about it is
+due at a moment, so it is the honest exception: a clock, at 06:41 and 18:41
+UTC, off the hour for the same congestion reason the dispatch cron is.
 
 **The greeting types once and does not come back.** It runs on a timeline of
 its own with `repeatCount="1"`, and the drawn lines loop among themselves on a

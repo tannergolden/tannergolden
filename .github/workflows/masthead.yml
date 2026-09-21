@@ -1,0 +1,64 @@
+# The masthead, redrawn on a clock.
+#
+# Every other schedule here is an exponential draw, because a dispatch that
+# arrives on the hour is a dispatch nobody believes is random. The masthead
+# is not news and nothing about it is due at a moment, so this one is the
+# honest exception: twelve hours, predictably.
+#
+# WHY A SCHEDULE AT ALL. The animation in the image is finite. A reader who
+# stays long enough sees its loop come round, and nothing in the file can
+# change while it is on screen, because GitHub serves a committed SVG and
+# strips the script that might have redrawn it. Variety between visits is
+# the only kind available, and this is what produces it.
+#
+# EGRESS. The harden step audits rather than blocks, per the action's own
+# guidance. This job reaches github.com only, to clone and to push.
+
+name: '⌨️ Masthead'
+
+on:
+  schedule:
+    # 06:41 and 18:41 UTC. Off the hour for the same reason the dispatch
+    # cron is: GitHub's scheduler is most congested on the hour, and runs
+    # there are delayed or dropped most often.
+    - cron: '41 6,18 * * *'
+  workflow_dispatch:
+
+# Shares the writing group with the other two, so no run commits beside a
+# dispatch that is asleep waiting for its moment.
+concurrency:
+  group: profile-write
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  draw:
+    name: '⌨️ Draw the masthead again'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # commit the image and push it
+    env:
+      GIT_COMMITTER_NAME: github-actions[bot]
+      GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+      # A rehearsal anywhere but the default branch commits and stops, for
+      # the same reason a dispatch does: the image would conflict at merge.
+      # Gated on the event first, because github.event.repository is NOT
+      # present on a schedule event.
+      DISPATCH_NO_PUSH: ${{ github.event_name == 'workflow_dispatch' && github.ref_name != github.event.repository.default_branch && '1' || '' }}
+    steps:
+      - name: '🛡️ Harden Runner'
+        uses: tannergolden/standards/actions/harden@v1
+        with:
+          egress-policy: audit
+          notice: '⌨️ Masthead: draws twelve new lines and commits the image.'
+
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true # zizmor: ignore[artipacked] - this job pushes
+
+      - name: '⌨️ Draw the masthead again'
+        run: python3 src/dispatches.py --mode masthead

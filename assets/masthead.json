@@ -1,10 +1,17 @@
 {
   "lines": [
     "\ud83d\udc4b\ud83c\udffb Hello World!",
-    "\ud83e\udd16 No human wrote this line",
-    "\u2702\ufe0f Deleting more than I add",
-    "\ud83c\udfb2 Committed unattended, just now",
-    "\ud83d\udcd6 Docs nobody can ignore",
-    "\ud83d\udccc Pinned to a digest, not a range"
+    "\ud83d\udce6 Writing the same problem once",
+    "\ud83c\udfb2 Committed unattended, nobody chose when",
+    "\u2702\ufe0f Removing more than I ship",
+    "\ud83e\uddf9 Documenting the boring parts",
+    "\u267b\ufe0f Conventions that still run next year",
+    "\u2699\ufe0f Every step works on the first try",
+    "\ud83d\ude80 Deploying a build behind a gate",
+    "\ud83e\uddea Gates that earn their runtime",
+    "\ud83d\udca4 Alerts that need no babysitting",
+    "\ud83d\udcd6 Standards nobody argues with",
+    "\ud83e\udd16 A workflow drew a word of this",
+    "\ud83d\udd12 Reviewing every release on every push"
   ]
 }

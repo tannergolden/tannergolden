@@ -235,6 +235,23 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
     render.update_month_index()
 
 
+def redraw_masthead() -> int:
+    """Draw the masthead again, commit it and push.
+
+    On a clock rather than on the exponential draw the dispatches use. The
+    masthead is not news and nothing about it is due at a moment; it is the
+    one thing here where a predictable cadence is the honest design.
+    """
+    lines = masthead.lines()
+    cards.write_masthead(lines)
+    render_page(now(), with_modules=False)
+    if commit(render.masthead_commit_message(lines), paths=[README, ASSETS_DIR]):
+        push()
+    else:
+        print("the masthead is unchanged; nothing to commit.")
+    return 0
+
+
 def set_availability(state: str | None) -> int:
     """Write the availability line, commit it and push.
 
@@ -277,12 +294,6 @@ def write_dispatch(ledger: Ledger, when: datetime) -> str | None:
     ledger.remember(entry.kind, entry.identifier)
     sources.claim_link(ledger, entry.source_url)
     ledger.save()
-    # Redrawn here as well as on the page refresh. A reader reloading the
-    # page gets the committed file back unchanged, because GitHub serves a
-    # static image and strips the script that could have redrawn it, so the
-    # only lever on how often the lines change is how often a run writes
-    # them. Every dispatch is one more draw.
-    cards.write_masthead(masthead.lines())
     render_page(when, with_modules=False)
     return render.commit_message(entry)
 
@@ -300,8 +311,6 @@ def refresh_page(ledger: Ledger, when: datetime) -> str:
     render.save_modules(current)
     ledger.save()
 
-    cards.write_masthead(masthead.lines())
-    changed.append("the masthead")
     login = os.environ.get("GITHUB_REPOSITORY_OWNER") or profile.get("login") or "tannergolden"
     stats = cards.github_stats(login, os.environ.get("GITHUB_TOKEN"))
     if stats:
@@ -428,7 +437,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--mode",
-        choices=["tick", "dispatch", "refresh", "render", "check", "probe", "availability"],
+        choices=["tick", "dispatch", "refresh", "render", "check", "probe",
+                 "availability", "masthead"],
         default="tick",
     )
     parser.add_argument("--status", choices=sorted(render.AVAILABILITY), default=None)
@@ -451,6 +461,9 @@ def main() -> int:
 
     if args.mode == "availability":
         return set_availability(args.status)
+
+    if args.mode == "masthead":
+        return redraw_masthead()
 
     try:
         return run_writing_mode(args.mode)

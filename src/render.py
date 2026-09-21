@@ -554,6 +554,41 @@ def availability_commit_message(state: str) -> str:
                        f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>"]) + "\n"
 
 
+def masthead_commit_message(lines: list) -> str:
+    """A scheduled redraw, and a body that says why there is a schedule at all.
+
+    The what is the image, and the diff already carries it. The why is that
+    the animation in the file is finite: a reader who stays sees its loop
+    come round, and the only thing that can hand them something new is a
+    later draw. That is the whole reason this runs on a clock.
+    """
+    drawn = max(len(lines) - 1, 0)
+    header = fit_subject("chore", "masthead", phrasing.emoji_for("chore"),
+                         f"{phrasing.verb_for('masthead')} the masthead")
+    why = phrasing.one_of(
+        f"{drawn} lines drawn to replace the {drawn} before them. The loop "
+        "inside the image is finite, so a reader who stays long enough sees "
+        "it come round; a later draw is the only thing that can hand them "
+        "something they have not read.",
+        f"A new {drawn} lines, and the old ones will not be back for a while. "
+        "Nothing in the image can change while it is on screen, because "
+        "GitHub serves a committed file and strips the script that might "
+        "have, so variety has to arrive between visits rather than during one.",
+        f"The masthead types {drawn} new lines from here. What the animation "
+        "can hold is fixed at the moment it is drawn, which is why the "
+        "drawing is on a schedule and the reading is not.",
+    )
+    how = phrasing.one_of(
+        "Twice a day, because a reader who comes back tomorrow should not be "
+        "read the same thing, and one who comes back in an hour usually is "
+        "not reading it again anyway.",
+        "On a twelve-hour clock: often enough that a return visit differs, "
+        "rarely enough that the log stays about the dispatches.",
+    )
+    return "\n".join([header, "", wrap_body(f"{why}\n\n{how}"), "",
+                       f"Signed-off-by: {AUTHOR_NAME} <{AUTHOR_EMAIL}>"]) + "\n"
+
+
 def render_updated_line(when: datetime) -> str:
     stamp = local(when)
     return f"Last updated {stamp:%H:%M} {stamp:%Z} on {stamp:%A, %B} {stamp.day}, {stamp:%Y}."

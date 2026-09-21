@@ -33,6 +33,11 @@ MAX_CELLS = 52
 
 GREETING = "\U0001F44B\U0001F3FB Hello World!"
 
+# The greeting plus every line the frames can produce. A round number is a
+# promise rather than an accident, so the pools are sized to land on it and
+# a test fails the day one of them drifts.
+TOTAL_LINES = 1000
+
 _RNG = random.SystemRandom()
 
 
@@ -79,69 +84,108 @@ class Frame:
 
 
 FRAMES = (
-    # What the work is. The three pools are genuinely interchangeable, which
-    # is why this frame carries most of the space on its own.
+    # What the work is. Three interchangeable pools, so this frame carries
+    # more of the space than any other on its own.
     Frame("\U0001F512", "{} {} {}", (
-        ("Hardening", "Gating", "Pinning", "Auditing", "Reviewing"),
-        ("every action", "every workflow", "every build", "every dependency", "every release"),
-        ("by default", "before it merges", "on every push", "so nobody has to", "every single time"),
+        ("Hardening", "Gating", "Auditing", "Reviewing", "Checking", "Guarding", "Signing"),
+        ("every action", "every workflow", "every build", "every dependency",
+         "every release", "every image", "every artefact"),
+        ("by default", "before it merges", "on every push", "so nobody has to",
+         "every single time", "without being asked"),
     )),
     # What it is for.
     Frame("\u267B\uFE0F", "{} that {}", (
-        ("Pipelines", "Standards", "Environments", "Workflows", "Guardrails", "Runbooks"),
+        ("Pipelines", "Standards", "Environments", "Workflows", "Guardrails",
+         "Runbooks", "Defaults", "Templates", "Conventions", "Gates"),
         ("outlive their author", "still run next year", "nobody has to remember",
-         "a new machine cannot break", "explain themselves", "fail loudly"),
+         "a new machine cannot break", "explain themselves", "fail loudly",
+         "need no maintenance", "survive a rewrite", "age well", "nobody fights"),
     )),
     # The supply-chain line the rest of the account actually enforces.
     Frame("\U0001F4CC", "{}, not {}", (
-        ("Pinned to a commit SHA", "Pinned to a digest", "Locked to a version"),
-        ("a tag", "latest", "a range", "a promise"),
+        ("Pinned to a SHA", "Pinned to a digest", "Locked to a version",
+         "Fixed to a revision", "Bound to a lockfile"),
+        ("a tag", "latest", "a range", "a promise", "a moving branch",
+         "whatever resolves today", "a floating pointer"),
     )),
-    # Where the effort goes. Split from the one below, because deleting what
-    # people forget and automating more than I add are both nonsense, and one
-    # frame holding all four verbs produced exactly that.
+    # Where the effort goes.
     Frame("\U0001F9F9", "{} {}", (
-        ("Automating", "Documenting"),
-        ("the boring parts", "what people forget", "the thing nobody checks"),
+        ("Automating", "Documenting", "Simplifying", "Untangling", "Flattening"),
+        ("the boring parts", "what people forget", "the thing nobody checks",
+         "the step everyone skips", "the part that breaks", "the bit that bites"),
     )),
     Frame("\u2702\uFE0F", "{} more than I {}", (
-        ("Deleting", "Removing"),
-        ("add", "write", "ship"),
+        ("Deleting", "Removing", "Cutting", "Pruning"),
+        ("add", "write", "ship", "merge", "keep"),
     )),
     # The oldest joke in the trade, subverted: the whole point of the work
     # below is that it also works somewhere that is not my machine.
     Frame("\u2699\uFE0F", "{} works on {}", (
-        ("It", "The build", "The pipeline"),
-        ("my machine", "a fresh clone", "a cold runner", "somebody else's laptop"),
+        ("It", "The build", "The pipeline", "The whole thing", "Every step"),
+        ("my machine", "a fresh clone", "a cold runner", "somebody else's laptop",
+         "a clean container", "the first try", "a borrowed machine"),
     )),
     Frame("\U0001F4D6", "{} nobody {}", (
-        ("Docs", "Standards", "Runbooks"),
-        ("has to read twice", "argues with", "can ignore"),
+        ("Docs", "Standards", "Runbooks", "Guides", "Comments", "Rules"),
+        ("has to read twice", "argues with", "can ignore", "needs explained",
+         "has to guess at", "quietly works around"),
     )),
     Frame("\U0001F9EA", "{} that {}", (
-        ("Tests", "Gates", "Checks"),
-        ("catch it before I do", "fail for the right reason", "nobody can skip"),
+        ("Tests", "Gates", "Checks", "Linters", "Reviews", "Alarms"),
+        ("catch it before I do", "fail for the right reason", "nobody can skip",
+         "run on every change", "mean something", "earn their runtime"),
+    )),
+    # Shipping, which is the part the guardrails exist to make dull.
+    Frame("\U0001F680", "{} {} {}", (
+        ("Shipping", "Releasing", "Deploying", "Rolling out", "Cutting"),
+        ("a change", "a release", "a fix", "a version", "a build"),
+        ("behind a gate", "with a rollback ready", "on a green build",
+         "when the checks pass", "without a pager"),
+    )),
+    # Small changes, often, while they are still understood.
+    Frame("\U0001F552", "{} {} {}", (
+        ("Reviewing", "Merging", "Shipping", "Reverting", "Testing"),
+        ("small changes", "one thing", "a single commit", "what I understand",
+         "the smallest diff"),
+        ("every day", "before lunch", "the same week", "while it is fresh"),
+    )),
+    # The preferences, stated as preferences.
+    Frame("\U0001F9ED", "{} over {}", (
+        ("Boring tools", "One way", "Plain defaults", "Written rules",
+         "Shared conventions", "Working automation", "Fewer choices", "Dull tooling"),
+        ("configuration", "cleverness", "tribal knowledge", "heroics", "novelty",
+         "three ways", "trust", "surprise"),
+    )),
+    Frame("\U0001F4E6", "{} {} once", (
+        ("Defining", "Solving", "Writing", "Deciding"),
+        ("the hard part", "the same problem", "the rule", "the answer", "the shape"),
+    )),
+    # Nobody should be woken up by this.
+    Frame("\U0001F4A4", "{} that {}", (
+        ("Alerts", "Pipelines", "Builds", "Deploys", "Rollbacks"),
+        ("nobody gets paged for", "wait until morning", "do not wake anyone",
+         "run without me", "need no babysitting"),
     )),
     # The page talking about itself, which it has earned: it really is
     # generated, and this really was drawn rather than written.
     Frame("\U0001F3B2", "{}, {}", (
-        ("Drawn at random", "Generated on a schedule", "Written by a workflow",
-         "Committed unattended"),
-        # "at a moment nobody chose" reads well and pushes the longest
-        # combination in this frame to nine words, one over the ceiling.
+        ("Drawn at random", "Generated nightly", "Written by a workflow",
+         "Committed unattended", "Chosen by chance", "Assembled from parts",
+         "Picked by a machine"),
         ("just now", "nobody pressed anything", "nobody chose when",
-         "while I was asleep"),
+         "while I was asleep", "and never twice", "on no schedule",
+         "without being asked"),
     )),
     Frame("\U0001F916", "{} {}", (
-        ("Nobody typed", "No human wrote", "A workflow drew", "Something generated"),
-        ("this line", "what you are reading"),
+        ("Nobody typed", "No human wrote", "A workflow drew", "Something generated",
+         "No hand touched", "A cron produced"),
+        ("this line", "what you are reading", "any of this", "a word of this",
+         "the line above"),
     )),
 )
 
 
-# The greeting runs once and these loop, so this is the whole of what a
-# reader who stays sees repeating. Five puts the loop at 23.5 seconds.
-LINES_PER_MASTHEAD = 5
+LINES_PER_MASTHEAD = 12
 
 
 def mastheads() -> int:

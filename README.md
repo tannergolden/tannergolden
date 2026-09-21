@@ -13,8 +13,8 @@ category: profile
 
 <!-- MASTHEAD:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=5654d9c6">
-  <img alt="👋🏻 Hello World! / 🤖 No human wrote this line / ✂️ Deleting more than I add / 🎲 Committed unattended, just now / 📖 Docs nobody can ignore / 📌 Pinned to a digest, not a range" src="assets/masthead-light.svg?v=86e2d14e">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=cf910e57">
+  <img alt="👋🏻 Hello World! / 📦 Writing the same problem once / 🎲 Committed unattended, nobody chose when / ✂️ Removing more than I ship / 🧹 Documenting the boring parts / ♻️ Conventions that still run next year / ⚙️ Every step works on the first try / 🚀 Deploying a build behind a gate / 🧪 Gates that earn their runtime / 💤 Alerts that need no babysitting / 📖 Standards nobody argues with / 🤖 A workflow drew a word of this / 🔒 Reviewing every release on every push" src="assets/masthead-light.svg?v=ad33e111">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -109,7 +109,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 20:25 EDT on Sunday, September 20, 2026.
+Last updated 20:39 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

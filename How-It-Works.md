@@ -176,6 +176,37 @@ phone's stroke width of two pixels that is the difference between reading it
 and squinting at it. Both blurs are now dimmed and laid behind an untouched
 `SourceGraphic`, so the light is in the air around the glyphs, never on them.
 
+**Below 498 pixels it is not shown at all.** That is the width where
+the plate stops fitting the column, so everything under it is an image being
+scaled down, and a masthead scaled down is a smear of green where a first
+impression should be. A phone gets one transparent pixel instead, and the
+badges move up to take the space.
+
+```html
+<picture>
+  <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg">
+  <img alt="every line it types" src="assets/masthead-light.svg">
+</picture>
+```
+
+**The order of the sources is the whole thing.** A browser takes the first
+`<source>` whose media matches, so the width query has to come before the
+colour one or a phone in dark mode would never reach it.
+
+This works because GitHub's markdown sanitiser keeps `media` on a `<source>`
+whatever the query says, which is documented nowhere: the documented use is
+`prefers-color-scheme` and nothing else. It was **checked rather than
+assumed**. A probe file carrying `media="(max-width: 500px)"` was pushed to a
+branch and its rendered page fetched back, and the attribute came through the
+renderer intact. The breakpoint itself is derived from the plate rather than
+typed in, so it cannot be left behind when the plate changes.
+
+**The alt text does not move.** It lives on the `<img>`, which is where a
+screen reader reads it from whichever source the browser picked, so a phone
+still announces every line it would have typed. Hiding this is a visual
+decision and is not allowed to become an accessibility one.
+
 **The greeting types once and does not come back.** It runs on a timeline of
 its own with `repeatCount="1"`, and the drawn lines loop among themselves on a
 second one that begins where the first finished erasing. A greeting that

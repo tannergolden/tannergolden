@@ -842,3 +842,60 @@ def test_a_frame_that_cannot_fit_the_plate_still_draws_rather_than_fail(repo):
     frame = masthead.FRAMES[0]
     assert frame.fitting(cap=1) == []
     assert frame.draw(cap=1) in set(frame.every())
+
+
+# --- what a phone is handed instead ----------------------------------------------
+
+def test_a_phone_is_handed_a_blank_rather_than_a_smear(repo):
+    """Below the breakpoint the image can only be scaled down, and a masthead
+    scaled down is a smear of green where a first impression should be.
+
+    THE ORDER OF THE SOURCES IS THE WHOLE THING. A browser takes the first
+    <source> whose media matches, so the width query has to come before the
+    colour one or a phone in dark mode never reaches it.
+    """
+    cards.write_masthead(masthead.lines())
+    region = cards.masthead_region()
+    sources = re.findall(r'<source media="([^"]+)" srcset="([^"?]+)', region)
+    assert len(sources) == 2, region
+
+    (first_media, first_src), (second_media, _) = sources
+    assert first_media.startswith("(max-width:"), first_media
+    assert first_src.endswith("masthead-blank.svg")
+    assert second_media == "(prefers-color-scheme: dark)"
+    assert re.search(r'<img alt="[^"]+" src="[^"]*masthead-light\.svg\?v=[0-9a-f]{8}"', region)
+
+
+def test_the_breakpoint_is_derived_from_the_plate(repo):
+    """Typed in by hand it would be wrong the first time the plate changed."""
+    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
+    plate = cards.MASTHEAD_TEXT_X * 2 + (cards.PROMPT_CELLS + masthead.PLATE_CELLS) * cell
+    assert cards.masthead_breakpoint() == int(plate) + cards.GUTTERS - 1
+
+    # Every image the generator can produce fits the viewport just above it.
+    for _ in range(20):
+        svg = cards.masthead_svg(masthead.lines())
+        width = int(re.search(r'<svg[^>]*width="(\d+)"', svg).group(1))
+        assert width <= cards.masthead_breakpoint() + 1 - cards.GUTTERS
+
+
+def test_the_blank_is_blank(repo):
+    """One transparent pixel, so the image collapses rather than reserving a
+    band of empty page, and says nothing to a screen reader."""
+    cards.write_masthead(masthead.lines())
+    blank = (repo / "assets" / "masthead-blank.svg").read_text(encoding="utf-8")
+    assert 'width="1" height="1"' in blank
+    assert 'aria-hidden="true"' in blank
+    assert "<text" not in blank and "<animate" not in blank and "<rect" not in blank
+    assert len(blank) < 200, len(blank)
+
+
+def test_the_lines_are_still_announced_on_a_phone(repo):
+    """alt lives on the <img>, which is where a screen reader reads it from
+    whichever source the browser picked. Hiding it is a visual decision and
+    must not be an accessibility one."""
+    lines = masthead.lines()
+    cards.write_masthead(lines)
+    alt = re.search(r'<img alt="([^"]+)"', cards.masthead_region()).group(1)
+    for line in lines:
+        assert line in alt, line

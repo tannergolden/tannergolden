@@ -13,6 +13,7 @@ category: profile
 
 <!-- MASTHEAD:BEGIN -->
 <picture>
+  <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
   <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=07117fd9">
   <img alt="👋🏻 Hello World! / 🏗️ Keep the safe way easy / ✂️ Deleting more than I merge / ⏱️ Feedback in under a minute / 🧩 Repos that fit together / 📦 Deciding the rule once / 🪵 The failure in one place / 🗺️ Deployed with one file / 📉 One fewer thing to explain / 🚦 A red test means it stops here / 🚧 No step is waiting on me / 📐 One shape with no surprises / 🧪 Checks that nobody can skip" src="assets/masthead-light.svg?v=5487c180">
 </picture>
@@ -109,7 +110,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 00:00 EDT on Monday, September 21, 2026.
+Last updated 01:39 EDT on Monday, September 21, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

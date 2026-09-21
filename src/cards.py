@@ -555,15 +555,66 @@ def write_masthead(lines: list) -> dict:
         "recent": memory[-masthead.memory_size():],
         "loop_seconds": round(masthead_loop_seconds(drawn), 1),
     }, indent=2) + "\n")
+    # What a phone gets instead. One transparent pixel: the <img> collapses
+    # to nothing rather than reserving a band of empty page.
+    _write(f"{ASSETS_DIR}/masthead-blank.svg",
+           '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" '
+           'viewBox="0 0 1 1" role="presentation" aria-hidden="true"></svg>\n')
     return {
         scheme: _write(f"{ASSETS_DIR}/masthead-{scheme}.svg", masthead_svg(drawn, scheme))
         for scheme in MASTHEAD_INK
     }
 
 
+# GitHub's README gutters on a narrow screen, both sides together. The
+# breakpoint below is the plate plus this: the width at which the image
+# would have to start shrinking.
+GUTTERS = 32
+
+
+def masthead_breakpoint() -> int:
+    """The viewport width below which the masthead can no longer be read.
+
+    Derived rather than picked. The plate is as wide as it is, GitHub gives
+    a README about this much less than the viewport, and below the sum the
+    image gets scaled down and the type with it. A number typed in by hand
+    here would be wrong the first time the plate changed.
+    """
+    cell = MASTHEAD_FONT_SIZE * CELL_RATIO
+    plate = MASTHEAD_TEXT_X * 2 + (PROMPT_CELLS + masthead.PLATE_CELLS) * cell
+    return int(plate) + GUTTERS - 1
+
+
 def masthead_region() -> str:
-    """The image, cache-busted, with every line it types in the alt text."""
-    return picture("masthead", " / ".join(load_masthead_lines() or [masthead.GREETING]))
+    """The image, cache-busted, with every line it types in the alt text.
+
+    THREE SOURCES, AND THE ORDER IS THE POINT. A browser takes the first
+    <source> whose media matches, so the width query has to come before the
+    colour one or a phone in dark mode would never reach it.
+
+    The first one hands a phone a blank. Below the breakpoint the image can
+    only be scaled down, and a masthead scaled down is a smear of green
+    where a first impression should be; nothing is better than that. The alt
+    text stays on the <img>, which is where a screen reader reads it from
+    whichever source the browser picked, so the lines are still announced.
+
+    This works because GitHub's markdown sanitiser keeps `media` on a
+    <source> whatever the query says, which is checked rather than assumed:
+    a probe pushed to a branch came back through the renderer intact.
+    """
+    lines = load_masthead_lines() or [masthead.GREETING]
+    blank = f"{ASSETS_DIR}/masthead-blank.svg"
+    dark = f"{ASSETS_DIR}/masthead-dark.svg"
+    light = f"{ASSETS_DIR}/masthead-light.svg"
+    alt = escape(" / ".join(lines), {chr(34): "&quot;"})
+    return (
+        "<picture>\n"
+        f'  <source media="(max-width: {masthead_breakpoint()}px)" '
+        f'srcset="{blank}?v={content_tag(blank)}">\n'
+        f'  <source media="(prefers-color-scheme: dark)" srcset="{dark}?v={content_tag(dark)}">\n'
+        f'  <img alt="{alt}" src="{light}?v={content_tag(light)}">\n'
+        "</picture>"
+    )
 
 
 # --- the account's numbers --------------------------------------------------------

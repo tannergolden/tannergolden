@@ -47,16 +47,30 @@ MEMORY_DRAWS = 8
 _RNG = random.SystemRandom()
 
 
+# Characters that compose with the glyph before them rather than taking a
+# cell of their own: the variation selector, the zero width joiner, and the
+# five skin tone modifiers. Counting a modifier as two cells put the cursor
+# two characters clear of the greeting it was supposed to be sitting against.
+COMBINING = frozenset("\ufe0f\u200d") | {chr(code) for code in range(0x1F3FB, 0x1F400)}
+
+
 def cells(line: str) -> int:
     """How many terminal cells a line occupies.
 
-    An emoji takes two, as it does in a terminal, and a variation selector
-    takes none. Counting Python characters instead would under-measure every
-    line that starts with an emoji, which is all of them.
+    An emoji takes two, as it does in a terminal. Anything that composes
+    with the emoji before it takes none, because it is drawn inside the two
+    cells that emoji already claimed. Counting Python characters instead
+    would under-measure every line that starts with an emoji, which is all
+    of them; counting a skin tone as its own glyph over-measures the one
+    line that has one.
     """
-    total = 0
+    total, joined = 0, False
     for char in line:
-        if char == "\ufe0f":
+        if char in COMBINING:
+            joined = char == "\u200d"
+            continue
+        if joined:  # the far side of a joiner draws inside the same cells
+            joined = False
             continue
         total += 2 if ord(char) > 0x2100 else 1
     return total

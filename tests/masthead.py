@@ -531,18 +531,31 @@ def test_the_cursor_rides_the_end_of_what_has_been_typed(repo):
 
 # --- lighting ------------------------------------------------------------------
 
-def test_the_bloom_has_a_core_and_a_halo_rather_than_one_smear(repo):
-    """One blur merged with itself is a blurry copy of the text.
+def test_the_glyphs_are_never_blurred_only_lit(repo):
+    """Blurring the text and merging that back over itself thickens every
+    stroke. On a phone a stroke is two pixels, so that is the difference
+    between reading it and squinting at it.
 
-    A phosphor has a hard centre and soft light well beyond it, which is two
-    passes at different radii with the wide one dimmed.
+    Both blurs are dimmed and both sit BEHIND an untouched SourceGraphic, so
+    the light is in the air around the glyphs and never on them.
     """
     svg = cards.masthead_svg(masthead.lines(), "dark")
     radii = [float(r) for r in re.findall(r'stdDeviation="([\d.]+)"', svg)]
     assert len(radii) == 2, radii
-    assert max(radii) > 3 * min(radii), "both passes are the same blur"
-    # The halo is dimmed, or it reads as a second copy rather than as light.
-    assert re.search(r'feColorMatrix[^>]*0 0 0 0\.\d+ 0"', svg), "the halo is not dimmed"
+    assert max(radii) > 2 * min(radii), "both passes are the same blur"
+
+    merge = svg.split("<feMerge>")[1].split("</feMerge>")[0]
+    order = re.findall(r'feMergeNode in="([^"]+)"', merge)
+    assert order[-1] == "SourceGraphic", f"something is drawn over the text: {order}"
+    assert order.count("SourceGraphic") == 1, "the text is merged over itself"
+    for blurred in order[:-1]:
+        alpha = re.search(rf'result="{blurred}"[^>]*', svg)
+        row = re.search(rf'values="[^"]*0 0 0 (0\.\d+) 0"[^>]*result="{blurred}"', svg)
+        assert alpha or row, blurred
+    # Every pass that reaches the merge has had its alpha cut.
+    dimmed = re.findall(r'feColorMatrix[^>]*0 0 0 (0\.\d+) 0"', svg)
+    assert len(dimmed) == len(order) - 1, dimmed
+    assert all(float(a) < 0.6 for a in dimmed), dimmed
 
 
 def test_the_filter_keeps_its_colour(repo):

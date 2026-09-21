@@ -82,6 +82,14 @@ MASTHEAD_INK = {
 # 18px in a 339px image lands at 17.4 on a 328px column, 22px in a 408px one
 # lands at 17.7. The desktop reader is the one who notices, and they get a
 # masthead with presence rather than a caption.
+# The masthead's own stack, not the one the cards use. Everything here is
+# measured in cells, so which monospace actually resolves decides whether
+# the cursor lands against the text: the fonts that advance 0.600 to 0.602
+# go first, and Consolas at 0.550 goes last, behind two that Windows and
+# Linux both have.
+MASTHEAD_FONT = ("ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Mono', "
+                 "'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace")
+
 MASTHEAD_FONT_SIZE = 22
 
 # A terminal's line spacing, and enough air above and below that the bloom
@@ -123,12 +131,14 @@ PROMPT_CELLS = 2
 # allowed to sit below the contrast bar the text has to clear.
 PROMPT_OPACITY = {"dark": 0.5, "light": 0.72}
 
-# One cell as a fraction of the em. SF Mono, Menlo and DejaVu Sans Mono all
-# advance 0.600 to 0.602; Consolas advances 0.550. This is deliberately wider
-# than any of them. A cell that is too narrow makes the clip lag the glyphs
-# and the end of a row never arrives; too wide only runs the reveal
-# harmlessly ahead of the text.
-CELL_RATIO = 0.61
+# One cell as a fraction of the em, and the tolerance the cursor lives on.
+# SF Mono, Menlo, Cascadia Mono and DejaVu Sans Mono all advance 0.600 to
+# 0.602. This is a hair wider than the widest of them, on purpose: a cell
+# too narrow makes the clip lag the glyphs and the end of a row never
+# arrives, while too wide only runs the reveal ahead of the text and leaves
+# the cursor floating clear of it. 0.61 left that float visible at a quarter
+# of a character per ten cells.
+CELL_RATIO = 0.605
 
 # Typing is a constant cadence, because a terminal has one. Giving every
 # line the same fixed duration whatever its length made a short line crawl
@@ -153,18 +163,13 @@ BLINK_SECONDS = 0.5
 # increase and two moments a femtosecond apart round to one string.
 TIME_PLACES = 4
 
-# Skin tone modifiers. They render as part of the emoji before them and
-# should cost no keystroke of their own.
-_MODIFIERS = range(0x1F3FB, 0x1F400)
-
-
 def _num(value: float, places: int = TIME_PLACES) -> str:
     """The shortest honest spelling of a number, for a file emitted by the thousand."""
     text = f"{value:.{places}f}".rstrip("0").rstrip(".")
     return text or "0"
 
 
-def wrap(line: str, cap: int = WRAP_CELLS) -> list:
+def wrap(line: str, cap: int | None = None) -> list:
     """The fewest rows that fit the cap, then the evenest split of that many.
 
     Evenest, not greedy. Greedy wrapping fills the first row and leaves the
@@ -172,6 +177,10 @@ def wrap(line: str, cap: int = WRAP_CELLS) -> list:
     wrapped line. Balancing means searching the split points, which is free
     at this size: no line here has more than nine words.
     """
+    # Read at the call rather than bound as a default, because a default
+    # argument is evaluated once at import and a module constant that
+    # silently stops applying is a bug this repository has already had.
+    cap = WRAP_CELLS if cap is None else cap
     words = line.split(" ")
     for rows in range(1, len(words) + 1):
         best = None
@@ -204,12 +213,13 @@ def _rhythm(line: str, total: float) -> list:
     # and commit a diff that says nothing.
     rng = random.Random(  # noqa: S311
         int(hashlib.sha256(line.encode("utf-8")).hexdigest()[:8], 16))
-    weights, previous = [], ""
+    weights, previous, joined = [], "", False
     for char in line:
-        if char == "️":
+        if char in masthead.COMBINING:  # drawn inside the glyph before it
+            joined = char == "‍"
             continue
-        if ord(char) in _MODIFIERS:  # part of the emoji before it
-            weights += [0.0, 0.0]
+        if joined:
+            joined = False
             continue
         weight = rng.uniform(0.74, 1.30)
         if previous == " ":
@@ -311,27 +321,35 @@ def _reveal(rows: list, start: float, slot: float, cycle: float, cell: float) ->
 
 
 def _glow() -> list:
-    """Two blurs and the source: a tight core and a wide halo.
+    """Light around the glyphs, with the glyphs themselves left alone.
 
-    One blur merged with itself is a smudge with a bright middle. A phosphor
-    has a hard centre and a soft bloom well beyond it, which is two passes at
-    different radii, the wide one dimmed so it reads as light in the air
-    rather than as a second, blurrier copy of the text.
+    The first version blurred the text and merged that blur back over
+    itself. That thickens every stroke and softens every edge, which on a
+    phone, where a stroke is two pixels to begin with, is the difference
+    between reading it and squinting at it. What a phosphor actually looks
+    like is a hard glyph sitting in light, so both blurs are dimmed and laid
+    BEHIND an untouched SourceGraphic: near light close in, far light well
+    beyond, and nothing at all on the letterforms.
+
+    The radii follow the font rather than sitting beside it, so the bloom
+    does not change character when the type does.
 
     `color-interpolation-filters="sRGB"` is not a detail. The default is
     linearRGB, which turns a saturated green bloom into a pale grey one.
     """
+    near = MASTHEAD_FONT_SIZE * 0.085
+    far = MASTHEAD_FONT_SIZE * 0.24
     return [
-        '<filter id="g" x="-8%" y="-40%" width="116%" height="180%" '
+        '<filter id="g" x="-10%" y="-45%" width="120%" height="190%" '
         'color-interpolation-filters="sRGB">',
-        f'<feGaussianBlur in="SourceGraphic" stdDeviation="{_num(MASTHEAD_FONT_SIZE * 0.045, 2)}" '
-        'result="core"/>',
-        f'<feGaussianBlur in="SourceGraphic" stdDeviation="{_num(MASTHEAD_FONT_SIZE * 0.20, 2)}" '
-        'result="wide"/>',
-        '<feColorMatrix in="wide" type="matrix" result="halo" '
-        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.55 0"/>',
-        "<feMerge><feMergeNode in=\"halo\"/><feMergeNode in=\"core\"/>"
-        "<feMergeNode in=\"core\"/><feMergeNode in=\"SourceGraphic\"/></feMerge>",
+        f'<feGaussianBlur in="SourceGraphic" stdDeviation="{_num(near, 2)}" result="near"/>',
+        f'<feGaussianBlur in="SourceGraphic" stdDeviation="{_num(far, 2)}" result="far"/>',
+        '<feColorMatrix in="near" type="matrix" result="glow" '
+        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0"/>',
+        '<feColorMatrix in="far" type="matrix" result="halo" '
+        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.3 0"/>',
+        '<feMerge><feMergeNode in="halo"/><feMergeNode in="glow"/>'
+        '<feMergeNode in="SourceGraphic"/></feMerge>',
         "</filter>",
     ]
 
@@ -423,7 +441,7 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
     out.append("</defs>")
     out.append(
         "<style>"
-        f"text{{font-family:{FONT};font-size:{MASTHEAD_FONT_SIZE}px;fill:{ink};"
+        f"text{{font-family:{MASTHEAD_FONT};font-size:{MASTHEAD_FONT_SIZE}px;fill:{ink};"
         "white-space:pre;font-variant-ligatures:none;font-kerning:none;"
         "text-rendering:geometricPrecision}"
         f".p{{opacity:{PROMPT_OPACITY.get(scheme, 0.55)}}}"

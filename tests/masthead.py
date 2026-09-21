@@ -295,3 +295,34 @@ def test_the_alt_text_survives_a_render_that_drew_nothing(repo):
     cards.write_masthead(lines)
     assert cards.load_masthead_lines() == lines
     assert " / ".join(lines) in cards.masthead_region()
+
+
+# --- what the next draw remembers ---------------------------------
+
+def test_two_draws_in_a_row_share_no_shape(repo):
+    """Twelve of sixty-four shapes, twice a day, puts yesterday's shape back
+    on the page more often than not. Excluding the last draw's frames costs
+    nothing: fifty-two remain, and four times as many as a draw needs."""
+    for _ in range(40):
+        first = masthead.lines()
+        second = masthead.lines(avoid_shapes=masthead.shapes_in(first))
+        assert not set(masthead.shapes_in(first)) & set(masthead.shapes_in(second))
+        assert len(second) == masthead.LINES_PER_MASTHEAD + 1
+
+
+def test_a_line_drawn_recently_is_not_drawn_again(repo):
+    """Four days of memory, so a reader coming back tomorrow meets sentences
+    rather than reruns."""
+    for _ in range(40):
+        recent = masthead.lines()[1:]
+        again = masthead.lines(avoid_lines=recent)[1:]
+        assert not set(recent) & set(again)
+
+
+def test_the_memory_never_starves_the_draw(repo):
+    """Asked to avoid more than exists, it draws anyway: a masthead with a
+    hole in it is worse than a line somebody has seen before."""
+    everything = [f.emoji for f in masthead.FRAMES]
+    assert len(masthead.lines(avoid_shapes=everything)) == masthead.LINES_PER_MASTHEAD + 1
+    assert len(masthead.lines(avoid_lines=list(masthead.every_line()))) \
+        == masthead.LINES_PER_MASTHEAD + 1

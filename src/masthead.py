@@ -38,6 +38,12 @@ GREETING = "\U0001F44B\U0001F3FB Hello World!"
 # a test fails the day one of them drifts.
 TOTAL_LINES = 1000
 
+# How many past draws a redraw remembers. Twelve lines twice a day, so eight
+# draws is four days: long enough that a reader coming back tomorrow cannot
+# be shown a line they have already read, short enough that the window never
+# holds a meaningful share of the thousand.
+MEMORY_DRAWS = 8
+
 _RNG = random.SystemRandom()
 
 
@@ -83,7 +89,19 @@ class Frame:
         for pick in itertools.product(*self.slots):
             yield self.fill(pick)
 
-    def draw(self) -> str:
+    def draw(self, avoid=()) -> str:
+        """One line from this frame, preferring one not drawn recently.
+
+        Enumerating is cheap here: the largest frame holds twenty lines, and
+        walking twenty strings to keep a reader from meeting the same
+        sentence twice in a week is a trade worth making every time. When the
+        whole frame has been used lately it draws anyway rather than fail:
+        a repeat beats a masthead with a hole in it.
+        """
+        if avoid:
+            fresh = [line for line in self.every() if line not in avoid]
+            if fresh:
+                return _RNG.choice(fresh)
         return self.fill([_RNG.choice(pool) for pool in self.slots])
 
 
@@ -471,12 +489,40 @@ def every_line():
         yield from frame.every()
 
 
-def lines(count: int = LINES_PER_MASTHEAD) -> list:
+def memory_size() -> int:
+    """How many past lines the redraw carries forward."""
+    return MEMORY_DRAWS * LINES_PER_MASTHEAD
+
+
+def shapes_in(drawn) -> list:
+    """The frames a drawn set used, named by the emoji each one owns.
+
+    A frame is its emoji here, because that is the part of it that survives
+    a round trip through JSON and the part a reader actually recognises when
+    it comes back.
+    """
+    return [line.split(" ", 1)[0] for line in drawn if line != GREETING]
+
+
+def lines(count: int = LINES_PER_MASTHEAD, avoid_shapes=(), avoid_lines=()) -> list:
     """The greeting, then `count` lines drawn from distinct frames.
 
     Distinct frames rather than distinct lines: two draws from one frame
     share a shape, and a masthead that says the same sentence twice with
     different nouns reads worse than one that changes the subject.
+
+    ACROSS REDRAWS TOO. Random with no memory repeats sooner than anyone
+    expects: twelve of sixty-four shapes, drawn twice a day, put a shape a
+    reader saw yesterday back on the page more often than not. Excluding the
+    last draw's frames makes consecutive redraws share no shape at all, and
+    excluding the last four days of lines means a returning reader meets
+    sentences rather than reruns. Both fall back to the full set rather than
+    fail, because a masthead with a hole in it is worse than a repeat.
     """
-    frames = _RNG.sample(FRAMES, k=min(count, len(FRAMES)))
-    return [GREETING] + [frame.draw() for frame in frames]
+    avoid_shapes = set(avoid_shapes)
+    avoid_lines = set(avoid_lines)
+    pool = [frame for frame in FRAMES if frame.emoji not in avoid_shapes]
+    if len(pool) < count:
+        pool = list(FRAMES)
+    frames = _RNG.sample(pool, k=min(count, len(pool)))
+    return [GREETING] + [frame.draw(avoid_lines) for frame in frames]

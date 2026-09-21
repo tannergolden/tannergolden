@@ -139,7 +139,7 @@ def test_no_line_can_break_out_of_the_svg_or_the_page():
 
 
 def test_the_greeting_types_once_and_the_rest_loop_without_it(repo):
-    """A greeting that greets the same reader every nineteen seconds is a tic.
+    """A greeting that greets the same reader every minute is a tic.
 
     Two timelines: the greeting runs on its own with repeatCount="1" and
     then stays gone, and everything else loops among itself, beginning where
@@ -147,21 +147,24 @@ def test_the_greeting_types_once_and_the_rest_loop_without_it(repo):
     """
     lines = masthead.lines()
     svg = cards.masthead_svg(lines, "dark")
-    slot = cards.TYPE_SECONDS + cards.HOLD_SECONDS + cards.ERASE_SECONDS
+    intro = cards.masthead_slot(lines[0])
 
     once = re.findall(r'dur="([\d.]+)s" repeatCount="1"', svg)
     assert once, "the greeting never stops repeating"
-    assert all(float(d) == round(slot, 1) for d in once), once
+    assert all(float(d) == round(intro, 2) for d in once), once
 
     loop = set(re.findall(r'begin="([\d.]+)s" dur="([\d.]+)s" repeatCount="indefinite"', svg))
     assert len(loop) == 1, loop
     begin, dur = loop.pop()
-    assert float(begin) == round(slot, 1), "the loop must start where the greeting ends"
-    assert float(dur) == round(slot * (len(lines) - 1), 1)
+    assert float(begin) == round(intro, 2), "the loop must start where the greeting ends"
+    assert float(dur) == round(cards.masthead_loop_seconds(lines), 2)
 
-    # The greeting's own clip is the one that does not repeat.
-    greeting_clip = svg.split('<clipPath id="c0">')[1].split("</clipPath>")[0]
+    # The greeting's own clip is the one that does not repeat, and it freezes
+    # closed rather than reverting to the width it carries for renderers
+    # that never animated it at all.
+    greeting_clip = svg.split('<clipPath id="c0-0">')[1].split("</clipPath>")[0]
     assert 'repeatCount="1"' in greeting_clip and "begin=" not in greeting_clip
+    assert 'fill="freeze"' in greeting_clip
 
 
 def test_the_greeting_is_always_first_and_never_drawn_twice():
@@ -214,21 +217,23 @@ def test_the_reveal_steps_one_cell_at_a_time(repo):
     assert svg.count("<animate") == svg.count('calcMode="discrete"')
 
 
-def test_the_reveal_reaches_the_end_of_the_longest_line(repo):
+def test_the_reveal_reaches_the_end_of_every_row(repo):
     """The bug a screenshot found: the last character never finished typing.
 
-    The clip rectangle is anchored at x=0 and the text starts at x=16, so a
-    width measured from the text's own left edge stopped one and a half
-    characters short of the end. Every line has to be fully uncovered at the
-    top of its hold.
+    The clip rectangle is anchored at x=0 and the text starts beyond the
+    prompt, so a width measured from the text's own left edge stopped a
+    character and a half short of the end. Every row has to be fully
+    uncovered at the top of its hold, and the image has to be wide enough to
+    hold what the clip uncovers.
     """
+    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
+    left = cards.MASTHEAD_TEXT_X + cards.PROMPT_CELLS * cell
     for line in (max(masthead.every_line(), key=masthead.cells), masthead.GREETING):
         svg = cards.masthead_svg([line])
-        widths = [float(w) for w in re.search(r'values="([^"]+)" keyTimes', svg).group(1).split(";")]
-        ends_at = cards.MASTHEAD_TEXT_X + masthead.cells(line) * cards.MASTHEAD_FONT_SIZE * 0.61
-        assert max(widths) + 0.5 >= ends_at, f"{max(widths)} < {ends_at}: {line}"
-        # And the image is wide enough to hold what the clip uncovers.
-        assert int(re.search(r'width="(\d+)"', svg).group(1)) >= ends_at
+        for row, (_times, widths) in zip(cards.wrap(line), _clip_frames(svg)):
+            ends_at = left + masthead.cells(row) * cell
+            assert max(widths) + 0.5 >= ends_at, f"{max(widths)} < {ends_at}: {row}"
+            assert int(re.search(r'<svg[^>]*width="(\d+)"', svg).group(1)) >= ends_at
 
 
 def test_nothing_is_drawn_behind_the_text(repo):
@@ -266,8 +271,10 @@ def test_the_glow_degrades_rather_than_breaks(repo):
     assert "feGaussianBlur" in svg
     # The text is a child of the filtered group, so a stripped filter leaves
     # the glyphs where they are rather than removing them.
-    body = svg.split('<g filter="url(#g)">', 1)[1]
-    assert body.count("<text") == len(masthead.lines())
+    lines = masthead.lines()
+    body = cards.masthead_svg(lines).split('<g class="anim" filter="url(#g)">', 1)[1]
+    rows = sum(len(cards.wrap(line)) for line in lines)
+    assert body.count("<text") == rows + 1  # every row, and the prompt
 
 
 def test_the_region_switches_with_the_readers_scheme(repo):
@@ -297,7 +304,254 @@ def test_the_alt_text_survives_a_render_that_drew_nothing(repo):
     assert " / ".join(lines) in cards.masthead_region()
 
 
-# --- what the next draw remembers ---------------------------------
+# --- how it types --------------------------------------------------------------
+
+def _clip_frames(svg: str) -> list:
+    """Every clip animation in the file, as (times, widths)."""
+    found = re.findall(
+        r'<animate attributeName="width" values="([^"]+)" keyTimes="([^"]+)"', svg)
+    return [([float(t) for t in times.split(";")], [float(w) for w in widths.split(";")])
+            for widths, times in found]
+
+
+def test_the_keyframes_are_ordered_and_complete(repo):
+    """SMIL requires keyTimes to increase, start at 0 and end at 1.
+
+    Two bugs have hidden here. A rounding error put one mark a femtosecond
+    before the one ahead of it; writing four decimal places then collapsed
+    two distinct moments into one string. Either leaves a browser with an
+    animation it refuses to run at all, and the image goes blank.
+    """
+    lines = masthead.lines()
+    for scheme in cards.MASTHEAD_INK:
+        svg = cards.masthead_svg(lines, scheme)
+        frames = _clip_frames(svg)
+        assert len(frames) == sum(len(cards.wrap(line)) for line in lines)
+        for times, widths in frames:
+            assert len(times) == len(widths)
+            assert times[0] == 0.0 and times[-1] == 1.0, (times[0], times[-1])
+            assert all(b > a for a, b in zip(times, times[1:])), "keyTimes went backwards"
+
+
+def test_every_animation_in_the_file_agrees_on_its_own_timing(repo):
+    """The cursor rides its line's keyTimes; a list of a different length
+    would slide it away from the text it is supposed to follow.
+
+    One clip per row, one cursor per line: the cursor moves down a row when
+    the line wraps rather than each row keeping one of its own.
+    """
+    lines = masthead.lines()
+    svg = cards.masthead_svg(lines)
+    widths = re.findall(r'attributeName="width" values="([^"]+)" keyTimes="([^"]+)"', svg)
+    xs = re.findall(r'attributeName="x" values="([^"]+)" keyTimes="([^"]+)"', svg)
+    ys = re.findall(r'attributeName="y" values="([^"]+)" keyTimes="([^"]+)"', svg)
+    ops = re.findall(r'attributeName="opacity" values="([^"]+)" keyTimes="([^"]+)"', svg)
+
+    assert len(widths) == sum(len(cards.wrap(line)) for line in lines)
+    assert len(xs) == len(ys) == len(ops) == len(lines)
+    for (values, times), (_, other), (_, third) in zip(xs, ys, ops):
+        assert times == other == third
+        assert len(values.split(";")) == len(times.split(";"))
+
+    # And every row of a line rides that same line's timing.
+    at = 0
+    for line, (_, cursor_times) in zip(lines, xs):
+        for _ in cards.wrap(line):
+            assert widths[at][1] == cursor_times
+            at += 1
+
+
+def test_every_line_types_at_the_same_speed(repo):
+    """The bug in the model this replaced: one fixed duration for every line.
+
+    A seventeen cell greeting and a forty nine cell line both took 1.6
+    seconds, so one crawled and the other blurred past at three times the
+    speed. A terminal has one cadence.
+    """
+    for line in (masthead.GREETING, max(masthead.every_line(), key=masthead.cells)):
+        expected = cards.TYPE_CADENCE * masthead.cells(line)
+        assert abs(sum(cards._rhythm(line, expected)) - expected) < 1e-9
+
+
+def test_a_longer_line_is_held_longer_than_a_short_one(repo):
+    """Reading time is length times a rate plus a constant, so the hold is too."""
+    short = min(masthead.every_line(), key=masthead.cells)
+    long = max(masthead.every_line(), key=masthead.cells)
+    assert cards.masthead_slot(long) > cards.masthead_slot(short) * 1.3
+    # But no line owns the plate so long that a visitor gives up on it.
+    assert cards.masthead_slot(long) < 8.0
+
+
+def test_the_loop_comes_round_inside_a_first_visit(repo):
+    """Median time on a page a visitor has not seen before is under a minute.
+
+    The whole set has to have been typed by then, or the lines at the bottom
+    of the draw are lines nobody ever reads. Each line is held for as long as
+    its own length earns, so the loop varies with what was drawn: the median
+    is what has to clear the bar, and the worst set the frames can produce is
+    what has to stay inside a reader's patience.
+    """
+    import statistics
+
+    loops = [cards.masthead_loop_seconds(masthead.lines()) for _ in range(200)]
+    assert statistics.median(loops) < 60.0, statistics.median(loops)
+    assert min(loops) > 35.0, "the set goes past too fast to read"
+
+    longest = sorted((max(masthead.cells(line) for line in frame.every())
+                      for frame in masthead.FRAMES), reverse=True)
+    worst = sum(cards.masthead_slot("x" * c)
+                for c in longest[:masthead.LINES_PER_MASTHEAD])
+    assert worst < 75.0, worst
+
+
+def test_the_typing_is_not_a_metronome_but_is_the_same_every_time(repo):
+    """Human rhythm, drawn from the line's own text rather than from chance.
+
+    Drawn from chance, a run that changed nothing would still rewrite both
+    images, and every redraw would be a commit whether or not the words moved.
+    """
+    line = "\U0001F680 Shipping a change behind a gate"
+    total = cards.TYPE_CADENCE * masthead.cells(line)
+    once = cards._rhythm(line, total)
+    assert once == cards._rhythm(line, total), "the same line typed two different ways"
+    assert once != cards._rhythm(line + " again", total)
+    beats = [d for d in once if d > 0]
+    assert max(beats) > min(beats) * 1.5, "this is a metronome"
+
+
+def test_an_emoji_never_rests_half_revealed(repo):
+    """An emoji is two cells wide and one keystroke.
+
+    Stepping through the middle of one leaves the clip resting on half a
+    face for a tenth of a second, which is the sort of thing a reader sees
+    without being able to say what is wrong.
+    """
+    line = "\U0001F680 Shipping a change behind a gate"
+    delays = cards._rhythm(line, cards.TYPE_CADENCE * masthead.cells(line))
+    assert delays[1] == 0.0, "the second cell of the emoji waits its own turn"
+    assert delays[0] > 0.0
+
+
+# --- how it degrades -----------------------------------------------------------
+
+def test_a_renderer_with_no_animation_still_shows_the_greeting(repo):
+    """SMIL is a browser feature, not a universal one.
+
+    Every clip starts at width zero, so a renderer that ignores the
+    animations shows an empty box. The greeting's rectangle therefore
+    carries its full width as a plain attribute, which an animation
+    overrides rather than supplies, and freezes closed when it is done.
+    """
+    lines = masthead.lines()
+    svg = cards.masthead_svg(lines)
+    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
+    left = cards.MASTHEAD_TEXT_X + cards.PROMPT_CELLS * cell
+
+    for row, text in enumerate(cards.wrap(lines[0])):
+        clip = svg.split(f'<clipPath id="c0-{row}">')[1].split("</clipPath>")[0]
+        static = float(re.search(r'<rect x="0" y="0" width="([\d.]+)"', clip).group(1))
+        opened = left + masthead.cells(text) * cell
+        assert static + 0.05 >= opened, f"{static} < {opened}: a still renderer shows nothing"
+
+    for index in range(1, len(lines)):
+        for row in range(len(cards.wrap(lines[index]))):
+            clip = svg.split(f'<clipPath id="c{index}-{row}">')[1].split("</clipPath>")[0]
+            assert '<rect x="0" y="0" width="0"' in clip, "a later line would overlap the first"
+
+
+def test_a_reader_who_asked_for_less_motion_gets_a_still_line(repo):
+    """Text that types itself is exactly the motion that setting is about."""
+    for scheme in cards.MASTHEAD_INK:
+        svg = cards.masthead_svg(masthead.lines(), scheme)
+        assert "@media (prefers-reduced-motion:reduce)" in svg
+        assert ".anim{display:none}" in svg and ".still{display:inline}" in svg
+        still = svg.split('<g class="still"')[1].split("</g>")[0]
+        assert masthead.GREETING in still
+        assert "clip-path" not in still and "<animate" not in still
+
+
+def test_the_prompt_is_always_there_and_never_moves(repo):
+    """It is what says terminal before a character has been typed."""
+    for scheme in cards.MASTHEAD_INK:
+        svg = cards.masthead_svg(masthead.lines(), scheme)
+        prompt = f'<text class="p" x="{cards.MASTHEAD_TEXT_X}"'
+        assert prompt in svg
+        drawn = svg.split(prompt)[1].split("</text>")[0]
+        assert cards.MASTHEAD_PROMPT in drawn
+        assert "<animate" not in drawn and "clip-path" not in drawn
+
+
+def test_the_typed_text_starts_beyond_the_prompt(repo):
+    """The clip is anchored at x=0, so every width it animates through has to
+    carry the inset and the prompt both. Missing the inset cut the last
+    character and a half off the longest line once already."""
+    line = max(masthead.every_line(), key=masthead.cells)
+    svg = cards.masthead_svg([line])
+    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
+    left = cards.MASTHEAD_TEXT_X + cards.PROMPT_CELLS * cell
+
+    assert f'<text x="{left:.1f}"' in svg or f'<text x="{left:.0f}"' in svg, left
+    for row, (_times, widths) in zip(cards.wrap(line), _clip_frames(svg)):
+        assert max(widths) + 0.05 >= left + masthead.cells(row) * cell
+        assert int(re.search(r'<svg[^>]*width="(\d+)"', svg).group(1)) >= max(widths)
+
+
+# --- the cursor ----------------------------------------------------------------
+
+def test_the_cursor_is_solid_while_it_types_and_blinks_only_when_it_waits(repo):
+    """A real cursor does not blink mid-word. It blinks when nothing is happening."""
+    line = "\U0001F680 Shipping a change behind a gate"
+    svg = cards.masthead_svg([line])
+    times, _widths = _clip_frames(svg)[0]
+    lit = [int(v) for v in
+           re.search(r'attributeName="opacity" values="([^"]+)"', svg).group(1).split(";")]
+
+    slot = cards.masthead_slot(line)
+    typing = cards.TYPE_CADENCE * masthead.cells(line) / slot
+    holding = typing + (cards.HOLD_BASE + cards.HOLD_PER_CELL * masthead.cells(line)) / slot
+
+    during_typing = [on for at, on in zip(times, lit) if 0 < at < typing]
+    assert during_typing and all(during_typing), "the cursor blinked mid-word"
+    during_erase = [on for at, on in zip(times, lit) if holding < at < 0.999]
+    assert during_erase and all(during_erase), "the cursor blinked while erasing"
+    while_waiting = [on for at, on in zip(times, lit) if typing < at < holding]
+    assert 0 in while_waiting and 1 in while_waiting, "the cursor never blinked at all"
+    assert lit[-1] == 0, "the cursor outlives its line"
+
+
+def test_the_cursor_rides_the_end_of_what_has_been_typed(repo):
+    """Behind the text it is a smudge; far ahead of it, it belongs to nothing."""
+    svg = cards.masthead_svg([masthead.GREETING])
+    _times, widths = _clip_frames(svg)[0]
+    xs = [float(v) for v in
+          re.search(r'attributeName="x" values="([^"]+)"', svg).group(1).split(";")]
+    assert len(xs) == len(widths)
+    assert all(0 < x - w <= 2 for x, w in zip(xs, widths)), "the cursor left the text"
+
+
+# --- lighting ------------------------------------------------------------------
+
+def test_the_bloom_has_a_core_and_a_halo_rather_than_one_smear(repo):
+    """One blur merged with itself is a blurry copy of the text.
+
+    A phosphor has a hard centre and soft light well beyond it, which is two
+    passes at different radii with the wide one dimmed.
+    """
+    svg = cards.masthead_svg(masthead.lines(), "dark")
+    radii = [float(r) for r in re.findall(r'stdDeviation="([\d.]+)"', svg)]
+    assert len(radii) == 2, radii
+    assert max(radii) > 3 * min(radii), "both passes are the same blur"
+    # The halo is dimmed, or it reads as a second copy rather than as light.
+    assert re.search(r'feColorMatrix[^>]*0 0 0 0\.\d+ 0"', svg), "the halo is not dimmed"
+
+
+def test_the_filter_keeps_its_colour(repo):
+    """The default filter space is linearRGB, which turns a saturated green
+    bloom into a pale grey one. This is the one attribute that stops it."""
+    assert 'color-interpolation-filters="sRGB"' in cards.masthead_svg(masthead.lines(), "dark")
+
+
+# --- what the next draw remembers ------------------------------------------------
 
 def test_two_draws_in_a_row_share_no_shape(repo):
     """Twelve of sixty-four shapes, twice a day, puts yesterday's shape back
@@ -326,3 +580,157 @@ def test_the_memory_never_starves_the_draw(repo):
     assert len(masthead.lines(avoid_shapes=everything)) == masthead.LINES_PER_MASTHEAD + 1
     assert len(masthead.lines(avoid_lines=list(masthead.every_line()))) \
         == masthead.LINES_PER_MASTHEAD + 1
+
+
+def test_the_memory_is_written_beside_the_image_and_stays_bounded(repo):
+    """The image and the record of how it was drawn belong to one commit, so
+    they can never disagree about what the page is showing."""
+    seen = []
+    for _ in range(12):
+        shapes, recent = cards.masthead_memory()
+        drawn = masthead.lines(avoid_shapes=shapes, avoid_lines=recent)
+        cards.write_masthead(drawn)
+        seen.append(drawn)
+        assert cards.masthead_memory()[0] == masthead.shapes_in(drawn)
+        assert len(cards.masthead_memory()[1]) <= masthead.memory_size()
+
+    # Across more draws than the memory holds, nothing repeats inside it.
+    for earlier, later in zip(seen, seen[1:]):
+        assert not set(masthead.shapes_in(earlier)) & set(masthead.shapes_in(later))
+    window = masthead.MEMORY_DRAWS
+    for index in range(window, len(seen)):
+        back = {line for draw in seen[index - window:index] for line in draw[1:]}
+        assert not back & set(seen[index][1:]), "a line came back inside the window"
+
+
+def test_the_committed_file_says_how_long_its_loop_takes(repo):
+    """A number somebody can check against the reason the schedule exists."""
+    lines = masthead.lines()
+    cards.write_masthead(lines)
+    state = cards.load_masthead_state()
+    assert state["lines"] == lines
+    assert abs(state["loop_seconds"] - cards.masthead_loop_seconds(lines)) < 0.1
+
+
+# --- reading it on a phone -------------------------------------------------------
+
+# The narrowest column a README gets in practice: a 360px phone viewport
+# once GitHub's own gutters are taken out.
+PHONE_COLUMN = 328
+
+
+def _widest_image() -> float:
+    """The widest image the generator can produce, in CSS pixels."""
+    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
+    return cards.MASTHEAD_TEXT_X * 2 + (cards.PROMPT_CELLS + cards.WRAP_CELLS) * cell
+
+
+def test_every_line_the_generator_can_draw_fits_two_rows(repo):
+    """The promise the whole wrap rests on, checked over all thousand.
+
+    Three rows would make the image half again as tall for no gain, and the
+    cap is chosen to be the last value where none of them needs one: at
+    twenty four cells, twelve lines spill onto a third row.
+    """
+    for line in masthead.every_line():
+        rows = cards.wrap(line)
+        assert len(rows) <= 2, f"{len(rows)} rows: {line}"
+        for row in rows:
+            assert masthead.cells(row) <= cards.WRAP_CELLS, row
+
+
+def test_the_masthead_is_readable_on_a_phone_without_being_shrunk(repo):
+    """The bug a screenshot found, and the reason this wraps at all.
+
+    GitHub scales a README image down to the column. One row of forty nine
+    cells is a 570 pixel image, which arrives on a phone at 0.6 scale and an
+    effective font of eleven pixels: a green smear. Wrapping holds the image
+    narrow enough that almost nothing is lost.
+    """
+    scale = min(1.0, PHONE_COLUMN / _widest_image())
+    assert cards.MASTHEAD_FONT_SIZE * scale >= 16.0, (
+        f"{cards.MASTHEAD_FONT_SIZE * scale:.1f}px on a phone is too small to read")
+
+    # And the real draws, which are narrower than the worst case.
+    for _ in range(20):
+        svg = cards.masthead_svg(masthead.lines())
+        width = int(re.search(r'<svg[^>]*width="(\d+)"', svg).group(1))
+        assert width <= _widest_image() + 1, width
+        assert cards.MASTHEAD_FONT_SIZE * min(1.0, PHONE_COLUMN / width) >= 16.0
+
+
+def test_wrapping_loses_nothing_and_invents_nothing(repo):
+    """A wrap that drops or duplicates a word is a wrap nobody would catch."""
+    for line in masthead.every_line():
+        assert " ".join(cards.wrap(line)) == line
+
+
+def test_the_wrap_is_balanced_rather_than_greedy(repo):
+    """Greedy fills the first row and leaves the second holding two words,
+    which reads as a mistake rather than as a wrapped line."""
+    crowded = 0
+    for line in masthead.every_line():
+        rows = cards.wrap(line)
+        if len(rows) < 2:
+            continue
+        shortest, longest = min(map(masthead.cells, rows)), max(map(masthead.cells, rows))
+        if longest > shortest * 2:
+            crowded += 1
+    assert crowded == 0, f"{crowded} lines wrapped lopsidedly"
+
+
+def test_a_wrapped_row_lines_up_under_the_text_and_not_the_prompt(repo):
+    """The prompt belongs to the line, not to each row of it."""
+    line = max(masthead.every_line(), key=masthead.cells)
+    svg = cards.masthead_svg([line])
+    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
+    left = cards.MASTHEAD_TEXT_X + cards.PROMPT_CELLS * cell
+
+    assert svg.count(cards.MASTHEAD_PROMPT) == 2, "one prompt animated, one still"
+    xs = set(re.findall(r'<text x="([\d.]+)" y="\d+" clip-path=', svg))
+    assert xs == {f"{left:.1f}"}, xs
+
+
+def test_the_rows_sit_on_their_own_baselines(repo):
+    """Two rows on one baseline is one row of mush."""
+    line = max(masthead.every_line(), key=masthead.cells)
+    svg = cards.masthead_svg([line])
+    ys = [int(y) for y in re.findall(r'<text x="[\d.]+" y="(\d+)" clip-path=', svg)]
+    assert len(ys) == len(cards.wrap(line)) == 2
+    assert ys[1] - ys[0] == cards.ROW_HEIGHT
+    assert int(re.search(r'<svg[^>]*height="(\d+)"', svg).group(1)) > ys[-1]
+
+
+def test_the_cursor_drops_a_row_when_the_line_wraps(repo):
+    """A terminal cursor follows the text onto the next row. This one has to
+    as well, or it sits at the end of the first row while the second types."""
+    line = max(masthead.every_line(), key=masthead.cells)
+    svg = cards.masthead_svg([line])
+    ys = [int(v) for v in
+          re.search(r'attributeName="y" values="([^"]+)"', svg).group(1).split(";")]
+    assert len(set(ys)) == 2, "the cursor never left the first row"
+    assert max(ys) - min(ys) == cards.ROW_HEIGHT
+    # It goes down once and comes back once, rather than flickering between.
+    moves = sum(1 for a, b in zip(ys, ys[1:]) if a != b)
+    assert moves == 2, moves
+
+
+def test_only_one_cursor_is_ever_lit(repo):
+    """Thirteen lines share one loop. Two cursors on screen at once is the
+    kind of thing a reader sees without being able to say what is wrong."""
+    lines = masthead.lines()
+    svg = cards.masthead_svg(lines)
+    tracks = re.findall(r'attributeName="opacity" values="([^"]+)" keyTimes="([^"]+)"', svg)
+    assert len(tracks) == len(lines)
+
+    # The greeting runs on its own timeline before the loop begins, so the
+    # ones that can overlap are the looping lines.
+    loop = [([int(v) for v in values.split(";")], [float(t) for t in times.split(";")])
+            for values, times in tracks[1:]]
+    moments = sorted({t for _, times in loop for t in times})
+    for at in moments:
+        lit = 0
+        for values, times in loop:
+            held = max((i for i, t in enumerate(times) if t <= at), default=0)
+            lit += values[held]
+        assert lit <= 1, f"{lit} cursors lit at {at}"

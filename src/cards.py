@@ -19,7 +19,9 @@ already carries; the label is what makes them distinguishable, not the hue.
 from __future__ import annotations
 
 import hashlib
+import itertools
 import json
+import random
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -74,53 +76,264 @@ MASTHEAD_INK = {
     "light": "#067d17",  # 5.3:1 on white. Neon there is 1.4:1, invisible.
 }
 
-MASTHEAD_FONT_SIZE = 18
-MASTHEAD_HEIGHT = 52
+# Bigger than it looks like it should be, and that is the wrapping paying
+# for itself. Once a row fits a phone's column without scaling, the font and
+# the image grow together and the effective size on a phone barely moves:
+# 18px in a 339px image lands at 17.4 on a 328px column, 22px in a 408px one
+# lands at 17.7. The desktop reader is the one who notices, and they get a
+# masthead with presence rather than a caption.
+MASTHEAD_FONT_SIZE = 22
 
-# Where the first glyph starts. The clip rectangle is anchored at x=0, so
-# every width it animates through has to carry this, or the last character
-# of the longest line is cut off and the line never finishes typing.
+# A terminal's line spacing, and enough air above and below that the bloom
+# has somewhere to go. Both follow the font rather than sitting beside it,
+# so changing one number changes the block.
+ROW_HEIGHT = round(MASTHEAD_FONT_SIZE * 1.45)
+PAD_Y = round(MASTHEAD_FONT_SIZE * 0.45)
+
+# THE NUMBER THAT DECIDES WHETHER THIS IS READABLE ON A PHONE.
+#
+# GitHub scales a README image down to the column and the column on a phone
+# is about 330 to 360 CSS pixels. A forty nine cell line on one row is a 570
+# pixel image, which arrives at 0.6 scale and an effective font of eleven
+# pixels: a green smear, which is what it was. Wrapping at twenty six cells
+# makes the widest image 339 pixels, which needs no scaling at all on a
+# phone and renders at its full size.
+#
+# Twenty six is also the last value where every line in the generator fits
+# on two rows. Twenty four sends twelve of them onto three.
+WRAP_CELLS = 26
+
+# Where the prompt sits. The clip rectangle is anchored at x=0, so every
+# width it animates through has to carry this inset AND the prompt, or the
+# end of a row is cut off and it never finishes typing. This page has
+# shipped that bug once already.
 MASTHEAD_TEXT_X = 16
 
-# Type, hold, erase. One slot per line, and the whole loop is their sum, so
-# four lines come to 18.8 seconds and a visitor sees most of them.
-TYPE_SECONDS, HOLD_SECONDS, ERASE_SECONDS = 1.6, 2.2, 0.9
+# The prompt glyph and the space after it. It never animates and it is never
+# clipped: it is what says "terminal" before a single character is typed,
+# what gives the cursor somewhere to be born, and what a renderer that does
+# not animate at all still has to show. It sits on the first row only, and
+# a wrapped row lines up under the text rather than under the prompt.
+MASTHEAD_PROMPT = "\u276f"
+PROMPT_CELLS = 2
+
+# How loud the prompt is, per scheme. Neon wants holding back or it competes
+# with the words; the muted green the light variant is stuck with needs the
+# opposite. It is furniture either way, not content, which is why it is
+# allowed to sit below the contrast bar the text has to clear.
+PROMPT_OPACITY = {"dark": 0.5, "light": 0.72}
+
+# One cell as a fraction of the em. SF Mono, Menlo and DejaVu Sans Mono all
+# advance 0.600 to 0.602; Consolas advances 0.550. This is deliberately wider
+# than any of them. A cell that is too narrow makes the clip lag the glyphs
+# and the end of a row never arrives; too wide only runs the reveal
+# harmlessly ahead of the text.
+CELL_RATIO = 0.61
+
+# Typing is a constant cadence, because a terminal has one. Giving every
+# line the same fixed duration whatever its length made a short line crawl
+# and a long one blur past at three times the speed.
+TYPE_CADENCE = 0.050    # seconds per cell typed: twenty cells a second
+ERASE_CADENCE = 0.018   # and per cell erased, which is a wipe, not a performance
+ERASE_STEP = 3          # cells per erase mark: a third of the keyframes, same motion
+
+# The pause once a line is complete: a beat to notice it, plus reading time.
+# Two hundred words a minute puts a six word line at about 1.8 seconds, so a
+# line twice as long earns twice the pause rather than the same one.
+HOLD_BASE = 0.95
+HOLD_PER_CELL = 0.040
+
+# Half a blink. The cursor is SOLID while it types and erases, the way a
+# real one is, and blinks only while a finished line sits waiting to be read.
+BLINK_SECONDS = 0.5
+
+# How finely a keyTime is written. Four places of a minute-long cycle is
+# three and a half milliseconds, finer than a frame at 120Hz. Marks are
+# rounded to it BEFORE they are compared, because SMIL requires keyTimes to
+# increase and two moments a femtosecond apart round to one string.
+TIME_PLACES = 4
+
+# Skin tone modifiers. They render as part of the emoji before them and
+# should cost no keystroke of their own.
+_MODIFIERS = range(0x1F3FB, 0x1F400)
 
 
-def _reveal(index: int, line: str, slot: float, cycle: float, cell: float) -> tuple:
-    """Discrete keyframes that step one cell at a time, like a real terminal.
+def _num(value: float, places: int = TIME_PLACES) -> str:
+    """The shortest honest spelling of a number, for a file emitted by the thousand."""
+    text = f"{value:.{places}f}".rstrip("0").rstrip(".")
+    return text or "0"
+
+
+def wrap(line: str, cap: int = WRAP_CELLS) -> list:
+    """The fewest rows that fit the cap, then the evenest split of that many.
+
+    Evenest, not greedy. Greedy wrapping fills the first row and leaves the
+    second holding two words, which reads as a mistake rather than as a
+    wrapped line. Balancing means searching the split points, which is free
+    at this size: no line here has more than nine words.
+    """
+    words = line.split(" ")
+    for rows in range(1, len(words) + 1):
+        best = None
+        for cuts in itertools.combinations(range(1, len(words)), rows - 1):
+            bounds = (0, *cuts, len(words))
+            groups = [" ".join(words[a:b]) for a, b in zip(bounds, bounds[1:])]
+            widest = max(masthead.cells(group) for group in groups)
+            if widest <= cap and (best is None or widest < best[0]):
+                best = (widest, groups)
+        if best:
+            return best[1]
+    return [line]
+
+
+def _rhythm(line: str, total: float) -> list:
+    """Per-cell delays that sum to `total` but do not march.
+
+    Nobody types to a metronome: there is a beat before a new word and a
+    longer one after a full stop, and no two keystrokes are the same length.
+    The variation is drawn from the line's own text rather than from chance,
+    so the same line always types the same way and a run that redrew nothing
+    produces a file that changed nothing.
+
+    An emoji is two cells wide and one keystroke. Its second cell arrives in
+    no time at all, so the clip never comes to rest through the middle of a
+    glyph showing half a face.
+    """
+    # Not a secret: a seed taken from the text so the same line always types
+    # the same way. SystemRandom here would rewrite both images on every run
+    # and commit a diff that says nothing.
+    rng = random.Random(  # noqa: S311
+        int(hashlib.sha256(line.encode("utf-8")).hexdigest()[:8], 16))
+    weights, previous = [], ""
+    for char in line:
+        if char == "️":
+            continue
+        if ord(char) in _MODIFIERS:  # part of the emoji before it
+            weights += [0.0, 0.0]
+            continue
+        weight = rng.uniform(0.74, 1.30)
+        if previous == " ":
+            weight *= 1.45
+        elif previous in ",.!?:;":
+            weight *= 2.10
+        weights.append(weight)
+        if ord(char) > 0x2100:
+            weights.append(0.0)  # the second cell of the pair, arriving with the first
+        previous = char
+    spread = sum(weights)
+    scale = total / spread if spread else 0.0
+    return [weight * scale for weight in weights]
+
+
+def typed_cells(line: str) -> int:
+    """Cells actually typed, which is the line minus the spaces a wrap ate."""
+    return sum(masthead.cells(row) for row in wrap(line))
+
+
+def masthead_slot(line: str) -> float:
+    """How long one line owns the plate: typed, read, then wiped."""
+    return (TYPE_CADENCE + HOLD_PER_CELL + ERASE_CADENCE) * typed_cells(line) + HOLD_BASE
+
+
+def _reveal(rows: list, start: float, slot: float, cycle: float, cell: float) -> tuple:
+    """Discrete marks for one line, across however many rows it wrapped onto.
+
+    One walk for the whole line. Each row clips the same walk, offset by the
+    cells the rows above it already hold, so a row that has not been reached
+    shows nothing and a row already passed stays full. The cursor belongs to
+    the line rather than to a row: it moves down when the walk crosses a
+    break, which is what a terminal cursor does.
 
     A rectangle whose width grows continuously reveals letters through their
     own middles, which reads as a wipe rather than as typing. Stepping it by
-    whole cells is what makes it look typed, and `calcMode="discrete"` is
-    what holds each step until the next one.
-
-    Every width includes the left inset, because the rectangle starts at the
-    edge of the image and the text starts inside it.
+    whole cells is what makes it look typed, and `calcMode="discrete"` holds
+    each step until the next one.
     """
-    width = masthead.cells(line)
-    start = index * slot
-    marks = [(0.0, 0.0)]
+    lengths = [masthead.cells(row) for row in rows]
+    offsets, running = [], 0
+    for length in lengths:
+        offsets.append(running)
+        running += length
+    total = running
+    typing = TYPE_CADENCE * total
+    holding = HOLD_BASE + HOLD_PER_CELL * total
+    left = MASTHEAD_TEXT_X + PROMPT_CELLS * cell
 
-    for step in range(width + 1):  # 0 cells through all of them
-        marks.append((start + TYPE_SECONDS * step / max(width, 1),
-                      MASTHEAD_TEXT_X + step * cell))
-    marks.append((start + TYPE_SECONDS + HOLD_SECONDS, MASTHEAD_TEXT_X + width * cell))
-    for step in range(width, -1, -1):  # and back down, the same way
-        marks.append((start + TYPE_SECONDS + HOLD_SECONDS
-                      + ERASE_SECONDS * (width - step) / max(width, 1),
-                      MASTHEAD_TEXT_X + step * cell))
-    marks.append((start + slot, 0.0))
-    marks.append((cycle, 0.0))
+    def shot(step: int) -> tuple:
+        """Where every row stands once `step` cells of the line have been typed."""
+        widths = [left + min(max(step - offset, 0), length) * cell
+                  for offset, length in zip(offsets, lengths)]
+        here = max(index for index, offset in enumerate(offsets) if offset <= step)
+        return widths, widths[here] + 1, here
 
-    times, widths = [], []
-    for time, value in marks:
-        moment = min(max(time / cycle, 0.0), 1.0)
+    blank = ([0.0] * len(rows), 1.0, 0, 0)
+    marks = [(0.0, *blank)]
+
+    # The cursor arrives at the prompt, then one cell per keystroke.
+    at = start
+    marks.append((at, *shot(0), 1))
+    for step, delay in enumerate(_rhythm("".join(rows), typing), start=1):
+        at += delay
+        marks.append((at, *shot(step), 1))
+
+    # The line sits and is read. Only here does the cursor blink.
+    settled, dark = start + typing, 0
+    widths, tip, here = shot(total)
+    marks.append((settled, widths, tip, here, 1))
+    blink = settled + BLINK_SECONDS
+    while blink < settled + holding:
+        marks.append((blink, widths, tip, here, dark))
+        blink, dark = blink + BLINK_SECONDS, 1 - dark
+
+    # And back down, faster, three cells at a time.
+    erased = settled + holding
+    for index, step in enumerate(range(total, -1, -ERASE_STEP)):
+        marks.append((erased + ERASE_CADENCE * ERASE_STEP * index, *shot(step), 1))
+    marks.append((erased + ERASE_CADENCE * total, *shot(0), 1))
+    marks.append((start + slot, *blank))
+    marks.append((cycle, *blank))
+
+    times, seen = [], []
+    for moment, widths, tip, here, on in marks:
+        moment = round(min(max(moment / cycle, 0.0), 1.0), TIME_PLACES)
         if times and moment <= times[-1]:
+            # Two marks at one instant: the later one wins, which is what
+            # lets an emoji's two cells arrive together. The time itself is
+            # left alone, because keyTimes must not go backwards and a
+            # rounded sum can land a mark a hair before the one before it.
+            seen[-1] = (widths, tip, here, on)
             continue
         times.append(moment)
-        widths.append(value)
-    return times, widths, start / cycle, (start + slot) / cycle
+        seen.append((widths, tip, here, on))
+
+    per_row = [[frame[0][index] for frame in seen] for index in range(len(rows))]
+    return times, per_row, [f[1] for f in seen], [f[2] for f in seen], [f[3] for f in seen]
+
+
+def _glow() -> list:
+    """Two blurs and the source: a tight core and a wide halo.
+
+    One blur merged with itself is a smudge with a bright middle. A phosphor
+    has a hard centre and a soft bloom well beyond it, which is two passes at
+    different radii, the wide one dimmed so it reads as light in the air
+    rather than as a second, blurrier copy of the text.
+
+    `color-interpolation-filters="sRGB"` is not a detail. The default is
+    linearRGB, which turns a saturated green bloom into a pale grey one.
+    """
+    return [
+        '<filter id="g" x="-8%" y="-40%" width="116%" height="180%" '
+        'color-interpolation-filters="sRGB">',
+        f'<feGaussianBlur in="SourceGraphic" stdDeviation="{_num(MASTHEAD_FONT_SIZE * 0.045, 2)}" '
+        'result="core"/>',
+        f'<feGaussianBlur in="SourceGraphic" stdDeviation="{_num(MASTHEAD_FONT_SIZE * 0.20, 2)}" '
+        'result="wide"/>',
+        '<feColorMatrix in="wide" type="matrix" result="halo" '
+        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.55 0"/>',
+        "<feMerge><feMergeNode in=\"halo\"/><feMergeNode in=\"core\"/>"
+        "<feMergeNode in=\"core\"/><feMergeNode in=\"SourceGraphic\"/></feMerge>",
+        "</filter>",
+    ]
 
 
 def masthead_svg(lines: list, scheme: str = "dark") -> str:
@@ -131,104 +344,192 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
     background is transparent, so the glow is only drawn on the dark variant,
     where a bloom reads as neon rather than as a smudge.
 
+    IT WRAPS. A line that fits on one row is a 570 pixel image, and GitHub
+    scales that down to a phone's column until the text is eleven pixels of
+    green smear. Wrapping at twenty six cells makes the image narrow enough
+    to need no scaling at all, which is the difference between a masthead a
+    phone can read and one it cannot.
+
     THE GREETING RUNS ONCE. It is a greeting, and one that greets the same
-    reader again every nineteen seconds is a tic rather than a welcome. It
-    types on its own timeline with `repeatCount="1"` and then stays gone,
-    which leaves the drawn lines looping among themselves on a second
-    timeline that begins where the first one ends.
+    reader again every minute is a tic rather than a welcome. It types on its
+    own timeline with `repeatCount="1"` and then stays gone, which leaves the
+    drawn lines looping among themselves on a second timeline that begins
+    where the first one ends.
+
+    THREE WAYS TO READ IT. A browser types it. A renderer with no SMIL shows
+    the greeting complete, because the greeting's clip carries its full width
+    as a plain attribute and an animation is what overrides that rather than
+    what supplies it. A reader who has asked for less motion gets the same
+    still line, from a layer the media query swaps in.
     """
     lines = [line for line in lines if line] or [masthead.GREETING]
     ink = MASTHEAD_INK.get(scheme, MASTHEAD_INK["dark"])
-    cell = MASTHEAD_FONT_SIZE * 0.61
-    widest = max(masthead.cells(line) for line in lines)
-    width = int(widest * cell) + MASTHEAD_TEXT_X * 2
-    slot = TYPE_SECONDS + HOLD_SECONDS + ERASE_SECONDS
-    baseline = MASTHEAD_HEIGHT // 2 + MASTHEAD_FONT_SIZE // 3
+    cell = MASTHEAD_FONT_SIZE * CELL_RATIO
+    rows = [wrap(line) for line in lines]
+
+    tall = max(len(row) for row in rows)
+    height = tall * ROW_HEIGHT + PAD_Y * 2
+    widest = max(masthead.cells(row) for line in rows for row in line)
+    left = MASTHEAD_TEXT_X + PROMPT_CELLS * cell
+    width = int(left + widest * cell) + MASTHEAD_TEXT_X
+    baselines = [PAD_Y + ROW_HEIGHT * index + ROW_HEIGHT // 2 + MASTHEAD_FONT_SIZE // 3
+                 for index in range(tall)]
 
     # Two timelines. The first holds the greeting alone and never repeats;
-    # the second holds everything else and repeats for as long as the page
-    # is open, starting the moment the greeting has finished erasing.
-    looping = max(len(lines) - 1, 1)
-    intro_dur = f'dur="{slot:.1f}s" repeatCount="1"'
-    loop_dur = f'begin="{slot:.1f}s" dur="{slot * looping:.1f}s" repeatCount="indefinite"'
+    # the second holds everything else and repeats for as long as the page is
+    # open, starting the moment the greeting has finished erasing. Each line
+    # owns the plate for as long as its own length earns, so a short line no
+    # longer waits out a slot cut for a long one.
+    slots = [masthead_slot(line) for line in lines]
+    intro = slots[0]
+    loop = sum(slots[1:]) or intro
+    intro_dur = f'dur="{_num(intro, 2)}s" repeatCount="1" fill="freeze"'
+    loop_dur = f'begin="{_num(intro, 2)}s" dur="{_num(loop, 2)}s" repeatCount="indefinite"'
 
-    frames, durs = [], []
-    for index, line in enumerate(lines):
+    frames, durs, running = [], [], 0.0
+    for index in range(len(lines)):
         if index == 0:
-            frames.append(_reveal(0, line, slot, slot, cell))
+            frames.append(_reveal(rows[0], 0.0, intro, intro, cell))
             durs.append(intro_dur)
         else:
-            frames.append(_reveal(index - 1, line, slot, slot * looping, cell))
+            frames.append(_reveal(rows[index], running, slots[index], loop, cell))
             durs.append(loop_dur)
+            running += slots[index]
+
     out = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{MASTHEAD_HEIGHT}" '
-        f'viewBox="0 0 {width} {MASTHEAD_HEIGHT}" role="img" aria-labelledby="t">',
-        f"<title id=\"t\">{escape(' / '.join(lines))}</title>",
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}" role="img" aria-labelledby="t d">',
+        '<title id="t">A terminal typing out what this account is for</title>',
+        f"<desc id=\"d\">{escape(' / '.join(lines))}</desc>",
         "<defs>",
     ]
     if scheme == "dark":
-        out += [
-            '<filter id="g" x="-10%" y="-60%" width="120%" height="220%">',
-            '<feGaussianBlur stdDeviation="1.6" result="b"/>',
-            '<feMerge><feMergeNode in="b"/><feMergeNode in="b"/>'
-            '<feMergeNode in="SourceGraphic"/></feMerge>',
-            "</filter>",
-        ]
-    for index, (times, widths, _, _) in enumerate(frames):
-        key_times = ";".join(f"{t:.5f}" for t in times)
-        sizes = ";".join(f"{w:.1f}" for w in widths)
-        out.append(
-            f'<clipPath id="c{index}"><rect x="0" y="0" width="0" height="{MASTHEAD_HEIGHT}">'
-            f'<animate attributeName="width" values="{sizes}" keyTimes="{key_times}" '
-            f'calcMode="discrete" {durs[index]}/></rect></clipPath>'
-        )
+        out += _glow()
+    for index, (times, per_row, _, _, _) in enumerate(frames):
+        key_times = ";".join(_num(t) for t in times)
+        for row, widths in enumerate(per_row):
+            # The greeting's rectangles are open before anything animates
+            # them, so a renderer that ignores SMIL shows a finished greeting
+            # rather than an empty box. `fill="freeze"` is what stops the
+            # animation handing that same full width back at the end of its
+            # one run.
+            still = _num(left + masthead.cells(rows[0][row]) * cell, 1) if index == 0 else "0"
+            out.append(
+                f'<clipPath id="c{index}-{row}">'
+                f'<rect x="0" y="0" width="{still}" height="{height}">'
+                f'<animate attributeName="width" values="{";".join(_num(w, 1) for w in widths)}" '
+                f'keyTimes="{key_times}" calcMode="discrete" {durs[index]}/></rect></clipPath>'
+            )
     out.append("</defs>")
     out.append(
-        f'<style>text{{font-family:{FONT};font-size:{MASTHEAD_FONT_SIZE}px;'
-        f'fill:{ink};white-space:pre}}</style>'
+        "<style>"
+        f"text{{font-family:{FONT};font-size:{MASTHEAD_FONT_SIZE}px;fill:{ink};"
+        "white-space:pre;font-variant-ligatures:none;font-kerning:none;"
+        "text-rendering:geometricPrecision}"
+        f".p{{opacity:{PROMPT_OPACITY.get(scheme, 0.55)}}}"
+        ".still{display:none}"
+        "@media (prefers-reduced-motion:reduce){.anim{display:none}.still{display:inline}}"
+        "</style>"
     )
-    out.append('<g filter="url(#g)">' if scheme == "dark" else "<g>")
-    for index, line in enumerate(lines):
-        out.append(
-            f'<text x="{MASTHEAD_TEXT_X}" y="{baseline}" clip-path="url(#c{index})">'
-            f"{escape(line)}</text>"
-        )
 
-    # The cursor sits at the typed edge and blinks on a cycle of its own.
-    for index, (times, widths, start, end) in enumerate(frames):
-        key_times = ";".join(f"{t:.5f}" for t in times)
-        xs = ";".join(f"{w + 1:.1f}" for w in widths)
-        on = ";".join("1" if start <= t < end else "0" for t in times)
+    filtered = ' filter="url(#g)"' if scheme == "dark" else ""
+
+    # What a reader who asked for less motion sees instead: the same prompt,
+    # the same greeting, none of it moving.
+    still = [f'<g class="still"{filtered}>']
+    for row, text in enumerate(rows[0]):
+        prompt = f'<tspan class="p">{MASTHEAD_PROMPT}</tspan> ' if row == 0 else "  "
+        still.append(f'<text x="{MASTHEAD_TEXT_X}" y="{baselines[row]}">'
+                     f"{prompt}{escape(text)}</text>")
+    out.append("".join(still) + "</g>")
+
+    out.append(f'<g class="anim"{filtered}>')
+    # The prompt is never clipped and never animates. It is the one thing on
+    # the plate that is always there.
+    out.append(
+        f'<text class="p" x="{MASTHEAD_TEXT_X}" y="{baselines[0]}">{MASTHEAD_PROMPT}</text>'
+    )
+    for index, wrapped in enumerate(rows):
+        for row, text in enumerate(wrapped):
+            out.append(
+                f'<text x="{_num(left, 1)}" y="{baselines[row]}" '
+                f'clip-path="url(#c{index}-{row})">{escape(text)}</text>'
+            )
+
+    # One cursor per line, not per row. It sits at the typed edge and drops a
+    # row when the line wraps, the way a terminal cursor does. Its opacity
+    # carries both jobs at once: whether this line's turn is running at all,
+    # and the blink, which only happens while a finished line waits.
+    for index, (times, _, tips, here, lit) in enumerate(frames):
+        key_times = ";".join(_num(t) for t in times)
+        top = baselines[0] - MASTHEAD_FONT_SIZE + 2
         out.append(
-            f'<g opacity="0"><animate attributeName="opacity" values="{on}" '
+            f'<g opacity="0"><animate attributeName="opacity" values="{";".join(str(b) for b in lit)}" '
             f'keyTimes="{key_times}" calcMode="discrete" {durs[index]}/>'
-            f'<rect y="{baseline - MASTHEAD_FONT_SIZE + 2}" width="{cell * 0.85:.1f}" '
-            f'height="{MASTHEAD_FONT_SIZE + 2}" fill="{ink}">'
-            f'<animate attributeName="x" values="{xs}" keyTimes="{key_times}" '
-            f'calcMode="discrete" {durs[index]}/>'
-            '<animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" '
-            'repeatCount="indefinite"/></rect></g>'
+            f'<rect width="{_num(cell * 0.85, 1)}" height="{MASTHEAD_FONT_SIZE + 2}" fill="{ink}">'
+            f'<animate attributeName="x" values="{";".join(_num(x, 1) for x in tips)}" '
+            f'keyTimes="{key_times}" calcMode="discrete" {durs[index]}/>'
+            f'<animate attributeName="y" '
+            f'values="{";".join(str(top + ROW_HEIGHT * r) for r in here)}" '
+            f'keyTimes="{key_times}" calcMode="discrete" {durs[index]}/></rect></g>'
         )
     out.append("</g></svg>")
     return "\n".join(out) + "\n"
 
 
-def write_masthead(lines: list) -> dict:
-    """One file per colour scheme, because no green is legible on both."""
-    _write(f"{ASSETS_DIR}/masthead.json", json.dumps({"lines": list(lines)}, indent=2) + "\n")
-    return {
-        scheme: _write(f"{ASSETS_DIR}/masthead-{scheme}.svg", masthead_svg(lines, scheme))
-        for scheme in MASTHEAD_INK
-    }
+def masthead_loop_seconds(lines: list) -> float:
+    """How long the looping part takes to come round, for the record."""
+    return sum(masthead_slot(line) for line in lines[1:]) or masthead_slot(lines[0])
 
 
-def load_masthead_lines() -> list:
-    """What the committed image says, for the alt text of a render that drew nothing."""
+def load_masthead_state() -> dict:
+    """What the committed image says about itself."""
     try:
         loaded = json.loads(Path(f"{ASSETS_DIR}/masthead.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        return []
-    return [str(line) for line in (loaded.get("lines") or [])] if isinstance(loaded, dict) else []
+        return {}
+    return loaded if isinstance(loaded, dict) else {}
+
+
+def load_masthead_lines() -> list:
+    """What the committed image types, for the alt text of a render that drew nothing."""
+    return [str(line) for line in (load_masthead_state().get("lines") or [])]
+
+
+def masthead_memory() -> tuple:
+    """The shapes the last draw used and the lines the last few did.
+
+    This is what stops a random draw from repeating itself sooner than
+    anybody expects. Read from the committed file rather than from a state
+    directory, because the image and the memory of how it was drawn belong
+    to the same commit and should never be able to disagree.
+    """
+    state = load_masthead_state()
+    shapes = [str(s) for s in (state.get("shapes") or [])]
+    recent = [str(line) for line in (state.get("recent") or [])]
+    return shapes, recent
+
+
+def write_masthead(lines: list) -> dict:
+    """One file per colour scheme, because no green is legible on both.
+
+    The JSON beside them is not a cache. It is the alt text for the many
+    renders that do not redraw the image, and the memory the next redraw
+    reads so it can avoid what this one just used.
+    """
+    drawn = list(lines)
+    _, recent = masthead_memory()
+    memory = [line for line in recent if line not in drawn] + drawn[1:]
+    _write(f"{ASSETS_DIR}/masthead.json", json.dumps({
+        "lines": drawn,
+        "shapes": masthead.shapes_in(drawn),
+        "recent": memory[-masthead.memory_size():],
+        "loop_seconds": round(masthead_loop_seconds(drawn), 1),
+    }, indent=2) + "\n")
+    return {
+        scheme: _write(f"{ASSETS_DIR}/masthead-{scheme}.svg", masthead_svg(drawn, scheme))
+        for scheme in MASTHEAD_INK
+    }
 
 
 def masthead_region() -> str:

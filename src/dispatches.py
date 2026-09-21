@@ -241,8 +241,14 @@ def redraw_masthead() -> int:
     On a clock rather than on the exponential draw the dispatches use. The
     masthead is not news and nothing about it is due at a moment; it is the
     one thing here where a predictable cadence is the honest design.
+
+    The draw reads what the last one committed: the shapes it used, so no
+    two redraws in a row share one, and the lines the last four days carried,
+    so a reader who comes back meets sentences rather than reruns. Random
+    with no memory repeats far sooner than anybody expects.
     """
-    lines = masthead.lines()
+    shapes, recent = cards.masthead_memory()
+    lines = masthead.lines(avoid_shapes=shapes, avoid_lines=recent)
     cards.write_masthead(lines)
     render_page(now(), with_modules=False)
     if commit(render.masthead_commit_message(lines), paths=[README, ASSETS_DIR]):

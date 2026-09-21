@@ -13,8 +13,8 @@ category: profile
 
 <!-- MASTHEAD:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=114103a8">
-  <img alt="👋🏻 Hello World! / 🪫 Builds that degrade into a known state / 💬 A commit that reads as prose / 🧮 Risk measured, not felt / 🧬 A result reproducible from one command / 📮 A release that arrives with a rollback / 🧱 Composed from parts that do one thing / 🎲 Generated nightly, nobody chose when / 🔬 Results that survive a new seed / 🛟 An escape hatch when it goes wrong / 🌱 No default ages into a mystery / 🔗 No dependency without a known licence / 🔐 Default to least access, always" src="assets/masthead-light.svg?v=cebb73b2">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=694bc134">
+  <img alt="👋🏻 Hello World! / 🧮 Risk measured, not guessed / 🧹 Automating the step everyone skips / 🌱 Nothing here ages without warning / ♻️ Environments that nobody has to remember / 📊 Runs you can rerun later / ⛓️ A rule that cannot rot quietly / 🧾 A log line that says who to ask / 💤 Builds that do not wake anyone / 🎓 Only what the next reader needs / 📖 Runbooks nobody can ignore / 🗓️ Renewed on a schedule, not a reminder / 🔋 A runbook that outlasts the team" src="assets/masthead-light.svg?v=930ffb7a">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -109,7 +109,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 20:54 EDT on Sunday, September 20, 2026.
+Last updated 21:19 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

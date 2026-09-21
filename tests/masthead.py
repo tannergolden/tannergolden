@@ -23,7 +23,7 @@ LEADING_EMOJI = re.compile(r"^[^\sA-Za-z0-9]+️?\s")
 def test_the_space_is_large_enough_to_be_worth_generating():
     """Lines are not the number that matters; a reader takes in the whole set."""
     assert masthead.combinations() == 239
-    assert masthead.mastheads() == 822_553
+    assert masthead.mastheads() == 320_264_964
 
 
 def test_every_line_that_can_be_drawn_fits_the_plate(repo):
@@ -52,6 +52,32 @@ def test_no_line_can_break_out_of_the_svg_or_the_page():
         assert "-->" not in line, line
 
 
+def test_the_greeting_types_once_and_the_rest_loop_without_it(repo):
+    """A greeting that greets the same reader every nineteen seconds is a tic.
+
+    Two timelines: the greeting runs on its own with repeatCount="1" and
+    then stays gone, and everything else loops among itself, beginning where
+    the greeting finished erasing.
+    """
+    lines = masthead.lines()
+    svg = cards.masthead_svg(lines, "dark")
+    slot = cards.TYPE_SECONDS + cards.HOLD_SECONDS + cards.ERASE_SECONDS
+
+    once = re.findall(r'dur="([\d.]+)s" repeatCount="1"', svg)
+    assert once, "the greeting never stops repeating"
+    assert all(float(d) == round(slot, 1) for d in once), once
+
+    loop = set(re.findall(r'begin="([\d.]+)s" dur="([\d.]+)s" repeatCount="indefinite"', svg))
+    assert len(loop) == 1, loop
+    begin, dur = loop.pop()
+    assert float(begin) == round(slot, 1), "the loop must start where the greeting ends"
+    assert float(dur) == round(slot * (len(lines) - 1), 1)
+
+    # The greeting's own clip is the one that does not repeat.
+    greeting_clip = svg.split('<clipPath id="c0">')[1].split("</clipPath>")[0]
+    assert 'repeatCount="1"' in greeting_clip and "begin=" not in greeting_clip
+
+
 def test_the_greeting_is_always_first_and_never_drawn_twice():
     for _ in range(50):
         lines = masthead.lines()
@@ -59,6 +85,12 @@ def test_the_greeting_is_always_first_and_never_drawn_twice():
         assert lines[0].startswith("\U0001F44B\U0001F3FB")
         assert masthead.GREETING not in lines[1:]
         assert len(lines) == masthead.LINES_PER_MASTHEAD + 1
+
+
+def test_the_drawn_count_is_what_the_module_says_it_is():
+    """A hardcoded default here silently ignored the constant beside it."""
+    assert len(masthead.lines()) == masthead.LINES_PER_MASTHEAD + 1
+    assert masthead.LINES_PER_MASTHEAD <= len(masthead.FRAMES)
 
 
 def test_one_masthead_never_says_the_same_thing_twice(repo):

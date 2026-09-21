@@ -139,7 +139,9 @@ FRAMES = (
 )
 
 
-LINES_PER_MASTHEAD = 3
+# The greeting runs once and these loop, so this is the whole of what a
+# reader who stays sees repeating. Five puts the loop at 23.5 seconds.
+LINES_PER_MASTHEAD = 5
 
 
 def mastheads() -> int:
@@ -170,7 +172,7 @@ def every_line():
         yield from frame.every()
 
 
-def lines(count: int = 3) -> list:
+def lines(count: int = LINES_PER_MASTHEAD) -> list:
     """The greeting, then `count` lines drawn from distinct frames.
 
     Distinct frames rather than distinct lines: two draws from one frame

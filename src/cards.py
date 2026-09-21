@@ -130,18 +130,36 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
     animation is SMIL and the text is chosen in Python rather than here. The
     background is transparent, so the glow is only drawn on the dark variant,
     where a bloom reads as neon rather than as a smudge.
+
+    THE GREETING RUNS ONCE. It is a greeting, and one that greets the same
+    reader again every nineteen seconds is a tic rather than a welcome. It
+    types on its own timeline with `repeatCount="1"` and then stays gone,
+    which leaves the drawn lines looping among themselves on a second
+    timeline that begins where the first one ends.
     """
-    lines = [line for line in lines if line][:5] or [masthead.GREETING]
+    lines = [line for line in lines if line] or [masthead.GREETING]
     ink = MASTHEAD_INK.get(scheme, MASTHEAD_INK["dark"])
     cell = MASTHEAD_FONT_SIZE * 0.61
     widest = max(masthead.cells(line) for line in lines)
     width = int(widest * cell) + MASTHEAD_TEXT_X * 2
     slot = TYPE_SECONDS + HOLD_SECONDS + ERASE_SECONDS
-    cycle = slot * len(lines)
-    dur = f'dur="{cycle:.1f}s" repeatCount="indefinite"'
     baseline = MASTHEAD_HEIGHT // 2 + MASTHEAD_FONT_SIZE // 3
 
-    frames = [_reveal(i, line, slot, cycle, cell) for i, line in enumerate(lines)]
+    # Two timelines. The first holds the greeting alone and never repeats;
+    # the second holds everything else and repeats for as long as the page
+    # is open, starting the moment the greeting has finished erasing.
+    looping = max(len(lines) - 1, 1)
+    intro_dur = f'dur="{slot:.1f}s" repeatCount="1"'
+    loop_dur = f'begin="{slot:.1f}s" dur="{slot * looping:.1f}s" repeatCount="indefinite"'
+
+    frames, durs = [], []
+    for index, line in enumerate(lines):
+        if index == 0:
+            frames.append(_reveal(0, line, slot, slot, cell))
+            durs.append(intro_dur)
+        else:
+            frames.append(_reveal(index - 1, line, slot, slot * looping, cell))
+            durs.append(loop_dur)
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{MASTHEAD_HEIGHT}" '
         f'viewBox="0 0 {width} {MASTHEAD_HEIGHT}" role="img" aria-labelledby="t">',
@@ -162,7 +180,7 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
         out.append(
             f'<clipPath id="c{index}"><rect x="0" y="0" width="0" height="{MASTHEAD_HEIGHT}">'
             f'<animate attributeName="width" values="{sizes}" keyTimes="{key_times}" '
-            f'calcMode="discrete" {dur}/></rect></clipPath>'
+            f'calcMode="discrete" {durs[index]}/></rect></clipPath>'
         )
     out.append("</defs>")
     out.append(
@@ -177,17 +195,17 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
         )
 
     # The cursor sits at the typed edge and blinks on a cycle of its own.
-    for times, widths, start, end in frames:
+    for index, (times, widths, start, end) in enumerate(frames):
         key_times = ";".join(f"{t:.5f}" for t in times)
         xs = ";".join(f"{w + 1:.1f}" for w in widths)
         on = ";".join("1" if start <= t < end else "0" for t in times)
         out.append(
             f'<g opacity="0"><animate attributeName="opacity" values="{on}" '
-            f'keyTimes="{key_times}" calcMode="discrete" {dur}/>'
+            f'keyTimes="{key_times}" calcMode="discrete" {durs[index]}/>'
             f'<rect y="{baseline - MASTHEAD_FONT_SIZE + 2}" width="{cell * 0.85:.1f}" '
             f'height="{MASTHEAD_FONT_SIZE + 2}" fill="{ink}">'
             f'<animate attributeName="x" values="{xs}" keyTimes="{key_times}" '
-            f'calcMode="discrete" {dur}/>'
+            f'calcMode="discrete" {durs[index]}/>'
             '<animate attributeName="opacity" values="1;0" dur="1s" calcMode="discrete" '
             'repeatCount="indefinite"/></rect></g>'
         )

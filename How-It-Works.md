@@ -68,10 +68,17 @@ is a generator nobody can vouch for.
 | | |
 | :--- | ---: |
 | Distinct lines | 239 |
-| Distinct mastheads (three drawn from ten frames) | **822,553** |
+| Distinct mastheads (five drawn from ten frames) | **320,264,964** |
 | Words per line | 4 to 8 |
 | Widest line | 51 cells, 594px |
-| Loop | 18.8 seconds |
+| Greeting | 4.7 seconds, once |
+| Loop | 23.5 seconds, forever |
+
+**The greeting types once and does not come back.** It runs on a timeline of
+its own with `repeatCount="1"`, and the drawn lines loop among themselves on a
+second one that begins where the first finished erasing. A greeting that
+greets the same reader again every nineteen seconds is a tic rather than a
+welcome, which is what the first version did.
 
 **Reloading the page will not change the lines.** GitHub serves a committed
 file and strips the script that could redraw one, which is the same constraint

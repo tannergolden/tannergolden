@@ -96,11 +96,50 @@ def test_the_reveal_steps_one_cell_at_a_time(repo):
     assert svg.count("<animate") == svg.count('calcMode="discrete"')
 
 
-def test_the_plate_is_black_and_the_ink_is_legible_on_it(repo):
-    """Neon green comes to 1.33:1 on the page's light surface and 14.9:1 here."""
-    svg = cards.masthead_svg(masthead.lines())
-    assert cards.CRT["plate"] in svg and cards.CRT["ink"] in svg
-    assert "prefers-color-scheme" not in svg, "a terminal is black either way"
+def test_the_reveal_reaches_the_end_of_the_longest_line(repo):
+    """The bug a screenshot found: the last character never finished typing.
+
+    The clip rectangle is anchored at x=0 and the text starts at x=16, so a
+    width measured from the text's own left edge stopped one and a half
+    characters short of the end. Every line has to be fully uncovered at the
+    top of its hold.
+    """
+    for line in (max(masthead.every_line(), key=masthead.cells), masthead.GREETING):
+        svg = cards.masthead_svg([line])
+        widths = [float(w) for w in re.search(r'values="([^"]+)" keyTimes', svg).group(1).split(";")]
+        ends_at = cards.MASTHEAD_TEXT_X + masthead.cells(line) * cards.MASTHEAD_FONT_SIZE * 0.61
+        assert max(widths) + 0.5 >= ends_at, f"{max(widths)} < {ends_at}: {line}"
+        # And the image is wide enough to hold what the clip uncovers.
+        assert int(re.search(r'width="(\d+)"', svg).group(1)) >= ends_at
+
+
+def test_nothing_is_drawn_behind_the_text(repo):
+    """Transparent, so the text sits on whatever GitHub paints behind it."""
+    for scheme in cards.MASTHEAD_INK:
+        svg = cards.masthead_svg(masthead.lines(), scheme)
+        assert "<rect" in svg, "the cursor is a rect"
+        # ...but no full-bleed plate behind everything.
+        assert 'rx="8"' not in svg and "#0d0208" not in svg
+
+
+def test_each_scheme_gets_a_green_that_is_legible_on_it(repo):
+    """Neon is 13.9:1 on GitHub dark and 1.4:1 on white, which is invisible.
+
+    No single green clears the bar on both, which is the whole reason this
+    ships two files instead of one.
+    """
+    assert cards.MASTHEAD_INK["dark"] == "#00ff41"
+    assert cards.MASTHEAD_INK["light"] != cards.MASTHEAD_INK["dark"]
+    for scheme, ink in cards.MASTHEAD_INK.items():
+        svg = cards.masthead_svg(masthead.lines(), scheme)
+        assert f"fill:{ink}" in svg
+        assert all(other not in svg for other in cards.MASTHEAD_INK.values() if other != ink)
+
+
+def test_the_bloom_is_only_drawn_where_it_reads_as_neon(repo):
+    """On a light background a glow around dark green is a smudge."""
+    assert "feGaussianBlur" in cards.masthead_svg(masthead.lines(), "dark")
+    assert "feGaussianBlur" not in cards.masthead_svg(masthead.lines(), "light")
 
 
 def test_the_glow_degrades_rather_than_breaks(repo):
@@ -113,13 +152,14 @@ def test_the_glow_degrades_rather_than_breaks(repo):
     assert body.count("<text") == len(masthead.lines())
 
 
-def test_the_image_is_one_file_with_every_line_in_its_alt(repo):
+def test_the_region_switches_with_the_readers_scheme(repo):
     lines = masthead.lines()
     cards.write_masthead(lines)
     region = cards.masthead_region()
-    assert region.startswith("<img alt=")
-    assert "<picture>" not in region, "a terminal needs no light variant"
-    assert re.search(r"masthead\.svg\?v=[0-9a-f]{8}", region), region
+    assert region.startswith("<picture>")
+    assert "(prefers-color-scheme: dark)" in region
+    assert re.search(r"masthead-dark\.svg\?v=[0-9a-f]{8}", region), region
+    assert re.search(r"masthead-light\.svg\?v=[0-9a-f]{8}", region), region
     for line in lines:
         assert line in region
 

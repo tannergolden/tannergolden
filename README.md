@@ -12,7 +12,10 @@ category: profile
 <a name="top"></a>
 
 <!-- MASTHEAD:BEGIN -->
-<img alt="👋🏻 Hello World! / ♻️ Standards that a new machine cannot break / ✂️ Deleting more than I write / 🧹 Documenting the boring parts" src="assets/masthead.svg?v=9047d92e">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=b535c0df">
+  <img alt="👋🏻 Hello World! / 📖 Runbooks nobody argues with / 🎲 Written by a workflow, while I was asleep / 🔒 Hardening every build on every push" src="assets/masthead-light.svg?v=bbd91f1b">
+</picture>
 <!-- MASTHEAD:END -->
 
 [![Status: Active](assets/badges/static/status.svg)](./)
@@ -106,7 +109,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:56 EDT on Sunday, September 20, 2026.
+Last updated 20:06 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

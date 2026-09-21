@@ -277,6 +277,12 @@ def write_dispatch(ledger: Ledger, when: datetime) -> str | None:
     ledger.remember(entry.kind, entry.identifier)
     sources.claim_link(ledger, entry.source_url)
     ledger.save()
+    # Redrawn here as well as on the page refresh. A reader reloading the
+    # page gets the committed file back unchanged, because GitHub serves a
+    # static image and strips the script that could have redrawn it, so the
+    # only lever on how often the lines change is how often a run writes
+    # them. Every dispatch is one more draw.
+    cards.write_masthead(masthead.lines())
     render_page(when, with_modules=False)
     return render.commit_message(entry)
 

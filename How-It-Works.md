@@ -73,16 +73,31 @@ is a generator nobody can vouch for.
 | Widest line | 51 cells, 594px |
 | Loop | 18.8 seconds |
 
+**Reloading the page will not change the lines.** GitHub serves a committed
+file and strips the script that could redraw one, which is the same constraint
+that makes the animation SMIL. The lines change when a run writes them, so
+they are redrawn on every dispatch as well as on every page refresh: a few
+times a day rather than once.
+
 The count that matters is the second one. A reader takes in the set at once,
 so two mastheads differing in one line are two different mastheads.
 
-**It is black in both colour schemes**, which makes it one file rather than a
-light and a dark variant. That is not a style choice: `#00ff41` on the page's
-light surface comes to 1.33:1, which is invisible. On the plate it is 14.9:1.
+**The background is transparent**, so the text sits on whatever colour GitHub
+is painting behind it, and that is white on one theme and near-black on the
+other. No single green clears the contrast bar on both: neon `#00ff41` is
+13.9:1 on GitHub's dark and **1.4:1 on white**, which is invisible. So there
+are two files and a `<picture>`, the same answer the cards reach for. Dark
+gets the neon and the bloom; light gets `#067d17` at 5.3:1 and no bloom,
+because a glow around dark green on white is a smudge.
 
 The reveal steps one cell at a time rather than growing smoothly, because a
 rectangle widening continuously uncovers letters through their own middles and
 reads as a wipe. Stepping by whole cells is what makes it look typed.
+
+The rectangle is anchored at the left edge of the image while the text starts
+16px inside it, so every width it steps through carries that inset. The first
+version did not, and the longest line stopped one and a half characters short
+of finishing: `Standards that a new machine cannot brea`.
 
 **No script, anywhere.** GitHub strips those from an SVG in a README, which is
 why the animation is SMIL and the words are chosen in Python. The glow is an

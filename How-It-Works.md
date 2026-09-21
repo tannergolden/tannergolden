@@ -54,8 +54,9 @@ and scheduled, and every one of them is authored by me.
 ## ⌨️ The Masthead
 
 The page opens with a terminal that types itself out. `👋🏻 Hello World!` is
-always first; the three lines after it are assembled on every page refresh
-from [`src/masthead.py`](src/masthead.py).
+always first; the twelve lines after it are assembled from
+[`src/masthead.py`](src/masthead.py) and drawn into SVG by
+[`src/cards.py`](src/cards.py).
 
 Not from a word salad. A slot filled at random from a pool that fits every
 other slot in its frame produces grammar by accident and nonsense by default,
@@ -71,10 +72,12 @@ is a generator nobody can vouch for.
 | Frames | 64 |
 | Distinct mastheads (twelve drawn from sixty-four frames) | 6.77 x 10^26 |
 | Words per line | 4 to 8 |
-| Widest line | 51 cells |
-| Greeting | 4.7 seconds, once |
-| Loop | 56.4 seconds, forever |
-| Redrawn | every 12 hours |
+| Widest line | 49 cells, wrapped onto at most 2 rows of 26 |
+| Image | at most 407 x 84, which fits a phone column unscaled |
+| Typing | 20 cells a second, constant |
+| Greeting | 2.8 seconds, once |
+| Loop | about 55 seconds, forever |
+| Redrawn | every 12 hours, and it remembers the last 4 days |
 
 A thousand is a promise rather than an accident: the pools are sized to land
 on it, and a test fails the day one of them drifts.
@@ -122,7 +125,7 @@ actually notices, which is the shapes.
 
 **Redrawn every twelve hours**, by
 [a workflow of its own](.github/workflows/masthead.yml), and its commit
-message is drawn the same way the lines are: 26,208 of them, because a log
+message is drawn the same way the lines are: 8,736 of them, because a log
 carrying the same paragraph twice a day is a log nobody reads twice. Every
 frame it can draw from states a why, since the commit standard asks for one
 and a generated body is the easiest place in a repository to restate a
@@ -132,11 +135,33 @@ nobody believes is random. The masthead is not news and nothing about it is
 due at a moment, so it is the honest exception: a clock, at 06:41 and 18:41
 UTC, off the hour for the same congestion reason the dispatch cron is.
 
+**It wraps, and that is the single thing that makes it readable on a phone.**
+GitHub scales a README image down to the column, and the column on a phone is
+about 330 pixels. A forty nine cell line on one row is a 570 pixel image,
+which arrives at 0.6 scale and an effective font of **ten pixels**: a green
+smear rather than a masthead. Every line is wrapped onto at most two rows of
+twenty six cells, which holds the image at 407 pixels at its widest and needs
+almost no scaling at all.
+
+Twenty six is not a round number. It is the last cap where every one of the
+thousand lines still fits two rows; at twenty four, twelve of them spill onto
+a third. The split is balanced rather than greedy, because greedy fills the
+first row and leaves the second holding two words, which reads as a mistake.
+
+Wrapping also paid for a bigger font. Once a row fits the column, the font and
+the image grow together and the effective size on a phone barely moves, so the
+type went from 18 to 22 and the desktop reader is the only one who notices.
+
+| | one row, 18px | wrapped, 22px |
+| :--- | ---: | ---: |
+| Image | 570 x 56 | 407 x 84 |
+| Effective font on a 328px column | 10.4px | 17.7px |
+
 **The greeting types once and does not come back.** It runs on a timeline of
 its own with `repeatCount="1"`, and the drawn lines loop among themselves on a
 second one that begins where the first finished erasing. A greeting that
-greets the same reader again every nineteen seconds is a tic rather than a
-welcome, which is what the first version did.
+greets the same reader again every minute is a tic rather than a welcome,
+which is what the first version did.
 
 **Reloading the page will not change the lines.** GitHub serves a committed
 file and strips the script that could redraw one, which is the same constraint
@@ -158,6 +183,54 @@ because a glow around dark green on white is a smudge.
 The reveal steps one cell at a time rather than growing smoothly, because a
 rectangle widening continuously uncovers letters through their own middles and
 reads as a wipe. Stepping by whole cells is what makes it look typed.
+
+**One cadence, not one duration.** The first version gave every line the same
+1.6 seconds whatever its length, so a seventeen cell greeting crawled and a
+forty nine cell line blurred past at three times the speed. Typing is now a
+constant twenty cells a second and the pause afterwards is reading time,
+0.95 seconds plus 0.04 a cell, so a long line is held about twice as long as a
+short one. The loop varies with what was drawn, between roughly fifty and
+sixty seconds.
+
+The keystrokes themselves are not evenly spaced: there is a beat before a new
+word and a longer one after a full stop, and no two are the same length. The
+variation is seeded from the line's own text rather than from chance, so the
+same line always types the same way and a run that redrew nothing produces a
+file that changed nothing. An emoji is two cells wide and one keystroke, so
+its second cell arrives in no time at all and the clip never rests through the
+middle of a glyph showing half a face.
+
+**The cursor is solid while it types**, the way a real one is, and blinks only
+while a finished line sits waiting to be read. It follows the text down onto
+the second row when a line wraps. There is one cursor per line rather than one
+per row, and only ever one lit at a time.
+
+**Three ways to read it.** A browser types it out. A renderer with no SMIL at
+all shows the greeting complete, because the greeting's clip rectangles carry
+their full width as a plain attribute and an animation is what overrides that
+rather than what supplies it; `fill="freeze"` is what stops the animation
+handing that width back at the end of its one run. A reader who has asked for
+less motion gets the same still line, from a layer a `prefers-reduced-motion`
+query swaps in: text that types itself is exactly the motion that setting is
+about.
+
+**The glow is two passes, not one.** A single blur merged with itself is a
+smudge with a bright middle. A phosphor has a hard centre and soft light well
+beyond it, so there is a tight core at 0.045em and a wide halo at 0.2em with
+its alpha cut to 55%. `color-interpolation-filters="sRGB"` is on the filter
+because the default is linearRGB, which turns a saturated green bloom into a
+pale grey one.
+
+**Each redraw remembers the last one.** Random with no memory repeats far
+sooner than anybody expects: twelve of sixty-four shapes, drawn twice a day,
+put a shape from yesterday back on the page more often than not. A redraw
+reads what the last one committed and excludes its frames, so two consecutive
+mastheads share no shape at all, and excludes the lines of the last eight
+draws, which is four days. Both fall back to the full set rather than fail,
+because a masthead with a hole in it is worse than a repeat. The memory lives
+in `assets/masthead.json` beside the images rather than in the state
+directory, so the image and the record of how it was drawn are always in the
+same commit and can never disagree.
 
 The rectangle is anchored at the left edge of the image while the text starts
 16px inside it, so every width it steps through carries that inset. The first

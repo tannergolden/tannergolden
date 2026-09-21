@@ -14,8 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=07117fd9">
-  <img alt="👋🏻 Hello World! / 🏗️ Keep the safe way easy / ✂️ Deleting more than I merge / ⏱️ Feedback in under a minute / 🧩 Repos that fit together / 📦 Deciding the rule once / 🪵 The failure in one place / 🗺️ Deployed with one file / 📉 One fewer thing to explain / 🚦 A red test means it stops here / 🚧 No step is waiting on me / 📐 One shape with no surprises / 🧪 Checks that nobody can skip" src="assets/masthead-light.svg?v=5487c180">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=c1d50f6a">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=536a1d88">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=ed98f4bf">
+  <img alt="👋🏻 Hello World! / 🏗️ Keep the right way easy / 🩺 Notice it before the pager does / 🪵 The context in one place / 🧩 Pieces that fit without glue / 🔗 No package without a review / 📮 A fix that arrives reviewed / 📦 Solving the same problem once / 🎯 Solves exactly what it claims / ⏱️ A review in under five minutes / 🪄 No implicit steps in the deploy / 💬 A commit that reads as prose / 🛠️ Fix the cause, not the ticket" src="assets/masthead-light.svg?v=a2dbdc2d">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -110,7 +112,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 01:39 EDT on Monday, September 21, 2026.
+Last updated 02:29 EDT on Monday, September 21, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

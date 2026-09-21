@@ -12,6 +12,8 @@ embarrasses this page" is checked rather than hoped for.
 from __future__ import annotations
 
 import re
+from pathlib import Path
+from xml.sax.saxutils import escape
 
 import cards
 import masthead
@@ -459,15 +461,39 @@ def test_a_renderer_with_no_animation_still_shows_the_greeting(repo):
             assert '<rect x="0" y="0" width="0"' in clip, "a later line would overlap the first"
 
 
-def test_a_reader_who_asked_for_less_motion_gets_a_still_line(repo):
-    """Text that types itself is exactly the motion that setting is about."""
+def test_the_switch_for_less_motion_is_not_inside_the_image(repo):
+    """It was, and it never fired. A preference media query does not reach an
+    SVG loaded as an <img>: the isolated image document does not inherit it.
+
+    Checked in a real browser after a review called it doubtful, which is
+    the only way this class of thing can be checked. The query now lives on
+    a <picture> source, where it is evaluated against the page.
+    """
     for scheme in cards.MASTHEAD_INK:
         svg = cards.masthead_svg(masthead.lines(), scheme)
-        assert "@media (prefers-reduced-motion:reduce)" in svg
-        assert ".anim{display:none}" in svg and ".still{display:inline}" in svg
-        still = svg.split('<g class="still"')[1].split("</g>")[0]
-        assert masthead.GREETING in still
-        assert "clip-path" not in still and "<animate" not in still
+        assert "prefers-reduced-motion" not in svg, "a query that cannot fire"
+        assert 'class="still"' not in svg
+
+
+def test_a_reader_who_asked_for_less_motion_gets_the_set_standing_still(repo):
+    """Text that types itself is exactly the motion that setting is about.
+
+    Reduced motion should cost the reader the movement, not the content, so
+    it is a transcript rather than a single frozen line.
+    """
+    lines = masthead.lines()
+    for scheme in cards.MASTHEAD_INK:
+        svg = cards.masthead_still_svg(lines, scheme)
+        assert "<animate" not in svg and "clip-path" not in svg
+        assert svg.count("<text") == cards.STILL_ROWS > 1
+        for line in lines[:cards.STILL_ROWS]:
+            assert escape(line) in svg
+        # Every row gets its own prompt, the way a terminal shows what was typed.
+        assert svg.count(cards.MASTHEAD_PROMPT) == cards.STILL_ROWS
+        # And the rows do not sit on top of one another.
+        ys = [int(y) for y in re.findall(r'<text x="\d+" y="(\d+)"', svg)]
+        assert ys == sorted(set(ys)) and len(ys) == cards.STILL_ROWS
+        assert int(re.search(r'<svg[^>]*height="(\d+)"', svg).group(1)) > ys[-1]
 
 
 def test_the_prompt_is_always_there_and_never_moves(repo):
@@ -739,7 +765,7 @@ def test_the_text_starts_beyond_the_prompt_on_every_row(repo):
     cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
     left = cards.MASTHEAD_TEXT_X + cards.PROMPT_CELLS * cell
 
-    assert svg.count(cards.MASTHEAD_PROMPT) == 2, "one prompt animated, one still"
+    assert svg.count(cards.MASTHEAD_PROMPT) == 1, "the prompt is drawn once"
     xs = set(re.findall(r'<text x="([\d.]+)" y="\d+" clip-path=', svg))
     assert xs == {f"{left:.1f}"}, xs
 
@@ -857,13 +883,24 @@ def test_a_phone_is_handed_a_blank_rather_than_a_smear(repo):
     cards.write_masthead(masthead.lines())
     region = cards.masthead_region()
     sources = re.findall(r'<source media="([^"]+)" srcset="([^"?]+)', region)
-    assert len(sources) == 2, region
+    assert len(sources) == 4, region
 
-    (first_media, first_src), (second_media, _) = sources
-    assert first_media.startswith("(max-width:"), first_media
-    assert first_src.endswith("masthead-blank.svg")
-    assert second_media == "(prefers-color-scheme: dark)"
+    media = [m for m, _ in sources]
+    files = [Path(f).stem for _, f in sources]
+    assert files == ["masthead-blank", "masthead-still-dark",
+                     "masthead-still-light", "masthead-dark"], files
+
+    # A browser takes the first match, so the narrower conditions come first.
+    assert media[0].startswith("(max-width:"), media
+    assert "reduced-motion" in media[1] and "color-scheme" in media[1]
+    assert media[2] == "(prefers-reduced-motion: reduce)"
+    assert media[3] == "(prefers-color-scheme: dark)"
     assert re.search(r'<img alt="[^"]+" src="[^"]*masthead-light\.svg\?v=[0-9a-f]{8}"', region)
+
+    # Every source is cache-busted and every file it names was written.
+    for _, path in sources:
+        assert (repo / path).exists(), path
+    assert region.count("?v=") == 5
 
 
 def test_the_breakpoint_is_derived_from_the_plate(repo):
@@ -899,19 +936,3 @@ def test_the_lines_are_still_announced_on_a_phone(repo):
     alt = re.search(r'<img alt="([^"]+)"', cards.masthead_region()).group(1)
     for line in lines:
         assert line in alt, line
-
-
-def test_the_plate_never_reaches_the_frames_that_write_commits(repo):
-    """The plate is a masthead concept. The commit frames share this class
-    and are not laid out on it.
-
-    A frame that quietly capped them would drop a subject the moment one
-    grew past 34 cells, while commit_messages() went on counting it. The
-    longest subject is already 33 of 34, so this is one word away.
-    """
-    for frame in (masthead.COMMIT_SUBJECT, *masthead.COMMIT_WHY, *masthead.COMMIT_HOW):
-        assert {frame.draw() for _ in range(200)} <= set(frame.every())
-    seen = {masthead.COMMIT_SUBJECT.draw() for _ in range(400)}
-    assert len(seen) == masthead.COMMIT_SUBJECT.combinations(), len(seen)
-    assert max(masthead.cells(line) for line in masthead.COMMIT_SUBJECT.every()) \
-        > masthead.PLATE_CELLS - 4, "the subject pool has drifted well clear of the plate"

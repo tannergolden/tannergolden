@@ -373,11 +373,14 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
     drawn lines looping among themselves on a second timeline that begins
     where the first one ends.
 
-    THREE WAYS TO READ IT. A browser types it. A renderer with no SMIL shows
-    the greeting complete, because the greeting's clip carries its full width
-    as a plain attribute and an animation is what overrides that rather than
-    what supplies it. A reader who has asked for less motion gets the same
-    still line, from a layer the media query swaps in.
+    NO SMIL, NO BLANK. A renderer that ignores the animations shows the
+    greeting complete, because the greeting's clip carries its full width as
+    a plain attribute and an animation overrides that rather than supplying
+    it. Reduced motion is NOT handled here: a preference media query inside
+    an SVG loaded as an <img> never matches, which was checked in a real
+    browser after a review called it doubtful. It is handled by
+    `masthead_still_svg` and a <picture> source, where the query is
+    evaluated against the page instead.
     """
     lines = [line for line in lines if line] or [masthead.GREETING]
     ink = MASTHEAD_INK.get(scheme, MASTHEAD_INK["dark"])
@@ -444,21 +447,10 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
         "white-space:pre;font-variant-ligatures:none;font-kerning:none;"
         "text-rendering:geometricPrecision}"
         f".p{{opacity:{PROMPT_OPACITY.get(scheme, 0.55)}}}"
-        ".still{display:none}"
-        "@media (prefers-reduced-motion:reduce){.anim{display:none}.still{display:inline}}"
         "</style>"
     )
 
     filtered = ' filter="url(#g)"' if scheme == "dark" else ""
-
-    # What a reader who asked for less motion sees instead: the same prompt,
-    # the same greeting, none of it moving.
-    still = [f'<g class="still"{filtered}>']
-    for row, text in enumerate(rows[0]):
-        prompt = f'<tspan class="p">{MASTHEAD_PROMPT}</tspan> ' if row == 0 else "  "
-        still.append(f'<text x="{MASTHEAD_TEXT_X}" y="{baselines[row]}">'
-                     f"{prompt}{escape(text)}</text>")
-    out.append("".join(still) + "</g>")
 
     out.append(f'<g class="anim"{filtered}>')
     # The prompt is never clipped and never animates. It is the one thing on
@@ -489,6 +481,59 @@ def masthead_svg(lines: list, scheme: str = "dark") -> str:
             f'<animate attributeName="y" '
             f'values="{";".join(str(top + ROW_HEIGHT * r) for r in here)}" '
             f'keyTimes="{key_times}" calcMode="discrete" {durs[index]}/></rect></g>'
+        )
+    out.append("</g></svg>")
+    return "\n".join(out) + "\n"
+
+
+# How much of the set the still variant carries. Four rows is a terminal
+# somebody has been typing in, which is the point; thirteen is a wall of
+# text where a masthead should be.
+STILL_ROWS = 4
+
+
+def masthead_still_svg(lines: list, scheme: str = "dark") -> str:
+    """The same masthead with nothing moving, for a reader who asked for that.
+
+    Not a frame of the animation: a transcript of it. Each line gets its own
+    prompt, the way a terminal shows what has already been typed, so reduced
+    motion costs the reader the movement rather than the content.
+
+    It exists as a separate FILE because the switch cannot live inside the
+    image. `prefers-reduced-motion` in an SVG's own stylesheet never matches
+    when that SVG is loaded as an <img>: the preference does not reach the
+    isolated image document. A <picture> source is evaluated against the page
+    itself, where it does.
+    """
+    shown = [line for line in lines if line][:STILL_ROWS] or [masthead.GREETING]
+    ink = MASTHEAD_INK.get(scheme, MASTHEAD_INK["dark"])
+    cell = MASTHEAD_FONT_SIZE * CELL_RATIO
+    widest = max(masthead.cells(line) for line in shown)
+    width = int(MASTHEAD_TEXT_X + (PROMPT_CELLS + widest) * cell) + MASTHEAD_TEXT_X
+    height = len(shown) * ROW_HEIGHT + PAD_Y * 2
+
+    out = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}" role="img" aria-labelledby="t d">',
+        '<title id="t">A terminal, and what it has been typing</title>',
+        f"<desc id=\"d\">{escape(' / '.join(lines))}</desc>",
+    ]
+    if scheme == "dark":
+        out += ["<defs>", *_glow(), "</defs>"]
+    out.append(
+        "<style>"
+        f"text{{font-family:{MASTHEAD_FONT};font-size:{MASTHEAD_FONT_SIZE}px;fill:{ink};"
+        "white-space:pre;font-variant-ligatures:none;font-kerning:none;"
+        "text-rendering:geometricPrecision}"
+        f".p{{opacity:{PROMPT_OPACITY.get(scheme, 0.55)}}}"
+        "</style>"
+    )
+    out.append('<g filter="url(#g)">' if scheme == "dark" else "<g>")
+    for row, line in enumerate(shown):
+        baseline = PAD_Y + ROW_HEIGHT * row + ROW_HEIGHT // 2 + MASTHEAD_FONT_SIZE // 3
+        out.append(
+            f'<text x="{MASTHEAD_TEXT_X}" y="{baseline}">'
+            f'<tspan class="p">{MASTHEAD_PROMPT}</tspan> {escape(line)}</text>'
         )
     out.append("</g></svg>")
     return "\n".join(out) + "\n"
@@ -548,10 +593,13 @@ def write_masthead(lines: list) -> dict:
     _write(f"{ASSETS_DIR}/masthead-blank.svg",
            '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" '
            'viewBox="0 0 1 1" role="presentation" aria-hidden="true"></svg>\n')
-    return {
-        scheme: _write(f"{ASSETS_DIR}/masthead-{scheme}.svg", masthead_svg(drawn, scheme))
-        for scheme in MASTHEAD_INK
-    }
+    written = {}
+    for scheme in MASTHEAD_INK:
+        written[scheme] = _write(f"{ASSETS_DIR}/masthead-{scheme}.svg",
+                                 masthead_svg(drawn, scheme))
+        _write(f"{ASSETS_DIR}/masthead-still-{scheme}.svg",
+               masthead_still_svg(drawn, scheme))
+    return written
 
 
 # GitHub's README gutters on a narrow screen, both sides together. The
@@ -576,33 +624,51 @@ def masthead_breakpoint() -> int:
 def masthead_region() -> str:
     """The image, cache-busted, with every line it types in the alt text.
 
-    THREE SOURCES, AND THE ORDER IS THE POINT. A browser takes the first
-    <source> whose media matches, so the width query has to come before the
-    colour one or a phone in dark mode would never reach it.
+    FOUR SOURCES, AND THE ORDER IS THE WHOLE THING. A browser takes the
+    first <source> whose media matches, so the narrower conditions come
+    first: a phone in dark mode would never reach the width query if the
+    colour one were above it, and a reader who has reduced motion AND dark
+    mode would never reach the still.
 
-    The first one hands a phone a blank. Below the breakpoint the image can
-    only be scaled down, and a masthead scaled down is a smear of green
-    where a first impression should be; nothing is better than that. The alt
-    text stays on the <img>, which is where a screen reader reads it from
-    whichever source the browser picked, so the lines are still announced.
+    Width first. Below the breakpoint the image can only be scaled down, and
+    a masthead scaled down is a smear of green where a first impression
+    should be; nothing is better than that, so a phone is handed one
+    transparent pixel.
 
-    This works because GitHub's markdown sanitiser keeps `media` on a
-    <source> whatever the query says, which is checked rather than assumed:
-    a probe pushed to a branch came back through the renderer intact.
+    Reduced motion next, because this is the one place it can be honoured.
+    The same query inside the SVG's own stylesheet never matches when the
+    SVG is loaded as an <img>, since the preference does not reach the
+    isolated image document; here it is evaluated against the page.
+
+    Then the colour scheme, which is the ordinary case, and the <img> that
+    carries the alt text for all of them. A screen reader reads alt from the
+    <img> whichever source the browser picked, so hiding this on a phone
+    stays a visual decision rather than an accessibility one.
+
+    All of it rests on GitHub's markdown sanitiser keeping `media` on a
+    <source> whatever the query says. That is documented nowhere and was
+    checked rather than assumed: a probe pushed to a branch came back
+    through the renderer intact.
     """
     lines = load_masthead_lines() or [masthead.GREETING]
-    blank = f"{ASSETS_DIR}/masthead-blank.svg"
-    dark = f"{ASSETS_DIR}/masthead-dark.svg"
-    light = f"{ASSETS_DIR}/masthead-light.svg"
+    def tagged(name):
+        path = f"{ASSETS_DIR}/{name}.svg"
+        return f"{path}?v={content_tag(path)}"
+
     alt = escape(" / ".join(lines), {chr(34): "&quot;"})
-    return (
-        "<picture>\n"
-        f'  <source media="(max-width: {masthead_breakpoint()}px)" '
-        f'srcset="{blank}?v={content_tag(blank)}">\n'
-        f'  <source media="(prefers-color-scheme: dark)" srcset="{dark}?v={content_tag(dark)}">\n'
-        f'  <img alt="{alt}" src="{light}?v={content_tag(light)}">\n'
-        "</picture>"
-    )
+    sources = [
+        (f"(max-width: {masthead_breakpoint()}px)", "masthead-blank"),
+        ("(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)",
+         "masthead-still-dark"),
+        ("(prefers-reduced-motion: reduce)", "masthead-still-light"),
+        ("(prefers-color-scheme: dark)", "masthead-dark"),
+    ]
+    return "\n".join([
+        "<picture>",
+        *[f'  <source media="{media}" srcset="{tagged(name)}">' for media, name in sources],
+        f'  <img alt="{alt}" src="{tagged("masthead-light")}">',
+        "</picture>",
+    ])
 
 
 # --- the account's numbers --------------------------------------------------------

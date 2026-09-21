@@ -72,10 +72,10 @@ is a generator nobody can vouch for.
 | Frames | 64 |
 | Distinct mastheads (twelve drawn from sixty-four frames) | 6.77 x 10^26 |
 | Words per line | 4 to 8 |
-| Widest line | 49 cells, wrapped onto at most 2 rows of 26 |
-| Image | at most 407 x 84, which fits a phone column unscaled |
+| Widest line | 49 cells, on one row |
+| Image | at most 649 x 47 |
 | Typing | 20 cells a second, constant |
-| Greeting | 2.8 seconds, once |
+| Greeting | 2.6 seconds, once |
 | Loop | about 55 seconds, forever |
 | Redrawn | every 12 hours, and it remembers the last 4 days |
 
@@ -135,27 +135,29 @@ nobody believes is random. The masthead is not news and nothing about it is
 due at a moment, so it is the honest exception: a clock, at 06:41 and 18:41
 UTC, off the hour for the same congestion reason the dispatch cron is.
 
-**It wraps, and that is the single thing that makes it readable on a phone.**
-GitHub scales a README image down to the column, and the column on a phone is
-about 330 pixels. A forty nine cell line on one row is a 570 pixel image,
-which arrives at 0.6 scale and an effective font of **ten pixels**: a green
-smear rather than a masthead. Every line is wrapped onto at most two rows of
-twenty six cells, which holds the image at 407 pixels at its widest and needs
-almost no scaling at all.
+**One row, and what that costs on a phone.** GitHub scales a README image
+down to the column, and the column on a phone is about 330 CSS pixels. Fifty
+one cells across 330 pixels is under seven pixels a cell, so **one row on a
+phone is about 10 pixels and no font size changes that**: raising the font
+widens the image by the same proportion GitHub then scales it back down by.
+A test proves the cancellation rather than asserting a target, because it is
+a fact about the layout and not a preference.
 
-Twenty six is not a round number. It is the last cap where every one of the
-thousand lines still fits two rows; at twenty four, twelve of them spill onto
-a third. The split is balanced rather than greedy, because greedy fills the
-first row and leaves the second holding two words, which reads as a mistake.
+Wrapping is the only thing that moves it. At twenty six cells a row the
+image is 371 pixels and a phone gets 18, which was shipped and then
+taken back out: a masthead that breaks mid-sentence reads as a mistake on
+every screen, and that cost falls on every reader rather than only on the
+ones holding a phone. The renderer still wraps if `WRAP_CELLS` is lowered,
+and a test keeps that path exercised so it cannot rot while it is unused.
+Twenty six is the number to use, being the last cap where every one of the
+thousand lines still fits two rows.
 
-Wrapping also paid for a bigger font. Once a row fits the column, the font and
-the image grow together and the effective size on a phone barely moves, so the
-type went from 18 to 22 and the desktop reader is the only one who notices.
-
-| | one row, 18px | wrapped, 22px |
-| :--- | ---: | ---: |
-| Image | 570 x 56 | 407 x 84 |
-| Effective font on a 328px column | 10.4px | 17.7px |
+What made 10 pixels survivable was the lighting rather than the layout. The
+glow used to blur the text and merge that blur back over the text, which
+thickens every stroke and softens every edge; at a phone's stroke width of
+two pixels that is the difference between reading it and squinting at it.
+Both blurs are now dimmed and laid behind an untouched `SourceGraphic`, so
+the light is in the air around the glyphs and never on them.
 
 **The greeting types once and does not come back.** It runs on a timeline of
 its own with `repeatCount="1"`, and the drawn lines loop among themselves on a

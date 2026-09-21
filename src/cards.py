@@ -90,7 +90,12 @@ MASTHEAD_INK = {
 MASTHEAD_FONT = ("ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Mono', "
                  "'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace")
 
-MASTHEAD_FONT_SIZE = 22
+# On one row this is a desktop decision and only a desktop decision. A phone
+# divides its column by the cell count and lands on the same eleven pixels
+# whatever is set here, so the size is chosen for the reader who sees it
+# unscaled: a little more presence than the 18 it started at, and an image
+# still well inside GitHub's column.
+MASTHEAD_FONT_SIZE = 20
 
 # A terminal's line spacing, and enough air above and below that the bloom
 # has somewhere to go. Both follow the font rather than sitting beside it,
@@ -98,18 +103,24 @@ MASTHEAD_FONT_SIZE = 22
 ROW_HEIGHT = round(MASTHEAD_FONT_SIZE * 1.45)
 PAD_Y = round(MASTHEAD_FONT_SIZE * 0.45)
 
-# THE NUMBER THAT DECIDES WHETHER THIS IS READABLE ON A PHONE.
+# Where a line breaks, if it breaks.
 #
-# GitHub scales a README image down to the column and the column on a phone
-# is about 330 to 360 CSS pixels. A forty nine cell line on one row is a 570
-# pixel image, which arrives at 0.6 scale and an effective font of eleven
-# pixels: a green smear, which is what it was. Wrapping at twenty six cells
-# makes the widest image 339 pixels, which needs no scaling at all on a
-# phone and renders at its full size.
+# GitHub scales a README image down to the column, and the column on a phone
+# is about 330 CSS pixels. Fifty-one cells across that column is seven pixels
+# a cell whatever the font says, so ONE ROW ON A PHONE IS ELEVEN PIXELS AND
+# NO SETTING HERE CHANGES IT. Wrapping at twenty-six was the only thing that
+# moved the number, and it moved it to twenty.
 #
-# Twenty six is also the last value where every line in the generator fits
-# on two rows. Twenty four sends twelve of them onto three.
-WRAP_CELLS = 26
+# It is set to the plate's own width anyway, so nothing wraps. A masthead
+# that breaks mid-sentence reads as a mistake on every screen, and that cost
+# falls on every reader rather than only on the ones holding a phone. What
+# made eleven pixels survivable was the lighting: the glow used to be laid
+# over the glyphs and is now only behind them, which is most of what the
+# screenshot was actually complaining about.
+#
+# Lower this and the renderer wraps, balanced, onto as many rows as it
+# takes. A test holds that path open so it cannot rot while it is unused.
+WRAP_CELLS = masthead.MAX_CELLS
 
 # Where the prompt sits. The clip rectangle is anchored at x=0, so every
 # width it animates through has to carry this inset AND the prompt, or the

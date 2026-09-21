@@ -628,48 +628,81 @@ def test_the_committed_file_says_how_long_its_loop_takes(repo):
 # --- reading it on a phone -------------------------------------------------------
 
 # The narrowest column a README gets in practice: a 360px phone viewport
-# once GitHub's own gutters are taken out.
+# once GitHub's own gutters are taken out. Measured against a real headless
+# Chromium at a 390px viewport, which leaves 358.
 PHONE_COLUMN = 328
 
 
+def _image_for(cells: int) -> float:
+    """How wide the plate is for a row of `cells`, in CSS pixels."""
+    return (cards.MASTHEAD_TEXT_X * 2
+            + (cards.PROMPT_CELLS + cells) * cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO)
+
+
 def _widest_image() -> float:
-    """The widest image the generator can produce, in CSS pixels."""
-    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
-    return cards.MASTHEAD_TEXT_X * 2 + (cards.PROMPT_CELLS + cards.WRAP_CELLS) * cell
+    """The widest plate the cap allows: an upper bound, not a real draw."""
+    return _image_for(cards.WRAP_CELLS)
 
 
-def test_every_line_the_generator_can_draw_fits_two_rows(repo):
-    """The promise the whole wrap rests on, checked over all thousand.
+def _longest_image() -> float:
+    """The widest plate any line the generator can draw actually needs."""
+    return _image_for(max(masthead.cells(line) for line in masthead.every_line()))
 
-    Three rows would make the image half again as tall for no gain, and the
-    cap is chosen to be the last value where none of them needs one: at
-    twenty four cells, twelve lines spill onto a third row.
+
+def test_nothing_the_generator_can_draw_wraps(repo):
+    """A masthead that breaks mid-sentence reads as a mistake on every
+    screen, so the cap is the plate's own width and nothing reaches it."""
+    for line in masthead.every_line():
+        assert cards.wrap(line) == [line], line
+    assert cards.WRAP_CELLS >= max(masthead.cells(line) for line in masthead.every_line())
+
+
+def test_the_wrap_still_works_when_it_is_asked_to(repo):
+    """Nothing wraps today. The path stays exercised so it cannot rot, and
+    so the number that turns it back on is known to be the only one needed.
+
+    Twenty-six is that number: the last cap where every line in the
+    generator fits two rows. At twenty-four, twelve of them need three.
     """
     for line in masthead.every_line():
-        rows = cards.wrap(line)
+        rows = cards.wrap(line, 26)
         assert len(rows) <= 2, f"{len(rows)} rows: {line}"
+        assert " ".join(rows) == line
         for row in rows:
-            assert masthead.cells(row) <= cards.WRAP_CELLS, row
+            assert masthead.cells(row) <= 26, row
 
 
-def test_the_masthead_is_readable_on_a_phone_without_being_shrunk(repo):
-    """The bug a screenshot found, and the reason this wraps at all.
+def test_what_a_phone_actually_gets_is_known_and_written_down(repo):
+    """One row on a phone is eleven pixels and no setting here changes it.
 
-    GitHub scales a README image down to the column. One row of forty nine
-    cells is a 570 pixel image, which arrives on a phone at 0.6 scale and an
-    effective font of eleven pixels: a green smear. Wrapping holds the image
-    narrow enough that almost nothing is lost.
+    The column divided by the cells is the whole calculation, and the font
+    size cancels out of it: raising the font widens the image by the same
+    proportion that GitHub then scales it back down by. This is a fact about
+    the layout rather than a target, so the test records it rather than
+    demanding something of it. If it ever moves, the comment above
+    WRAP_CELLS is wrong and somebody should know.
     """
-    scale = min(1.0, PHONE_COLUMN / _widest_image())
-    assert cards.MASTHEAD_FONT_SIZE * scale >= 16.0, (
-        f"{cards.MASTHEAD_FONT_SIZE * scale:.1f}px on a phone is too small to read")
+    landed = cards.MASTHEAD_FONT_SIZE * PHONE_COLUMN / _longest_image()
+    assert 9.5 <= landed <= 12.0, f"{landed:.1f}px, not the eleven the comment claims"
 
-    # And the real draws, which are narrower than the worst case.
+    # And the font cancels out of it, which is the part worth proving: a
+    # bigger font only widens the image that GitHub then scales back down.
+    was = cards.MASTHEAD_FONT_SIZE
+    try:
+        cards.MASTHEAD_FONT_SIZE = was * 2
+        doubled = cards.MASTHEAD_FONT_SIZE * PHONE_COLUMN / _longest_image()
+    finally:
+        cards.MASTHEAD_FONT_SIZE = was
+    assert abs(doubled - landed) < 0.6, f"{landed:.1f} -> {doubled:.1f}: it did move"
+
+    # Wrapping is what moves it, and by how much is the reason it exists.
+    wrapped = PHONE_COLUMN / _image_for(26)
+    assert cards.MASTHEAD_FONT_SIZE * min(1.0, wrapped) >= 16.0
+
+    # Whatever is drawn, the image never exceeds the plate it was sized for.
     for _ in range(20):
         svg = cards.masthead_svg(masthead.lines())
-        width = int(re.search(r'<svg[^>]*width="(\d+)"', svg).group(1))
-        assert width <= _widest_image() + 1, width
-        assert cards.MASTHEAD_FONT_SIZE * min(1.0, PHONE_COLUMN / width) >= 16.0
+        assert int(re.search(r'<svg[^>]*width="(\d+)"', svg).group(1)) <= _widest_image() + 1
 
 
 def test_wrapping_loses_nothing_and_invents_nothing(repo):
@@ -683,7 +716,7 @@ def test_the_wrap_is_balanced_rather_than_greedy(repo):
     which reads as a mistake rather than as a wrapped line."""
     crowded = 0
     for line in masthead.every_line():
-        rows = cards.wrap(line)
+        rows = cards.wrap(line, 26)
         if len(rows) < 2:
             continue
         shortest, longest = min(map(masthead.cells, rows)), max(map(masthead.cells, rows))
@@ -692,7 +725,7 @@ def test_the_wrap_is_balanced_rather_than_greedy(repo):
     assert crowded == 0, f"{crowded} lines wrapped lopsidedly"
 
 
-def test_a_wrapped_row_lines_up_under_the_text_and_not_the_prompt(repo):
+def test_the_text_starts_beyond_the_prompt_on_every_row(repo):
     """The prompt belongs to the line, not to each row of it."""
     line = max(masthead.every_line(), key=masthead.cells)
     svg = cards.masthead_svg([line])
@@ -704,28 +737,34 @@ def test_a_wrapped_row_lines_up_under_the_text_and_not_the_prompt(repo):
     assert xs == {f"{left:.1f}"}, xs
 
 
-def test_the_rows_sit_on_their_own_baselines(repo):
-    """Two rows on one baseline is one row of mush."""
+def test_the_plate_is_one_row_tall_and_the_text_sits_inside_it(repo):
+    """One row, so one baseline, with air above and below it for the bloom."""
     line = max(masthead.every_line(), key=masthead.cells)
     svg = cards.masthead_svg([line])
     ys = [int(y) for y in re.findall(r'<text x="[\d.]+" y="(\d+)" clip-path=', svg)]
-    assert len(ys) == len(cards.wrap(line)) == 2
-    assert ys[1] - ys[0] == cards.ROW_HEIGHT
-    assert int(re.search(r'<svg[^>]*height="(\d+)"', svg).group(1)) > ys[-1]
+    assert ys == [cards.PAD_Y + cards.ROW_HEIGHT // 2 + cards.MASTHEAD_FONT_SIZE // 3]
+
+    height = int(re.search(r'<svg[^>]*height="(\d+)"', svg).group(1))
+    assert height == cards.ROW_HEIGHT + 2 * cards.PAD_Y
+    assert height > ys[0] + cards.MASTHEAD_FONT_SIZE // 3, "the descenders are clipped"
 
 
-def test_the_cursor_drops_a_row_when_the_line_wraps(repo):
-    """A terminal cursor follows the text onto the next row. This one has to
-    as well, or it sits at the end of the first row while the second types."""
+def test_the_cursor_stays_on_the_one_row_there_is(repo):
+    """And would follow the text down if there were another: the machinery
+    is the same either way, so this checks both."""
     line = max(masthead.every_line(), key=masthead.cells)
-    svg = cards.masthead_svg([line])
-    ys = [int(v) for v in
-          re.search(r'attributeName="y" values="([^"]+)"', svg).group(1).split(";")]
-    assert len(set(ys)) == 2, "the cursor never left the first row"
-    assert max(ys) - min(ys) == cards.ROW_HEIGHT
-    # It goes down once and comes back once, rather than flickering between.
-    moves = sum(1 for a, b in zip(ys, ys[1:]) if a != b)
-    assert moves == 2, moves
+    ys = [int(v) for v in re.search(
+        r'attributeName="y" values="([^"]+)"',
+        cards.masthead_svg([line])).group(1).split(";")]
+    assert len(set(ys)) == 1, "the cursor left a row that does not exist"
+
+    rows = cards.wrap(line, 26)
+    assert len(rows) == 2, rows
+    cell = cards.MASTHEAD_FONT_SIZE * cards.CELL_RATIO
+    _times, _widths, _tips, where, _lit = cards._reveal(rows, 0.0, 9.0, 9.0, cell)
+    assert set(where) == {0, 1}, "the cursor never reached the second row"
+    moves = sum(1 for a, b in zip(where, where[1:]) if a != b)
+    assert moves == 2, f"it crossed the break {moves} times, not down and back"
 
 
 def test_only_one_cursor_is_ever_lit(repo):

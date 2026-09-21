@@ -13,8 +13,8 @@ category: profile
 
 <!-- MASTHEAD:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=715ac8c2">
-  <img alt="👋🏻 Hello World! / 🧮 Risk measured, not guessed / 🧹 Automating the step everyone skips / 🌱 Nothing here ages without warning / ♻️ Environments that nobody has to remember / 📊 Runs you can rerun later / ⛓️ A rule that cannot rot quietly / 🧾 A log line that says who to ask / 💤 Builds that do not wake anyone / 🎓 Only what the next reader needs / 📖 Runbooks nobody can ignore / 🗓️ Renewed on a schedule, not a reminder / 🔋 A runbook that outlasts the team" src="assets/masthead-light.svg?v=569cb797">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=66862196">
+  <img alt="👋🏻 Hello World! / 🧮 Risk measured, not guessed / 🧹 Automating the step everyone skips / 🌱 Nothing here ages without warning / ♻️ Environments that nobody has to remember / 📊 Runs you can rerun later / ⛓️ A rule that cannot rot quietly / 🧾 A log line that says who to ask / 💤 Builds that do not wake anyone / 🎓 Only what the next reader needs / 📖 Runbooks nobody can ignore / 🗓️ Renewed on a schedule, not a reminder / 🔋 A runbook that outlasts the team" src="assets/masthead-light.svg?v=34bf5227">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -109,7 +109,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 21:41 EDT on Sunday, September 20, 2026.
+Last updated 21:51 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

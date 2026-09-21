@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=c1d50f6a">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=536a1d88">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=ed98f4bf">
-  <img alt="👋🏻 Hello World! / 🏗️ Keep the right way easy / 🩺 Notice it before the pager does / 🪵 The context in one place / 🧩 Pieces that fit without glue / 🔗 No package without a review / 📮 A fix that arrives reviewed / 📦 Solving the same problem once / 🎯 Solves exactly what it claims / ⏱️ A review in under five minutes / 🪄 No implicit steps in the deploy / 💬 A commit that reads as prose / 🛠️ Fix the cause, not the ticket" src="assets/masthead-light.svg?v=a2dbdc2d">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=e3ccea49">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=17d3a273">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=371cec21">
+  <img alt="👋🏻 Hello World! / 🔍 Errors you can actually act on / 📌 Pinned to a SHA, not latest / 🗃️ Configs where everyone expects / 🏷️ Every release carries a version / ✂️ Cutting more than I write / 🧯 A fix without anyone noticing / 🔔 Page only when it is real / 🌱 Nothing here ages silently / 💡 The intent obvious in the name / 📉 One fewer step to explain / 🔐 Request least access, always / 🚦 A red gate means work now" src="assets/masthead-light.svg?v=116899cb">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -112,7 +112,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 02:29 EDT on Monday, September 21, 2026.
+Last updated 09:20 EDT on Monday, September 21, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

@@ -899,3 +899,19 @@ def test_the_lines_are_still_announced_on_a_phone(repo):
     alt = re.search(r'<img alt="([^"]+)"', cards.masthead_region()).group(1)
     for line in lines:
         assert line in alt, line
+
+
+def test_the_plate_never_reaches_the_frames_that_write_commits(repo):
+    """The plate is a masthead concept. The commit frames share this class
+    and are not laid out on it.
+
+    A frame that quietly capped them would drop a subject the moment one
+    grew past 34 cells, while commit_messages() went on counting it. The
+    longest subject is already 33 of 34, so this is one word away.
+    """
+    for frame in (masthead.COMMIT_SUBJECT, *masthead.COMMIT_WHY, *masthead.COMMIT_HOW):
+        assert {frame.draw() for _ in range(200)} <= set(frame.every())
+    seen = {masthead.COMMIT_SUBJECT.draw() for _ in range(400)}
+    assert len(seen) == masthead.COMMIT_SUBJECT.combinations(), len(seen)
+    assert max(masthead.cells(line) for line in masthead.COMMIT_SUBJECT.every()) \
+        > masthead.PLATE_CELLS - 4, "the subject pool has drifted well clear of the plate"

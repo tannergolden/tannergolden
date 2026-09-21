@@ -130,13 +130,19 @@ class Frame:
         for pick in itertools.product(*self.slots):
             yield self.fill(pick)
 
-    def fitting(self, cap: int = 0):
+    def fitting(self, cap: int | None = None):
         """The lines from this frame narrow enough for the plate to show."""
-        cap = cap or PLATE_CELLS
+        cap = PLATE_CELLS if cap is None else cap
         return [line for line in self.every() if cells(line) <= cap]
 
-    def draw(self, avoid=(), cap: int = 0) -> str:
-        """One line from this frame that fits the plate, preferring a fresh one.
+    def draw(self, avoid=(), cap: int | None = None) -> str:
+        """One line from this frame, preferring one not drawn recently.
+
+        `cap` is the plate, and it is passed in rather than assumed. The
+        plate belongs to the masthead; the frames that write commit subjects
+        and bodies share this class and are not laid out on it, and a frame
+        that quietly capped them would drop a subject the moment one grew
+        past the plate while `commit_messages()` went on counting it.
 
         Enumerating is cheap here: the largest frame holds twenty lines, and
         walking twenty strings to keep a reader from meeting the same
@@ -144,7 +150,7 @@ class Frame:
         whole frame has been used lately it draws anyway rather than fail:
         a repeat beats a masthead with a hole in it.
         """
-        shown = self.fitting(cap) or list(self.every())
+        shown = list(self.every()) if cap is None else (self.fitting(cap) or list(self.every()))
         fresh = [line for line in shown if line not in avoid] if avoid else shown
         return _RNG.choice(fresh or shown)
 
@@ -527,12 +533,12 @@ def combinations() -> int:
     return sum(frame.combinations() for frame in FRAMES)
 
 
-def drawable(cap: int = 0) -> int:
+def drawable(cap: int | None = None) -> int:
     """How many of those the masthead can actually put on the page."""
     return sum(len(frame.fitting(cap)) for frame in plate_frames(cap))
 
 
-def plate_frames(cap: int = 0) -> list:
+def plate_frames(cap: int | None = None) -> list:
     """The frames with enough short enough lines to be worth drawing from."""
     return [frame for frame in FRAMES if len(frame.fitting(cap)) >= PLATE_MIN_LINES]
 
@@ -580,4 +586,4 @@ def lines(count: int = LINES_PER_MASTHEAD, avoid_shapes=(), avoid_lines=()) -> l
     if len(pool) < count:
         pool = drawable_frames
     frames = _RNG.sample(pool, k=min(count, len(pool)))
-    return [GREETING] + [frame.draw(avoid_lines) for frame in frames]
+    return [GREETING] + [frame.draw(avoid_lines, cap=PLATE_CELLS) for frame in frames]

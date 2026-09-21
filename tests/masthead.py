@@ -36,7 +36,7 @@ def test_there_are_enough_frames_to_draw_the_set_from(repo):
     every shape on every masthead, and the emoji down the left would be the
     same twelve every time however the words varied.
     """
-    assert len(masthead.FRAMES) >= 2 * masthead.LINES_PER_MASTHEAD
+    assert len(masthead.plate_frames()) >= 2 * masthead.LINES_PER_MASTHEAD
     assert len(masthead.lines()) == masthead.LINES_PER_MASTHEAD + 1
 
 
@@ -645,8 +645,15 @@ def _widest_image() -> float:
 
 
 def _longest_image() -> float:
-    """The widest plate any line the generator can draw actually needs."""
-    return _image_for(max(masthead.cells(line) for line in masthead.every_line()))
+    """The widest plate any line the masthead can SHOW actually needs.
+
+    Not the widest the generator can write. The plate is what decides which
+    of those reach the page, and a measurement taken over lines nobody will
+    ever see measures nothing.
+    """
+    longest = max(masthead.cells(line)
+                  for frame in masthead.plate_frames() for line in frame.fitting())
+    return _image_for(longest)
 
 
 def test_nothing_the_generator_can_draw_wraps(repo):
@@ -683,7 +690,7 @@ def test_what_a_phone_actually_gets_is_known_and_written_down(repo):
     WRAP_CELLS is wrong and somebody should know.
     """
     landed = cards.MASTHEAD_FONT_SIZE * PHONE_COLUMN / _longest_image()
-    assert 9.5 <= landed <= 12.0, f"{landed:.1f}px, not the eleven the comment claims"
+    assert 14.0 <= landed <= 17.0, f"{landed:.1f}px on a phone"
 
     # And the font cancels out of it, which is the part worth proving: a
     # bigger font only widens the image that GitHub then scales back down.
@@ -786,3 +793,52 @@ def test_only_one_cursor_is_ever_lit(repo):
             held = max((i for i, t in enumerate(times) if t <= at), default=0)
             lit += values[held]
         assert lit <= 1, f"{lit} cursors lit at {at}"
+
+
+# --- the plate ------------------------------------------------------------------
+
+def test_the_plate_decides_what_the_page_can_show(repo):
+    """Both numbers stated, so neither drifts quietly.
+
+    The generator holds a thousand lines. The plate is 34 cells wide because
+    that is what a phone can read, and half of those lines are wider than
+    that. Nothing about the shortfall is hidden: it is here, in a number a
+    test fails on.
+    """
+    assert masthead.combinations() + 1 == masthead.TOTAL_LINES == 1000
+    assert masthead.PLATE_CELLS == 34
+    assert masthead.drawable() == 511, masthead.drawable()
+    assert len(masthead.plate_frames()) == 42, len(masthead.plate_frames())
+    assert masthead.mastheads() > 10 ** 20
+
+
+def test_nothing_wider_than_the_plate_ever_reaches_the_page(repo):
+    """The whole point. One long line in a draw widens the image for all of
+    them, so this holds over the draw rather than over the line."""
+    for _ in range(60):
+        drawn = masthead.lines()
+        assert max(masthead.cells(line) for line in drawn[1:]) <= masthead.PLATE_CELLS
+        width = int(re.search(r'<svg[^>]*width="(\d+)"',
+                              cards.masthead_svg(drawn)).group(1))
+        assert cards.MASTHEAD_FONT_SIZE * PHONE_COLUMN / width >= 14.0
+
+
+def test_every_frame_the_plate_keeps_outlasts_the_memory(repo):
+    """At 34 cells one frame keeps a single line, which would then be the
+    only thing it ever said. A frame appears at most seven times inside the
+    window, since the last draw's shapes are excluded from the next, so
+    eight is what makes 'no line twice in four days' true rather than hoped
+    for."""
+    assert masthead.PLATE_MIN_LINES >= masthead.MEMORY_DRAWS
+    for frame in masthead.plate_frames():
+        assert len(frame.fitting()) >= masthead.PLATE_MIN_LINES, frame.shape
+    dropped = [f for f in masthead.FRAMES if f not in masthead.plate_frames()]
+    assert all(len(f.fitting()) < masthead.PLATE_MIN_LINES for f in dropped)
+
+
+def test_a_frame_that_cannot_fit_the_plate_still_draws_rather_than_fail(repo):
+    """Asked for a plate narrower than anything it has, a frame answers with
+    a line that does not fit instead of nothing at all."""
+    frame = masthead.FRAMES[0]
+    assert frame.fitting(cap=1) == []
+    assert frame.draw(cap=1) in set(frame.every())

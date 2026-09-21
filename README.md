@@ -13,8 +13,8 @@ category: profile
 
 <!-- MASTHEAD:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=66862196">
-  <img alt="👋🏻 Hello World! / 🧮 Risk measured, not guessed / 🧹 Automating the step everyone skips / 🌱 Nothing here ages without warning / ♻️ Environments that nobody has to remember / 📊 Runs you can rerun later / ⛓️ A rule that cannot rot quietly / 🧾 A log line that says who to ask / 💤 Builds that do not wake anyone / 🎓 Only what the next reader needs / 📖 Runbooks nobody can ignore / 🗓️ Renewed on a schedule, not a reminder / 🔋 A runbook that outlasts the team" src="assets/masthead-light.svg?v=34bf5227">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=07117fd9">
+  <img alt="👋🏻 Hello World! / 🏗️ Keep the safe way easy / ✂️ Deleting more than I merge / ⏱️ Feedback in under a minute / 🧩 Repos that fit together / 📦 Deciding the rule once / 🪵 The failure in one place / 🗺️ Deployed with one file / 📉 One fewer thing to explain / 🚦 A red test means it stops here / 🚧 No step is waiting on me / 📐 One shape with no surprises / 🧪 Checks that nobody can skip" src="assets/masthead-light.svg?v=5487c180">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -38,15 +38,15 @@ category: profile
 ## 📡 Dispatch
 
 <!-- DISPATCHES:BEGIN -->
-### Sunday, September 20, 2026
+### Monday, September 21, 2026
 
 [![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
-| 19:05 | `feat(trending)` | [Tencent/WeMM-Embedding](dispatches/2026/September.md#dispatch-20260920-190522) |
-| 18:41 | `docs(rfc)` | [RFC 9792: Prefix Flag Extension for OSPFv2 and OSPFv3](dispatches/2026/September.md#dispatch-20260920-184118) |
-| 18:38 | `security(advisory)` | [GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp](dispatches/2026/September.md#dispatch-20260920-183803) |
+| Sep 20, 19:05 | `feat(trending)` | [Tencent/WeMM-Embedding](dispatches/2026/September.md#dispatch-20260920-190522) |
+| Sep 20, 18:41 | `docs(rfc)` | [RFC 9792: Prefix Flag Extension for OSPFv2 and OSPFv3](dispatches/2026/September.md#dispatch-20260920-184118) |
+| Sep 20, 18:38 | `security(advisory)` | [GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp](dispatches/2026/September.md#dispatch-20260920-183803) |
 
 [All dispatches](dispatches/) · [How it works](How-It-Works.md) · 3 in September
 <!-- DISPATCHES:END -->
@@ -109,7 +109,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 21:51 EDT on Sunday, September 20, 2026.
+Last updated 00:00 EDT on Monday, September 21, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

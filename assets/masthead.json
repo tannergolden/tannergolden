@@ -1,32 +1,32 @@
 {
   "lines": [
     "\ud83d\udc4b\ud83c\udffb Hello World!",
-    "\ud83e\uddee Risk measured, not guessed",
-    "\ud83e\uddf9 Automating the step everyone skips",
-    "\ud83c\udf31 Nothing here ages without warning",
-    "\u267b\ufe0f Environments that nobody has to remember",
-    "\ud83d\udcca Runs you can rerun later",
-    "\u26d3\ufe0f A rule that cannot rot quietly",
-    "\ud83e\uddfe A log line that says who to ask",
-    "\ud83d\udca4 Builds that do not wake anyone",
-    "\ud83c\udf93 Only what the next reader needs",
-    "\ud83d\udcd6 Runbooks nobody can ignore",
-    "\ud83d\uddd3\ufe0f Renewed on a schedule, not a reminder",
-    "\ud83d\udd0b A runbook that outlasts the team"
+    "\ud83c\udfd7\ufe0f Keep the safe way easy",
+    "\u2702\ufe0f Deleting more than I merge",
+    "\u23f1\ufe0f Feedback in under a minute",
+    "\ud83e\udde9 Repos that fit together",
+    "\ud83d\udce6 Deciding the rule once",
+    "\ud83e\udeb5 The failure in one place",
+    "\ud83d\uddfa\ufe0f Deployed with one file",
+    "\ud83d\udcc9 One fewer thing to explain",
+    "\ud83d\udea6 A red test means it stops here",
+    "\ud83d\udea7 No step is waiting on me",
+    "\ud83d\udcd0 One shape with no surprises",
+    "\ud83e\uddea Checks that nobody can skip"
   ],
   "shapes": [
-    "\ud83e\uddee",
-    "\ud83e\uddf9",
-    "\ud83c\udf31",
-    "\u267b\ufe0f",
-    "\ud83d\udcca",
-    "\u26d3\ufe0f",
-    "\ud83e\uddfe",
-    "\ud83d\udca4",
-    "\ud83c\udf93",
-    "\ud83d\udcd6",
-    "\ud83d\uddd3\ufe0f",
-    "\ud83d\udd0b"
+    "\ud83c\udfd7\ufe0f",
+    "\u2702\ufe0f",
+    "\u23f1\ufe0f",
+    "\ud83e\udde9",
+    "\ud83d\udce6",
+    "\ud83e\udeb5",
+    "\ud83d\uddfa\ufe0f",
+    "\ud83d\udcc9",
+    "\ud83d\udea6",
+    "\ud83d\udea7",
+    "\ud83d\udcd0",
+    "\ud83e\uddea"
   ],
   "recent": [
     "\ud83d\ude80 Deploying a change behind a gate",
@@ -52,7 +52,19 @@
     "\ud83c\udf93 Only what the next reader needs",
     "\ud83d\udcd6 Runbooks nobody can ignore",
     "\ud83d\uddd3\ufe0f Renewed on a schedule, not a reminder",
-    "\ud83d\udd0b A runbook that outlasts the team"
+    "\ud83d\udd0b A runbook that outlasts the team",
+    "\ud83c\udfd7\ufe0f Keep the safe way easy",
+    "\u2702\ufe0f Deleting more than I merge",
+    "\u23f1\ufe0f Feedback in under a minute",
+    "\ud83e\udde9 Repos that fit together",
+    "\ud83d\udce6 Deciding the rule once",
+    "\ud83e\udeb5 The failure in one place",
+    "\ud83d\uddfa\ufe0f Deployed with one file",
+    "\ud83d\udcc9 One fewer thing to explain",
+    "\ud83d\udea6 A red test means it stops here",
+    "\ud83d\udea7 No step is waiting on me",
+    "\ud83d\udcd0 One shape with no surprises",
+    "\ud83e\uddea Checks that nobody can skip"
   ],
-  "loop_seconds": 55.7
+  "loop_seconds": 47.6
 }

@@ -69,14 +69,15 @@ is a generator nobody can vouch for.
 | | |
 | :--- | ---: |
 | Lines, the greeting included | **1,000** exactly |
-| Frames | 64 |
-| Distinct mastheads (twelve drawn from sixty-four frames) | 6.77 x 10^26 |
+| Of those, narrow enough to show | 511 |
+| Frames | 64, of which 42 fit the plate |
+| Distinct mastheads | 1.05 x 10^23 |
 | Words per line | 4 to 8 |
-| Widest line | 49 cells, on one row |
-| Image | at most 649 x 47 |
+| Plate | 34 cells, one row |
+| Image | at most 467 x 47 |
 | Typing | 20 cells a second, constant |
 | Greeting | 2.6 seconds, once |
-| Loop | about 55 seconds, forever |
+| Loop | about 51 seconds, forever |
 | Redrawn | every 12 hours, and it remembers the last 4 days |
 
 A thousand is a promise rather than an accident: the pools are sized to land
@@ -135,29 +136,45 @@ nobody believes is random. The masthead is not news and nothing about it is
 due at a moment, so it is the honest exception: a clock, at 06:41 and 18:41
 UTC, off the hour for the same congestion reason the dispatch cron is.
 
-**One row, and what that costs on a phone.** GitHub scales a README image
-down to the column, and the column on a phone is about 330 CSS pixels. Fifty
-one cells across 330 pixels is under seven pixels a cell, so **one row on a
-phone is about 10 pixels and no font size changes that**: raising the font
-widens the image by the same proportion GitHub then scales it back down by.
-A test proves the cancellation rather than asserting a target, because it is
-a fact about the layout and not a preference.
+**The plate is 34 cells, and that is the number that decides whether a
+phone can read this.** GitHub scales a README image down to its column, and
+the column on a phone is about 330 CSS pixels. The effective font size is
+the column divided by the cells, and **the font size set in the renderer
+cancels out of it entirely**: a bigger font widens the image by exactly the
+proportion GitHub then scales back down. Cells are the only lever there is,
+and a test proves the cancellation rather than asserting a target.
 
-Wrapping is the only thing that moves it. At twenty six cells a row the
-image is 371 pixels and a phone gets 18, which was shipped and then
-taken back out: a masthead that breaks mid-sentence reads as a mistake on
-every screen, and that cost falls on every reader rather than only on the
-ones holding a phone. The renderer still wraps if `WRAP_CELLS` is lowered,
-and a test keeps that path exercised so it cannot rot while it is unused.
-Twenty six is the number to use, being the last cap where every one of the
-thousand lines still fits two rows.
+| Longest line shown | Image | On a 328px column |
+| :--- | ---: | ---: |
+| 49 cells | 649px | 10.1px |
+| 34 cells | 467px | 14.0px |
 
-What made 10 pixels survivable was the lighting rather than the layout. The
-glow used to blur the text and merge that blur back over the text, which
-thickens every stroke and softens every edge; at a phone's stroke width of
-two pixels that is the difference between reading it and squinting at it.
-Both blurs are now dimmed and laid behind an untouched `SourceGraphic`, so
-the light is in the air around the glyphs and never on them.
+**This is not free and it is not hidden.** The generator still writes a
+thousand lines, but 511 of them fit the plate, across 42 of the sixty-four
+frames. `drawable()` counts what the page can show, `combinations()` counts
+what exists, and a test states both numbers so neither drifts quietly.
+Widening the plate is one constant; getting all thousand back under it is a
+rewrite of fifty-one frames, which is the honest price of having asked for
+four to eight words a line.
+
+A frame is kept only if it has at least eight lines that fit. At 34 cells
+one frame keeps a single line, which would then be the only thing it ever
+said. A frame appears at most seven times inside the memory window, since
+the shapes the last draw used are excluded from the next, so eight is what
+makes "no line twice in four days" true rather than hoped for.
+
+**Wrapping was tried and taken back out.** Two rows of twenty six cells put a
+phone at eighteen pixels, but a masthead that breaks mid-sentence reads as a
+mistake on every screen, and that cost falls on every reader rather than
+only on the ones holding a phone. The renderer still wraps if `WRAP_CELLS`
+is lowered, and a test keeps that path exercised so it cannot rot.
+
+What made the small type survivable in the meantime was the lighting rather
+than the layout. The glow used to blur the text and merge that blur back
+over the text, which thickens every stroke and softens every edge; at a
+phone's stroke width of two pixels that is the difference between reading it
+and squinting at it. Both blurs are now dimmed and laid behind an untouched
+`SourceGraphic`, so the light is in the air around the glyphs, never on them.
 
 **The greeting types once and does not come back.** It runs on a timeline of
 its own with `repeatCount="1"`, and the drawn lines loop among themselves on a

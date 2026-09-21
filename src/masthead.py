@@ -25,11 +25,38 @@ import itertools
 import random
 from dataclasses import dataclass
 
-# The plate is as wide as its longest line, so this is a layout constraint
-# before it is an editorial one. At 52 cells and an 18px monospace the image
-# comes to 594px, which sits inside GitHub's column on a desktop and scales
-# down on a phone rather than overflowing.
+# The longest line a frame may write. An editorial ceiling: past this a line
+# stops being a masthead and starts being a sentence.
 MAX_CELLS = 52
+
+# THE WIDTH THE MASTHEAD WILL ACTUALLY SHOW, and the number that decides
+# whether a phone can read this.
+#
+# GitHub scales a README image down to its column, and the column on a phone
+# is about 330 CSS pixels. The effective font size is the column divided by
+# the cells, and the font size set in the renderer cancels out of that
+# entirely: a bigger font widens the image by exactly the proportion GitHub
+# then scales back down. Cells are the only lever there is.
+#
+#     49 cells -> a 649px image -> 11px on a phone
+#     34 cells -> a 468px image -> 15px on a phone
+#
+# So the masthead draws only from lines that fit 34. THIS IS NOT FREE and it
+# is not hidden: it leaves 511 of the thousand drawable, across 42 of the
+# sixty-four frames. `drawable()` counts what the page can show,
+# `combinations()` still counts what exists, and a test states both numbers
+# so neither can drift quietly. Widening the plate is one constant; getting
+# all thousand back under it is a rewrite of fifty-one frames, which is the
+# honest price of having asked for four to eight words a line.
+PLATE_CELLS = 34
+
+# And the fewest lines a frame must still have at that width to be drawn from
+# at all. The plate cuts some frames much harder than others: at 34 cells one
+# of them keeps a single line, which would then be the only thing it ever
+# said. A frame can appear at most seven times inside the memory window,
+# since the shape the last draw used is excluded from the next, so eight is
+# what guarantees a frame never repeats itself inside four days.
+PLATE_MIN_LINES = 8
 
 GREETING = "\U0001F44B\U0001F3FB Hello World!"
 
@@ -103,8 +130,13 @@ class Frame:
         for pick in itertools.product(*self.slots):
             yield self.fill(pick)
 
-    def draw(self, avoid=()) -> str:
-        """One line from this frame, preferring one not drawn recently.
+    def fitting(self, cap: int = 0):
+        """The lines from this frame narrow enough for the plate to show."""
+        cap = cap or PLATE_CELLS
+        return [line for line in self.every() if cells(line) <= cap]
+
+    def draw(self, avoid=(), cap: int = 0) -> str:
+        """One line from this frame that fits the plate, preferring a fresh one.
 
         Enumerating is cheap here: the largest frame holds twenty lines, and
         walking twenty strings to keep a reader from meeting the same
@@ -112,11 +144,9 @@ class Frame:
         whole frame has been used lately it draws anyway rather than fail:
         a repeat beats a masthead with a hole in it.
         """
-        if avoid:
-            fresh = [line for line in self.every() if line not in avoid]
-            if fresh:
-                return _RNG.choice(fresh)
-        return self.fill([_RNG.choice(pool) for pool in self.slots])
+        shown = self.fitting(cap) or list(self.every())
+        fresh = [line for line in shown if line not in avoid] if avoid else shown
+        return _RNG.choice(fresh or shown)
 
 
 FRAMES = (
@@ -420,7 +450,7 @@ def mastheads() -> int:
     # The elementary symmetric polynomial of the frame sizes, at degree
     # LINES_PER_MASTHEAD. Walking the subsets instead would be correct and
     # take C(38, 12) steps, which is 2.7 billion; this is 38 x 12.
-    sizes = [frame.combinations() for frame in FRAMES]
+    sizes = [len(frame.fitting()) for frame in plate_frames()]
     totals = [1] + [0] * LINES_PER_MASTHEAD
     for size in sizes:
         for k in range(LINES_PER_MASTHEAD, 0, -1):
@@ -497,6 +527,16 @@ def combinations() -> int:
     return sum(frame.combinations() for frame in FRAMES)
 
 
+def drawable(cap: int = 0) -> int:
+    """How many of those the masthead can actually put on the page."""
+    return sum(len(frame.fitting(cap)) for frame in plate_frames(cap))
+
+
+def plate_frames(cap: int = 0) -> list:
+    """The frames with enough short enough lines to be worth drawing from."""
+    return [frame for frame in FRAMES if len(frame.fitting(cap)) >= PLATE_MIN_LINES]
+
+
 def every_line():
     """All of them, for a test that asserts the whole space is shippable."""
     for frame in FRAMES:
@@ -535,8 +575,9 @@ def lines(count: int = LINES_PER_MASTHEAD, avoid_shapes=(), avoid_lines=()) -> l
     """
     avoid_shapes = set(avoid_shapes)
     avoid_lines = set(avoid_lines)
-    pool = [frame for frame in FRAMES if frame.emoji not in avoid_shapes]
+    drawable_frames = plate_frames()
+    pool = [frame for frame in drawable_frames if frame.emoji not in avoid_shapes]
     if len(pool) < count:
-        pool = list(FRAMES)
+        pool = drawable_frames
     frames = _RNG.sample(pool, k=min(count, len(pool)))
     return [GREETING] + [frame.draw(avoid_lines) for frame in frames]

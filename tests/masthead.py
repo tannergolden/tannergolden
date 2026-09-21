@@ -24,7 +24,7 @@ LEADING_EMOJI = re.compile(r"^[^\sA-Za-z0-9]+️?\s")
 def test_the_thousandth_line_is_the_greeting():
     """A round number is a promise, so it fails the day a pool drifts."""
     assert masthead.combinations() + 1 == masthead.TOTAL_LINES == 1000
-    assert len(masthead.FRAMES) == 38
+    assert len(masthead.FRAMES) == 64
     assert len(set(masthead.every_line())) == masthead.combinations(), "a line is duplicated"
     assert masthead.GREETING not in set(masthead.every_line())
 
@@ -107,6 +107,13 @@ def test_every_line_opens_with_an_emoji_and_then_words():
         rest = LEADING_EMOJI.sub("", line)
         assert rest[:1].isupper(), line
         assert 4 <= len(rest.split()) <= 8, f"{len(rest.split())} words: {line}"
+
+
+def test_every_frame_has_its_own_emoji():
+    """Two frames sharing one would read as the same shape twice in a set."""
+    emoji = [f.emoji for f in masthead.FRAMES]
+    assert len(set(emoji)) == len(emoji), "an emoji is used by two frames"
+    assert all(emoji), "a masthead line without an emoji"
 
 
 def test_every_frame_earns_its_place():

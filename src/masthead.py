@@ -88,112 +88,146 @@ class Frame:
 
 
 FRAMES = (
-    # --- what the work is ---------------------------------------------------
+    # --- what the work is --------------------------------------------------
     Frame("\U0001F512", "{} {} {}", (
-        ("Hardening", "Gating", "Auditing", "Reviewing", "Guarding"),
-        ("every action", "every workflow", "every build", "every dependency", "every release"),
-        ("by default", "before it merges", "on every push"),
+        ("Hardening", "Gating", "Auditing"),
+        ("every action", "every workflow", "every build"),
+        ("by default", "before it merges"),
     )),
     Frame("\U0001F680", "{} {} {}", (
-        ("Shipping", "Releasing", "Deploying", "Rolling out"),
-        ("a change", "a release", "a fix", "a version"),
-        ("behind a gate", "with a rollback ready", "on a green build", "without a pager"),
+        ("Shipping", "Releasing", "Deploying"),
+        ("a change", "a fix", "a version"),
+        ("behind a gate", "with a rollback ready"),
     )),
     Frame("\U0001F552", "{} {} {}", (
-        ("Reviewing", "Merging", "Shipping", "Reverting"),
-        ("small changes", "one thing", "a single commit", "the smallest diff"),
-        ("every day", "before lunch", "while it is fresh"),
+        ("Reviewing", "Merging", "Shipping"),
+        ("small changes", "one thing"),
+        ("every day", "while it is fresh"),
     )),
-    # --- what it is for -----------------------------------------------------
+    Frame("\U0001F510", "{} least {}, always", (
+        ("Grant", "Request", "Assume", "Default to"),
+        ("privilege", "access", "trust", "permission"),
+    )),
+    Frame("\u26D3\uFE0F", "{} that cannot {}", (
+        ("A pipeline", "A gate", "A default", "A rule"),
+        ("be skipped", "drift", "be argued away", "rot quietly"),
+    )),
+    # --- what it is for ----------------------------------------------------
     Frame("\u267B\uFE0F", "{} that {}", (
-        ("Pipelines", "Standards", "Environments", "Workflows", "Guardrails", "Runbooks"),
+        ("Pipelines", "Standards", "Environments", "Guardrails"),
         ("outlive their author", "still run next year", "nobody has to remember",
-         "a new machine cannot break", "explain themselves", "fail loudly"),
+         "explain themselves"),
     )),
     Frame("\U0001F4D6", "{} nobody {}", (
-        ("Docs", "Standards", "Runbooks", "Guides", "Comments", "Rules"),
-        ("has to read twice", "argues with", "can ignore", "needs explained",
-         "has to guess at", "quietly works around"),
+        ("Docs", "Standards", "Runbooks", "Guides"),
+        ("has to read twice", "argues with", "can ignore", "has to guess at"),
     )),
     Frame("\U0001F9EA", "{} that {}", (
-        ("Tests", "Gates", "Checks", "Linters", "Reviews", "Alarms"),
+        ("Tests", "Gates", "Checks", "Linters"),
         ("catch it before I do", "fail for the right reason", "nobody can skip",
-         "run on every change", "mean something", "earn their runtime"),
+         "earn their runtime"),
     )),
     Frame("\U0001F4A4", "{} that {}", (
-        ("Alerts", "Pipelines", "Builds", "Deploys", "Rollbacks"),
+        ("Alerts", "Pipelines", "Builds", "Deploys"),
         ("nobody gets paged for", "wait until morning", "do not wake anyone",
-         "run without me", "need no babysitting"),
+         "run without me"),
     )),
-    # --- preferences, stated as preferences ---------------------------------
+    Frame("\U0001F9FE", "{} that says {}", (
+        ("An error", "A log line", "A failure"),
+        ("what to do", "what broke", "what comes next", "who to ask"),
+    )),
+    # --- preferences, stated as preferences --------------------------------
     Frame("\U0001F9ED", "{} over {}", (
-        ("Boring tools", "One way", "Plain defaults", "Written rules",
-         "Shared conventions", "Working automation", "Fewer choices", "Dull tooling"),
-        ("configuration", "cleverness", "tribal knowledge", "heroics", "novelty",
-         "three ways", "trust", "surprise"),
+        ("Boring tools", "One way", "Plain defaults", "Written rules"),
+        ("configuration", "cleverness", "tribal knowledge", "heroics", "novelty"),
     )),
     Frame("\U0001F9F0", "{} I would {} again", (
         ("Tools", "Defaults", "Choices", "Conventions"),
         ("pick", "defend", "write", "make"),
     )),
     Frame("\U0001F3AF", "{} exactly {}", (
-        ("Does", "Solves", "Covers", "Says"),
+        ("Does", "Solves", "Covers"),
         ("one thing", "what it claims", "what is needed", "nothing more"),
     )),
-    # --- where the effort goes ----------------------------------------------
+    Frame("\U0001F3D7\uFE0F", "{} the {} way easy", (
+        ("Make", "Keep", "Leave"),
+        ("right", "safe", "boring"),
+    )),
+    Frame("\U0001F4CB", "{} once, {} everywhere", (
+        ("Written", "Decided", "Fixed"),
+        ("applied", "enforced", "used", "honoured"),
+    )),
+    # --- where the effort goes ---------------------------------------------
     Frame("\U0001F9F9", "{} {}", (
-        ("Automating", "Documenting", "Simplifying", "Untangling", "Flattening"),
+        ("Automating", "Documenting", "Simplifying", "Untangling"),
         ("the boring parts", "what people forget", "the thing nobody checks",
-         "the step everyone skips", "the part that breaks", "the bit that bites"),
+         "the step everyone skips"),
     )),
     Frame("\u2702\uFE0F", "{} more than I {}", (
         ("Deleting", "Removing", "Cutting", "Pruning"),
-        ("add", "write", "ship", "merge", "keep"),
+        ("add", "write", "ship", "merge"),
     )),
     Frame("\U0001F4E6", "{} {} once", (
         ("Defining", "Solving", "Writing", "Deciding"),
-        ("the hard part", "the same problem", "the rule", "the answer", "the shape"),
+        ("the hard part", "the same problem", "the rule", "the answer"),
     )),
     Frame("\U0001F4C9", "One fewer {} to {}", (
-        ("thing", "step", "decision", "config file", "moving part"),
+        ("thing", "step", "decision", "moving part"),
         ("remember", "maintain", "explain", "get wrong"),
     )),
-    # --- the supply chain ---------------------------------------------------
+    Frame("\U0001F6AE", "{} removed, not {}", (
+        ("Dead code", "Old flags", "Stale docs"),
+        ("commented out", "left to rot", "quietly deprecated", "kept just in case"),
+    )),
+    # --- the supply chain --------------------------------------------------
     Frame("\U0001F4CC", "{}, not {}", (
         ("Pinned to a SHA", "Pinned to a digest", "Locked to a version",
-         "Fixed to a revision", "Bound to a lockfile"),
-        ("a tag", "latest", "a range", "a promise", "a moving branch"),
+         "Bound to a lockfile"),
+        ("a tag", "latest", "a range", "a moving branch"),
     )),
     Frame("\U0001F517", "No {} without {}", (
         ("dependency", "action", "image", "package"),
         ("a pinned digest", "a known licence", "a review", "an SBOM"),
     )),
     Frame("\U0001F3F7\uFE0F", "Every {} carries {}", (
-        ("release", "build", "commit", "artefact", "image"),
+        ("release", "build", "commit", "image"),
         ("a version", "its provenance", "a changelog", "a signature"),
     )),
     Frame("\U0001F9CA", "{} frozen at {}", (
         ("The toolchain", "The base image", "The runtime", "The lockfile"),
         ("a digest", "a version", "a date", "a known good"),
     )),
-    # --- reproducibility ----------------------------------------------------
+    Frame("\U0001F5D3\uFE0F", "{} on a schedule, not {}", (
+        ("Renewed", "Rotated", "Reviewed"),
+        ("a whim", "a reminder", "a memory", "good intentions"),
+    )),
+    # --- reproducibility ---------------------------------------------------
     Frame("\u2699\uFE0F", "{} works on {}", (
-        ("It", "The build", "The pipeline", "The whole thing", "Every step"),
-        ("my machine", "a fresh clone", "a cold runner", "somebody else's laptop",
-         "a clean container", "the first try"),
+        ("It", "The build", "The pipeline", "Every step"),
+        ("my machine", "a fresh clone", "a cold runner", "a clean container"),
     )),
     Frame("\U0001F501", "{} twice and {}", (
         ("Run it", "Build it", "Deploy it", "Clone it"),
-        ("get the same answer", "nothing differs", "the hash matches", "it still works"),
+        ("get the same answer", "nothing differs", "the hash matches",
+         "it still works"),
     )),
     Frame("\U0001F5FA\uFE0F", "{} with one {}", (
-        ("Set up", "Reproduced", "Deployed", "Rebuilt", "Restored"),
+        ("Set up", "Reproduced", "Deployed", "Restored"),
         ("command", "clone", "file", "flag"),
     )),
-    # --- operating it -------------------------------------------------------
+    Frame("\U0001F9EC", "{} reproducible from {}", (
+        ("A result", "A model", "A build", "A figure"),
+        ("the commit alone", "a lockfile", "one command", "the manifest"),
+    )),
+    Frame("\U0001F52D", "{} another {} can {}", (
+        ("Results", "Work", "Code"),
+        ("team", "reviewer", "lab"),
+        ("check", "rerun"),
+    )),
+    # --- operating it ------------------------------------------------------
     Frame("\U0001F9EF", "{} without {}", (
-        ("Recovery", "A rollback", "A fix", "A restart", "Failover"),
-        ("a war room", "a pager", "a heroic night", "a postmortem", "anyone noticing"),
+        ("Recovery", "A rollback", "A fix", "Failover"),
+        ("a war room", "a pager", "a heroic night", "anyone noticing"),
     )),
     Frame("\U0001F514", "{} only when {}", (
         ("Notify", "Page", "Alert", "Interrupt"),
@@ -203,10 +237,18 @@ FRAMES = (
         ("A way back", "A rollback", "An escape hatch", "A safe default"),
         ("it goes wrong", "nobody is watching", "the fix is slow", "it matters"),
     )),
-    # --- what you can see ---------------------------------------------------
+    Frame("\U0001FA7A", "{} before {} does", (
+        ("Catch it", "Find it", "Fix it", "Notice it"),
+        ("a user", "the pager", "the customer", "anyone else"),
+    )),
+    Frame("\U0001FAAB", "{} that degrade {}", (
+        ("Systems", "Services", "Builds"),
+        ("gracefully", "loudly", "into a known state", "without losing data"),
+    )),
+    # --- what you can see --------------------------------------------------
     Frame("\U0001F50D", "{} you can actually {}", (
-        ("Logs", "Traces", "Errors", "Metrics", "Stack traces"),
-        ("grep", "read", "act on", "trust", "follow"),
+        ("Logs", "Traces", "Errors", "Metrics"),
+        ("grep", "read", "act on", "trust"),
     )),
     Frame("\U0001FAB5", "{} in one {}", (
         ("The whole story", "Every request", "The failure", "The context"),
@@ -216,15 +258,27 @@ FRAMES = (
         ("Latency", "Coverage", "Risk", "Cost"),
         ("guessed", "argued", "assumed", "felt"),
     )),
-    # --- secrets ------------------------------------------------------------
+    Frame("\U0001F4A1", "{} obvious in {}", (
+        ("The next step", "The failure", "The fix", "The intent"),
+        ("the error", "the diff", "the name", "the log"),
+    )),
+    Frame("\U0001F4CA", "{} you can {} later", (
+        ("Numbers", "Runs", "Results", "Experiments"),
+        ("rerun", "compare", "defend", "reproduce"),
+    )),
+    # --- secrets -----------------------------------------------------------
     Frame("\U0001F5DD\uFE0F", "{} that never {}", (
         ("Secrets", "Tokens", "Keys", "Credentials"),
         ("reach a log", "leave the vault", "live in a repo", "get copied around"),
     )),
-    # --- shape and review ---------------------------------------------------
+    Frame("\U0001F39A\uFE0F", "{} off by default, {} on", (
+        ("Magic", "Guessing", "Retries", "Auto-merge"),
+        ("checks", "gates", "logs", "limits"),
+    )),
+    # --- shape and review --------------------------------------------------
     Frame("\U0001FA9E", "{} before {}", (
-        ("Review", "Test", "Lint", "Document", "Question"),
-        ("a merge", "a release", "the pager rings", "anyone asks", "it ships"),
+        ("Review", "Test", "Lint", "Document"),
+        ("a merge", "a release", "the pager rings", "anyone asks"),
     )),
     Frame("\U0001F4D0", "{} with {}", (
         ("One way in", "One shape", "A single entry point", "One source of truth"),
@@ -234,7 +288,15 @@ FRAMES = (
         ("Code", "A commit", "A name", "An error"),
         ("prose", "a sentence", "its intent", "what it does"),
     )),
-    # --- decay, and refusing it ---------------------------------------------
+    Frame("\U0001F9E9", "{} that fit {}", (
+        ("Pieces", "Repos", "Tools", "Standards"),
+        ("together", "one job each", "without glue", "by contract"),
+    )),
+    Frame("\U0001F5C3\uFE0F", "{} where {} expects", (
+        ("Files", "Configs", "Scripts", "Docs"),
+        ("the next person", "everyone", "the tooling", "a newcomer"),
+    )),
+    # --- decay, and refusing it --------------------------------------------
     Frame("\U0001F331", "{} ages {}", (
         ("Nothing here", "No pipeline", "No config", "No default"),
         ("badly", "into a mystery", "without warning", "silently"),
@@ -253,22 +315,61 @@ FRAMES = (
     )),
     Frame("\U0001FA84", "No {} in {}", (
         ("magic", "surprises", "hidden state", "implicit steps"),
-        ("the build", "the deploy", "the config", "the defaults", "the path"),
+        ("the build", "the deploy", "the config", "the path"),
     )),
-    # --- the page talking about itself, which it has earned -----------------
+    # --- research that holds up --------------------------------------------
+    Frame("\U0001F52C", "{} that survive {}", (
+        ("Results", "Findings", "Benchmarks", "Claims"),
+        ("a rerun", "review", "a new seed", "another machine"),
+    )),
+    Frame("\U0001F39B\uFE0F", "Never {} the same {} twice", (
+        ("configure", "solve", "debug", "explain"),
+        ("thing", "problem", "way", "step"),
+    )),
+    Frame("\U0001F6E0\uFE0F", "Fix the {}, not the {}", (
+        ("class", "root", "cause", "pattern"),
+        ("case", "symptom", "instance", "ticket"),
+    )),
+    # --- delivery ----------------------------------------------------------
+    Frame("\U0001F4EE", "{} that arrives {}", (
+        ("A change", "A release", "A fix", "A feature"),
+        ("reviewed", "tested", "with a rollback", "or not at all"),
+    )),
+    Frame("\u23F1\uFE0F", "{} in under {}", (
+        ("Builds", "Tests", "Feedback", "A review"),
+        ("a minute", "five minutes", "ten minutes", "a coffee"),
+    )),
+    Frame("\U0001F6A6", "A red {} means {}", (
+        ("build", "check", "gate", "test"),
+        ("nobody merges", "it stops here", "work now", "the queue waits"),
+    )),
+    # --- the next person ---------------------------------------------------
+    Frame("\U0001F393", "Only what the next {} {}", (
+        ("person", "reader", "maintainer", "engineer"),
+        ("needs", "will ask", "cannot guess", "would look for"),
+    )),
+    Frame("\U0001F4DD", "{} written down, not {}", (
+        ("Decisions", "Conventions", "Trade-offs", "Reasons"),
+        ("remembered", "argued", "re-derived", "guessed"),
+    )),
+    Frame("\U0001F310", "{} that works {}", (
+        ("A default", "A setup", "An environment"),
+        ("offline", "anywhere", "without me", "on any runner"),
+    )),
+    Frame("\U0001F9F1", "{} from parts that {}", (
+        ("Built", "Assembled", "Composed", "Made"),
+        ("are replaceable", "do one thing", "exist already", "nobody owns"),
+    )),
+    # --- the page talking about itself -------------------------------------
     Frame("\U0001F3B2", "{}, {}", (
         ("Drawn at random", "Generated nightly", "Written by a workflow",
-         "Committed unattended", "Chosen by chance", "Assembled from parts",
-         "Picked by a machine"),
+         "Committed unattended"),
         ("just now", "nobody pressed anything", "nobody chose when",
-         "while I was asleep", "and never twice", "on no schedule",
-         "without being asked"),
+         "while I was asleep", "and never twice"),
     )),
     Frame("\U0001F916", "{} {}", (
-        ("Nobody typed", "No human wrote", "A workflow drew", "Something generated",
-         "No hand touched", "A cron produced"),
-        ("this line", "what you are reading", "any of this", "a word of this",
-         "the line above"),
+        ("Nobody typed", "No human wrote", "A workflow drew", "No hand touched"),
+        ("this line", "what you are reading", "any of this", "a word of this"),
     )),
 )
 

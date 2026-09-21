@@ -13,8 +13,8 @@ category: profile
 
 <!-- MASTHEAD:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=db5bde81">
-  <img alt="👋🏻 Hello World! / 📉 One fewer decision to explain / 🧰 Conventions I would write again / 🚀 Rolling out a version on a green build / 🗺️ Reproduced with one clone / 🗝️ Keys that never live in a repo / 🎲 Generated nightly, nobody chose when / 🧪 Checks that run on every change / 🧹 Simplifying the boring parts / 🛟 A way back when it matters / 🤖 Nobody typed what you are reading / 🧭 Dull tooling over surprise / 🔍 Traces you can actually read" src="assets/masthead-light.svg?v=ad76e372">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=114103a8">
+  <img alt="👋🏻 Hello World! / 🪫 Builds that degrade into a known state / 💬 A commit that reads as prose / 🧮 Risk measured, not felt / 🧬 A result reproducible from one command / 📮 A release that arrives with a rollback / 🧱 Composed from parts that do one thing / 🎲 Generated nightly, nobody chose when / 🔬 Results that survive a new seed / 🛟 An escape hatch when it goes wrong / 🌱 No default ages into a mystery / 🔗 No dependency without a known licence / 🔐 Default to least access, always" src="assets/masthead-light.svg?v=cebb73b2">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -109,7 +109,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 20:49 EDT on Sunday, September 20, 2026.
+Last updated 20:54 EDT on Sunday, September 20, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

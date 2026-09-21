@@ -68,8 +68,8 @@ is a generator nobody can vouch for.
 | | |
 | :--- | ---: |
 | Lines, the greeting included | **1,000** exactly |
-| Frames | 38 |
-| Distinct mastheads (twelve drawn from thirty-eight frames) | 1.75 x 10^26 |
+| Frames | 64 |
+| Distinct mastheads (twelve drawn from sixty-four frames) | 6.77 x 10^26 |
 | Words per line | 4 to 8 |
 | Widest line | 51 cells |
 | Greeting | 4.7 seconds, once |
@@ -87,30 +87,38 @@ on a page is 52 to 54 seconds. Twelve lines is a 56-second loop, which
 outlasts that average. Past twenty the loop only serves a flat tail that no
 finite animation can serve anyway, at real CPU in every open tab.
 
-**Thirty-eight frames, by what they are for.**
+**Sixty-four frames, by what they are for.** One emoji each, so no shape can
+appear twice in a set.
 
 | | Frames |
 | :--- | :--- |
-| What the work is | 🔒 🚀 🕒 |
-| What it is for | ♻️ 📖 🧪 💤 |
-| Preferences, stated as preferences | 🧭 🧰 🎯 |
-| Where the effort goes | 🧹 ✂️ 📦 📉 |
-| The supply chain | 📌 🔗 🏷️ 🧊 |
-| Reproducibility, and the joke subverted | ⚙️ 🔁 🗺️ |
-| Operating it | 🧯 🔔 🛟 |
-| What you can see | 🔍 🪵 🧮 |
-| Secrets | 🗝️ |
-| Shape and review | 🪞 📐 💬 |
+| What the work is | 🔒 🚀 🕒 🔐 ⛓️ |
+| What it is for | ♻️ 📖 🧪 💤 🧾 |
+| Preferences, stated as preferences | 🧭 🧰 🎯 🏗️ 📋 |
+| Where the effort goes | 🧹 ✂️ 📦 📉 🚮 |
+| The supply chain | 📌 🔗 🏷️ 🧊 🗓️ |
+| Reproducibility | ⚙️ 🔁 🗺️ 🧬 🔭 |
+| Operating it | 🧯 🔔 🛟 🩺 🪫 |
+| What you can see | 🔍 🪵 🧮 💡 📊 |
+| Secrets | 🗝️ 🎚️ |
+| Shape and review | 🪞 📐 💬 🧩 🗃️ |
 | Decay, and refusing it | 🌱 🚧 ⏳ 🔋 🪄 |
+| Research that holds up | 🔬 🎛️ 🛠️ |
+| Delivery | 📮 ⏱️ 🚦 |
+| The next person | 🎓 📝 🌐 🧱 |
 | The page talking about itself | 🎲 🤖 |
 
-**Why so many frames rather than bigger pools.** Twelve lines drawn from
-fifteen frames put every masthead at eighty per cent of all the shapes there
-were, so two consecutive draws shared ten of their twelve emoji and the page
-read as repetitive however much the words changed. Thirty-eight frames put a
-draw at under a third, and two consecutive ones share about four. The count
-of lines is the same thousand; what changed is how much of the vocabulary any
-one reader sees.
+**Why frames rather than bigger pools.** Twelve lines drawn from fifteen
+frames put every masthead at eighty per cent of all the shapes there were, so
+two consecutive draws shared ten of their twelve emoji and the page read as
+repetitive however much the words changed. Sixty-four puts a draw at nineteen
+per cent, and two consecutive ones share about two.
+
+The line count is the same thousand either way, and frame count is close to
+free for how often a line comes back: for evenly sized frames the expected
+wait is 999/12 draws whatever the frame count, because a rarer frame holds
+correspondingly fewer lines. What more frames buy is the part a reader
+actually notices, which is the shapes.
 
 **Redrawn every twelve hours**, by
 [a workflow of its own](.github/workflows/masthead.yml), and its commit

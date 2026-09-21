@@ -54,246 +54,36 @@ and scheduled, and every one of them is authored by me.
 ## ⌨️ The Masthead
 
 The page opens with a terminal that types itself out. `👋🏻 Hello World!` is
-always first; the twelve lines after it are assembled from
-[`src/masthead.py`](src/masthead.py) and drawn into SVG by
-[`src/cards.py`](src/cards.py).
-
-Not from a word salad. A slot filled at random from a pool that fits every
-other slot in its frame produces grammar by accident and nonsense by default,
-and an earlier draft of this really did offer "Automating more than I add" and
-"Deleting what people forget". Each frame now carries its own pools, small
-enough to have been read end to end, and the test walks **every** line the
-generator can produce rather than a sample: a generator nobody can enumerate
-is a generator nobody can vouch for.
+always first and then stays gone; twelve lines loop after it for about fifty
+seconds before coming round, and a workflow draws twelve new ones every twelve
+hours.
 
 | | |
 | :--- | ---: |
-| Lines, the greeting included | **1,000** exactly |
+| Lines the generator can write | **1,000** exactly |
 | Of those, narrow enough to show | 511 |
 | Frames | 64, of which 42 fit the plate |
-| Distinct mastheads | 1.05 x 10^23 |
-| Words per line | 4 to 8 |
-| Plate | 34 cells, one row |
-| Image | at most 467 x 47 |
-| Typing | 20 cells a second, constant |
-| Greeting | 2.6 seconds, once |
-| Loop | about 51 seconds, forever |
-| Redrawn | every 12 hours, and it remembers the last 4 days |
+| Distinct mastheads | 1.05e+23 |
+| Plate | 34 cells on one row, a 467px image |
+| Hidden below | 498px, where it would have to shrink |
 
-A thousand is a promise rather than an accident: the pools are sized to land
-on it, and a test fails the day one of them drifts.
+Nothing in it is written by hand. Each line comes from a **frame**: a sentence
+shape with its own pools, small enough to have been read end to end, where
+every pool is interchangeable with every other. The emoji belongs to the frame
+rather than the line, so no shape can appear twice in a set without the
+repetition being visible, and the test suite walks every line the generator can
+produce rather than a sample.
 
-**Why twelve lines.** Dwell time on a web page follows a Weibull distribution
-with negative aging, per Nielsen Norman's reading of Liu, White and Dumais:
-the first ten seconds decide it, the next twenty thin the survivors, and only
-past about thirty seconds does the curve flatten. Cross-industry average time
-on a page is 52 to 54 seconds. Twelve lines is a 56-second loop, which
-outlasts that average. Past twenty the loop only serves a flat tail that no
-finite animation can serve anyway, at real CPU in every open tab.
+Variety has to arrive between visits rather than during one, because GitHub
+strips the script that could redraw a committed image. That is what the
+twelve-hour redraw is for, and each one reads what the last committed so two
+consecutive mastheads share no shape and no line returns inside four days.
 
-**Sixty-four frames, by what they are for.** One emoji each, so no shape can
-appear twice in a set.
-
-| | Frames |
-| :--- | :--- |
-| What the work is | 🔒 🚀 🕒 🔐 ⛓️ |
-| What it is for | ♻️ 📖 🧪 💤 🧾 |
-| Preferences, stated as preferences | 🧭 🧰 🎯 🏗️ 📋 |
-| Where the effort goes | 🧹 ✂️ 📦 📉 🚮 |
-| The supply chain | 📌 🔗 🏷️ 🧊 🗓️ |
-| Reproducibility | ⚙️ 🔁 🗺️ 🧬 🔭 |
-| Operating it | 🧯 🔔 🛟 🩺 🪫 |
-| What you can see | 🔍 🪵 🧮 💡 📊 |
-| Secrets | 🗝️ 🎚️ |
-| Shape and review | 🪞 📐 💬 🧩 🗃️ |
-| Decay, and refusing it | 🌱 🚧 ⏳ 🔋 🪄 |
-| Research that holds up | 🔬 🎛️ 🛠️ |
-| Delivery | 📮 ⏱️ 🚦 |
-| The next person | 🎓 📝 🌐 🧱 |
-| The page talking about itself | 🎲 🤖 |
-
-**Why frames rather than bigger pools.** Twelve lines drawn from fifteen
-frames put every masthead at eighty per cent of all the shapes there were, so
-two consecutive draws shared ten of their twelve emoji and the page read as
-repetitive however much the words changed. Sixty-four puts a draw at nineteen
-per cent, and two consecutive ones share about two.
-
-The line count is the same thousand either way, and frame count is close to
-free for how often a line comes back: for evenly sized frames the expected
-wait is 999/12 draws whatever the frame count, because a rarer frame holds
-correspondingly fewer lines. What more frames buy is the part a reader
-actually notices, which is the shapes.
-
-**Redrawn every twelve hours**, by
-[a workflow of its own](.github/workflows/masthead.yml), and its commit
-message is drawn the same way the lines are: 8,736 of them, because a log
-carrying the same paragraph twice a day is a log nobody reads twice. Every
-frame it can draw from states a why, since the commit standard asks for one
-and a generated body is the easiest place in a repository to restate a
-subject instead. Every other schedule
-here is an exponential draw, because a dispatch arriving on the hour is one
-nobody believes is random. The masthead is not news and nothing about it is
-due at a moment, so it is the honest exception: a clock, at 06:41 and 18:41
-UTC, off the hour for the same congestion reason the dispatch cron is.
-
-**The plate is 34 cells, and that is the number that decides whether a
-phone can read this.** GitHub scales a README image down to its column, and
-the column on a phone is about 330 CSS pixels. The effective font size is
-the column divided by the cells, and **the font size set in the renderer
-cancels out of it entirely**: a bigger font widens the image by exactly the
-proportion GitHub then scales back down. Cells are the only lever there is,
-and a test proves the cancellation rather than asserting a target.
-
-| Longest line shown | Image | On a 328px column |
-| :--- | ---: | ---: |
-| 49 cells | 649px | 10.1px |
-| 34 cells | 467px | 14.0px |
-
-**This is not free and it is not hidden.** The generator still writes a
-thousand lines, but 511 of them fit the plate, across 42 of the sixty-four
-frames. `drawable()` counts what the page can show, `combinations()` counts
-what exists, and a test states both numbers so neither drifts quietly.
-Widening the plate is one constant; getting all thousand back under it is a
-rewrite of fifty-one frames, which is the honest price of having asked for
-four to eight words a line.
-
-A frame is kept only if it has at least eight lines that fit. At 34 cells
-one frame keeps a single line, which would then be the only thing it ever
-said. A frame appears at most seven times inside the memory window, since
-the shapes the last draw used are excluded from the next, so eight is what
-makes "no line twice in four days" true rather than hoped for.
-
-**Wrapping was tried and taken back out.** Two rows of twenty six cells put a
-phone at eighteen pixels, but a masthead that breaks mid-sentence reads as a
-mistake on every screen, and that cost falls on every reader rather than
-only on the ones holding a phone. The renderer still wraps if `WRAP_CELLS`
-is lowered, and a test keeps that path exercised so it cannot rot.
-
-What made the small type survivable in the meantime was the lighting rather
-than the layout. The glow used to blur the text and merge that blur back
-over the text, which thickens every stroke and softens every edge; at a
-phone's stroke width of two pixels that is the difference between reading it
-and squinting at it. Both blurs are now dimmed and laid behind an untouched
-`SourceGraphic`, so the light is in the air around the glyphs, never on them.
-
-**Below 498 pixels it is not shown at all.** That is the width where
-the plate stops fitting the column, so everything under it is an image being
-scaled down, and a masthead scaled down is a smear of green where a first
-impression should be. A phone gets one transparent pixel instead, and the
-badges move up to take the space.
-
-```html
-<picture>
-  <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg">
-  <img alt="every line it types" src="assets/masthead-light.svg">
-</picture>
-```
-
-**The order of the sources is the whole thing.** A browser takes the first
-`<source>` whose media matches, so the width query has to come before the
-colour one or a phone in dark mode would never reach it.
-
-This works because GitHub's markdown sanitiser keeps `media` on a `<source>`
-whatever the query says, which is documented nowhere: the documented use is
-`prefers-color-scheme` and nothing else. It was **checked rather than
-assumed**. A probe file carrying `media="(max-width: 500px)"` was pushed to a
-branch and its rendered page fetched back, and the attribute came through the
-renderer intact. The breakpoint itself is derived from the plate rather than
-typed in, so it cannot be left behind when the plate changes.
-
-**The alt text does not move.** It lives on the `<img>`, which is where a
-screen reader reads it from whichever source the browser picked, so a phone
-still announces every line it would have typed. Hiding this is a visual
-decision and is not allowed to become an accessibility one.
-
-**The greeting types once and does not come back.** It runs on a timeline of
-its own with `repeatCount="1"`, and the drawn lines loop among themselves on a
-second one that begins where the first finished erasing. A greeting that
-greets the same reader again every minute is a tic rather than a welcome,
-which is what the first version did.
-
-**Reloading the page will not change the lines.** GitHub serves a committed
-file and strips the script that could redraw one, which is the same constraint
-that makes the animation SMIL. The lines change when a run writes them, so
-they are redrawn on every dispatch as well as on every page refresh: a few
-times a day rather than once.
-
-The count that matters is the second one. A reader takes in the set at once,
-so two mastheads differing in one line are two different mastheads.
-
-**The background is transparent**, so the text sits on whatever colour GitHub
-is painting behind it, and that is white on one theme and near-black on the
-other. No single green clears the contrast bar on both: neon `#00ff41` is
-13.9:1 on GitHub's dark and **1.4:1 on white**, which is invisible. So there
-are two files and a `<picture>`, the same answer the cards reach for. Dark
-gets the neon and the bloom; light gets `#067d17` at 5.3:1 and no bloom,
-because a glow around dark green on white is a smudge.
-
-The reveal steps one cell at a time rather than growing smoothly, because a
-rectangle widening continuously uncovers letters through their own middles and
-reads as a wipe. Stepping by whole cells is what makes it look typed.
-
-**One cadence, not one duration.** The first version gave every line the same
-1.6 seconds whatever its length, so a seventeen cell greeting crawled and a
-forty nine cell line blurred past at three times the speed. Typing is now a
-constant twenty cells a second and the pause afterwards is reading time,
-0.95 seconds plus 0.04 a cell, so a long line is held about twice as long as a
-short one. The loop varies with what was drawn, between roughly fifty and
-sixty seconds.
-
-The keystrokes themselves are not evenly spaced: there is a beat before a new
-word and a longer one after a full stop, and no two are the same length. The
-variation is seeded from the line's own text rather than from chance, so the
-same line always types the same way and a run that redrew nothing produces a
-file that changed nothing. An emoji is two cells wide and one keystroke, so
-its second cell arrives in no time at all and the clip never rests through the
-middle of a glyph showing half a face.
-
-**The cursor is solid while it types**, the way a real one is, and blinks only
-while a finished line sits waiting to be read. It follows the text down onto
-the second row when a line wraps. There is one cursor per line rather than one
-per row, and only ever one lit at a time.
-
-**Three ways to read it.** A browser types it out. A renderer with no SMIL at
-all shows the greeting complete, because the greeting's clip rectangles carry
-their full width as a plain attribute and an animation is what overrides that
-rather than what supplies it; `fill="freeze"` is what stops the animation
-handing that width back at the end of its one run. A reader who has asked for
-less motion gets the same still line, from a layer a `prefers-reduced-motion`
-query swaps in: text that types itself is exactly the motion that setting is
-about.
-
-**The glow is two passes, not one.** A single blur merged with itself is a
-smudge with a bright middle. A phosphor has a hard centre and soft light well
-beyond it, so there is a tight core at 0.045em and a wide halo at 0.2em with
-its alpha cut to 55%. `color-interpolation-filters="sRGB"` is on the filter
-because the default is linearRGB, which turns a saturated green bloom into a
-pale grey one.
-
-**Each redraw remembers the last one.** Random with no memory repeats far
-sooner than anybody expects: twelve of sixty-four shapes, drawn twice a day,
-put a shape from yesterday back on the page more often than not. A redraw
-reads what the last one committed and excludes its frames, so two consecutive
-mastheads share no shape at all, and excludes the lines of the last eight
-draws, which is four days. Both fall back to the full set rather than fail,
-because a masthead with a hole in it is worse than a repeat. The memory lives
-in `assets/masthead.json` beside the images rather than in the state
-directory, so the image and the record of how it was drawn are always in the
-same commit and can never disagree.
-
-The rectangle is anchored at the left edge of the image while the text starts
-16px inside it, so every width it steps through carries that inset. The first
-version did not, and the longest line stopped one and a half characters short
-of finishing: `Standards that a new machine cannot brea`.
-
-**No script, anywhere.** GitHub strips those from an SVG in a README, which is
-why the animation is SMIL and the words are chosen in Python. The glow is an
-SVG filter, and a filter is the one thing here whose survival through GitHub's
-sanitiser is unproven; it degrades to flat green on black, which is the same
-picture without the bloom.
-
----
+> [!NOTE]
+> **The full account is in [⌨️ The Masthead](Masthead.md)**: the frames, the
+> arithmetic behind the combination count, the SMIL typing and the phosphor,
+> the plate and what it costs, and which of five images each reader is served.
+> It lives in one place so the numbers cannot drift between two.
 
 ## 🟢 Availability
 
@@ -540,6 +330,7 @@ with a month table the run regenerates between markers each time it writes.
 
 ## 🔗 See Also
 
+- [⌨️ The Masthead](Masthead.md), the terminal at the top of the page in full.
 - The [archive](dispatches/), one file per month, appended and never rewritten.
 - [`NOTICE`](NOTICE), the source and license terms in full.
 - [tannergolden/emblems](https://github.com/tannergolden/emblems), which draws every badge on the page as a committed file, so the page makes no request to an image service.

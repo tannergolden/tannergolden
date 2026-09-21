@@ -1,32 +1,32 @@
 {
   "lines": [
     "\ud83d\udc4b\ud83c\udffb Hello World!",
-    "\ud83d\udd0d Errors you can actually act on",
-    "\ud83d\udccc Pinned to a SHA, not latest",
-    "\ud83d\uddc3\ufe0f Configs where everyone expects",
-    "\ud83c\udff7\ufe0f Every release carries a version",
-    "\u2702\ufe0f Cutting more than I write",
-    "\ud83e\uddef A fix without anyone noticing",
-    "\ud83d\udd14 Page only when it is real",
-    "\ud83c\udf31 Nothing here ages silently",
-    "\ud83d\udca1 The intent obvious in the name",
-    "\ud83d\udcc9 One fewer step to explain",
-    "\ud83d\udd10 Request least access, always",
-    "\ud83d\udea6 A red gate means work now"
+    "\ud83e\uddf9 Untangling what people forget",
+    "\ud83e\udded Written rules over heroics",
+    "\ud83d\uddfa\ufe0f Set up with one flag",
+    "\ud83e\udeb5 The whole story in one query",
+    "\ud83d\udd17 No action without a review",
+    "\ud83d\udcee A change that arrives tested",
+    "\ud83d\udee0\ufe0f Fix the cause, not the symptom",
+    "\ud83e\uddf0 Choices I would make again",
+    "\ud83e\ude7a Catch it before the pager does",
+    "\ud83e\udde9 Pieces that fit by contract",
+    "\ud83c\udfd7\ufe0f Leave the safe way easy",
+    "\ud83c\udfaf Covers exactly what it claims"
   ],
   "shapes": [
-    "\ud83d\udd0d",
-    "\ud83d\udccc",
-    "\ud83d\uddc3\ufe0f",
-    "\ud83c\udff7\ufe0f",
-    "\u2702\ufe0f",
-    "\ud83e\uddef",
-    "\ud83d\udd14",
-    "\ud83c\udf31",
-    "\ud83d\udca1",
-    "\ud83d\udcc9",
-    "\ud83d\udd10",
-    "\ud83d\udea6"
+    "\ud83e\uddf9",
+    "\ud83e\udded",
+    "\ud83d\uddfa\ufe0f",
+    "\ud83e\udeb5",
+    "\ud83d\udd17",
+    "\ud83d\udcee",
+    "\ud83d\udee0\ufe0f",
+    "\ud83e\uddf0",
+    "\ud83e\ude7a",
+    "\ud83e\udde9",
+    "\ud83c\udfd7\ufe0f",
+    "\ud83c\udfaf"
   ],
   "recent": [
     "\ud83d\ude80 Deploying a change behind a gate",
@@ -100,7 +100,19 @@
     "\ud83d\udca1 The intent obvious in the name",
     "\ud83d\udcc9 One fewer step to explain",
     "\ud83d\udd10 Request least access, always",
-    "\ud83d\udea6 A red gate means work now"
+    "\ud83d\udea6 A red gate means work now",
+    "\ud83e\uddf9 Untangling what people forget",
+    "\ud83e\udded Written rules over heroics",
+    "\ud83d\uddfa\ufe0f Set up with one flag",
+    "\ud83e\udeb5 The whole story in one query",
+    "\ud83d\udd17 No action without a review",
+    "\ud83d\udcee A change that arrives tested",
+    "\ud83d\udee0\ufe0f Fix the cause, not the symptom",
+    "\ud83e\uddf0 Choices I would make again",
+    "\ud83e\ude7a Catch it before the pager does",
+    "\ud83e\udde9 Pieces that fit by contract",
+    "\ud83c\udfd7\ufe0f Leave the safe way easy",
+    "\ud83c\udfaf Covers exactly what it claims"
   ],
-  "loop_seconds": 51.0
+  "loop_seconds": 50.1
 }

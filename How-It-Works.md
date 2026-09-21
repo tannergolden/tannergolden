@@ -68,8 +68,8 @@ is a generator nobody can vouch for.
 | | |
 | :--- | ---: |
 | Lines, the greeting included | **1,000** exactly |
-| Frames | 15 |
-| Distinct mastheads (twelve drawn from fifteen frames) | 1.6 x 10^23 |
+| Frames | 38 |
+| Distinct mastheads (twelve drawn from thirty-eight frames) | 1.75 x 10^26 |
 | Words per line | 4 to 8 |
 | Widest line | 51 cells |
 | Greeting | 4.7 seconds, once |
@@ -87,20 +87,38 @@ on a page is 52 to 54 seconds. Twelve lines is a 56-second loop, which
 outlasts that average. Past twenty the loop only serves a flat tail that no
 finite animation can serve anyway, at real CPU in every open tab.
 
-**The fifteen frames, by what they are for.**
+**Thirty-eight frames, by what they are for.**
 
-| | Frames | Lines |
-| :--- | :--- | ---: |
-| What the work is | 🔒 🚀 🕒 | 519 |
-| What it is for | ♻️ 📖 🧪 💤 | 197 |
-| Preferences, stated as preferences | 🧭 | 64 |
-| Where the effort goes | 🧹 ✂️ 📦 | 70 |
-| The supply-chain line the account enforces | 📌 | 35 |
-| The oldest joke in the trade, subverted | ⚙️ | 35 |
-| The page talking about itself | 🎲 🤖 | 79 |
+| | Frames |
+| :--- | :--- |
+| What the work is | 🔒 🚀 🕒 |
+| What it is for | ♻️ 📖 🧪 💤 |
+| Preferences, stated as preferences | 🧭 🧰 🎯 |
+| Where the effort goes | 🧹 ✂️ 📦 📉 |
+| The supply chain | 📌 🔗 🏷️ 🧊 |
+| Reproducibility, and the joke subverted | ⚙️ 🔁 🗺️ |
+| Operating it | 🧯 🔔 🛟 |
+| What you can see | 🔍 🪵 🧮 |
+| Secrets | 🗝️ |
+| Shape and review | 🪞 📐 💬 |
+| Decay, and refusing it | 🌱 🚧 ⏳ 🔋 🪄 |
+| The page talking about itself | 🎲 🤖 |
+
+**Why so many frames rather than bigger pools.** Twelve lines drawn from
+fifteen frames put every masthead at eighty per cent of all the shapes there
+were, so two consecutive draws shared ten of their twelve emoji and the page
+read as repetitive however much the words changed. Thirty-eight frames put a
+draw at under a third, and two consecutive ones share about four. The count
+of lines is the same thousand; what changed is how much of the vocabulary any
+one reader sees.
 
 **Redrawn every twelve hours**, by
-[a workflow of its own](.github/workflows/masthead.yml). Every other schedule
+[a workflow of its own](.github/workflows/masthead.yml), and its commit
+message is drawn the same way the lines are: 26,208 of them, because a log
+carrying the same paragraph twice a day is a log nobody reads twice. Every
+frame it can draw from states a why, since the commit standard asks for one
+and a generated body is the easiest place in a repository to restate a
+subject instead. Every other schedule
 here is an exponential draw, because a dispatch arriving on the hour is one
 nobody believes is random. The masthead is not news and nothing about it is
 due at a moment, so it is the honest exception: a clock, at 06:41 and 18:41

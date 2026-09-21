@@ -75,55 +75,40 @@ class Frame:
             total *= len(pool)
         return total
 
+    def fill(self, pick) -> str:
+        body = self.shape.format(*pick)
+        return f"{self.emoji} {body}" if self.emoji else body
+
     def every(self):
         for pick in itertools.product(*self.slots):
-            yield f"{self.emoji} {self.shape.format(*pick)}"
+            yield self.fill(pick)
 
     def draw(self) -> str:
-        return f"{self.emoji} {self.shape.format(*(_RNG.choice(p) for p in self.slots))}"
+        return self.fill([_RNG.choice(pool) for pool in self.slots])
 
 
 FRAMES = (
-    # What the work is. Three interchangeable pools, so this frame carries
-    # more of the space than any other on its own.
+    # --- what the work is ---------------------------------------------------
     Frame("\U0001F512", "{} {} {}", (
-        ("Hardening", "Gating", "Auditing", "Reviewing", "Checking", "Guarding", "Signing"),
-        ("every action", "every workflow", "every build", "every dependency",
-         "every release", "every image", "every artefact"),
-        ("by default", "before it merges", "on every push", "so nobody has to",
-         "every single time", "without being asked"),
+        ("Hardening", "Gating", "Auditing", "Reviewing", "Guarding"),
+        ("every action", "every workflow", "every build", "every dependency", "every release"),
+        ("by default", "before it merges", "on every push"),
     )),
-    # What it is for.
+    Frame("\U0001F680", "{} {} {}", (
+        ("Shipping", "Releasing", "Deploying", "Rolling out"),
+        ("a change", "a release", "a fix", "a version"),
+        ("behind a gate", "with a rollback ready", "on a green build", "without a pager"),
+    )),
+    Frame("\U0001F552", "{} {} {}", (
+        ("Reviewing", "Merging", "Shipping", "Reverting"),
+        ("small changes", "one thing", "a single commit", "the smallest diff"),
+        ("every day", "before lunch", "while it is fresh"),
+    )),
+    # --- what it is for -----------------------------------------------------
     Frame("\u267B\uFE0F", "{} that {}", (
-        ("Pipelines", "Standards", "Environments", "Workflows", "Guardrails",
-         "Runbooks", "Defaults", "Templates", "Conventions", "Gates"),
+        ("Pipelines", "Standards", "Environments", "Workflows", "Guardrails", "Runbooks"),
         ("outlive their author", "still run next year", "nobody has to remember",
-         "a new machine cannot break", "explain themselves", "fail loudly",
-         "need no maintenance", "survive a rewrite", "age well", "nobody fights"),
-    )),
-    # The supply-chain line the rest of the account actually enforces.
-    Frame("\U0001F4CC", "{}, not {}", (
-        ("Pinned to a SHA", "Pinned to a digest", "Locked to a version",
-         "Fixed to a revision", "Bound to a lockfile"),
-        ("a tag", "latest", "a range", "a promise", "a moving branch",
-         "whatever resolves today", "a floating pointer"),
-    )),
-    # Where the effort goes.
-    Frame("\U0001F9F9", "{} {}", (
-        ("Automating", "Documenting", "Simplifying", "Untangling", "Flattening"),
-        ("the boring parts", "what people forget", "the thing nobody checks",
-         "the step everyone skips", "the part that breaks", "the bit that bites"),
-    )),
-    Frame("\u2702\uFE0F", "{} more than I {}", (
-        ("Deleting", "Removing", "Cutting", "Pruning"),
-        ("add", "write", "ship", "merge", "keep"),
-    )),
-    # The oldest joke in the trade, subverted: the whole point of the work
-    # below is that it also works somewhere that is not my machine.
-    Frame("\u2699\uFE0F", "{} works on {}", (
-        ("It", "The build", "The pipeline", "The whole thing", "Every step"),
-        ("my machine", "a fresh clone", "a cold runner", "somebody else's laptop",
-         "a clean container", "the first try", "a borrowed machine"),
+         "a new machine cannot break", "explain themselves", "fail loudly"),
     )),
     Frame("\U0001F4D6", "{} nobody {}", (
         ("Docs", "Standards", "Runbooks", "Guides", "Comments", "Rules"),
@@ -135,39 +120,142 @@ FRAMES = (
         ("catch it before I do", "fail for the right reason", "nobody can skip",
          "run on every change", "mean something", "earn their runtime"),
     )),
-    # Shipping, which is the part the guardrails exist to make dull.
-    Frame("\U0001F680", "{} {} {}", (
-        ("Shipping", "Releasing", "Deploying", "Rolling out", "Cutting"),
-        ("a change", "a release", "a fix", "a version", "a build"),
-        ("behind a gate", "with a rollback ready", "on a green build",
-         "when the checks pass", "without a pager"),
+    Frame("\U0001F4A4", "{} that {}", (
+        ("Alerts", "Pipelines", "Builds", "Deploys", "Rollbacks"),
+        ("nobody gets paged for", "wait until morning", "do not wake anyone",
+         "run without me", "need no babysitting"),
     )),
-    # Small changes, often, while they are still understood.
-    Frame("\U0001F552", "{} {} {}", (
-        ("Reviewing", "Merging", "Shipping", "Reverting", "Testing"),
-        ("small changes", "one thing", "a single commit", "what I understand",
-         "the smallest diff"),
-        ("every day", "before lunch", "the same week", "while it is fresh"),
-    )),
-    # The preferences, stated as preferences.
+    # --- preferences, stated as preferences ---------------------------------
     Frame("\U0001F9ED", "{} over {}", (
         ("Boring tools", "One way", "Plain defaults", "Written rules",
          "Shared conventions", "Working automation", "Fewer choices", "Dull tooling"),
         ("configuration", "cleverness", "tribal knowledge", "heroics", "novelty",
          "three ways", "trust", "surprise"),
     )),
+    Frame("\U0001F9F0", "{} I would {} again", (
+        ("Tools", "Defaults", "Choices", "Conventions"),
+        ("pick", "defend", "write", "make"),
+    )),
+    Frame("\U0001F3AF", "{} exactly {}", (
+        ("Does", "Solves", "Covers", "Says"),
+        ("one thing", "what it claims", "what is needed", "nothing more"),
+    )),
+    # --- where the effort goes ----------------------------------------------
+    Frame("\U0001F9F9", "{} {}", (
+        ("Automating", "Documenting", "Simplifying", "Untangling", "Flattening"),
+        ("the boring parts", "what people forget", "the thing nobody checks",
+         "the step everyone skips", "the part that breaks", "the bit that bites"),
+    )),
+    Frame("\u2702\uFE0F", "{} more than I {}", (
+        ("Deleting", "Removing", "Cutting", "Pruning"),
+        ("add", "write", "ship", "merge", "keep"),
+    )),
     Frame("\U0001F4E6", "{} {} once", (
         ("Defining", "Solving", "Writing", "Deciding"),
         ("the hard part", "the same problem", "the rule", "the answer", "the shape"),
     )),
-    # Nobody should be woken up by this.
-    Frame("\U0001F4A4", "{} that {}", (
-        ("Alerts", "Pipelines", "Builds", "Deploys", "Rollbacks"),
-        ("nobody gets paged for", "wait until morning", "do not wake anyone",
-         "run without me", "need no babysitting"),
+    Frame("\U0001F4C9", "One fewer {} to {}", (
+        ("thing", "step", "decision", "config file", "moving part"),
+        ("remember", "maintain", "explain", "get wrong"),
     )),
-    # The page talking about itself, which it has earned: it really is
-    # generated, and this really was drawn rather than written.
+    # --- the supply chain ---------------------------------------------------
+    Frame("\U0001F4CC", "{}, not {}", (
+        ("Pinned to a SHA", "Pinned to a digest", "Locked to a version",
+         "Fixed to a revision", "Bound to a lockfile"),
+        ("a tag", "latest", "a range", "a promise", "a moving branch"),
+    )),
+    Frame("\U0001F517", "No {} without {}", (
+        ("dependency", "action", "image", "package"),
+        ("a pinned digest", "a known licence", "a review", "an SBOM"),
+    )),
+    Frame("\U0001F3F7\uFE0F", "Every {} carries {}", (
+        ("release", "build", "commit", "artefact", "image"),
+        ("a version", "its provenance", "a changelog", "a signature"),
+    )),
+    Frame("\U0001F9CA", "{} frozen at {}", (
+        ("The toolchain", "The base image", "The runtime", "The lockfile"),
+        ("a digest", "a version", "a date", "a known good"),
+    )),
+    # --- reproducibility ----------------------------------------------------
+    Frame("\u2699\uFE0F", "{} works on {}", (
+        ("It", "The build", "The pipeline", "The whole thing", "Every step"),
+        ("my machine", "a fresh clone", "a cold runner", "somebody else's laptop",
+         "a clean container", "the first try"),
+    )),
+    Frame("\U0001F501", "{} twice and {}", (
+        ("Run it", "Build it", "Deploy it", "Clone it"),
+        ("get the same answer", "nothing differs", "the hash matches", "it still works"),
+    )),
+    Frame("\U0001F5FA\uFE0F", "{} with one {}", (
+        ("Set up", "Reproduced", "Deployed", "Rebuilt", "Restored"),
+        ("command", "clone", "file", "flag"),
+    )),
+    # --- operating it -------------------------------------------------------
+    Frame("\U0001F9EF", "{} without {}", (
+        ("Recovery", "A rollback", "A fix", "A restart", "Failover"),
+        ("a war room", "a pager", "a heroic night", "a postmortem", "anyone noticing"),
+    )),
+    Frame("\U0001F514", "{} only when {}", (
+        ("Notify", "Page", "Alert", "Interrupt"),
+        ("it is real", "a human can help", "it cannot wait", "something broke"),
+    )),
+    Frame("\U0001F6DF", "{} when {}", (
+        ("A way back", "A rollback", "An escape hatch", "A safe default"),
+        ("it goes wrong", "nobody is watching", "the fix is slow", "it matters"),
+    )),
+    # --- what you can see ---------------------------------------------------
+    Frame("\U0001F50D", "{} you can actually {}", (
+        ("Logs", "Traces", "Errors", "Metrics", "Stack traces"),
+        ("grep", "read", "act on", "trust", "follow"),
+    )),
+    Frame("\U0001FAB5", "{} in one {}", (
+        ("The whole story", "Every request", "The failure", "The context"),
+        ("line", "place", "query", "trace"),
+    )),
+    Frame("\U0001F9EE", "{} measured, not {}", (
+        ("Latency", "Coverage", "Risk", "Cost"),
+        ("guessed", "argued", "assumed", "felt"),
+    )),
+    # --- secrets ------------------------------------------------------------
+    Frame("\U0001F5DD\uFE0F", "{} that never {}", (
+        ("Secrets", "Tokens", "Keys", "Credentials"),
+        ("reach a log", "leave the vault", "live in a repo", "get copied around"),
+    )),
+    # --- shape and review ---------------------------------------------------
+    Frame("\U0001FA9E", "{} before {}", (
+        ("Review", "Test", "Lint", "Document", "Question"),
+        ("a merge", "a release", "the pager rings", "anyone asks", "it ships"),
+    )),
+    Frame("\U0001F4D0", "{} with {}", (
+        ("One way in", "One shape", "A single entry point", "One source of truth"),
+        ("no exceptions", "nothing hidden", "no side doors", "no surprises"),
+    )),
+    Frame("\U0001F4AC", "{} that reads as {}", (
+        ("Code", "A commit", "A name", "An error"),
+        ("prose", "a sentence", "its intent", "what it does"),
+    )),
+    # --- decay, and refusing it ---------------------------------------------
+    Frame("\U0001F331", "{} ages {}", (
+        ("Nothing here", "No pipeline", "No config", "No default"),
+        ("badly", "into a mystery", "without warning", "silently"),
+    )),
+    Frame("\U0001F6A7", "{} is {}", (
+        ("Nothing here", "No workflow", "No step", "No secret"),
+        ("half-migrated", "copied twice", "waiting on me", "a special case"),
+    )),
+    Frame("\u23F3", "{} that {} later", (
+        ("Decisions", "Shortcuts", "Assumptions", "Cleverness"),
+        ("cost nothing", "surface", "get paid for", "come back"),
+    )),
+    Frame("\U0001F50B", "{} that outlasts {}", (
+        ("A convention", "A default", "A runbook", "A template"),
+        ("the team", "the tool", "my memory", "the rewrite"),
+    )),
+    Frame("\U0001FA84", "No {} in {}", (
+        ("magic", "surprises", "hidden state", "implicit steps"),
+        ("the build", "the deploy", "the config", "the defaults", "the path"),
+    )),
+    # --- the page talking about itself, which it has earned -----------------
     Frame("\U0001F3B2", "{}, {}", (
         ("Drawn at random", "Generated nightly", "Written by a workflow",
          "Committed unattended", "Chosen by chance", "Assembled from parts",
@@ -196,13 +284,79 @@ def mastheads() -> int:
     without replacement, so this sums the product over every combination of
     frames that can appear together.
     """
-    total = 0
-    for chosen in itertools.combinations(FRAMES, LINES_PER_MASTHEAD):
-        product = 1
-        for frame in chosen:
-            product *= frame.combinations()
-        total += product
-    return total
+    # The elementary symmetric polynomial of the frame sizes, at degree
+    # LINES_PER_MASTHEAD. Walking the subsets instead would be correct and
+    # take C(38, 12) steps, which is 2.7 billion; this is 38 x 12.
+    sizes = [frame.combinations() for frame in FRAMES]
+    totals = [1] + [0] * LINES_PER_MASTHEAD
+    for size in sizes:
+        for k in range(LINES_PER_MASTHEAD, 0, -1):
+            totals[k] += totals[k - 1] * size
+    return totals[LINES_PER_MASTHEAD]
+
+
+# --- the commit the schedule writes -------------------------------------------
+#
+# Held to the same standard as every other generated commit here, and drawn
+# rather than written for the same reason the lines are: a log with the same
+# paragraph in it twice a day is a log nobody reads twice. Every combination
+# is a real why, because the standard asks for one and a body that restates
+# its subject is the failure that section is written against.
+
+COMMIT_SUBJECT = Frame("", "{} {}", (
+    ("redraw", "retype", "recompose", "reprint", "redeal", "refresh"),
+    ("the masthead", "the twelve lines", "what the terminal types", "the lines up top"),
+))
+
+COMMIT_WHY = (
+    Frame("", "The loop inside the image is finite, so a reader who {} sees it "
+              "{}. A later draw is the only thing that can hand them something "
+              "they have not read.", (
+        ("stays", "lingers", "leaves the tab open", "reads to the end"),
+        ("come round", "repeat", "start again", "return to the top"),
+    )),
+    Frame("", "Nothing in the image changes while it is on screen, because "
+              "GitHub serves a committed file and strips the script that might "
+              "have {}. Variety has to arrive {}.", (
+        ("redrawn it", "changed it", "helped"),
+        ("between visits", "between draws", "on a schedule or not at all"),
+    )),
+    Frame("", "{{}} lines replace the {{}} before them, drawn from {{}}. A set "
+              "that differs is the only thing a returning reader can be given, "
+              "since {}.", (
+        ("the animation cannot", "the file is static",
+         "nothing in it moves on its own"),
+    )),
+)
+
+COMMIT_HOW = (
+    Frame("", "Twice a day, because {} should not {}.", (
+        ("a reader who comes back tomorrow", "somebody returning next week",
+         "a second visit"),
+        ("be read the same thing", "find the same lines", "meet the same set"),
+    )),
+    Frame("", "On a twelve-hour clock: {}, {}.", (
+        ("often enough that a return visit differs",
+         "frequent enough that coming back is worth it"),
+        ("rarely enough that the log stays about the dispatches",
+         "seldom enough that it never crowds the feed"),
+    )),
+)
+
+
+def commit_messages() -> int:
+    """Distinct commit bodies the schedule can write, the emoji aside."""
+    return (COMMIT_SUBJECT.combinations()
+            * sum(f.combinations() for f in COMMIT_WHY)
+            * sum(f.combinations() for f in COMMIT_HOW))
+
+
+def commit_parts(drawn: int) -> tuple:
+    """A subject, a why and a cadence, each drawn rather than written."""
+    why = _RNG.choice(COMMIT_WHY).draw()
+    if "{}" in why:  # the frame that wants the numbers
+        why = why.format(drawn, drawn, TOTAL_LINES)
+    return COMMIT_SUBJECT.draw(), why, _RNG.choice(COMMIT_HOW).draw()
 
 
 def combinations() -> int:

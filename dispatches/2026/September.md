@@ -85,3 +85,15 @@ _[GitHub](https://github.com/Tencent/WeMM-Embedding) · Repository metadata, rep
 _[Hacker News](https://x.ai/news/grok-4-7) · Title, score and link, reported as fact · [discussion](https://news.ycombinator.com/item?id=49788838)_
 
 ---
+<a name="dispatch-20260922-140358"></a>
+
+### 📖 What Sun got wrong
+
+`docs(lobsters)` · 14:03 EDT
+
+From bcantrill.dtrace.org, sitting at 116 points on Lobsters. Tagged
+historical.
+
+_[Lobsters](https://bcantrill.dtrace.org/2026/09/20/what-sun-got-wrong/) · submitted by j11g · Title and score, reported as fact · [discussion](https://lobste.rs/s/vwl2kn/what_sun_got_wrong)_
+
+---

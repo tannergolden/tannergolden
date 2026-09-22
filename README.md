@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=1fc41628">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=bc2b37a8">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=844abe93">
-  <img alt="👋🏻 Hello World! / 🧹 Untangling what people forget / 🧭 Written rules over heroics / 🗺️ Set up with one flag / 🪵 The whole story in one query / 🔗 No action without a review / 📮 A change that arrives tested / 🛠️ Fix the cause, not the symptom / 🧰 Choices I would make again / 🩺 Catch it before the pager does / 🧩 Pieces that fit by contract / 🏗️ Leave the safe way easy / 🎯 Covers exactly what it claims" src="assets/masthead-light.svg?v=94af7d6e">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=6a02df11">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=88c65bce">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=5bdab16b">
+  <img alt="👋🏻 Hello World! / 📊 Numbers you can compare later / 📌 Pinned to a digest, not a tag / 📦 Defining the answer once / ⛓️ A gate that cannot drift / 🪞 Review before a release / 🪄 No hidden state in the path / 🔍 Metrics you can actually read / 🔬 Claims that survive review / 🛟 A way back when the fix is slow / 📐 One shape with nothing hidden / 📉 One fewer decision to get wrong / ⏱️ Tests in under a coffee" src="assets/masthead-light.svg?v=349dfa31">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -121,7 +121,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 03:41 EDT on Tuesday, September 22, 2026.
+Last updated 08:02 EDT on Tuesday, September 22, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

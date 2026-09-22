@@ -1,32 +1,32 @@
 {
   "lines": [
     "\ud83d\udc4b\ud83c\udffb Hello World!",
-    "\ud83e\uddf9 Untangling what people forget",
-    "\ud83e\udded Written rules over heroics",
-    "\ud83d\uddfa\ufe0f Set up with one flag",
-    "\ud83e\udeb5 The whole story in one query",
-    "\ud83d\udd17 No action without a review",
-    "\ud83d\udcee A change that arrives tested",
-    "\ud83d\udee0\ufe0f Fix the cause, not the symptom",
-    "\ud83e\uddf0 Choices I would make again",
-    "\ud83e\ude7a Catch it before the pager does",
-    "\ud83e\udde9 Pieces that fit by contract",
-    "\ud83c\udfd7\ufe0f Leave the safe way easy",
-    "\ud83c\udfaf Covers exactly what it claims"
+    "\ud83d\udcca Numbers you can compare later",
+    "\ud83d\udccc Pinned to a digest, not a tag",
+    "\ud83d\udce6 Defining the answer once",
+    "\u26d3\ufe0f A gate that cannot drift",
+    "\ud83e\ude9e Review before a release",
+    "\ud83e\ude84 No hidden state in the path",
+    "\ud83d\udd0d Metrics you can actually read",
+    "\ud83d\udd2c Claims that survive review",
+    "\ud83d\udedf A way back when the fix is slow",
+    "\ud83d\udcd0 One shape with nothing hidden",
+    "\ud83d\udcc9 One fewer decision to get wrong",
+    "\u23f1\ufe0f Tests in under a coffee"
   ],
   "shapes": [
-    "\ud83e\uddf9",
-    "\ud83e\udded",
-    "\ud83d\uddfa\ufe0f",
-    "\ud83e\udeb5",
-    "\ud83d\udd17",
-    "\ud83d\udcee",
-    "\ud83d\udee0\ufe0f",
-    "\ud83e\uddf0",
-    "\ud83e\ude7a",
-    "\ud83e\udde9",
-    "\ud83c\udfd7\ufe0f",
-    "\ud83c\udfaf"
+    "\ud83d\udcca",
+    "\ud83d\udccc",
+    "\ud83d\udce6",
+    "\u26d3\ufe0f",
+    "\ud83e\ude9e",
+    "\ud83e\ude84",
+    "\ud83d\udd0d",
+    "\ud83d\udd2c",
+    "\ud83d\udedf",
+    "\ud83d\udcd0",
+    "\ud83d\udcc9",
+    "\u23f1\ufe0f"
   ],
   "recent": [
     "\ud83d\ude80 Deploying a change behind a gate",
@@ -112,7 +112,19 @@
     "\ud83e\ude7a Catch it before the pager does",
     "\ud83e\udde9 Pieces that fit by contract",
     "\ud83c\udfd7\ufe0f Leave the safe way easy",
-    "\ud83c\udfaf Covers exactly what it claims"
+    "\ud83c\udfaf Covers exactly what it claims",
+    "\ud83d\udcca Numbers you can compare later",
+    "\ud83d\udccc Pinned to a digest, not a tag",
+    "\ud83d\udce6 Defining the answer once",
+    "\u26d3\ufe0f A gate that cannot drift",
+    "\ud83e\ude9e Review before a release",
+    "\ud83e\ude84 No hidden state in the path",
+    "\ud83d\udd0d Metrics you can actually read",
+    "\ud83d\udd2c Claims that survive review",
+    "\ud83d\udedf A way back when the fix is slow",
+    "\ud83d\udcd0 One shape with nothing hidden",
+    "\ud83d\udcc9 One fewer decision to get wrong",
+    "\u23f1\ufe0f Tests in under a coffee"
   ],
-  "loop_seconds": 50.1
+  "loop_seconds": 50.4
 }

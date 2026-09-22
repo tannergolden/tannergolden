@@ -97,3 +97,15 @@ historical.
 _[Lobsters](https://bcantrill.dtrace.org/2026/09/20/what-sun-got-wrong/) · submitted by j11g · Title and score, reported as fact · [discussion](https://lobste.rs/s/vwl2kn/what_sun_got_wrong)_
 
 ---
+<a name="dispatch-20260922-193634"></a>
+
+### 📖 Fearless SIMD v1.0 is here
+
+`docs(lobsters)` · 19:36 EDT
+
+From linebender.org, sitting at 46 points on Lobsters. Tagged release,
+rust.
+
+_[Lobsters](https://linebender.org/blog/fearless-simd-1-0/) · submitted by ohrv · Title and score, reported as fact · [discussion](https://lobste.rs/s/wx3qsm/fearless_simd_v1_0_is_here)_
+
+---

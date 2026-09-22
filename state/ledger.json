@@ -8,10 +8,12 @@
   "link": [
     "bcantrill.dtrace.org/2026/09/20/what-sun-got-wrong",
     "github.com/Tencent/WeMM-Embedding",
+    "linebender.org/blog/fearless-simd-1-0",
     "x.ai/news/grok-4-7"
   ],
   "lobsters": [
-    "vwl2kn"
+    "vwl2kn",
+    "wx3qsm"
   ],
   "rfc": [
     "9792"

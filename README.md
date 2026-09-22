@@ -43,25 +43,26 @@ category: profile
 <!-- DISPATCHES:BEGIN -->
 ### Tuesday, September 22, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=42e84137)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=313dcbd8)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
+| 19:36 | `docs(lobsters)` | [Fearless SIMD v1.0 is here](dispatches/2026/September.md#dispatch-20260922-193634) |
 | 14:03 | `docs(lobsters)` | [What Sun got wrong](dispatches/2026/September.md#dispatch-20260922-140358) |
 | 03:41 | `docs(hn)` | [Grok 4.7](dispatches/2026/September.md#dispatch-20260922-034111) |
-| Sep 20, 19:05 | `feat(trending)` | [Tencent/WeMM-Embedding](dispatches/2026/September.md#dispatch-20260920-190522) |
 
 <details>
 <summary>Earlier entries</summary>
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
+| Sep 20, 19:05 | `feat(trending)` | [Tencent/WeMM-Embedding](dispatches/2026/September.md#dispatch-20260920-190522) |
 | Sep 20, 18:41 | `docs(rfc)` | [RFC 9792: Prefix Flag Extension for OSPFv2 and OSPFv3](dispatches/2026/September.md#dispatch-20260920-184118) |
 | Sep 20, 18:38 | `security(advisory)` | [GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp](dispatches/2026/September.md#dispatch-20260920-183803) |
 
 </details>
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 5 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 6 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -122,7 +123,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 17:39 EDT on Tuesday, September 22, 2026.
+Last updated 19:36 EDT on Tuesday, September 22, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

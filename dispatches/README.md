@@ -30,7 +30,7 @@ How dispatches are chosen, timed and attributed is in [How it works](../How-It-W
 <!-- MONTHS:BEGIN -->
 | Month | Dispatches |
 | :--- | ---: |
-| [September 2026](2026/September.md) | 5 |
+| [September 2026](2026/September.md) | 6 |
 <!-- MONTHS:END -->
 
 ---

@@ -41,17 +41,26 @@ category: profile
 ## 📡 Dispatch
 
 <!-- DISPATCHES:BEGIN -->
-### Monday, September 21, 2026
+### Tuesday, September 22, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=8d09e8be)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
+| 03:41 | `docs(hn)` | [Grok 4.7](dispatches/2026/September.md#dispatch-20260922-034111) |
 | Sep 20, 19:05 | `feat(trending)` | [Tencent/WeMM-Embedding](dispatches/2026/September.md#dispatch-20260920-190522) |
 | Sep 20, 18:41 | `docs(rfc)` | [RFC 9792: Prefix Flag Extension for OSPFv2 and OSPFv3](dispatches/2026/September.md#dispatch-20260920-184118) |
+
+<details>
+<summary>Earlier entries</summary>
+
+| Time | Commit | Dispatch |
+| :--- | :--- | :--- |
 | Sep 20, 18:38 | `security(advisory)` | [GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp](dispatches/2026/September.md#dispatch-20260920-183803) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 3 in September
+</details>
+
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 4 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -112,7 +121,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 18:12 EDT on Monday, September 21, 2026.
+Last updated 03:41 EDT on Tuesday, September 22, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

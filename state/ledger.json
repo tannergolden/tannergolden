@@ -2,8 +2,12 @@
   "advisory": [
     "GHSA-c8w2-fgvx-vhv4"
   ],
+  "hn": [
+    "49788838"
+  ],
   "link": [
-    "github.com/Tencent/WeMM-Embedding"
+    "github.com/Tencent/WeMM-Embedding",
+    "x.ai/news/grok-4-7"
   ],
   "rfc": [
     "9792"

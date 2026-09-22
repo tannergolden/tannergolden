@@ -1,5 +1,13 @@
 [
   {
+    "at": "2026-09-22T07:41:11.887089+00:00",
+    "type": "docs",
+    "scope": "hn",
+    "title": "Grok 4.7",
+    "path": "dispatches/2026/September.md",
+    "anchor": "dispatch-20260922-034111"
+  },
+  {
     "at": "2026-09-20T23:05:22.494580+00:00",
     "type": "feat",
     "scope": "trending",

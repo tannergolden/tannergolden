@@ -72,3 +72,16 @@ Written in Python.
 _[GitHub](https://github.com/Tencent/WeMM-Embedding) · Repository metadata, reported as fact_
 
 ---
+## Tuesday, September 22, 2026
+
+<a name="dispatch-20260922-034111"></a>
+
+### 📝 Grok 4.7
+
+`docs(hn)` · 03:41 EDT
+
+553 points on Hacker News, from x.ai. 474 comments so far. Posted today.
+
+_[Hacker News](https://x.ai/news/grok-4-7) · Title, score and link, reported as fact · [discussion](https://news.ycombinator.com/item?id=49788838)_
+
+---

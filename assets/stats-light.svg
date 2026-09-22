@@ -10,9 +10,9 @@
 <text x="20" y="90" font-size="13" fill="#52514e">Stars earned</text>
 <text x="380" y="90" font-size="13" font-weight="600" text-anchor="end" fill="#0b0b0b">0</text>
 <text x="20" y="116" font-size="13" fill="#52514e">Followers</text>
-<text x="380" y="116" font-size="13" font-weight="600" text-anchor="end" fill="#0b0b0b">11</text>
+<text x="380" y="116" font-size="13" font-weight="600" text-anchor="end" fill="#0b0b0b">13</text>
 <text x="20" y="142" font-size="13" fill="#52514e">Commits in 2026</text>
-<text x="380" y="142" font-size="13" font-weight="600" text-anchor="end" fill="#0b0b0b">775</text>
+<text x="380" y="142" font-size="13" font-weight="600" text-anchor="end" fill="#0b0b0b">836</text>
 <text x="20" y="168" font-size="13" fill="#52514e">Pull requests in 2026</text>
 <text x="380" y="168" font-size="13" font-weight="600" text-anchor="end" fill="#0b0b0b">0</text>
 <text x="20" y="194" font-size="13" fill="#52514e">Repositories contributed to</text>

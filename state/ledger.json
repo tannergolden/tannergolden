@@ -13,6 +13,7 @@
     "9792"
   ],
   "tip": [
+    "biber",
     "docker-compose-down",
     "sed"
   ],

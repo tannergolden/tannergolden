@@ -65,12 +65,12 @@ category: profile
 
 <!-- MODULES:BEGIN -->
 > [!TIP]
-> **sed** · Edit text in a scriptable manner. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/sed.md)
+> **biber** · A backend bibliography processor for the biblatex package. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/biber.md)
 >
-> Replace all apple (basic regex) occurrences with mango (basic regex) in all input lines and print the result to stdout:
+> Enable debugging:
 >
 > ```bash
-> <command> | sed 's/apple/mango/g'
+> biber <path/to/file.bcf> --debug
 > ```
 <!-- MODULES:END -->
 
@@ -100,12 +100,12 @@ category: profile
 
 <!-- CARDS:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg?v=809d4bda">
-  <img alt="GitHub statistics for tannergolden: 5 public repositories, 0 stars, 11 followers, 775 commits and 0 pull requests in 2026." src="assets/stats-light.svg?v=a95d2feb">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg?v=90413e33">
+  <img alt="GitHub statistics for tannergolden: 5 public repositories, 0 stars, 13 followers, 836 commits and 0 pull requests in 2026." src="assets/stats-light.svg?v=68464a2c">
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/languages-dark.svg?v=e3f6adf8">
-  <img alt="Top languages across public repositories: Python 87.6%, Shell 10.7%, Makefile 0.9%, JavaScript 0.8%." src="assets/languages-light.svg?v=d8c13bb2">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/languages-dark.svg?v=06530f1a">
+  <img alt="Top languages across public repositories: Python 89.4%, Shell 9.2%, Makefile 0.8%, JavaScript 0.7%." src="assets/languages-light.svg?v=4fd4179a">
 </picture>
 <!-- CARDS:END -->
 
@@ -121,7 +121,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 08:02 EDT on Tuesday, September 22, 2026.
+Last updated 09:23 EDT on Tuesday, September 22, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

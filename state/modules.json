@@ -1,10 +1,10 @@
 {
   "tip": {
-    "id": "sed",
-    "command": "sed",
-    "summary": "Edit text in a scriptable manner.",
-    "description": "Replace all apple (basic regex) occurrences with mango (basic regex) in all input lines and print the result to stdout",
-    "example": "<command> | sed 's/apple/mango/g'",
-    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/sed.md"
+    "id": "biber",
+    "command": "biber",
+    "summary": "A backend bibliography processor for the biblatex package.",
+    "description": "Enable debugging",
+    "example": "biber <path/to/file.bcf> --debug",
+    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/biber.md"
   }
 }

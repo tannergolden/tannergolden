@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="443" height="134" viewBox="0 0 443 134" role="img" aria-labelledby="t d">
 <title id="t">A terminal, and what it has been typing</title>
-<desc id="d">👋🏻 Hello World! / 📊 Numbers you can compare later / 📌 Pinned to a digest, not a tag / 📦 Defining the answer once / ⛓️ A gate that cannot drift / 🪞 Review before a release / 🪄 No hidden state in the path / 🔍 Metrics you can actually read / 🔬 Claims that survive review / 🛟 A way back when the fix is slow / 📐 One shape with nothing hidden / 📉 One fewer decision to get wrong / ⏱️ Tests in under a coffee</desc>
+<desc id="d">👋🏻 Hello World! / 🧩 Pieces that fit together / 🔭 Results another lab can rerun / 🔐 Assume least trust, always / 💡 The failure obvious in the log / 🔔 Notify only when it cannot wait / 📖 Docs nobody has to read twice / 🧰 Conventions I would write again / 🏗️ Make the right way easy / 📮 A change that arrives reviewed / 🚧 No step is half-migrated / 🪵 The context in one trace / 💬 Code that reads as what it does</desc>
 <defs>
 <filter id="g" x="-10%" y="-45%" width="120%" height="190%" color-interpolation-filters="sRGB">
 <feGaussianBlur in="SourceGraphic" stdDeviation="1.7" result="near"/>
@@ -13,7 +13,7 @@
 <style>text{font-family:ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Mono', 'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace;font-size:20px;fill:#00ff41;white-space:pre;font-variant-ligatures:none;font-kerning:none;text-rendering:geometricPrecision}.p{opacity:0.5}</style>
 <g filter="url(#g)">
 <text x="16" y="29"><tspan class="p">❯</tspan> 👋🏻 Hello World!</text>
-<text x="16" y="58"><tspan class="p">❯</tspan> 📊 Numbers you can compare later</text>
-<text x="16" y="87"><tspan class="p">❯</tspan> 📌 Pinned to a digest, not a tag</text>
-<text x="16" y="116"><tspan class="p">❯</tspan> 📦 Defining the answer once</text>
+<text x="16" y="58"><tspan class="p">❯</tspan> 🧩 Pieces that fit together</text>
+<text x="16" y="87"><tspan class="p">❯</tspan> 🔭 Results another lab can rerun</text>
+<text x="16" y="116"><tspan class="p">❯</tspan> 🔐 Assume least trust, always</text>
 </g></svg>

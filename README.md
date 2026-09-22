@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=6a02df11">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=88c65bce">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=5bdab16b">
-  <img alt="👋🏻 Hello World! / 📊 Numbers you can compare later / 📌 Pinned to a digest, not a tag / 📦 Defining the answer once / ⛓️ A gate that cannot drift / 🪞 Review before a release / 🪄 No hidden state in the path / 🔍 Metrics you can actually read / 🔬 Claims that survive review / 🛟 A way back when the fix is slow / 📐 One shape with nothing hidden / 📉 One fewer decision to get wrong / ⏱️ Tests in under a coffee" src="assets/masthead-light.svg?v=349dfa31">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=c81001c1">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=d248e8c7">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=6b5541ee">
+  <img alt="👋🏻 Hello World! / 🧩 Pieces that fit together / 🔭 Results another lab can rerun / 🔐 Assume least trust, always / 💡 The failure obvious in the log / 🔔 Notify only when it cannot wait / 📖 Docs nobody has to read twice / 🧰 Conventions I would write again / 🏗️ Make the right way easy / 📮 A change that arrives reviewed / 🚧 No step is half-migrated / 🪵 The context in one trace / 💬 Code that reads as what it does" src="assets/masthead-light.svg?v=d8e13ebb">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -122,7 +122,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 14:03 EDT on Tuesday, September 22, 2026.
+Last updated 17:39 EDT on Tuesday, September 22, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

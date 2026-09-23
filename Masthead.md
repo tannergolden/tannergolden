@@ -93,7 +93,7 @@ Frame("\U0001F680", "{} {} {}", (
 
 Every pool in a frame is interchangeable with every other, which is what makes
 the product of their lengths a count of **sentences** rather than a count of
-strings. That frame writes eighteen of them and every one is something a
+strings. That frame writes eighteen of them, and every one is something a
 person would say.
 
 Three rules hold the quality up:
@@ -122,15 +122,15 @@ N  =  sum over every 12-frame subset S  of  ( product of n_f for f in S )
 ```
 
 That is the elementary symmetric polynomial of degree 12 over the per-frame
-counts, which a dynamic program evaluates in a few dozen steps. Enumerating the
-subsets instead would be C(42, 12) = 1.1 x 10<sup>10</sup> of them, so the
-identity is worth checking rather than trusting: a test verifies the recurrence
+counts, which a dynamic program evaluates in a few dozen steps. Enumerating
+the subsets instead would mean walking C(42, 12) = 1.1 x 10<sup>10</sup> of
+them, so the identity is worth checking rather than trusting: a test verifies the recurrence
 against brute force on a small case where brute force is possible.
 
 ### The Answer
 
-**104,896,258,985,113,656,616,840** distinct mastheads, or **1.05 x
-10<sup>23</sup>**.
+There are **104,896,258,985,113,656,616,840** distinct mastheads, or
+**1.05 x 10<sup>23</sup>**.
 
 At two redraws a day, exhausting them takes about 1.4 x 10<sup>20</sup> years,
 which is roughly ten billion times the age of the universe. The set you are
@@ -139,8 +139,8 @@ never be shown again.
 
 ### What Repeats, And When
 
-The set never repeats. Individual lines do, and that is the number worth
-knowing:
+The set never repeats. Individual lines do, and how often they come back is
+the number worth knowing:
 
 | | At two redraws a day |
 | :--- | ---: |
@@ -151,7 +151,7 @@ knowing:
 | **Any** previously seen line, without memory | about 1 day |
 | **Any** previously seen line, with memory | **4 days, guaranteed** |
 
-That last row is not a statistic, it is a rule. Each redraw reads what the last
+That last row is not a statistic; it is a rule. Each redraw reads what the last
 one committed and excludes it:
 
 - **The shapes the last draw used**, so two consecutive mastheads share no
@@ -170,15 +170,14 @@ never disagree.
 
 Twelve lines drawn from fifteen frames put every masthead at eighty per cent of
 all the shapes there were, so two consecutive draws shared ten of their twelve
-emoji and the page read as repetitive however much the words changed. Sixty
-four written frames, of which forty two survive the plate, puts a draw at
-twenty nine per cent, and the shape memory takes the overlap between two
+emoji and the page read as repetitive however much the words changed.
+Sixty-four written frames, of which forty-two survive the plate, put a draw at
+twenty-nine per cent, and the shape memory takes the overlap between two
 consecutive draws to zero.
 
-The line count is nearly the same either way. Frame count is close to free for
+The line count is nearly the same either way, and frame count barely changes
 how often a line comes back, because a rarer frame holds correspondingly fewer
-lines. What more frames buy is the part a reader actually notices, which is the
-shapes.
+lines. What more frames buy is the part a reader actually notices: the shapes.
 
 ---
 
@@ -198,17 +197,17 @@ typed.
 | Phase | Rate | Why |
 | :--- | :--- | :--- |
 | Typing | 20 cells a second, constant | A terminal has one cadence. A fixed duration per line made a short line crawl and a long one blur past at three times the speed |
-| Hold | 0.95s + 0.04s a cell | Reading time. Two hundred words a minute puts a six word line at about 1.8 seconds, so a longer line earns a longer pause |
+| Hold | 0.95s + 0.04s a cell | Reading time. Two hundred words a minute puts a six-word line at about 1.8 seconds, so a longer line earns a longer pause |
 | Erase | 56 cells a second | A wipe, not a performance |
 | Blink | 0.5s | Only while a finished line waits |
 
 The keystrokes are not evenly spaced. There is a beat before a new word and a
 longer one after a full stop, and no two are the same length. The variation is
 **seeded from the line's own text** rather than from chance, so the same line
-always types the same way and a run that redrew nothing produces a byte
-identical file. An emoji is two cells wide and one keystroke, so its second
-cell arrives in no time at all and the clip never rests through the middle of a
-glyph showing half a face.
+always types the same way and a run that redrew nothing produces a
+byte-identical file. An emoji is two cells wide and one keystroke, so its second
+cell arrives in no time at all, and the clip never comes to rest in the middle
+of a glyph, showing half a face.
 
 The cursor is **solid while it types**, the way a real one is, and blinks only
 while a finished line waits to be read. There is one cursor per line, never two
@@ -217,7 +216,7 @@ lit at once.
 ### Colour And Light
 
 The background is transparent, so the text sits on whatever GitHub paints
-behind it, and that is white on one theme and near black on the other. **No
+behind it, and that is white on one theme and near-black on the other. **No
 single green clears the contrast bar on both:**
 
 | Scheme | Ink | On its own background | On the other |
@@ -230,11 +229,11 @@ light gets no bloom at all, because a glow around dark green on white is a
 smudge.
 
 The bloom is two passes, not one. A single blur merged with itself is a blurry
-copy of the text: it thickens every stroke and softens every edge. A phosphor
-has a hard glyph sitting in light, so both blurs are **dimmed and laid behind
-an untouched `SourceGraphic`**. `color-interpolation-filters="sRGB"` is on the
-filter because the default is linearRGB, which turns a saturated green bloom
-into a pale grey one.
+copy of the text: it thickens every stroke and softens every edge. What a
+phosphor actually looks like is a hard glyph sitting in light, so both blurs
+are **dimmed and laid behind an untouched `SourceGraphic`**. The filter also
+carries `color-interpolation-filters="sRGB"`, because the default is linearRGB,
+which turns a saturated green bloom into a pale grey one.
 
 > [!IMPORTANT]
 > This was not a refinement. With the glow laid over the glyphs the masthead
@@ -260,16 +259,16 @@ So the masthead draws only from lines that fit **34 cells**, and only from
 frames that keep at least **eight** of them. Eight, because a frame appears at
 most seven times inside the memory window (the last draw's shapes being
 excluded from the next), so eight is what makes "no line twice in four days"
-true rather than hoped for. Without that floor the plate leaves one frame
+true rather than hoped for. Without that floor, the plate leaves one frame
 holding a single line, which would then be the only thing that frame ever said.
 
 > [!WARNING]
-> **This costs 488 lines and it is not hidden.** The generator still writes a
+> **This costs 488 lines, and it is not hidden.** The generator still writes a
 > thousand; 511 of them fit, across 42 of the 64 frames. `drawable()` counts
 > what can be shown and `combinations()` counts what exists, both pinned by a
 > test, so the shortfall cannot drift quietly. Getting all thousand back under
-> the plate means rewriting fifty one frames to four to six words, which is a
-> separate job.
+> the plate means rewriting fifty-one frames so their lines
+> run to four or six words, which is a separate job.
 
 Wrapping onto two rows was tried and taken back out. It put a phone at eighteen
 pixels, but a masthead that breaks mid-sentence reads as a mistake on every
@@ -281,7 +280,7 @@ test keeps that path exercised so it cannot rot.
 
 That is the width where the plate stops fitting the column, derived from the
 plate rather than typed in, so it cannot be left behind the next time the plate
-moves. Under it, everything is an image being scaled down. A phone gets one
+moves. Below it, everything is an image being scaled down. A phone gets one
 transparent pixel instead and the badges move up to take the space.
 
 ---
@@ -289,7 +288,7 @@ transparent pixel instead and the badges move up to take the space.
 ## 🖼️ Which Reader Gets Which Image
 
 Five files, one `<picture>`, and **the order of the sources is the whole
-thing**: a browser takes the first whose media matches, so the narrower
+thing**: a browser takes the first one whose media matches, so the narrower
 conditions come first.
 
 ```html
@@ -349,13 +348,13 @@ conditions come first.
 
 [`.github/workflows/masthead.yml`](.github/workflows/masthead.yml) runs at
 06:41 and 18:41 UTC, off the hour because GitHub's scheduler is most congested
-on it and runs there are delayed or dropped most often. It shares a concurrency
+on it, and runs there are delayed or dropped most often. It shares a concurrency
 group with the other writing workflows, so no redraw lands beside a dispatch.
 
 The commit message is **drawn the same way the lines are**, from 8,736
 combinations: a subject, a reason a redraw exists at all, and a reason it is on
 a clock. A log carrying the same paragraph twice a day is a log nobody reads
-twice. Every frame it can draw from states a *why*, because the commit standard
+twice. Every frame the body can draw from states a *why*, because the commit standard
 asks for one and a generated body is the easiest place in a repository to
 restate a subject instead.
 
@@ -368,8 +367,9 @@ changes exactly when the image does and never otherwise.
 
 ## 🧾 Departures Worth Knowing
 
-- **488 of the 999 generated lines are currently undrawable.** They are written, tested
-  and counted; the plate is narrower than they are. See the plate section above.
+- **488 of the 999 generated lines are currently undrawable.** They are
+  written, tested and counted; the plate is narrower than they are. See the
+  plate section above.
 - **A fixed schedule**, where everything else here is an exponential draw.
 - **The corpus is finite and small enough to read.** That is deliberate. The
   space is not infinite; it is deeper than the number of times this page will

@@ -23,8 +23,8 @@ _Random by construction. Attributed by default._
 
 ## 💡 What Runs
 
-One workflow, [`dispatches.yml`](.github/workflows/dispatches.yml), fires every hour at
-seventeen minutes past. It reads [`state/schedule.json`](state/schedule.json),
+One workflow, [`dispatches.yml`](.github/workflows/dispatches.yml), fires
+every hour at seventeen minutes past. It reads [`state/schedule.json`](state/schedule.json),
 which holds two moments: when the next dispatch is due and when the next
 page refresh is due. If either falls inside the coming hour, the run sleeps
 until that exact second, does the work, draws the next moment, and looks

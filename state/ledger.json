@@ -7,6 +7,7 @@
   ],
   "tip": [
     "biber",
+    "brew-leaves",
     "docker-compose-down",
     "lighthouse",
     "sed"

@@ -43,7 +43,7 @@ category: profile
 <!-- DISPATCHES:BEGIN -->
 ### Wednesday, September 23, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=3465b94a)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=2f7904e7)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
@@ -54,12 +54,12 @@ category: profile
 
 <!-- MODULES:BEGIN -->
 > [!TIP]
-> **lighthouse** · Analyzes web applications and web pages, collecting modern performance metrics and insights on developer best practices. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/lighthouse.md)
+> **brew leaves** · List installed formulas that are not dependencies of another installed formula or cask. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/brew-leaves.md)
 >
-> Generate a JSON report and save it to a specific file:
+> Only list leaves that were installed as dependencies:
 >
 > ```bash
-> lighthouse --output <json> --output-path <path/to/file.json> <https://example.com>
+> brew leaves --installed-as-dependency
 > ```
 <!-- MODULES:END -->
 
@@ -92,13 +92,21 @@ category: profile
 ## ⏳ Support Clock
 
 <!-- SUPPORT:BEGIN -->
-_The support clock fills in on the first refresh._
+| Runtime | Line | Latest | Security support ends |
+| :--- | :--- | :--- | :--- |
+| [macOS](https://endoflife.date/macos) | `27` | `27.0` | 🟢 No end announced |
+| [Windows](https://endoflife.date/windows) | `11 26H1` | `10.0.28000` | 🟢 March 14, 2028 · 18 months left |
+| [Linux kernel](https://endoflife.date/linux) | `7.2` | `7.2.7` | 🟢 No end announced |
+| [Python](https://endoflife.date/python) | `3.14` | `3.14.7` | 🟢 October 31, 2030 · 4 years left |
+| [Node.js](https://endoflife.date/nodejs) | `26` | `26.10.0` | 🟢 April 30, 2029 · 3 years left |
+
+**Line** is the release series the date applies to; **Latest** is the newest release on it. Dates are when security fixes stop, not when support gets quieter. Operating systems are fixed; everything below them is whatever this account's public repositories are written in, so the table changes when the code does. Source: [endoflife.date](https://endoflife.date) · CC BY-SA 4.0.
 <!-- SUPPORT:END -->
 
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 06:06 EDT on Wednesday, September 23, 2026.
+Last updated 06:27 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

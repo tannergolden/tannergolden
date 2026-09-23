@@ -1,0 +1,52 @@
+[
+  {
+    "name": "macOS",
+    "product": "macos",
+    "url": "https://endoflife.date/macos",
+    "cycle": "27",
+    "latest": "27.0",
+    "released": "2026-09-14",
+    "ends": null,
+    "forever": true
+  },
+  {
+    "name": "Windows",
+    "product": "windows",
+    "url": "https://endoflife.date/windows",
+    "cycle": "11 26H1",
+    "latest": "10.0.28000",
+    "released": "2026-02-10",
+    "ends": "2028-03-14",
+    "forever": false
+  },
+  {
+    "name": "Linux kernel",
+    "product": "linux",
+    "url": "https://endoflife.date/linux",
+    "cycle": "7.2",
+    "latest": "7.2.7",
+    "released": "2026-09-21",
+    "ends": null,
+    "forever": true
+  },
+  {
+    "name": "Python",
+    "product": "python",
+    "url": "https://endoflife.date/python",
+    "cycle": "3.14",
+    "latest": "3.14.7",
+    "released": "2026-08-05",
+    "ends": "2030-10-31",
+    "forever": false
+  },
+  {
+    "name": "Node.js",
+    "product": "nodejs",
+    "url": "https://endoflife.date/nodejs",
+    "cycle": "26",
+    "latest": "26.10.0",
+    "released": "2026-09-22",
+    "ends": "2029-04-30",
+    "forever": false
+  }
+]

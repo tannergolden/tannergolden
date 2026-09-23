@@ -43,26 +43,11 @@ category: profile
 <!-- DISPATCHES:BEGIN -->
 ### Wednesday, September 23, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=313dcbd8)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=313dcbd8)](dispatches/)
 
-| Time | Commit | Dispatch |
-| :--- | :--- | :--- |
-| Sep 22, 19:36 | `docs(lobsters)` | [Fearless SIMD v1.0 is here](dispatches/2026/September.md#dispatch-20260922-193634) |
-| Sep 22, 14:03 | `docs(lobsters)` | [What Sun got wrong](dispatches/2026/September.md#dispatch-20260922-140358) |
-| Sep 22, 03:41 | `docs(hn)` | [Grok 4.7](dispatches/2026/September.md#dispatch-20260922-034111) |
+_No dispatches yet. The first lands at a random moment within the next twelve hours or so; nothing here is on a schedule._
 
-<details>
-<summary>Earlier News</summary>
-
-| Time | Commit | Dispatch |
-| :--- | :--- | :--- |
-| Sep 20, 19:05 | `feat(trending)` | [Tencent/WeMM-Embedding](dispatches/2026/September.md#dispatch-20260920-190522) |
-| Sep 20, 18:41 | `docs(rfc)` | [RFC 9792: Prefix Flag Extension for OSPFv2 and OSPFv3](dispatches/2026/September.md#dispatch-20260920-184118) |
-| Sep 20, 18:38 | `security(advisory)` | [GHSA-c8w2-fgvx-vhv4: github.com/kcp-dev/kcp](dispatches/2026/September.md#dispatch-20260920-183803) |
-
-</details>
-
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 6 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 0 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -114,7 +99,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 05:10 EDT on Wednesday, September 23, 2026.
+Last updated 05:25 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

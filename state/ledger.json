@@ -1,4 +1,10 @@
 {
+  "link": [
+    "nodejs.org/en/blog/release/v26.10.0"
+  ],
+  "node": [
+    "/blog/release/v26.10.0?1790067829095"
+  ],
   "tip": [
     "biber",
     "docker-compose-down",

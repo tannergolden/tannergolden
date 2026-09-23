@@ -159,14 +159,14 @@ def test_a_languages_url_pointing_somewhere_other_than_github_is_not_followed(fa
 
 def test_two_languages_sharing_a_runtime_ask_about_it_once(fake_net):
     assert support.runtimes_for(["C#", "F#"]) == [(".NET", "dotnet")]
-    assert support.runtimes_for(["JavaScript", "TypeScript"]) == [
-        ("Node.js", "nodejs"), ("TypeScript", "typescript")]
+    assert support.runtimes_for(["C#", "Python", "F#"]) == [
+        (".NET", "dotnet"), ("Python", "python")]
 
 
 def test_a_row_is_named_after_the_runtime_because_that_is_what_the_date_describes():
-    """"Shell 5.3" linking to Bash makes the reader work out the mapping."""
-    assert support.runtimes_for(["Shell"]) == [("Bash", "bash")]
+    """A row reading "Node.js 26" does not make the reader work the mapping out."""
     assert support.runtimes_for(["JavaScript"]) == [("Node.js", "nodejs")]
+    assert support.runtimes_for(["C#"]) == [(".NET", "dotnet")]
     assert support.runtimes_for(["Python"]) == [("Python", "python")]
 
 
@@ -189,11 +189,14 @@ def test_the_platforms_come_first_then_the_languages_by_bytes(fake_net):
     for _, product in support.PLATFORMS:
         fake_net.json(API + product, cycles(cycle("1", eol=False)))
     fake_net.json(API + "python", cycles(cycle("3.14", "3.14.1", eol="2030-10-31")))
-    fake_net.json(API + "bash", cycles(cycle("5.3", "5.3.0", eol=False)))
-    account(fake_net, repo("one", {"Python": 90_000, "Shell": 9_000, "Makefile": 5_000}))
+    fake_net.json(API + "ruby", cycles(cycle("4.0", "4.0.7", eol="2029-03-31")))
+    # Shell and Makefile are both left off, and for different reasons: the
+    # catalogue carries no shell, and a Makefile has no lifecycle to carry.
+    account(fake_net, repo("one", {"Python": 90_000, "Shell": 40_000,
+                                   "Makefile": 20_000, "Ruby": 9_000}))
 
     names = [row["name"] for row in support.collect("tannergolden", None)]
-    assert names == ["macOS", "Windows", "Linux kernel", "Python", "Bash"]
+    assert names == ["macOS", "Windows", "Linux kernel", "Python", "Ruby"]
 
 
 def test_the_three_operating_systems_the_user_asked_for_are_always_asked_about():
@@ -372,6 +375,7 @@ def test_the_documentation_still_describes_the_clock_that_exists():
         "the floor": f"above {kilobytes} KB",
         "the warning window": f"inside {spelled[render.SUPPORT_WARNING_DAYS // 30]} months",
         "the mapping it names": "JavaScript asks about Node",
+        "the gap it admits": "Shell is the one that costs this page",
         "the attribution": "CC BY-SA 4.0",
     }
     assert {name: phrase for name, phrase in expected.items() if phrase not in doc} == {}
@@ -394,3 +398,24 @@ def test_nothing_the_clock_writes_carries_a_dash_the_house_bans():
              "ends": ends, "forever": False} for ends in ("2030-01-01", "2020-01-01", None)]
     drawn = render.render_support_region(rows, MOMENT)
     assert not [ch for ch in drawn if 0x2013 <= ord(ch) <= 0x2015]
+
+
+def test_every_mapping_is_either_verified_or_recorded_as_missing():
+    """The two tables are disjoint, and nothing is in both or in neither.
+
+    RUNTIMES is what the clock asks for and every slug in it has been
+    answered by the real catalogue. UNLISTED is what the catalogue turned
+    down, kept so the probe keeps trying rather than the knowledge being
+    deleted with the mapping.
+    """
+    assert not set(support.RUNTIMES) & set(support.UNLISTED)
+    assert not (set(support.RUNTIMES) | set(support.UNLISTED)) & support.NO_LIFECYCLE
+    assert support.runtimes_for(list(support.UNLISTED)) == []
+
+
+def test_the_probe_tries_the_slugs_the_clock_has_given_up_on():
+    """Otherwise a slug the catalogue adds later is never noticed."""
+    tried = {slug for _, slug in support.every_product()}
+    assert tried >= {slug for _, slug in support.UNLISTED.values()}
+    assert tried >= {slug for _, slug in support.RUNTIMES.values()}
+    assert tried >= {slug for _, slug in support.PLATFORMS}

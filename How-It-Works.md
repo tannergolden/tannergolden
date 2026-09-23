@@ -360,20 +360,29 @@ and **Linux**, meaning the kernel rather than somebody's distribution.
 Everything under them is read from this account: the GitHub API is asked for
 the languages of every public repository that is not a fork and not archived,
 the bytes are summed, and each language above 2 KB is mapped onto the product
-whose lifecycle it actually depends on. JavaScript asks about Node, `C#` asks
-about .NET, Shell asks about Bash. A language nobody writes here drops off by
-itself, and one picked up next year appears the same way.
+whose lifecycle it actually depends on. JavaScript asks about Node and `C#`
+asks about .NET. A language nobody writes here drops off by itself, and one
+picked up next year appears the same way.
 
 **A row is named after the runtime, not the language**, because the version
 and the date describe the runtime: a row reading "Shell 5.3" and linking to
 Bash asks the reader to work the mapping out, and one reading "Bash 5.3" does
 not. For most languages the two names are the same and nothing changes.
 
-A language with no support lifecycle is left off deliberately rather than by
-omission: a Makefile does not go end of life. A language mapped to a product
-the catalogue does not carry answers 404, and that row is simply absent, which
-is why the mapping table leans generous. It is cheaper to list a guess that
-turns out not to exist than to leave a language off because nobody checked.
+Two kinds of language are left off, both deliberately rather than by omission.
+One has no support lifecycle at all: a Makefile does not go end of life. The
+other has one that endoflife.date does not track, which is a fact about the
+catalogue and not a gap here. **Shell is the one that costs this page
+something**, because this account writes a good deal of it and there is no
+shell in the catalogue to point at. Those mappings are kept rather than
+deleted, and `probe` still tries them, so the day one is added it shows up as
+answering and can be promoted.
+
+Every slug the clock itself uses has been answered by the real catalogue.
+That is what `probe` is for: it walks the whole table, tries each slug, and
+stars the ones this account's languages actually ask for, so a mapping is
+checked against the real thing before it is needed rather than failing
+quietly on the day somebody writes that language.
 
 **The clock is drawn on every page write and fetched only on a refresh.**
 State holds dates, never the sentence they become, so "4 years left" is

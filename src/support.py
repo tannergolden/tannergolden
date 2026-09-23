@@ -41,39 +41,46 @@ GITHUB = "https://api.github.com"
 # --- what the account actually writes ----------------------------------------------
 
 # Linguist's name for a language, then what the page calls the thing that
-# actually has a lifecycle and the product endoflife.date tracks it under. A
-# language whose name is not here is not asked about.
+# actually has a lifecycle and the product endoflife.date tracks it under.
 #
 # THE ROW IS NAMED AFTER THE RUNTIME, NOT THE LANGUAGE, because the version
 # and the date describe the runtime. A row reading "Shell 5.3" linking to
 # Bash asks the reader to work out the mapping; a row reading "Bash 5.3" does
 # not. Where the two names coincide, which is most of them, nothing changes.
 #
-# A WRONG GUESS COSTS NOTHING. An unknown product answers 404, `net` returns
-# None, and the row is simply absent. That is why this leans generous: it is
-# cheaper to list a mapping that turns out not to exist than to leave a
-# language off the clock because nobody checked.
+# EVERY SLUG HERE HAS BEEN ANSWERED BY THE CATALOGUE. `probe` walks this
+# table and UNLISTED below, so a mapping is checked against the real thing
+# rather than assumed, and a guess that turns out not to exist is moved
+# rather than left to fail quietly on the day somebody writes that language.
 RUNTIMES = {
     "Python": ("Python", "python"),
     "JavaScript": ("Node.js", "nodejs"),
-    "TypeScript": ("TypeScript", "typescript"),
     "Ruby": ("Ruby", "ruby"),
     "Go": ("Go", "go"),
     "Rust": ("Rust", "rust"),
     "PHP": ("PHP", "php"),
-    "Java": ("Java", "java"),
     "Kotlin": ("Kotlin", "kotlin"),
-    "Swift": ("Swift", "swift"),
     "C#": (".NET", "dotnet"),
     "F#": (".NET", "dotnet"),
     "Elixir": ("Elixir", "elixir"),
     "Erlang": ("Erlang", "erlang"),
     "Perl": ("Perl", "perl"),
+    "Scala": ("Scala", "scala"),
+}
+
+# Languages whose runtime endoflife.date does not carry. Asked for once,
+# answered 404, and recorded here rather than deleted: the probe still tries
+# them, so the day the catalogue adds one it shows up as answering and can be
+# promoted into RUNTIMES. Shell is the one that costs this page something,
+# since this account writes it; there is no shell in the catalogue to point at.
+UNLISTED = {
+    "Shell": ("Bash", "bash"),
+    "TypeScript": ("TypeScript", "typescript"),
+    "Java": ("Java", "java"),
+    "Swift": ("Swift", "swift"),
     "R": ("R", "r"),
     "Dart": ("Dart", "dart"),
-    "Scala": ("Scala", "scala"),
     "Clojure": ("Clojure", "clojure"),
-    "Shell": ("Bash", "bash"),
     "Zig": ("Zig", "zig"),
 }
 
@@ -317,7 +324,7 @@ def every_product() -> list:
     rather than only the handful today's languages happen to reach.
     """
     out: list = []
-    for name, slug in (*PLATFORMS, *RUNTIMES.values()):
+    for name, slug in (*PLATFORMS, *RUNTIMES.values(), *UNLISTED.values()):
         if not any(seen == slug for _, seen in out):
             out.append((name, slug))
     return out

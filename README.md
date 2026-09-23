@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=c1d50f6a">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=536a1d88">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=ed98f4bf">
-  <img alt="👋🏻 Hello World! / 🏗️ Keep the right way easy / 🩺 Notice it before the pager does / 🪵 The context in one place / 🧩 Pieces that fit without glue / 🔗 No package without a review / 📮 A fix that arrives reviewed / 📦 Solving the same problem once / 🎯 Solves exactly what it claims / ⏱️ A review in under five minutes / 🪄 No implicit steps in the deploy / 💬 A commit that reads as prose / 🛠️ Fix the cause, not the ticket" src="assets/masthead-light.svg?v=a2dbdc2d">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=32544bf1">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=f2271a28">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=ac162768">
+  <img alt="👋🏻 Hello World! / 🪞 Lint before a release / 🧹 Simplifying the boring parts / 🧭 Plain defaults over novelty / 🏷️ Every build carries a version / 📐 One way in with no side doors / 🚧 No step is copied twice / 🌱 No pipeline ages badly / 🧰 Tools I would make again / 🧮 Latency measured, not argued / ✂️ Cutting more than I write / ⛓️ A rule that cannot drift / 🗺️ Restored with one command" src="assets/masthead-light.svg?v=43e42ab1">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -41,7 +41,7 @@ category: profile
 ## 📡 Dispatch
 
 <!-- DISPATCHES:BEGIN -->
-### Monday, September 21, 2026
+### Wednesday, September 23, 2026
 
 [![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
 
@@ -112,7 +112,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 02:29 EDT on Monday, September 21, 2026.
+Last updated 05:09 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

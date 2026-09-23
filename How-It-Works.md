@@ -61,9 +61,9 @@ hours.
 | | |
 | :--- | ---: |
 | Lines the generator can write | **1,000** exactly |
-| Of those, narrow enough to show | 511 |
+| Of those, narrow enough to show | 515 |
 | Frames | 64, of which 42 fit the plate |
-| Distinct mastheads | 1.05e+23 |
+| Distinct mastheads | 1.16e+23 |
 | Plate | 34 cells on one row, a 467px image |
 | Hidden below | 498px, where it would have to shrink |
 

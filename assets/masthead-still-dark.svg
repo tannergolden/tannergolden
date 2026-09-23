@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="467" height="134" viewBox="0 0 467 134" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" width="431" height="134" viewBox="0 0 431 134" role="img" aria-labelledby="t d">
 <title id="t">A terminal, and what it has been typing</title>
-<desc id="d">👋🏻 Hello World! / 🏗️ Keep the right way easy / 🩺 Notice it before the pager does / 🪵 The context in one place / 🧩 Pieces that fit without glue / 🔗 No package without a review / 📮 A fix that arrives reviewed / 📦 Solving the same problem once / 🎯 Solves exactly what it claims / ⏱️ A review in under five minutes / 🪄 No implicit steps in the deploy / 💬 A commit that reads as prose / 🛠️ Fix the cause, not the ticket</desc>
+<desc id="d">👋🏻 Hello World! / 🪞 Lint before a release / 🧹 Simplifying the boring parts / 🧭 Plain defaults over novelty / 🏷️ Every build carries a version / 📐 One way in with no side doors / 🚧 No step is copied twice / 🌱 No pipeline ages badly / 🧰 Tools I would make again / 🧮 Latency measured, not argued / ✂️ Cutting more than I write / ⛓️ A rule that cannot drift / 🗺️ Restored with one command</desc>
 <defs>
 <filter id="g" x="-10%" y="-45%" width="120%" height="190%" color-interpolation-filters="sRGB">
 <feGaussianBlur in="SourceGraphic" stdDeviation="1.7" result="near"/>
@@ -13,7 +13,7 @@
 <style>text{font-family:ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Mono', 'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace;font-size:20px;fill:#00ff41;white-space:pre;font-variant-ligatures:none;font-kerning:none;text-rendering:geometricPrecision}.p{opacity:0.5}</style>
 <g filter="url(#g)">
 <text x="16" y="29"><tspan class="p">❯</tspan> 👋🏻 Hello World!</text>
-<text x="16" y="58"><tspan class="p">❯</tspan> 🏗️ Keep the right way easy</text>
-<text x="16" y="87"><tspan class="p">❯</tspan> 🩺 Notice it before the pager does</text>
-<text x="16" y="116"><tspan class="p">❯</tspan> 🪵 The context in one place</text>
+<text x="16" y="58"><tspan class="p">❯</tspan> 🪞 Lint before a release</text>
+<text x="16" y="87"><tspan class="p">❯</tspan> 🧹 Simplifying the boring parts</text>
+<text x="16" y="116"><tspan class="p">❯</tspan> 🧭 Plain defaults over novelty</text>
 </g></svg>

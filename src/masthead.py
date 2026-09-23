@@ -169,7 +169,7 @@ FRAMES = (
     )),
     Frame("\U0001F552", "{} {} {}", (
         ("Reviewing", "Merging", "Shipping"),
-        ("small changes", "one thing"),
+        ("a small change", "one thing"),
         ("every day", "while it is fresh"),
     )),
     Frame("\U0001F510", "{} least {}, always", (
@@ -183,7 +183,7 @@ FRAMES = (
     # --- what it is for ----------------------------------------------------
     Frame("\u267B\uFE0F", "{} that {}", (
         ("Pipelines", "Standards", "Environments", "Guardrails"),
-        ("outlive their author", "still run next year", "nobody has to remember",
+        ("outlive their author", "are still right next year", "nobody has to remember",
          "explain themselves"),
     )),
     Frame("\U0001F4D6", "{} nobody {}", (
@@ -215,7 +215,7 @@ FRAMES = (
     )),
     Frame("\U0001F3AF", "{} exactly {}", (
         ("Does", "Solves", "Covers"),
-        ("one thing", "what it claims", "what is needed", "nothing more"),
+        ("one thing", "what it claims", "what is needed", "what was asked"),
     )),
     Frame("\U0001F3D7\uFE0F", "{} the {} way easy", (
         ("Make", "Keep", "Leave"),
@@ -236,8 +236,8 @@ FRAMES = (
         ("add", "write", "ship", "merge"),
     )),
     Frame("\U0001F4E6", "{} {} once", (
-        ("Defining", "Solving", "Writing", "Deciding"),
-        ("the hard part", "the same problem", "the rule", "the answer"),
+        ("Deciding", "Settling", "Recording", "Writing down"),
+        ("the rule", "the answer", "the default", "the exception"),
     )),
     Frame("\U0001F4C9", "One fewer {} to {}", (
         ("thing", "step", "decision", "moving part"),
@@ -272,7 +272,7 @@ FRAMES = (
     # --- reproducibility ---------------------------------------------------
     Frame("\u2699\uFE0F", "{} works on {}", (
         ("It", "The build", "The pipeline", "Every step"),
-        ("my machine", "a fresh clone", "a cold runner", "a clean container"),
+        ("any machine", "a fresh clone", "a cold runner", "a clean container"),
     )),
     Frame("\U0001F501", "{} twice and {}", (
         ("Run it", "Build it", "Deploy it", "Clone it"),
@@ -306,7 +306,7 @@ FRAMES = (
         ("it goes wrong", "nobody is watching", "the fix is slow", "it matters"),
     )),
     Frame("\U0001FA7A", "{} before {} does", (
-        ("Catch it", "Find it", "Fix it", "Notice it"),
+        ("Catch it", "Find it", "See it", "Notice it"),
         ("a user", "the pager", "the customer", "anyone else"),
     )),
     Frame("\U0001FAAB", "{} that degrade {}", (
@@ -360,7 +360,7 @@ FRAMES = (
         ("Pieces", "Repos", "Tools", "Standards"),
         ("together", "one job each", "without glue", "by contract"),
     )),
-    Frame("\U0001F5C3\uFE0F", "{} where {} expects", (
+    Frame("\U0001F5C3\uFE0F", "{} where {} looks", (
         ("Files", "Configs", "Scripts", "Docs"),
         ("the next person", "everyone", "the tooling", "a newcomer"),
     )),
@@ -374,7 +374,7 @@ FRAMES = (
         ("half-migrated", "copied twice", "waiting on me", "a special case"),
     )),
     Frame("\u23F3", "{} that {} later", (
-        ("Decisions", "Shortcuts", "Assumptions", "Cleverness"),
+        ("Decisions", "Shortcuts", "Assumptions", "Clever tricks"),
         ("cost nothing", "surface", "get paid for", "come back"),
     )),
     Frame("\U0001F50B", "{} that outlasts {}", (
@@ -401,7 +401,7 @@ FRAMES = (
     # --- delivery ----------------------------------------------------------
     Frame("\U0001F4EE", "{} that arrives {}", (
         ("A change", "A release", "A fix", "A feature"),
-        ("reviewed", "tested", "with a rollback", "or not at all"),
+        ("reviewed", "tested", "with a rollback", "ready to revert"),
     )),
     Frame("\u23F1\uFE0F", "{} in under {}", (
         ("Builds", "Tests", "Feedback", "A review"),
@@ -437,7 +437,7 @@ FRAMES = (
     )),
     Frame("\U0001F916", "{} {}", (
         ("Nobody typed", "No human wrote", "A workflow drew", "No hand touched"),
-        ("this line", "what you are reading", "any of this", "a word of this"),
+        ("this line", "what you are reading", "this sentence", "these words"),
     )),
 )
 

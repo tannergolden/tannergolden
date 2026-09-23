@@ -1,32 +1,32 @@
 {
   "lines": [
     "\ud83d\udc4b\ud83c\udffb Hello World!",
-    "\ud83c\udfd7\ufe0f Keep the right way easy",
-    "\ud83e\ude7a Notice it before the pager does",
-    "\ud83e\udeb5 The context in one place",
-    "\ud83e\udde9 Pieces that fit without glue",
-    "\ud83d\udd17 No package without a review",
-    "\ud83d\udcee A fix that arrives reviewed",
-    "\ud83d\udce6 Solving the same problem once",
-    "\ud83c\udfaf Solves exactly what it claims",
-    "\u23f1\ufe0f A review in under five minutes",
-    "\ud83e\ude84 No implicit steps in the deploy",
-    "\ud83d\udcac A commit that reads as prose",
-    "\ud83d\udee0\ufe0f Fix the cause, not the ticket"
+    "\ud83e\ude9e Lint before a release",
+    "\ud83e\uddf9 Simplifying the boring parts",
+    "\ud83e\udded Plain defaults over novelty",
+    "\ud83c\udff7\ufe0f Every build carries a version",
+    "\ud83d\udcd0 One way in with no side doors",
+    "\ud83d\udea7 No step is copied twice",
+    "\ud83c\udf31 No pipeline ages badly",
+    "\ud83e\uddf0 Tools I would make again",
+    "\ud83e\uddee Latency measured, not argued",
+    "\u2702\ufe0f Cutting more than I write",
+    "\u26d3\ufe0f A rule that cannot drift",
+    "\ud83d\uddfa\ufe0f Restored with one command"
   ],
   "shapes": [
-    "\ud83c\udfd7\ufe0f",
-    "\ud83e\ude7a",
-    "\ud83e\udeb5",
-    "\ud83e\udde9",
-    "\ud83d\udd17",
-    "\ud83d\udcee",
-    "\ud83d\udce6",
-    "\ud83c\udfaf",
-    "\u23f1\ufe0f",
-    "\ud83e\ude84",
-    "\ud83d\udcac",
-    "\ud83d\udee0\ufe0f"
+    "\ud83e\ude9e",
+    "\ud83e\uddf9",
+    "\ud83e\udded",
+    "\ud83c\udff7\ufe0f",
+    "\ud83d\udcd0",
+    "\ud83d\udea7",
+    "\ud83c\udf31",
+    "\ud83e\uddf0",
+    "\ud83e\uddee",
+    "\u2702\ufe0f",
+    "\u26d3\ufe0f",
+    "\ud83d\uddfa\ufe0f"
   ],
   "recent": [
     "\ud83d\ude80 Deploying a change behind a gate",
@@ -88,7 +88,19 @@
     "\u23f1\ufe0f A review in under five minutes",
     "\ud83e\ude84 No implicit steps in the deploy",
     "\ud83d\udcac A commit that reads as prose",
-    "\ud83d\udee0\ufe0f Fix the cause, not the ticket"
+    "\ud83d\udee0\ufe0f Fix the cause, not the ticket",
+    "\ud83e\ude9e Lint before a release",
+    "\ud83e\uddf9 Simplifying the boring parts",
+    "\ud83e\udded Plain defaults over novelty",
+    "\ud83c\udff7\ufe0f Every build carries a version",
+    "\ud83d\udcd0 One way in with no side doors",
+    "\ud83d\udea7 No step is copied twice",
+    "\ud83c\udf31 No pipeline ages badly",
+    "\ud83e\uddf0 Tools I would make again",
+    "\ud83e\uddee Latency measured, not argued",
+    "\u2702\ufe0f Cutting more than I write",
+    "\u26d3\ufe0f A rule that cannot drift",
+    "\ud83d\uddfa\ufe0f Restored with one command"
   ],
-  "loop_seconds": 51.6
+  "loop_seconds": 48.2
 }

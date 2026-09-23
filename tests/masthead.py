@@ -833,7 +833,7 @@ def test_the_plate_decides_what_the_page_can_show(repo):
     """
     assert masthead.combinations() + 1 == masthead.TOTAL_LINES == 1000
     assert masthead.PLATE_CELLS == 34
-    assert masthead.drawable() == 511, masthead.drawable()
+    assert masthead.drawable() == 515, masthead.drawable()
     assert len(masthead.plate_frames()) == 42, len(masthead.plate_frames())
     assert masthead.mastheads() > 10 ** 20
 

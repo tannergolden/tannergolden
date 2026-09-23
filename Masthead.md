@@ -35,9 +35,9 @@ any other image on the page.
 | | |
 | :--- | ---: |
 | Lines the generator can write | **1,000** exactly, the greeting included |
-| Of those, narrow enough to show | 511 |
+| Of those, narrow enough to show | 515 |
 | Frames | 64, of which 42 fit the plate |
-| **Distinct mastheads** | **1.05 x 10<sup>23</sup>** |
+| **Distinct mastheads** | **1.16 x 10<sup>23</sup>** |
 | Distinct commit messages | 8,736 |
 | Lines on screen at once | 1, drawn from 12 per redraw |
 | Loop | about 51 seconds |
@@ -129,11 +129,11 @@ against brute force on a small case where brute force is possible.
 
 ### The Answer
 
-There are **104,896,258,985,113,656,616,840** distinct mastheads, or
-**1.05 x 10<sup>23</sup>**.
+There are **115,895,023,955,407,099,204,396** distinct mastheads, or
+**1.16 x 10<sup>23</sup>**.
 
-At two redraws a day, exhausting them takes about 1.4 x 10<sup>20</sup> years,
-which is roughly ten billion times the age of the universe. The set you are
+At two redraws a day, exhausting them takes about 1.6 x 10<sup>20</sup> years,
+which is roughly eleven billion times the age of the universe. The set you are
 looking at has, to any standard that matters, never been shown before and will
 never be shown again.
 
@@ -263,8 +263,8 @@ true rather than hoped for. Without that floor, the plate leaves one frame
 holding a single line, which would then be the only thing that frame ever said.
 
 > [!WARNING]
-> **This costs 488 lines, and it is not hidden.** The generator still writes a
-> thousand; 511 of them fit, across 42 of the 64 frames. `drawable()` counts
+> **This costs 484 lines, and it is not hidden.** The generator still writes a
+> thousand; 515 of them fit, across 42 of the 64 frames. `drawable()` counts
 > what can be shown and `combinations()` counts what exists, both pinned by a
 > test, so the shortfall cannot drift quietly. Getting all thousand back under
 > the plate means rewriting fifty-one frames so their lines
@@ -367,7 +367,7 @@ changes exactly when the image does and never otherwise.
 
 ## 🧾 Departures Worth Knowing
 
-- **488 of the 999 generated lines are currently undrawable.** They are
+- **484 of the 999 generated lines are currently undrawable.** They are
   written, tested and counted; the plate is narrower than they are. See the
   plate section above.
 - **A fixed schedule**, where everything else here is an exponential draw.

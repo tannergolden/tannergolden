@@ -207,45 +207,18 @@ person greps for them.
 
 ## 📚 The Sources
 
-Three sources, chosen for one property: they say what developers are actually
-reading and starring this week, rather than what was published this week. An
-earlier design drew on primary records instead, a release cut, an advisory
-reviewed, a standard published, and it was authoritative and almost never
-about anything anybody was talking about.
+**22 sources, in two families.** Three say what developers are
+*reading*; 19 say what *happened*. A page built on either alone is worse
+than one built on both: attention without news is a popularity contest, and
+news without attention is a wire nobody asked for.
 
-| Commit            | Content                                           | Source           | License                       |
-| :---------------- | :-------------------------------------------------- | :--------------- | :---------------------------- |
-| `docs(hn)`        | A front-page story, its score and its conversation  | Hacker News      | Title, score and link, as fact |
-| `feat(trending)`  | A repository the industry is starring this month    | GitHub Search    | Metadata, reported as fact    |
-| `docs(lobsters)`  | What the quiet end of the internet is reading       | Lobsters         | Title and score, as fact      |
+### The aggregators
 
-**All three lists are current by construction.** A front page, a hottest list
-and a search for repositories created this month cannot return last year, so
-freshness is a property of the source rather than something this has to
-enforce. Lobsters still carries a window on the story's own date,
-`DISPATCH_NEWS_WINDOW_DAYS`, as a guard against an outlier. An item whose date
-will not parse is not treated as an old one: the two are different answers, and
-collapsing them would take a whole kind dark the day a source renames a field.
-
-**The three overlap, and that is handled.** Hacker News and Lobsters carry the
-same link on the same morning more often than not, and a trending repository is
-frequently the thing both are discussing. The ledger keys on a per-source
-identifier, so without more than that the page would run one article three
-times under three scopes. Every dispatch therefore also claims the canonical
-URL of what it sent, with tracking parameters and trailing slashes normalised
-away, and a claim already taken is a story already sent.
-
-The claim is filed when the dispatch reaches the page, not when a fetcher finds
-it. A candidate the run discards must not burn the link for the other two
-sources that carry it.
-
-The three are equals in the draw. If a source is down or has nothing new the
-next kind is tried, and if all three come back empty the run writes nothing and
-leaves the moment in the past for the next run to catch.
-
-The commit type is a genre label rather than a claim about this repository:
-`feat(trending)` adds no feature here. This repository cuts no releases and
-runs no changelog generator, which is the only reason that is free.
+| Commit | Content | Source |
+| :--- | :--- | :--- |
+| `docs(hn)` | A front-page story, its score and its conversation | Hacker News |
+| `feat(trending)` | A repository the industry is starring this month | GitHub Search |
+| `docs(lobsters)` | What the quiet end of the internet is reading | Lobsters |
 
 **What counts as trending.** `docs(hn)` reads the top of the front page and
 takes nothing under a hundred points, because below that a story is on its way
@@ -254,6 +227,103 @@ reading". `feat(trending)` asks GitHub for repositories created inside the last
 fortnight, month or quarter and already past a hundred and fifty stars: new
 plus adopted, rather than famous for a decade. The window is drawn at random
 each time, so the page is not three months of the same fifty repositories.
+
+### The publishers
+
+Three tiers, and the tier is the argument rather than a label.
+
+**Primary.** A project publishing its own release notes. There is no
+intermediary to get it wrong, so a Go release announced on the Go blog is as
+close to fact as technology news gets.
+
+| Commit | Source | Home |
+| :--- | :--- | :--- |
+| `feat(github)` | The GitHub Blog: Changelog | https://github.blog/changelog/ |
+| `feat(python)` | Python Insider | https://pythoninsider.blogspot.com/ |
+| `feat(rust)` | The Rust Blog | https://blog.rust-lang.org/ |
+| `feat(golang)` | The Go Blog | https://go.dev/blog/ |
+| `feat(node)` | Node.js Blog | https://nodejs.org/en/blog/ |
+| `feat(kubernetes)` | Kubernetes Blog | https://kubernetes.io/blog/ |
+| `feat(postgres)` | PostgreSQL News | https://www.postgresql.org/about/newsarchive/ |
+| `docs(mozilla)` | Mozilla Hacks | https://hacks.mozilla.org/ |
+
+**Registry.** A public body whose product is the record itself. Cited rather
+than reported.
+
+| Commit | Source | Home |
+| :--- | :--- | :--- |
+| `security(cisa)` | CISA Cybersecurity Advisories | https://www.cisa.gov/news-events/cybersecurity-advisories |
+
+**Press.** A desk with named editors, a masthead and a corrections policy.
+That is the line: a publication answers for what it prints, and a feed of
+opinions does not. Each of these has been publishing technical journalism for
+a decade or more, which is the only track record worth anything here.
+
+| Commit | Source | Home |
+| :--- | :--- | :--- |
+| `docs(ars)` | Ars Technica | https://arstechnica.com/ |
+| `docs(lwn)` | LWN.net | https://lwn.net/ |
+| `docs(register)` | The Register | https://www.theregister.com/ |
+| `docs(spectrum)` | IEEE Spectrum | https://spectrum.ieee.org/ |
+| `docs(infoq)` | InfoQ | https://www.infoq.com/ |
+| `docs(phoronix)` | Phoronix | https://www.phoronix.com/ |
+| `docs(bbc)` | BBC Technology | https://www.bbc.com/news/technology |
+| `docs(guardian)` | The Guardian Technology | https://www.theguardian.com/uk/technology |
+| `docs(npr)` | NPR Technology | https://www.npr.org/sections/technology/ |
+| `docs(verge)` | The Verge | https://www.theverge.com/ |
+
+**One table, one fetcher.** RSS and Atom are two shapes, not nineteen.
+Everything that differs between these sources is data: a URL, a name, a commit
+type and a sentence about the terms. A function per source would be the same
+forty lines nineteen times, and the twentieth source would be the one nobody
+adds.
+
+**A project gets longer than a newspaper.** A press desk publishes daily, so
+anything from last month is stale and the standard fourteen-day window
+applies. A project publishes when it ships, and a language release from three
+weeks ago is still the news for anyone who has not upgraded, so primary and
+registry sources get forty-five days. Holding both to fourteen would take
+every primary source dark for most of the year and make that list a
+decoration.
+
+**A publisher dispatch is longer than an aggregator one**, because it has more
+to say. An aggregator entry is a title and a score, and the score *is* the
+story. A publisher entry arrives with the publisher's own summary, a byline
+and a filing, and dropping all of that would leave a headline on the page with
+nothing under it. The summary is trimmed at a sentence boundary, never
+mid-word, and never past 360 characters: long enough to say what happened,
+short enough that this stays a page of dispatches rather than a mirror of
+somebody else's article.
+
+**They all overlap, and that is handled.** Hacker News and Lobsters carry the
+same Ars Technica piece the same morning it runs. The ledger keys on a
+per-source identifier, so without more than that the page would run one
+article three times under three scopes. Every dispatch therefore also claims
+the canonical URL of what it sent, with tracking parameters and trailing
+slashes normalised away, and a claim already taken is a story already sent.
+
+The claim is filed when the dispatch reaches the page, not when a fetcher
+finds it. A candidate the run discards must not burn the link for every other
+source that carries it.
+
+All of them are equals in the draw. If a source is down or has nothing new the
+next kind is tried, and if every one comes back empty the run writes nothing
+and leaves the moment in the past for the next run to catch. With
+22 kinds a run almost always finds something on its first or second try.
+
+The commit type is a genre label rather than a claim about this repository:
+`feat(rust)` adds no feature here. This repository cuts no releases and runs no
+changelog generator, which is the only reason that is free.
+
+> [!IMPORTANT]
+> **A feed is a document from the open internet handed to an XML parser**,
+> which is the one combination here that can take the runner down rather than
+> merely return nothing. Both classic attacks arrive in a document type
+> declaration: an external entity that makes the parser fetch a local file,
+> and nested entities that expand a kilobyte into a gigabyte. None of these
+> sources needs one, so **a feed carrying a declaration is not parsed at all**.
+> Refusing it outright is a complete defence against both and needs no
+> dependency to implement.
 
 ---
 

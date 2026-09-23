@@ -88,21 +88,10 @@ category: profile
 | **Tooling**    | ![GitHub Actions](assets/badges/static/stack-actions.svg) ![Make](assets/badges/static/stack-make.svg) ![Ruff](assets/badges/static/stack-ruff.svg) ![pytest](assets/badges/static/stack-pytest.svg) ![Prettier](assets/badges/static/stack-prettier.svg) |
 | **Operations** | ![CodeQL](assets/badges/static/stack-codeql.svg) ![Dependabot](assets/badges/static/stack-dependabot.svg) ![Gitleaks](assets/badges/static/stack-gitleaks.svg) ![SBOM](assets/badges/static/stack-sbom.svg)                               |
 
-<!-- CARDS:BEGIN -->
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg?v=457665a5">
-  <img alt="GitHub statistics for tannergolden: 5 public repositories, 0 stars, 13 followers, 840 commits and 0 pull requests in 2026." src="assets/stats-light.svg?v=fc8f96bd">
-</picture>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/languages-dark.svg?v=06530f1a">
-  <img alt="Top languages across public repositories: Python 89.4%, Shell 9.2%, Makefile 0.8%, JavaScript 0.7%." src="assets/languages-light.svg?v=4fd4179a">
-</picture>
-<!-- CARDS:END -->
-
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 05:37 EDT on Wednesday, September 23, 2026.
+Last updated 05:43 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

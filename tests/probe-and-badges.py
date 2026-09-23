@@ -12,7 +12,6 @@ from pathlib import Path
 
 import pytest
 
-import cards
 import dispatches
 import modules
 import sources
@@ -40,7 +39,6 @@ def snapshot(root):
 def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys):
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good, "trending": empty, "lobsters": broken})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: {"command": "jq"})
-    monkeypatch.setattr(cards, "github_stats", lambda login, token: {"public_repos": 7, "languages": {"Python": 1}, "commits": 412})
     summary = repo / "summary.md"
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
     before = snapshot(repo)
@@ -53,7 +51,6 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
     assert rows["trending"] == "empty  nothing available today"
     assert rows["lobsters"].startswith("error  RuntimeError('the wiki is down") and "\u2014" not in out
     assert rows["tip"] == "ok     jq"
-    assert rows["stats"] == "ok     7 public repositories, 1 languages, commits 412"
 
     after = snapshot(repo)
     assert {k: v for k, v in after.items() if k != "summary.md"} == before
@@ -64,7 +61,6 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
 def test_probe_is_clean_when_everything_answers(repo, monkeypatch):
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
-    monkeypatch.setattr(cards, "github_stats", lambda login, token: None)
     assert dispatches.probe() == 0
 
 

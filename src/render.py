@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 """Everything that writes Markdown: the commit message, the archive, the page.
 
-THE PAGE IS EDITED ONLY BETWEEN MARKERS. Four regions of README.md are bounded
+THE PAGE IS EDITED ONLY BETWEEN MARKERS. Five regions of README.md are bounded
 by HTML comments of the form `<!-- NAME:BEGIN -->` and `<!-- NAME:END -->`,
 the same shape as the AUTO-INDEX markers in tannergolden/standards. Text
 inside them is machine-owned and rewritten whole; text outside them is never

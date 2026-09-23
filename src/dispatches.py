@@ -26,7 +26,6 @@ person made in the meantime.
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import re
 import subprocess
@@ -54,7 +53,6 @@ from text import clean, fit_subject
 
 BADGE_DATA = ".github/badges.yml"
 
-PROFILE_FILE = "profile.json"
 COMMIT_PATHS = [README, DISPATCH_DIR, STATE_DIR, ASSETS_DIR, ".github/badges.yml"]
 
 
@@ -205,13 +203,6 @@ def render_badges(month_count: int, status: str = "Passing", color: str = "green
 
 # --- the work -----------------------------------------------------------------------
 
-def load_profile() -> dict:
-    try:
-        return json.loads(Path(PROFILE_FILE).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-
-
 def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("Passing", "green")) -> None:
     recent = render.load_recent()
     month_count = render.dispatches_this_month(when)
@@ -224,13 +215,7 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
         "UPDATED": render.render_updated_line(when),
     }
     if with_modules:
-        alts = cards.load_card_alts()
         regions["MODULES"] = render.render_modules_region(render.load_modules())
-        regions["CARDS"] = (
-            cards.picture("stats", alts.get("stats_alt", "GitHub statistics card"))
-            + "\n"
-            + cards.picture("languages", alts.get("languages_alt", "Top languages card"))
-        )
     render.update_readme(regions)
     render.update_month_index()
 
@@ -306,7 +291,6 @@ def write_dispatch(ledger: Ledger, when: datetime) -> str | None:
 
 def refresh_page(ledger: Ledger, when: datetime) -> str:
     """Refresh the modules, the images and the page; return the commit message."""
-    profile = load_profile()
     changed = []
 
     current = render.load_modules()
@@ -316,12 +300,6 @@ def refresh_page(ledger: Ledger, when: datetime) -> str:
         changed.append("the terminal tip")
     render.save_modules(current)
     ledger.save()
-
-    login = os.environ.get("GITHUB_REPOSITORY_OWNER") or profile.get("login") or "tannergolden"
-    stats = cards.github_stats(login, os.environ.get("GITHUB_TOKEN"))
-    if stats:
-        cards.write_cards(stats)
-        changed.append("the cards")
 
     render_page(when)
     return render.readme_commit_message(when, changed)
@@ -349,7 +327,6 @@ def probe() -> int:
             else:
                 rows.append((kind, "ok", fit_subject(entry.commit_type, entry.scope, entry.emoji, entry.subject)))
 
-        profile = load_profile()
         try:
             tip = modules.terminal_tip(ledger)
         except Exception as exc:
@@ -357,16 +334,6 @@ def probe() -> int:
         else:
             rows.append(("tip", "ok", clean(str(tip["command"]))[:120]) if tip else ("tip", "empty", "nothing new"))
 
-        login = os.environ.get("GITHUB_REPOSITORY_OWNER") or profile.get("login") or "tannergolden"
-        try:
-            stats = cards.github_stats(login, os.environ.get("GITHUB_TOKEN"))
-        except Exception as exc:
-            rows.append(("stats", "error", clean(repr(exc))[:160]))
-        else:
-            if stats:
-                rows.append(("stats", "ok", f"{stats['public_repos']} public repositories, {len(stats['languages'])} languages, commits {stats['commits']}"))
-            else:
-                rows.append(("stats", "empty", "the API returned nothing"))
 
     width = max(len(r[0]) for r in rows)
     lines = [f"{kind.ljust(width)}  {status:5}  {detail}" for kind, status, detail in rows]
@@ -455,9 +422,9 @@ def main() -> int:
 
     if args.mode == "check":
         document = Path(README).read_text(encoding="utf-8")
-        for name in ("MASTHEAD", "AVAILABILITY", "DISPATCHES", "MODULES", "CARDS", "UPDATED"):
+        for name in ("MASTHEAD", "AVAILABILITY", "DISPATCHES", "MODULES", "UPDATED"):
             render.read_region(document, name)
-        print("README.md: all six regions intact")
+        print("README.md: all five regions intact")
         return 0
 
     if args.mode == "render":

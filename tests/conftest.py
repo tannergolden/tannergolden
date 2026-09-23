@@ -28,9 +28,6 @@ old dispatches
 old modules
 <!-- MODULES:END -->
 
-<!-- CARDS:BEGIN -->
-<!-- CARDS:END -->
-
 prose after
 
 <!-- UPDATED:BEGIN -->

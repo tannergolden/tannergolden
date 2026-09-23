@@ -139,7 +139,7 @@ A cron can only fire on a lattice, and a fixed wait after each entry is also a
 lattice, just an offset one. Sleeping to the second inside an hourly run is
 what turns a schedule into a moment.
 
-The page refresh (the date line, the terminal tip, the two cards) is
+The page refresh (the date line and the terminal tip) is
 drawn the same way, with a mean of one day, so it also lands at an
 unremarkable hour.
 

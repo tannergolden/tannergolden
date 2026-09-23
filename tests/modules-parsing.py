@@ -10,7 +10,6 @@ a short and a long spelling of one flag.
 
 from __future__ import annotations
 
-import cards
 import modules
 from state import Ledger
 
@@ -201,25 +200,3 @@ def test_terminal_tip_falls_back_to_the_contents_listing(repo, fake_net, seeded)
 
 def test_a_source_that_is_down_answers_none(repo, fake_net, seeded):
     assert modules.terminal_tip(Ledger("state/ledger.json")) is None
-
-
-def test_github_stats_sums_public_repositories(repo, fake_net):
-    fake_net.json("https://api.github.com/users/someone/repos", [
-        {"fork": False, "archived": False, "stargazers_count": 3, "forks_count": 1, "languages_url": "https://api.github.com/repos/someone/a/languages"},
-        {"fork": True, "archived": False, "stargazers_count": 99, "forks_count": 9, "languages_url": "https://api.github.com/repos/someone/fork/languages"},
-    ]).json("https://api.github.com/users/someone", {"login": "someone", "public_repos": 2, "followers": 12})
-    fake_net.json("https://api.github.com/repos/someone/a/languages", {"Python": 1000, "Shell": 200})
-    fake_net.json(cards.GRAPHQL, {"data": {"user": {"contributionsCollection": {"totalCommitContributions": 412, "totalPullRequestContributions": 58, "totalIssueContributions": 9}, "repositoriesContributedTo": {"totalCount": 6}}}})
-    stats = cards.github_stats("someone", "token")
-    assert stats["stars"] == 3 and stats["forks"] == 1 and stats["followers"] == 12
-    assert stats["languages"] == {"Python": 1000, "Shell": 200}
-    assert stats["commits"] == 412 and stats["pulls"] == 58 and stats["contributed"] == 6
-    assert cards.stats_alt(stats).startswith("GitHub statistics for someone: 2 public repositories, 3 stars, 12 followers, 412 commits")
-    assert cards.languages_alt(stats["languages"]) == "Top languages across public repositories: Python 83.3%, Shell 16.7%."
-
-
-def test_github_stats_without_a_token_leaves_the_year_unknown(repo, fake_net):
-    fake_net.json("https://api.github.com/users/someone/repos", []).json("https://api.github.com/users/someone", {"login": "someone", "public_repos": 0, "followers": 0})
-    stats = cards.github_stats("someone", None)
-    assert stats["commits"] is None and cards.GRAPHQL not in fake_net.requests
-    assert cards.github_stats("nobody", None) is None

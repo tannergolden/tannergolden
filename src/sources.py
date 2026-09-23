@@ -345,11 +345,17 @@ def fetch_lobsters(ledger: Ledger, today: date) -> Dispatch | None:
 
 # --- docs(<publisher>): one entry from a syndicated source -------------------------
 
-# How far into a feed to look. Taking the newest entry alone would put one
-# story on the page for as long as it led the feed; shuffling the whole thing
-# would surface last fortnight's. Twelve is the front page of most of these,
-# so the choice is current and still varies between runs.
-FEED_DEPTH = 12
+# How far into a feed to look, AFTER the window and the sort. Taking the
+# newest entry alone would put one story on the page for as long as it led
+# the feed; shuffling the whole thing would surface last fortnight's.
+#
+# Eight rather than twelve because of what a live feed turned out to look
+# like. The Node.js blog carries a thousand entries and ships often, so
+# twelve deep reached five weeks back, and the first real probe picked a
+# release twenty-seven days old while the current one sat at the top of the
+# same document. A page claiming the most recent developer news has to mean
+# the top of the feed rather than somewhere near it.
+FEED_DEPTH = 8
 
 _EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
 
@@ -371,6 +377,11 @@ def _feed_body(feed: feeds.Feed, item: feeds.Item) -> str:
     summary = clean(item.summary)
     if summary:
         parts.append(summary if summary.endswith((".", "!", "?", "\u2026")) else summary + ".")
+    else:
+        # Some feeds carry headlines and nothing else, and a release blog is
+        # the common case: "Node.js 26.10.0 (Current)" IS the news. Saying
+        # where the detail lives beats a body that stops at the date.
+        parts.append(f"The feed carries no summary; the release note is at {_domain(item.link)}.")
     author = clean(item.author)
     if author:
         parts.append(f"By {author}.")
@@ -394,17 +405,35 @@ def fetch_feed(feed: feeds.Feed):
         document = net.get_text(feed.url)
         if not document:
             return None
-        newest = sorted(feeds.parse(document),
-                        key=lambda i: i.published or _EPOCH, reverse=True)[:FEED_DEPTH]
-        for item in _shuffled(newest):
+        # Window first, then sort, then slice. Slicing before filtering
+        # spends the whole budget on entries that were never eligible, which
+        # is how a source with a long archive goes quiet for no reason.
+        fresh = [i for i in feeds.parse(document)
+                 if not (i.published and _stale(i.published.isoformat(), feed.window))]
+        fresh.sort(key=lambda i: i.published or _EPOCH, reverse=True)
+        top = fresh[:FEED_DEPTH]
+
+        # NEWEST FIRST, AND NOT SHUFFLED. The aggregators shuffle because
+        # their lists are a ranking: any of the front page is "what people
+        # are reading", so picking at random is picking fairly. A feed is a
+        # chronology, and the top of it is the news. Shuffling eight entries
+        # that span six weeks, which is what the Node.js blog turned out to
+        # be, meant a real probe offering a release twenty-seven days old
+        # with the current one sitting above it in the same document.
+        #
+        # Variety does not need a shuffle here. The ledger supplies it: the
+        # newest unsent entry is sent, and the next run takes the one after
+        # it, until something newer arrives and goes to the top. Across
+        # twenty-two sources that is more variety than any one feed could
+        # give, and every entry is the most recent thing that source had to
+        # say which this page had not already said.
+        for item in top:
             identifier = clean(item.identifier)[:200]
             if not identifier or ledger.seen(feed.key, identifier):
                 continue
             # A missing date is not an old one, so an entry the generator
             # dated badly is still offered. One demonstrably outside this
             # source's window is not.
-            if item.published and _stale(item.published.isoformat(), feed.window):
-                continue
             if not _unclaimed(ledger, item.link):
                 continue
             title = clean(item.title)

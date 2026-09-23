@@ -322,3 +322,45 @@ def test_a_story_a_publisher_and_an_aggregator_both_carry_is_sent_once(repo, fak
     sources.claim_link(led, entry.source_url)
     assert sources.FETCHERS["ars"](led, TODAY) is None
     assert not sources._unclaimed(led, shared + "?utm_source=hn")
+
+
+def test_the_newest_unsent_entry_is_the_one_that_goes(repo, fake_net, seeded):
+    """A feed is a chronology, not a ranking. The aggregators shuffle because
+    any of the front page is "what people are reading"; the top of a feed is
+    the news, and anything else is not the most recent thing that source had
+    to say.
+
+    This is the defect a live probe found: shuffling eight entries that
+    spanned six weeks offered a Node.js release twenty-seven days old with
+    the current one sitting above it in the same document.
+    """
+    items = "".join(
+        f"<item><title>Story {n}</title><link>https://arstechnica.com/s{n}</link>"
+        f"<description>Number {n}.</description><pubDate>{rfc822(n)}</pubDate></item>"
+        for n in range(1, 7))
+    fake_net.text(ARS.url, rss(items))
+
+    led = Ledger("state/ledger.json")
+    sent = []
+    for _ in range(3):
+        entry = sources.FETCHERS["ars"](led, TODAY)
+        assert entry is not None
+        sent.append(entry.title)
+        led.remember("ars", entry.identifier)
+        sources.claim_link(led, entry.source_url)
+    assert sent == ["Story 1", "Story 2", "Story 3"], sent
+
+
+def test_the_window_is_applied_before_the_depth_and_not_after(repo, fake_net, seeded):
+    """Slicing first spends the whole budget on entries that were never
+    eligible, which is how a source with a long archive goes quiet."""
+    old = "".join(
+        f"<item><title>Ancient {n}</title><link>https://arstechnica.com/old{n}</link>"
+        f"<description>Old.</description><pubDate>{rfc822(400 + n)}</pubDate></item>"
+        for n in range(sources.FEED_DEPTH + 4))
+    current = (f"<item><title>Today</title><link>https://arstechnica.com/new</link>"
+               f"<description>New.</description><pubDate>{rfc822(0.2)}</pubDate></item>")
+    fake_net.text(ARS.url, rss(old + current))
+
+    entry = sources.FETCHERS["ars"](Ledger("state/ledger.json"), TODAY)
+    assert entry is not None and entry.title == "Today"

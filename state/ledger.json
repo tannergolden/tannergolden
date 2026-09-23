@@ -21,6 +21,7 @@
   "tip": [
     "biber",
     "docker-compose-down",
+    "lighthouse",
     "sed"
   ],
   "trending": [

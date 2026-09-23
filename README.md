@@ -41,15 +41,15 @@ category: profile
 ## 📡 Dispatch
 
 <!-- DISPATCHES:BEGIN -->
-### Tuesday, September 22, 2026
+### Wednesday, September 23, 2026
 
 [![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=313dcbd8)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
-| 19:36 | `docs(lobsters)` | [Fearless SIMD v1.0 is here](dispatches/2026/September.md#dispatch-20260922-193634) |
-| 14:03 | `docs(lobsters)` | [What Sun got wrong](dispatches/2026/September.md#dispatch-20260922-140358) |
-| 03:41 | `docs(hn)` | [Grok 4.7](dispatches/2026/September.md#dispatch-20260922-034111) |
+| Sep 22, 19:36 | `docs(lobsters)` | [Fearless SIMD v1.0 is here](dispatches/2026/September.md#dispatch-20260922-193634) |
+| Sep 22, 14:03 | `docs(lobsters)` | [What Sun got wrong](dispatches/2026/September.md#dispatch-20260922-140358) |
+| Sep 22, 03:41 | `docs(hn)` | [Grok 4.7](dispatches/2026/September.md#dispatch-20260922-034111) |
 
 <details>
 <summary>Earlier entries</summary>
@@ -67,12 +67,12 @@ category: profile
 
 <!-- MODULES:BEGIN -->
 > [!TIP]
-> **biber** · A backend bibliography processor for the biblatex package. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/biber.md)
+> **lighthouse** · Analyzes web applications and web pages, collecting modern performance metrics and insights on developer best practices. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/lighthouse.md)
 >
-> Enable debugging:
+> Generate a JSON report and save it to a specific file:
 >
 > ```bash
-> biber <path/to/file.bcf> --debug
+> lighthouse --output <json> --output-path <path/to/file.json> <https://example.com>
 > ```
 <!-- MODULES:END -->
 
@@ -102,8 +102,8 @@ category: profile
 
 <!-- CARDS:BEGIN -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg?v=90413e33">
-  <img alt="GitHub statistics for tannergolden: 5 public repositories, 0 stars, 13 followers, 836 commits and 0 pull requests in 2026." src="assets/stats-light.svg?v=68464a2c">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg?v=457665a5">
+  <img alt="GitHub statistics for tannergolden: 5 public repositories, 0 stars, 13 followers, 840 commits and 0 pull requests in 2026." src="assets/stats-light.svg?v=fc8f96bd">
 </picture>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/languages-dark.svg?v=06530f1a">
@@ -123,7 +123,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 19:36 EDT on Tuesday, September 22, 2026.
+Last updated 00:42 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

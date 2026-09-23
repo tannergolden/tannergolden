@@ -364,3 +364,28 @@ def test_the_window_is_applied_before_the_depth_and_not_after(repo, fake_net, se
 
     entry = sources.FETCHERS["ars"](Ledger("state/ledger.json"), TODAY)
     assert entry is not None and entry.title == "Today"
+
+
+def test_stripping_a_tag_does_not_leave_a_space_before_the_full_stop():
+    """A real LWN summary produced "...the Linux kernel ." on the live page.
+
+    An inline link has to become a space or "wrote<br>about" becomes one
+    word, and that space then sits in front of whatever punctuation followed
+    the tag. A summary that prints it is a feed reader announcing it does not
+    read what it prints.
+    """
+    (item,) = feeds.parse(rss(
+        "<item><title>T</title><link>https://lwn.net/a</link><description>"
+        "&lt;p&gt;a talk on the status of &lt;a href=\"https://x\"&gt;gccrs&lt;/a&gt;, with "
+        "an eye toward compiling the &lt;a href=\"https://y\"&gt;Linux kernel&lt;/a&gt;. "
+        "Then ( &lt;b&gt;more&lt;/b&gt; ) ; and 40 % of it.&lt;/p&gt;"
+        "</description></item>"))
+    assert " ." not in item.summary and " ," not in item.summary
+    assert " ;" not in item.summary and "( " not in item.summary
+    assert item.summary.endswith("40% of it.")
+    assert "the Linux kernel." in item.summary
+    # And a tag between two words is still a space, not a join.
+    (joined,) = feeds.parse(rss(
+        "<item><title>T</title><link>https://lwn.net/b</link>"
+        "<description>wrote&lt;br/&gt;about it</description></item>"))
+    assert joined.summary == "wrote about it"

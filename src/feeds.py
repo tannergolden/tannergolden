@@ -145,6 +145,14 @@ MAX_FEED_BYTES = 8 * 1024 * 1024
 _TAGS = re.compile(r"<[^>]+>")
 _SPACE = re.compile(r"\s+")
 
+# A tag becomes a space, because "wrote<br>about" must not become one word.
+# That leaves a space in front of whatever punctuation followed the tag, and
+# a summary ending "...the Linux kernel ." is how a feed reader announces
+# that it does not read what it prints. Closing punctuation comes back to
+# the word it belongs to, and an opening bracket to the one after it.
+_BEFORE = re.compile(r"\s+([,.;:!?%)\]}])")
+_AFTER = re.compile(r"([(\[{])\s+")
+
 # How much of a summary reaches the page. Long enough to say what happened,
 # short enough that the archive stays a page of dispatches rather than a
 # mirror of somebody else's article, which is also the line that keeps this
@@ -170,7 +178,8 @@ def _text(node) -> str:
     if node is None:
         return ""
     raw = "".join(node.itertext())
-    return _SPACE.sub(" ", html.unescape(_TAGS.sub(" ", html.unescape(raw)))).strip()
+    flat = _SPACE.sub(" ", html.unescape(_TAGS.sub(" ", html.unescape(raw))))
+    return _AFTER.sub(r"\1", _BEFORE.sub(r"\1", flat)).strip()
 
 
 def _strip(name: str) -> str:

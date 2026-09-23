@@ -1,6 +1,10 @@
 {
   "link": [
+    "blog.melashri.net/posts/scientific-linux-mistake",
     "nodejs.org/en/blog/release/v26.10.0"
+  ],
+  "lobsters": [
+    "qysrps"
   ],
   "node": [
     "/blog/release/v26.10.0?1790067829095"

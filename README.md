@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=69f1f695">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=7b136ec7">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=ae257e56">
-  <img alt="👋🏻 Hello World! / 🤖 No human wrote this sentence / 🪄 No implicit steps in the build / 🧩 Repos that fit one job each / 🛠️ Fix the class, not the ticket / 🗃️ Scripts where everyone looks / 🏗️ Leave the right way easy / 🩺 See it before the pager does / 🔬 Results that survive review / 🪞 Document before anyone asks / 🧭 Written rules over cleverness / 📮 A feature that arrives reviewed / 💡 The fix obvious in the log" src="assets/masthead-light.svg?v=6fb6879f">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=e929f92a">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=7eaeae07">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=9fdac2a7">
+  <img alt="👋🏻 Hello World! / 📖 Guides nobody can ignore / 📊 Runs you can rerun later / 🔗 No action without an SBOM / ⏱️ Feedback in under a minute / 🧮 Cost measured, not assumed / 🔔 Alert only when it is real / ⛓️ A rule that cannot rot quietly / 🧪 Linters that earn their runtime / 🪵 Every request in one place / 📉 One fewer decision to maintain / ✂️ Deleting more than I write / 📐 One way in with no exceptions" src="assets/masthead-light.svg?v=d81140db">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -106,7 +106,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 08:08 EDT on Wednesday, September 23, 2026.
+Last updated 17:46 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

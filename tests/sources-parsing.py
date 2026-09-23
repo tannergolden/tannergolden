@@ -291,9 +291,16 @@ def test_draw_order_offers_every_kind_exactly_once():
         assert sorted(order) == sorted(sources.KINDS)
 
 
-def test_every_kind_has_a_fetcher_and_a_verb_pool():
+def test_every_kind_has_a_fetcher_and_a_verb_it_can_use():
+    """A kind with no pool of its own falls back to the shared one, which is
+    what lets a syndicated source be one row of a table rather than a pool,
+    a fetcher and an entry in three places."""
     assert set(sources.FETCHERS) == set(sources.KINDS)
     for kind in sources.KINDS:
+        assert phrasing.verb_for(kind), kind
+    # The aggregators keep pools of their own, because "star" only makes
+    # sense in front of a repository.
+    for kind in ("hn", "trending", "lobsters"):
         assert phrasing.VERBS[kind], kind
 
 

@@ -1,17 +1,23 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The three kinds of dispatch, and the picker that chooses between them.
+"""Every kind of dispatch, and the picker that chooses between them.
 
 Each fetcher returns one `Dispatch` the ledger has never seen, or None when
 its source is down or has nothing new. None is an ordinary answer: the picker
 moves to the next kind, and a run in which every source comes back empty writes
 nothing and leaves the schedule untouched, so the next run tries again.
 
-Every kind reports what developers are reading or starring right now, which
-means all three draw on lists that are current by construction. They also
-overlap: the same article reaches Hacker News and Lobsters on the same
-morning, so every kind claims a canonical URL as well as a per-source id and
-a claim already taken is a story already sent.
+Two families. The three in this file are AGGREGATORS: Hacker News, Lobsters
+and a trending repository list report what developers are reading and
+starring right now, which is a fact about attention rather than about the
+world. The nineteen in `feeds.py` are PUBLISHERS: projects announcing their
+own releases, a public registry, and technology desks with named editors. One
+says what people are looking at; the other says what happened.
+
+They overlap heavily, which is the whole reason the ledger keys on a
+canonical URL as well as a per-source id: the same Ars Technica piece reaches
+Hacker News and Lobsters the same morning, and a claim already taken is a
+story already sent.
 
 Nothing here is hand-written. Every source keeps producing, which is what
 lets the ledger promise that no item appears twice without the well ever
@@ -29,6 +35,7 @@ import urllib.parse
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 
+import feeds
 import net
 import phrasing
 from config import NEWS_WINDOW_DAYS
@@ -336,23 +343,114 @@ def fetch_lobsters(ledger: Ledger, today: date) -> Dispatch | None:
     return None
 
 
+# --- docs(<publisher>): one entry from a syndicated source -------------------------
+
+# How far into a feed to look. Taking the newest entry alone would put one
+# story on the page for as long as it led the feed; shuffling the whole thing
+# would surface last fortnight's. Twelve is the front page of most of these,
+# so the choice is current and still varies between runs.
+FEED_DEPTH = 12
+
+_EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
+
+
+def _feed_body(feed: feeds.Feed, item: feeds.Item) -> str:
+    """The prose that reaches the commit and the archive.
+
+    Longer than the aggregator bodies on purpose. An aggregator entry is a
+    title and a score, and the score is the story. A publisher entry comes
+    with the publisher's own summary, a byline and a filing, and dropping all
+    of that would leave a headline on the page with nothing under it.
+    """
+    age = _age(item.published.isoformat()) if item.published else "recently"
+    parts = [phrasing.one_of(
+        f"{feed.name} published this {age}.",
+        f"From {feed.name}, {age}.",
+        f"{feed.name} ran it {age}.",
+    )]
+    summary = clean(item.summary)
+    if summary:
+        parts.append(summary if summary.endswith((".", "!", "?", "\u2026")) else summary + ".")
+    author = clean(item.author)
+    if author:
+        parts.append(f"By {author}.")
+    tags = [clean(c) for c in item.categories]
+    if any(tags):
+        parts.append("Filed under " + ", ".join(t for t in tags if t) + ".")
+    where = _domain(item.link)
+    if where and where not in feed.home:
+        parts.append(f"The link goes to {where}.")
+    return " ".join(parts)
+
+
+def fetch_feed(feed: feeds.Feed):
+    """A fetcher for one row of the table, closed over that row.
+
+    One function, nineteen sources. Everything that differs between them is
+    already data, so the alternative is the same forty lines nineteen times
+    and a twentieth source nobody adds.
+    """
+    def fetcher(ledger: Ledger, today: date) -> Dispatch | None:
+        document = net.get_text(feed.url)
+        if not document:
+            return None
+        newest = sorted(feeds.parse(document),
+                        key=lambda i: i.published or _EPOCH, reverse=True)[:FEED_DEPTH]
+        for item in _shuffled(newest):
+            identifier = clean(item.identifier)[:200]
+            if not identifier or ledger.seen(feed.key, identifier):
+                continue
+            # A missing date is not an old one, so an entry the generator
+            # dated badly is still offered. One demonstrably outside this
+            # source's window is not.
+            if item.published and _stale(item.published.isoformat(), feed.window):
+                continue
+            if not _unclaimed(ledger, item.link):
+                continue
+            title = clean(item.title)
+            if not title:
+                continue
+            return Dispatch(
+                kind=feed.key,
+                commit_type=feed.commit_type,
+                emoji=phrasing.emoji_for(feed.commit_type),
+                subject=f"{phrasing.verb_for('release' if feed.tier == 'primary' else 'news')} {title}",
+                title=title,
+                body=_feed_body(feed, item),
+                identifier=identifier,
+                source_name=feed.name,
+                source_url=item.link,
+                license=feed.note,
+                attribution=f"by {clean(item.author)}" if clean(item.author) else "",
+                extra_links=[(feed.name, feed.home)] if _domain(item.link) not in feed.home else [],
+            )
+        return None
+
+    fetcher.__name__ = f"fetch_{feed.key}"
+    fetcher.__doc__ = f"One entry from {feed.name}, no older than {feed.window} days."
+    return fetcher
+
+
 # --- the picker -------------------------------------------------------------------
 
 FETCHERS: dict = {
     "hn": fetch_hn,
     "trending": fetch_trending,
     "lobsters": fetch_lobsters,
+    **{feed.key: fetch_feed(feed) for feed in feeds.FEEDS},
 }
 
-KINDS = ("hn", "trending", "lobsters")
+KINDS = tuple(FETCHERS)
 
 
 def draw_order() -> list:
     """The kinds in the order they will be tried.
 
     An earlier design weighted this, because two kinds drew on finite lists
-    that had to be rationed. Every source here keeps producing, so the five
-    are equals and the order is a plain shuffle.
+    that had to be rationed. Every source here keeps producing, so all of
+    them are equals and the order is a plain shuffle. With twenty-two kinds a
+    run almost always finds something on its first or second try, and the one
+    it lands on is not the one it landed on yesterday.
     """
     return _shuffled(list(KINDS))
 

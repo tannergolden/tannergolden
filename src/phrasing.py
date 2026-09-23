@@ -54,6 +54,11 @@ VERBS = {
     "availability": ("show", "mark", "post", "set"),
     "masthead": ("redraw", "retype", "recompose", "reprint"),
     "readme": ("refresh", "redraw", "update"),
+    # Every syndicated source shares this. Nineteen pools would be nineteen
+    # ways to say "read", and the scope in the header already says which
+    # publication it came from.
+    "news": ("read", "follow", "note", "surface", "cite", "log"),
+    "release": ("note", "track", "record", "follow", "log"),
 }
 
 
@@ -63,8 +68,14 @@ def emoji_for(commit_type: str) -> str:
 
 
 def verb_for(kind: str) -> str:
-    """One bare imperative from that kind's pool."""
-    return _RNG.choice(VERBS[kind])
+    """One bare imperative from that kind's pool, or from the shared one.
+
+    A kind with no pool of its own is a syndicated source, of which there are
+    nineteen and counting. Falling back beats a KeyError that takes a source
+    dark the day it is added, and beats a pool per publication that nobody
+    would keep distinct.
+    """
+    return _RNG.choice(VERBS.get(kind, VERBS["news"]))
 
 
 def one_of(*phrasings: str) -> str:

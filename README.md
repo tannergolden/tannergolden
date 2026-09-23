@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=c9e28553">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=d8aa5035">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=e476a054">
-  <img alt="👋🏻 Hello World! / ⏱️ Tests in under a minute / 🚦 A red build means work now / 📐 One shape with no exceptions / 📊 Runs you can reproduce later / 🌱 No default ages into a mystery / 📦 Recording the exception once / 🧯 Recovery without a pager / 🧮 Cost measured, not argued / 🛟 A rollback when it goes wrong / 📌 Bound to a lockfile, not latest / ✂️ Pruning more than I ship / 💤 Pipelines that run without me" src="assets/masthead-light.svg?v=c65b416a">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=69f1f695">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=7b136ec7">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=ae257e56">
+  <img alt="👋🏻 Hello World! / 🤖 No human wrote this sentence / 🪄 No implicit steps in the build / 🧩 Repos that fit one job each / 🛠️ Fix the class, not the ticket / 🗃️ Scripts where everyone looks / 🏗️ Leave the right way easy / 🩺 See it before the pager does / 🔬 Results that survive review / 🪞 Document before anyone asks / 🧭 Written rules over cleverness / 📮 A feature that arrives reviewed / 💡 The fix obvious in the log" src="assets/masthead-light.svg?v=6fb6879f">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -106,7 +106,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 06:27 EDT on Wednesday, September 23, 2026.
+Last updated 08:08 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

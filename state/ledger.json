@@ -1,30 +1,8 @@
 {
-  "advisory": [
-    "GHSA-c8w2-fgvx-vhv4"
-  ],
-  "hn": [
-    "49788838"
-  ],
-  "link": [
-    "bcantrill.dtrace.org/2026/09/20/what-sun-got-wrong",
-    "github.com/Tencent/WeMM-Embedding",
-    "linebender.org/blog/fearless-simd-1-0",
-    "x.ai/news/grok-4-7"
-  ],
-  "lobsters": [
-    "vwl2kn",
-    "wx3qsm"
-  ],
-  "rfc": [
-    "9792"
-  ],
   "tip": [
     "biber",
     "docker-compose-down",
     "lighthouse",
     "sed"
-  ],
-  "trending": [
-    "Tencent/WeMM-Embedding"
   ]
 }

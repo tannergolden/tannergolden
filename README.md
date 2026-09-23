@@ -47,10 +47,9 @@ category: profile
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
-| 05:37 | `docs(lwn)` | [\[$\] Compiling the kernel with gccrs](dispatches/2026/September.md#dispatch-20260923-053714) |
 | 05:35 | `feat(node)` | [Node.js 26.10.0 (Current)](dispatches/2026/September.md#dispatch-20260923-053543) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 2 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 1 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -91,7 +90,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 05:43 EDT on Wednesday, September 23, 2026.
+Last updated 05:48 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

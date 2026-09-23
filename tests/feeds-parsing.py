@@ -47,7 +47,7 @@ def atom(entries: str) -> str:
 def test_every_source_is_named_reachable_and_accounted_for():
     """A row with a bad key takes a source dark in a way nothing else notices,
     because a fetcher that never yields looks exactly like a quiet day."""
-    assert len(feeds.FEEDS) >= 19
+    assert len(feeds.FEEDS) >= 17
     keys = [f.key for f in feeds.FEEDS]
     assert len(set(keys)) == len(keys), "two sources share a scope"
     for feed in feeds.FEEDS:
@@ -65,7 +65,7 @@ def test_the_three_tiers_are_all_represented():
     """The argument for trusting this page is the mix, not any one source."""
     tiers = {f.tier for f in feeds.FEEDS}
     assert tiers == {"primary", "registry", "press"}
-    assert len(feeds.PRIMARY) >= 6 and len(feeds.PRESS) >= 8
+    assert len(feeds.PRIMARY) >= 6 and len(feeds.PRESS) >= 6
 
 
 def test_a_project_gets_longer_than_a_newspaper():
@@ -206,6 +206,7 @@ def test_markup_in_a_title_cannot_reach_the_page():
 # --- the fetcher over one source --------------------------------------------------
 
 ARS = feeds.by_key("ars")
+LWN_URL = "https://lwn.net/Articles/1095553/"
 GO = feeds.by_key("golang")
 
 
@@ -389,3 +390,67 @@ def test_stripping_a_tag_does_not_leave_a_space_before_the_full_stop():
         "<item><title>T</title><link>https://lwn.net/b</link>"
         "<description>wrote&lt;br/&gt;about it</description></item>"))
     assert joined.summary == "wrote about it"
+
+
+# --- nothing the page links to is behind a wall -----------------------------------
+
+def test_no_source_on_the_page_is_behind_a_subscription():
+    """A dispatch is a link somebody is asked to follow. Sending a reader into
+    a payment form is worse than sending them nothing.
+
+    Two sources came out for this rule: LWN, which is excellent and is
+    subscriber-only for about a fortnight, and The Verge, which went to a
+    membership model with nothing in its feed to say which entries are
+    behind it.
+    """
+    for feed in feeds.FEEDS:
+        assert feeds.free_to_read(feed.home), feed.name
+        assert feeds.free_to_read(feed.url), feed.url
+    assert feeds.by_key("lwn") is None and feeds.by_key("verge") is None
+
+
+def test_a_whole_publisher_behind_a_wall_is_refused():
+    for host in ("wsj.com", "www.ft.com", "nytimes.com", "lwn.net",
+                 "sub.bloomberg.com", "ieeexplore.ieee.org", "medium.com"):
+        assert not feeds.free_to_read(f"https://{host}/a-story"), host
+    for host in ("arstechnica.com", "go.dev", "www.theregister.com",
+                 "notwsj.com", "wsj.com.example.org"):
+        assert feeds.free_to_read(f"https://{host}/a-story"), host
+
+
+def test_one_entry_behind_a_wall_at_an_open_publisher_is_refused():
+    """The case that reached the page: "[$] Compiling the kernel with gccrs"."""
+    assert not feeds.free_to_read(LWN_URL, "[$] Compiling the kernel with gccrs")
+    for marker in ("Subscribers only", "MEMBERS ONLY", "Subscribe to read the rest",
+                   "This article is for paying readers"):
+        assert not feeds.free_to_read("https://open.example/a", "A headline", marker), marker
+    assert feeds.free_to_read("https://open.example/a", "A headline", "Free to read")
+
+
+def test_a_feed_entry_behind_a_wall_never_becomes_a_dispatch(repo, fake_net, seeded):
+    fake_net.text(ARS.url, rss(
+        f"<item><title>[$] Behind the wall</title><link>https://arstechnica.com/paid</link>"
+        f"<description>Subscribers only.</description><pubDate>{rfc822(0.1)}</pubDate></item>"
+        f"<item><title>Free to read</title><link>https://arstechnica.com/open</link>"
+        f"<description>Anyone can read this.</description><pubDate>{rfc822(0.5)}</pubDate></item>"))
+    entry = sources.FETCHERS["ars"](Ledger("state/ledger.json"), TODAY)
+    assert entry is not None and entry.title == "Free to read"
+
+
+def test_an_aggregator_linking_to_a_wall_sends_nothing(repo, fake_net, seeded):
+    """This is where the exposure actually is. A front page reports what was
+    submitted, and what was submitted is frequently a payment form."""
+    fake_net.json(sources.HN_TOP, [101])
+    fake_net.json("https://hacker-news.firebaseio.com/v0/item/101.json", {
+        "type": "story", "title": "A scoop", "url": "https://www.wsj.com/tech/a-scoop",
+        "score": 500, "descendants": 90,
+        "time": int((NOW - timedelta(hours=2)).timestamp()),
+    })
+    assert sources.fetch_hn(Ledger("state/ledger.json"), TODAY) is None
+
+    fake_net.json(sources.LOBSTERS, [{
+        "short_id": "abc123", "score": 80, "title": "[$] Paid piece",
+        "url": "https://open.example/x", "comments_url": "https://lobste.rs/s/abc123",
+        "created_at": rfc3339(0.2), "tags": [],
+    }])
+    assert sources.fetch_lobsters(Ledger("state/ledger.json"), TODAY) is None

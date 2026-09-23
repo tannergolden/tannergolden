@@ -14,6 +14,11 @@ world. The nineteen in `feeds.py` are PUBLISHERS: projects announcing their
 own releases, a public registry, and technology desks with named editors. One
 says what people are looking at; the other says what happened.
 
+EVERY DISPATCH LINKS SOMEWHERE A READER CAN OPEN. No source here is behind a
+subscription, and `feeds.free_to_read` holds that for the links this file does
+not choose: an aggregator reports what was submitted, and what was submitted
+is frequently a payment form with a headline on it.
+
 They overlap heavily, which is the whole reason the ledger keys on a
 canonical URL as well as a per-source id: the same Ars Technica piece reaches
 Hacker News and Lobsters the same morning, and a claim already taken is a
@@ -196,6 +201,11 @@ def fetch_hn(ledger: Ledger, today: date) -> Dispatch | None:
             url = thread  # a text post lives on the thread
         if not _unclaimed(ledger, url):
             continue
+        # The front page runs the WSJ and the FT most weeks. An aggregator
+        # reports what was submitted, and what was submitted is frequently a
+        # payment form with a headline on it.
+        if not feeds.free_to_read(url, str(item.get("title") or "")):
+            continue
 
         comments = int(item.get("descendants") or 0)
         title = clean(str(item["title"]))
@@ -313,6 +323,8 @@ def fetch_lobsters(ledger: Ledger, today: date) -> Dispatch | None:
         if not url.startswith("https://"):
             url = comments if comments.startswith("https://") else ""
         if not url or not _unclaimed(ledger, url):
+            continue
+        if not feeds.free_to_read(url, str(story.get("title") or "")):
             continue
 
         title = clean(str(story.get("title") or ""))
@@ -435,6 +447,10 @@ def fetch_feed(feed: feeds.Feed):
             # dated badly is still offered. One demonstrably outside this
             # source's window is not.
             if not _unclaimed(ledger, item.link):
+                continue
+            # One entry behind the wall at a publisher that is otherwise
+            # open. LWN's "[$]" is the case that got one onto the page.
+            if not feeds.free_to_read(item.link, item.title, item.summary):
                 continue
             title = clean(item.title)
             if not title:

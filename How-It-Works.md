@@ -207,8 +207,8 @@ person greps for them.
 
 ## 📚 The Sources
 
-**22 sources, in two families.** Three say what developers are
-*reading*; 19 say what *happened*. A page built on either alone is worse
+**20 sources, in two families.** Three say what developers are
+*reading*; 17 say what *happened*. A page built on either alone is worse
 than one built on both: attention without news is a popularity contest, and
 news without attention is a wire nobody asked for.
 
@@ -262,7 +262,6 @@ a decade or more, which is the only track record worth anything here.
 | Commit | Source | Home |
 | :--- | :--- | :--- |
 | `docs(ars)` | Ars Technica | https://arstechnica.com/ |
-| `docs(lwn)` | LWN.net | https://lwn.net/ |
 | `docs(register)` | The Register | https://www.theregister.com/ |
 | `docs(spectrum)` | IEEE Spectrum | https://spectrum.ieee.org/ |
 | `docs(infoq)` | InfoQ | https://www.infoq.com/ |
@@ -270,13 +269,30 @@ a decade or more, which is the only track record worth anything here.
 | `docs(bbc)` | BBC Technology | https://www.bbc.com/news/technology |
 | `docs(guardian)` | The Guardian Technology | https://www.theguardian.com/uk/technology |
 | `docs(npr)` | NPR Technology | https://www.npr.org/sections/technology/ |
-| `docs(verge)` | The Verge | https://www.theverge.com/ |
 
-**One table, one fetcher.** RSS and Atom are two shapes, not nineteen.
+> [!IMPORTANT]
+> **Every source is free to read, and nothing the page links to is behind a
+> subscription.** A dispatch is a link somebody is being asked to follow, and
+> sending a reader into a payment form is worse than sending them nothing.
+>
+> Two sources came out for this rule. **LWN** is excellent and is
+> subscriber-only for about a fortnight, which it marks with a `[$]` prefix;
+> one of those reached the page before the rule existed. **The Verge** went to
+> a membership model with nothing in its feed to say which entries are behind
+> it, so it cannot be made safe by filtering.
+>
+> The rule is enforced rather than trusted. `feeds.free_to_read` refuses a
+> known subscription domain and any entry carrying a marker like `[$]`,
+> "subscribers only" or "subscribe to read", and **it runs on the aggregators
+> too**, which is where the real exposure is: a front page reports what was
+> submitted, and what was submitted is frequently a payment form with a
+> headline on it. Hacker News runs the WSJ and the FT most weeks.
+
+**One table, one fetcher.** RSS and Atom are two shapes, not seventeen.
 Everything that differs between these sources is data: a URL, a name, a commit
 type and a sentence about the terms. A function per source would be the same
-forty lines nineteen times, and the twentieth source would be the one nobody
-adds.
+forty lines seventeen times, and the eighteenth source would be the one
+nobody adds.
 
 **A project gets longer than a newspaper.** A press desk publishes daily, so
 anything from last month is stale and the standard fourteen-day window
@@ -309,7 +325,7 @@ source that carries it.
 All of them are equals in the draw. If a source is down or has nothing new the
 next kind is tried, and if every one comes back empty the run writes nothing
 and leaves the moment in the past for the next run to catch. With
-22 kinds a run almost always finds something on its first or second try.
+20 kinds a run almost always finds something on its first or second try.
 
 The commit type is a genre label rather than a claim about this repository:
 `feat(rust)` adds no feature here. This repository cuts no releases and runs no

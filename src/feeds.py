@@ -10,6 +10,15 @@ job is the record itself. **Press** is a desk with named editors, a masthead
 and a correction policy, which is what separates a publication from a feed of
 opinions.
 
+EVERY SOURCE HERE IS FREE TO READ, and that is a rule rather than a
+coincidence. A dispatch is a link somebody is being asked to follow, and
+sending a reader into a subscription wall is worse than sending them nothing.
+Two sources came out for it: LWN, which is excellent and is subscriber-only
+for about a fortnight, and The Verge, which went to a membership model with
+nothing in the feed to say which entries are behind it. `free_to_read` below
+holds the line for everything that is left, and for the arbitrary links the
+aggregators carry, which is where the risk actually lives.
+
 Aggregators are deliberately not here. Hacker News, Lobsters and a trending
 repository list report what people are *reading*, which is a different and
 also useful thing; they live in `sources.py` and are drawn from the same hat.
@@ -30,6 +39,7 @@ from __future__ import annotations
 
 import html
 import re
+import urllib.parse
 import xml.etree.ElementTree as ElementTree
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -103,8 +113,6 @@ REGISTRY = (
 PRESS = (
     Feed("ars", "Ars Technica", "https://feeds.arstechnica.com/arstechnica/index",
          "https://arstechnica.com/", "press"),
-    Feed("lwn", "LWN.net", "https://lwn.net/headlines/newrss",
-         "https://lwn.net/", "press"),
     Feed("register", "The Register", "https://www.theregister.com/headlines.atom",
          "https://www.theregister.com/", "press"),
     Feed("spectrum", "IEEE Spectrum", "https://spectrum.ieee.org/feeds/feed.rss",
@@ -119,11 +127,68 @@ PRESS = (
          "https://www.theguardian.com/uk/technology", "press"),
     Feed("npr", "NPR Technology", "https://feeds.npr.org/1019/rss.xml",
          "https://www.npr.org/sections/technology/", "press"),
-    Feed("verge", "The Verge", "https://www.theverge.com/rss/index.xml",
-         "https://www.theverge.com/", "press"),
 )
 
 FEEDS = PRIMARY + REGISTRY + PRESS
+
+
+# --- what a reader can actually open ----------------------------------------------
+
+# A dispatch is a link somebody is asked to follow. These publishers put their
+# journalism behind a subscription, so a link to one is an invitation to a
+# payment form. None of them is a source here; they arrive through the
+# AGGREGATORS, whose front pages carry whatever was submitted, and that is the
+# real exposure: Hacker News runs the WSJ and the FT most weeks.
+#
+# It is a list of the big ones rather than an attempt at every paywall on the
+# internet, which is not a thing anybody can enumerate. A metered publisher
+# that gives a few free articles a month counts, because "a few" is not a
+# promise this page can make on a reader's behalf.
+PAYWALLED = frozenset({
+    "wsj.com", "ft.com", "nytimes.com", "bloomberg.com", "economist.com",
+    "washingtonpost.com", "theinformation.com", "businessinsider.com",
+    "newyorker.com", "theatlantic.com", "wired.com", "hbr.org",
+    "telegraph.co.uk", "thetimes.co.uk", "barrons.com", "seekingalpha.com",
+    "technologyreview.com", "nature.com", "science.org", "sciencedirect.com",
+    "link.springer.com", "dl.acm.org", "ieeexplore.ieee.org", "jstor.org",
+    "medium.com", "towardsdatascience.com", "lwn.net",
+})
+
+# And what a publisher writes when an individual entry is behind the wall.
+# LWN prefixes a subscriber article with "[$]", which is how the first one
+# reached the page before this existed.
+MARKERS = (
+    "[$]", "subscribers only", "subscriber only", "members only",
+    "for subscribers", "paywall", "subscribe to read", "premium content",
+    "this article is for", "sign in to read",
+)
+
+
+def _host(url: str) -> str:
+    """The registrable-ish host, so a subdomain cannot walk around the list."""
+    host = urllib.parse.urlsplit(url).netloc.lower().split("@")[-1].split(":")[0]
+    return host.removeprefix("www.")
+
+
+def free_to_read(url: str, *text: str) -> bool:
+    """False when the link leads somewhere a reader would have to pay.
+
+    Two checks, because there are two ways it happens. The domain is a whole
+    publisher behind a subscription. The marker is one entry behind it, at a
+    publisher that is otherwise open, which is what a title like
+    "[$] Compiling the kernel with gccrs" is telling anybody who reads it.
+
+    It cannot be complete and does not pretend to be. It is the difference
+    between a page that sends readers into payment forms by default and one
+    that does it only when somebody finds a case worth adding.
+    """
+    host = _host(url)
+    if not host:
+        return False
+    if host in PAYWALLED or any(host.endswith("." + p) for p in PAYWALLED):
+        return False
+    blob = " ".join(text).lower()
+    return not any(marker in blob for marker in MARKERS)
 
 
 # --- reading a feed ---------------------------------------------------------------

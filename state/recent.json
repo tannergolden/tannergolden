@@ -1,13 +1,5 @@
 [
   {
-    "at": "2026-09-23T09:37:14.333474+00:00",
-    "type": "docs",
-    "scope": "lwn",
-    "title": "[$] Compiling the kernel with gccrs",
-    "path": "dispatches/2026/September.md",
-    "anchor": "dispatch-20260923-053714"
-  },
-  {
     "at": "2026-09-23T09:35:43.696187+00:00",
     "type": "feat",
     "scope": "node",

@@ -483,7 +483,9 @@ _VERSION_LIMIT = 24
 def version_cell(value: str) -> str:
     """A version, as inline code, containing nothing that could be markup."""
     trimmed = _VERSION.sub("", str(value)).strip()[:_VERSION_LIMIT]
-    return f"`{trimmed}`" if trimmed else "\u2014"
+    # Not a dash: the house bans U+2013 to U+2015 in every file it writes,
+    # and a cell that says nothing is indistinguishable from a broken one.
+    return f"`{trimmed}`" if trimmed else "not published"
 
 # Inside six months is the point at which a reader should be planning the
 # upgrade rather than noting it. Past the date is not a warning, it is news.

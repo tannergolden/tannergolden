@@ -350,19 +350,25 @@ def probe() -> int:
         else:
             rows.append(("tip", "ok", clean(str(tip["command"]))[:120]) if tip else ("tip", "empty", "nothing new"))
 
-        # Named per product, because the useful answer is not "the clock
-        # works" but "which slugs resolved": a language mapped to a product
-        # endoflife.date does not carry is silent everywhere else.
+        # The whole mapping table, not only the products today's languages
+        # reach. A slug the catalogue does not carry is silent everywhere
+        # else, so this is the one run that says which of them are real. A
+        # star marks the ones this account's languages actually ask for.
         try:
-            clock = support.refresh()
+            languages, tried = support.audit(support.account_login(), os.environ.get("GITHUB_TOKEN"))
         except Exception as exc:
             rows.append(("support", "error", clean(repr(exc))[:160]))
         else:
-            for row in clock:
-                detail = f"{row['cycle']} \u00b7 latest {row['latest']} \u00b7 ends {row['ends'] or 'unannounced'}"
-                rows.append((f"eol:{row['product']}", "ok", clean(detail)[:120]))
-            if not clock:
-                rows.append(("support", "empty", "the catalogue answered nothing"))
+            rows.append(("languages", "ok" if languages else "empty",
+                         clean(", ".join(languages) or "the account answered nothing")[:120]))
+            for _name, slug, wanted, release in tried:
+                label = f"eol:{slug}" + ("*" if wanted else "")
+                if release is None:
+                    rows.append((label, "empty", "not in the catalogue"))
+                    continue
+                detail = (f"{release.cycle} \u00b7 latest {release.latest} \u00b7 "
+                          f"ends {release.ends.isoformat() if release.ends else 'unannounced'}")
+                rows.append((label, "ok", clean(detail)[:120]))
 
 
     width = max(len(r[0]) for r in rows)

@@ -273,7 +273,7 @@ def test_a_name_from_the_catalogue_cannot_break_out_of_its_cell():
 @pytest.mark.parametrize(("raw", "shown"), [
     ("3.14.1", "`3.14.1`"), ("11 25H2", "`11 25H2`"), ("1.26.2-rc1", "`1.26.2-rc1`"),
     ("6.12", "`6.12`"), ("10.0.26200", "`10.0.26200`"),
-    ("`x` **b**", "`x b`"), ("a|b", "`ab`"), ("", "\u2014"), ("!!!", "\u2014"),
+    ("`x` **b**", "`x b`"), ("a|b", "`ab`"), ("", "not published"), ("!!!", "not published"),
     ("v" * 40, "`" + "v" * 24 + "`"),
 ])
 def test_a_version_cell_says_the_version_and_can_say_nothing_else(raw, shown):
@@ -382,3 +382,15 @@ def test_the_notice_names_every_source_the_clock_reads():
 
     notice = Path(__file__).resolve().parent.parent.joinpath("NOTICE").read_text("utf-8")
     assert "endoflife.date" in notice and "CC BY-SA 4.0" in notice
+
+
+def test_nothing_the_clock_writes_carries_a_dash_the_house_bans():
+    """U+2013 to U+2015 are banned in every file this repository writes.
+
+    The region is written into README.md, so a fallback cell reaching for a
+    dash would put one there on the first day a version came back empty.
+    """
+    rows = [{"name": "Thing", "url": "https://endoflife.date/t", "cycle": "", "latest": "",
+             "ends": ends, "forever": False} for ends in ("2030-01-01", "2020-01-01", None)]
+    drawn = render.render_support_region(rows, MOMENT)
+    assert not [ch for ch in drawn if 0x2013 <= ord(ch) <= 0x2015]

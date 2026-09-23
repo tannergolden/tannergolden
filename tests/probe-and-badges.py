@@ -8,6 +8,7 @@ import os
 import shutil
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -37,14 +38,25 @@ def snapshot(root):
     return {p.relative_to(root).as_posix(): p.stat().st_mtime_ns for p in root.rglob("*") if p.is_file()}
 
 
-CLOCK = [{"product": "macos", "cycle": "26", "latest": "26.1", "ends": None},
-         {"product": "python", "cycle": "3.14", "latest": "3.14.1", "ends": "2030-10-31"}]
+def clock(*, languages=("Python",), missing=()):
+    """An audit answer: the account's languages, then every slug it tried."""
+    def release(name, slug):
+        return support.Release(name=name, product=slug, cycle="26", latest="26.1",
+                               released=None, ends=date(2030, 10, 31))
+
+    tried = [(name, slug, slug == "python", None if slug in missing else release(name, slug))
+             for name, slug in (("macOS", "macos"), ("Python", "python"), ("Bash", "bash"))]
+    return lambda login, token: (list(languages), tried)
+
+
+def raises(login, token):
+    raise RuntimeError("the catalogue moved")
 
 
 def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys):
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good, "trending": empty, "lobsters": broken})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: {"command": "jq"})
-    monkeypatch.setattr(support, "refresh", lambda: CLOCK)
+    monkeypatch.setattr(support, "audit", clock(missing=("bash",)))
     summary = repo / "summary.md"
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
     before = snapshot(repo)
@@ -57,11 +69,13 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
     assert rows["trending"] == "empty  nothing available today"
     assert rows["lobsters"].startswith("error  RuntimeError('the wiki is down") and "\u2014" not in out
     assert rows["tip"] == "ok     jq"
-    # Named per product: the useful answer is which slugs resolved, not that
-    # the clock ran. A language mapped to a product the catalogue does not
-    # carry is silent everywhere else.
-    assert rows["eol:macos"] == "ok     26 \u00b7 latest 26.1 \u00b7 ends unannounced"
-    assert rows["eol:python"] == "ok     3.14 \u00b7 latest 3.14.1 \u00b7 ends 2030-10-31"
+    assert rows["languages"] == "ok     Python"
+    assert rows["eol:macos"] == "ok     26 \u00b7 latest 26.1 \u00b7 ends 2030-10-31"
+    # A star marks a slug this account's languages actually ask for, so a
+    # mapping that is merely aspirational reads as separate from one in use.
+    assert rows["eol:python*"].startswith("ok     26")
+    # A slug the catalogue does not carry is reported, not silently dropped.
+    assert rows["eol:bash"] == "empty  not in the catalogue"
 
     after = snapshot(repo)
     assert {k: v for k, v in after.items() if k != "summary.md"} == before
@@ -72,32 +86,29 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
 def test_probe_is_clean_when_everything_answers(repo, monkeypatch):
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
-    monkeypatch.setattr(support, "refresh", lambda: CLOCK)
+    monkeypatch.setattr(support, "audit", clock())
     assert dispatches.probe() == 0
 
 
 def test_a_catalogue_that_answers_nothing_is_reported_but_is_not_a_failure(repo, monkeypatch, capsys):
     """A source being down is an ordinary Tuesday, and the probe says so.
 
-    An empty clock is worth printing, because it is the difference between
+    An empty answer is worth printing: it is the difference between
     "endoflife.date is down" and "the mapping table matches nothing".
     """
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
-    monkeypatch.setattr(support, "refresh", lambda: [])
+    monkeypatch.setattr(support, "audit", clock(languages=(), missing=("macos", "python", "bash")))
     assert dispatches.probe() == 0
-    assert "the catalogue answered nothing" in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert "the account answered nothing" in out and "not in the catalogue" in out
 
 
 def test_a_catalogue_that_raises_fails_the_probe_rather_than_going_unnoticed(repo, monkeypatch):
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
-    monkeypatch.setattr(support, "refresh", _raise)
+    monkeypatch.setattr(support, "audit", raises)
     assert dispatches.probe() == 1
-
-
-def _raise():
-    raise RuntimeError("the catalogue moved")
 
 
 @pytest.fixture

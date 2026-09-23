@@ -26,6 +26,7 @@ CC-BY-SA 4.0. Every row carries where it came from.
 from __future__ import annotations
 
 import os
+import re
 import urllib.parse
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
@@ -95,6 +96,13 @@ PLATFORMS = (
     ("Linux kernel", "linux"),
 )
 
+# Windows lists every release twice, once for Enterprise and Education and
+# once for Home and Pro, as cycles ending "-e" and "-w". They carry the same
+# version and different end dates, Enterprise's being the longer. Home and Pro
+# is the machine more readers are on and the earlier date, so it is the one
+# that warns rather than reassures.
+PREFER = {"windows": "-w"}
+
 # How many languages reach the page. Enough for any real account, few enough
 # that the table stays a table.
 MAX_LANGUAGES = 10
@@ -154,7 +162,7 @@ def _day(value) -> date | None:
         return None
 
 
-def _supported(cycles: list) -> dict | None:
+def _supported(cycles: list, product: str = "") -> dict | None:
     """The newest cycle still receiving security fixes.
 
     endoflife.date returns newest first and spells "not end of life" three
@@ -163,6 +171,7 @@ def _supported(cycles: list) -> dict | None:
     the past does not.
     """
     today = datetime.now(timezone.utc).date()
+    alive = []
     for cycle in cycles:
         if not isinstance(cycle, dict):
             continue
@@ -172,8 +181,27 @@ def _supported(cycles: list) -> dict | None:
         when = _day(eol)
         if when is not None and when < today:
             continue
-        return cycle
-    return None
+        alive.append(cycle)
+    if not alive:
+        return None
+    suffix = PREFER.get(product)
+    if suffix:
+        wanted = [c for c in alive if str(c.get("cycle", "")).endswith(suffix)]
+        if wanted:
+            return wanted[0]
+    return alive[0]
+
+
+# A cycle is an identifier in the catalogue's URLs, so Windows spells one
+# "11-26h1-w". On a page it should read the way the release is named.
+_EDITION = re.compile(r"-(?:e|w)$")
+_HALF = re.compile(r"^\d{2}h\d$", re.IGNORECASE)
+
+
+def pretty_cycle(cycle: str) -> str:
+    """The catalogue's cycle identifier, as a person would write the release."""
+    trimmed = _EDITION.sub("", str(cycle))
+    return " ".join(p.upper() if _HALF.match(p) else p for p in trimmed.split("-"))
 
 
 def fetch(name: str, product: str) -> Release | None:
@@ -186,14 +214,14 @@ def fetch(name: str, product: str) -> Release | None:
     cycles = net.get_json(API.format(product=urllib.parse.quote(product)))
     if not isinstance(cycles, list):
         return None
-    current = _supported(cycles)
+    current = _supported(cycles, product)
     if current is None:
         return None
     eol = current.get("eol")
     return Release(
         name=clean(name),
         product=clean(product),
-        cycle=clean(str(current.get("cycle") or "")),
+        cycle=clean(pretty_cycle(current.get("cycle") or "")),
         latest=clean(str(current.get("latest") or current.get("cycle") or "")),
         released=_day(current.get("latestReleaseDate") or current.get("releaseDate")),
         ends=_day(eol),
@@ -279,6 +307,34 @@ def collect(login: str, token: str | None) -> list:
 def account_login() -> str:
     """Whose repositories to read. The workflow already knows."""
     return os.environ.get("GITHUB_REPOSITORY_OWNER") or "tannergolden"
+
+
+def every_product() -> list:
+    """Every (name, slug) this repository could ever ask about, deduplicated.
+
+    Not what the clock draws: what the mapping table CLAIMS exists. The probe
+    walks this so one run answers which slugs the catalogue actually carries,
+    rather than only the handful today's languages happen to reach.
+    """
+    out: list = []
+    for name, slug in (*PLATFORMS, *RUNTIMES.values()):
+        if not any(seen == slug for _, seen in out):
+            out.append((name, slug))
+    return out
+
+
+def audit(login: str, token: str | None) -> tuple:
+    """What the probe reports: the account's languages, and every slug tried.
+
+    Deliberately wider than `collect`. `collect` asks only about the products
+    today's languages reach, so a mapping that is wrong stays invisible until
+    somebody writes that language. This asks about all of them, which is how
+    a guess in the table gets checked before it is ever needed.
+    """
+    languages = profile_languages(login, token)
+    asked = {slug for _, slug in runtimes_for(languages)}
+    tried = [(name, slug, slug in asked, fetch(name, slug)) for name, slug in every_product()]
+    return languages, tried
 
 
 def refresh() -> list:

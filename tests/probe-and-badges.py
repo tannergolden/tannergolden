@@ -15,6 +15,7 @@ import pytest
 import dispatches
 import modules
 import sources
+import support
 
 ROOT = Path(__file__).resolve().parents[1]
 KIT = Path(os.environ.get("EMBLEMS_KIT", ".emblems/src/badge-kit.py"))
@@ -36,9 +37,14 @@ def snapshot(root):
     return {p.relative_to(root).as_posix(): p.stat().st_mtime_ns for p in root.rglob("*") if p.is_file()}
 
 
+CLOCK = [{"product": "macos", "cycle": "26", "latest": "26.1", "ends": None},
+         {"product": "python", "cycle": "3.14", "latest": "3.14.1", "ends": "2030-10-31"}]
+
+
 def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys):
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good, "trending": empty, "lobsters": broken})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: {"command": "jq"})
+    monkeypatch.setattr(support, "refresh", lambda: CLOCK)
     summary = repo / "summary.md"
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
     before = snapshot(repo)
@@ -51,6 +57,11 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
     assert rows["trending"] == "empty  nothing available today"
     assert rows["lobsters"].startswith("error  RuntimeError('the wiki is down") and "\u2014" not in out
     assert rows["tip"] == "ok     jq"
+    # Named per product: the useful answer is which slugs resolved, not that
+    # the clock ran. A language mapped to a product the catalogue does not
+    # carry is silent everywhere else.
+    assert rows["eol:macos"] == "ok     26 \u00b7 latest 26.1 \u00b7 ends unannounced"
+    assert rows["eol:python"] == "ok     3.14 \u00b7 latest 3.14.1 \u00b7 ends 2030-10-31"
 
     after = snapshot(repo)
     assert {k: v for k, v in after.items() if k != "summary.md"} == before
@@ -61,7 +72,32 @@ def test_probe_reports_every_source_and_writes_nothing(repo, monkeypatch, capsys
 def test_probe_is_clean_when_everything_answers(repo, monkeypatch):
     monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
     monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
+    monkeypatch.setattr(support, "refresh", lambda: CLOCK)
     assert dispatches.probe() == 0
+
+
+def test_a_catalogue_that_answers_nothing_is_reported_but_is_not_a_failure(repo, monkeypatch, capsys):
+    """A source being down is an ordinary Tuesday, and the probe says so.
+
+    An empty clock is worth printing, because it is the difference between
+    "endoflife.date is down" and "the mapping table matches nothing".
+    """
+    monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
+    monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
+    monkeypatch.setattr(support, "refresh", lambda: [])
+    assert dispatches.probe() == 0
+    assert "the catalogue answered nothing" in capsys.readouterr().out
+
+
+def test_a_catalogue_that_raises_fails_the_probe_rather_than_going_unnoticed(repo, monkeypatch):
+    monkeypatch.setattr(sources, "FETCHERS", {"hn": good})
+    monkeypatch.setattr(modules, "terminal_tip", lambda ledger: None)
+    monkeypatch.setattr(support, "refresh", _raise)
+    assert dispatches.probe() == 1
+
+
+def _raise():
+    raise RuntimeError("the catalogue moved")
 
 
 @pytest.fixture

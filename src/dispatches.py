@@ -40,6 +40,7 @@ import masthead
 import modules
 import render
 import sources
+import support
 from config import (
     ASSETS_DIR,
     BOOTSTRAP_ENTRIES,
@@ -212,6 +213,10 @@ def render_page(when: datetime, *, with_modules: bool = True, status: tuple = ("
         "MASTHEAD": cards.masthead_region(),
         "AVAILABILITY": render.render_availability_region(render.load_availability()),
         "DISPATCHES": render.render_dispatches_region(recent, when, month_count),
+        # Drawn from state on every write, not fetched here. A countdown that
+        # only shortened on the days something was fetched would be wrong on
+        # every other day.
+        "SUPPORT": render.render_support_region(render.load_support(), when),
         "UPDATED": render.render_updated_line(when),
     }
     if with_modules:
@@ -301,6 +306,17 @@ def refresh_page(ledger: Ledger, when: datetime) -> str:
     render.save_modules(current)
     ledger.save()
 
+    # An empty answer means the catalogue could not be read, not that nothing
+    # is supported. Keeping the last reading is the difference between a page
+    # one day stale and a page that lost its table to a timeout.
+    rows = support.refresh()
+    if rows:
+        if rows != render.load_support():
+            changed.append("the support clock")
+        render.save_support(rows)
+    else:
+        print("::warning::the support catalogue could not be read; keeping the last reading.")
+
     render_page(when)
     return render.readme_commit_message(when, changed)
 
@@ -333,6 +349,20 @@ def probe() -> int:
             rows.append(("tip", "error", clean(repr(exc))[:160]))
         else:
             rows.append(("tip", "ok", clean(str(tip["command"]))[:120]) if tip else ("tip", "empty", "nothing new"))
+
+        # Named per product, because the useful answer is not "the clock
+        # works" but "which slugs resolved": a language mapped to a product
+        # endoflife.date does not carry is silent everywhere else.
+        try:
+            clock = support.refresh()
+        except Exception as exc:
+            rows.append(("support", "error", clean(repr(exc))[:160]))
+        else:
+            for row in clock:
+                detail = f"{row['cycle']} \u00b7 latest {row['latest']} \u00b7 ends {row['ends'] or 'unannounced'}"
+                rows.append((f"eol:{row['product']}", "ok", clean(detail)[:120]))
+            if not clock:
+                rows.append(("support", "empty", "the catalogue answered nothing"))
 
 
     width = max(len(r[0]) for r in rows)
@@ -422,9 +452,10 @@ def main() -> int:
 
     if args.mode == "check":
         document = Path(README).read_text(encoding="utf-8")
-        for name in ("MASTHEAD", "AVAILABILITY", "DISPATCHES", "MODULES", "UPDATED"):
+        regions = ("MASTHEAD", "AVAILABILITY", "DISPATCHES", "MODULES", "SUPPORT", "UPDATED")
+        for name in regions:
             render.read_region(document, name)
-        print("README.md: all five regions intact")
+        print(f"README.md: all {len(regions)} regions intact")
         return 0
 
     if args.mode == "render":

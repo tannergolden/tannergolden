@@ -71,3 +71,29 @@ def test_every_writing_workflow_checks_out_the_badge_kit():
         text = (root / ".github/workflows" / name).read_text(encoding="utf-8")
         assert "repository: tannergolden/emblems" in text, name
         assert "EMBLEMS_KIT:" in text, name
+
+
+def test_the_documented_egress_is_what_the_code_actually_fetches():
+    """The comment is the allowlist the day the policy moves to block.
+
+    It drifted once already: two feeds were removed for being paywalled and
+    their hosts stayed in the list. A stale allowlist is worse than none,
+    because it is the one nobody re-derives before pasting it in.
+    """
+    import sys
+    from urllib.parse import urlparse
+
+    sys.path.insert(0, str(ROOT / "src"))
+    import feeds
+    import support
+
+    fetched = {
+        "api.github.com", "raw.githubusercontent.com", "github.com",
+        "hacker-news.firebaseio.com", "lobste.rs",
+        urlparse(support.API).netloc,
+        *(urlparse(feed.url).netloc for feed in feeds.FEEDS),
+    }
+    text = (ROOT / ".github/workflows/dispatches.yml").read_text(encoding="utf-8")
+    block = text.split("for that allowlist:")[1].split("#\n")[0]
+    documented = {host for host in re.split(r"[\s,#]+", block) if "." in host}
+    assert documented == fetched, f"missing {fetched - documented}, stale {documented - fetched}"

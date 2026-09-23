@@ -28,6 +28,10 @@ old dispatches
 old modules
 <!-- MODULES:END -->
 
+<!-- SUPPORT:BEGIN -->
+old support
+<!-- SUPPORT:END -->
+
 prose after
 
 <!-- UPDATED:BEGIN -->
@@ -40,7 +44,6 @@ def repo(tmp_path, monkeypatch):
     """Run inside an empty repository tree with a page carrying every region."""
     monkeypatch.chdir(tmp_path)
     (tmp_path / "README.md").write_text(PAGE, encoding="utf-8")
-    (tmp_path / "profile.json").write_text('{"login": "someone"}', encoding="utf-8")
     os.makedirs(tmp_path / "state", exist_ok=True)
     return tmp_path
 

@@ -26,7 +26,8 @@ _Random by construction. Attributed by default._
 One workflow, [`dispatches.yml`](.github/workflows/dispatches.yml), fires
 every hour, on the hour. It reads [`state/schedule.json`](state/schedule.json),
 which holds two moments: when the next dispatch is due and when the next
-page refresh is due. If either falls inside the coming hour, the run sleeps
+page refresh is due. A dispatch adds one entry; a refresh redraws the terminal
+tip and the support clock. If either falls inside the coming hour, the run sleeps
 until that exact second, does the work, draws the next moment, and looks
 again. When nothing is due, the run ends in seconds.
 
@@ -35,8 +36,10 @@ handled at once. The entry lands late rather than never.
 
 The workflow can also be run by hand from the Actions tab: `tick` does what
 the cron does, `dispatch` sends one dispatch now, `refresh` rewrites the page now,
-and `probe` tries every source and the terminal tip once and reports what
-each would have written, without writing anything. Run on any branch but the
+and `probe` tries every source, the terminal tip and the support clock once
+and reports what each would have written, without writing anything. The clock
+reports one line per product, so `probe` is also how you find out which
+catalogue entries a newly added language actually resolves to. Run on any branch but the
 default one, the writing modes do everything except push, and report the
 commits they made in the run summary, so a change can be rehearsed before it
 merges.
@@ -343,6 +346,53 @@ changelog generator, which is the only reason that is free.
 
 ---
 
+## ⏳ The Support Clock
+
+Under the stack table is the one region on this page that is useful rather
+than merely true: what is current, and how long the current thing has left.
+"Python 3.10 stopped getting security fixes" is a sentence somebody can act
+on. "89.4% Python" is not, which is why the two statistics cards that used to
+sit there are gone.
+
+Nothing in it is typed. The three operating systems are fixed, because "what
+am I running" is the same question for every reader: **macOS**, **Windows**,
+and **Linux**, meaning the kernel rather than somebody's distribution.
+Everything under them is read from this account: the GitHub API is asked for
+the languages of every public repository that is not a fork and not archived,
+the bytes are summed, and each language above 2 KB is mapped onto the product
+whose lifecycle it actually depends on. JavaScript asks about Node, `C#` asks
+about .NET, Shell asks about Bash. A language nobody writes here drops off by
+itself, and one picked up next year appears the same way.
+
+**A row is named after the runtime, not the language**, because the version
+and the date describe the runtime: a row reading "Shell 5.3" and linking to
+Bash asks the reader to work the mapping out, and one reading "Bash 5.3" does
+not. For most languages the two names are the same and nothing changes.
+
+A language with no support lifecycle is left off deliberately rather than by
+omission: a Makefile does not go end of life. A language mapped to a product
+the catalogue does not carry answers 404, and that row is simply absent, which
+is why the mapping table leans generous. It is cheaper to list a guess that
+turns out not to exist than to leave a language off because nobody checked.
+
+**The clock is drawn on every page write and fetched only on a refresh.**
+State holds dates, never the sentence they become, so "4 years left" is
+recomputed against today each time the page is written. A countdown that only
+shortened on the days something was fetched would be wrong on every other day,
+which is the one failure a thing called a clock cannot have. If the catalogue
+cannot be reached, the last reading stays and the run says so in its summary:
+a timeout costs the page a day of freshness, not its table.
+
+The colour is computed, not chosen. Green is more than six months out, yellow
+is inside six months and means start planning, and red means the date has
+passed. The date is when security fixes stop, not when support gets quieter,
+because the second is a judgement and the first is a fact.
+
+The source is [endoflife.date](https://endoflife.date), a public catalogue of
+release and support dates. Every row links to the product page it came from.
+
+---
+
 ## 🛡️ Text From The Open Internet
 
 A story title, a repository description and a submitter's name are written by
@@ -368,8 +418,13 @@ written into the page unescaped.
 The code here is MIT. What the dispatches carry is fact rather than expression:
 a title, a score, a star count, a domain, a link. Every one is named and linked
 anyway, because attribution costs nothing and a reader should be able to check.
-No dispatch source is share-alike any more; tldr-pages, which feeds the terminal
-tip, is CC BY 4.0. [`NOTICE`](NOTICE) carries the terms in full.
+No dispatch source is share-alike; tldr-pages, which feeds the terminal tip, is
+CC BY 4.0. [`NOTICE`](NOTICE) carries the terms in full.
+
+The support clock reads endoflife.date, whose data is CC BY-SA 4.0. What the
+clock reproduces is a version number and a date, which are facts and not
+expression, and none of its prose is copied. It is attributed on the page
+regardless, for the same reason everything else here is.
 
 No copyleft source is reproduced here at all. An earlier design quoted GFDL
 program listings, which meant this repository had to carry the GFDL text and

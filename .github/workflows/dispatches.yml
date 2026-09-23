@@ -24,12 +24,15 @@
 # guidance: audit first, then block with the allowlist the audit reveals.
 # The endpoints this job is expected to reach, for that allowlist:
 #   api.github.com, raw.githubusercontent.com, github.com,
-#   hacker-news.firebaseio.com, lobste.rs,
-#   blog.rust-lang.org, feed.infoq.com, feeds.arstechnica.com
-#   feeds.bbci.co.uk, feeds.npr.org, github.blog, go.dev, hacks.mozilla.org
-#   kubernetes.io, lwn.net, nodejs.org, pythoninsider.blogspot.com
-#   spectrum.ieee.org, www.cisa.gov, www.phoronix.com, www.postgresql.org
-#   www.theguardian.com, www.theregister.com, www.theverge.com
+#   hacker-news.firebaseio.com, lobste.rs, endoflife.date,
+#   blog.rust-lang.org, feed.infoq.com, feeds.arstechnica.com,
+#   feeds.bbci.co.uk, feeds.npr.org, github.blog, go.dev, hacks.mozilla.org,
+#   kubernetes.io, nodejs.org, pythoninsider.blogspot.com,
+#   spectrum.ieee.org, www.cisa.gov, www.phoronix.com, www.postgresql.org,
+#   www.theguardian.com, www.theregister.com
+#
+# Kept true by tests/workflow-shape.py, which reads the registry and the
+# support clock and fails if this list drifts from what the code fetches.
 
 name: '📡 Dispatch'
 

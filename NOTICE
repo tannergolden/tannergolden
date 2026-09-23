@@ -24,8 +24,17 @@ Lobsters                      Facts via the official JSON           Story titles
 tldr-pages                    CC BY 4.0                             One command, its one-line summary, and one
                               https://github.com/tldr-pages/tldr/blob/main/LICENSE.md   example with its description, linked
                                                                     to the page.
-GitHub                        Facts via the REST and GraphQL API    The account's public repository, star,
-                                                                    follower and language counts.
+GitHub                        Facts via the REST API                Which languages this account's public
+                                                                    repositories are written in, and how many
+                                                                    bytes of each, for the support clock.
+endoflife.date                CC BY-SA 4.0                          For the support clock, not a dispatch: a
+                              https://creativecommons.org/licenses/by-sa/4.0/           product's current release line, its
+                                                                    latest version and its end-of-support date,
+                                                                    linked to the product page.
 
 The full text of each license is at the URL beside it. No copyleft source is
-reproduced here, so no license text needs to accompany this repository.
+reproduced here, so no license text needs to accompany this repository. What
+the support clock takes from endoflife.date is a version number and a date,
+which are facts and not expression; none of its prose is reproduced, and the
+attribution on the page is given because it is owed in courtesy rather than
+because ShareAlike reaches a table of facts.

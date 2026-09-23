@@ -458,6 +458,122 @@ def render_modules_region(modules: dict) -> str:
     )
 
 
+# --- the support clock ----------------------------------------------------------------
+
+# Read on every page write, fetched only on a refresh. Storing the dates
+# rather than the sentence is what lets the countdown shorten on a day when
+# nothing was fetched, and lets a page render at all on a day endoflife.date
+# is unreachable: the last good reading stays, one day staler, instead of the
+# table emptying because one request timed out.
+SUPPORT_FILE = f"{STATE_DIR}/support.json"
+
+# Every row links here or does not link at all. safe_url escapes what would
+# end a Markdown link early; it does not judge a scheme, and nothing on this
+# page should be the first thing to trust a string read back off disk.
+SUPPORT_HOME = "https://endoflife.date/"
+
+# A version is not prose. md_inline escapes for prose, and its backslashes
+# would show up literally inside the code span these cells use; the honest
+# fix is to say what a version may contain. Every real cycle the catalogue
+# carries fits this, "11 25H2" and "1.26.2-rc1" included.
+_VERSION = re.compile(r"[^0-9A-Za-z .+:_-]")
+_VERSION_LIMIT = 24
+
+
+def version_cell(value: str) -> str:
+    """A version, as inline code, containing nothing that could be markup."""
+    trimmed = _VERSION.sub("", str(value)).strip()[:_VERSION_LIMIT]
+    return f"`{trimmed}`" if trimmed else "\u2014"
+
+# Inside six months is the point at which a reader should be planning the
+# upgrade rather than noting it. Past the date is not a warning, it is news.
+SUPPORT_WARNING_DAYS = 180
+
+
+def load_support() -> list:
+    try:
+        with open(SUPPORT_FILE, encoding="utf-8") as handle:
+            loaded = json.load(handle)
+    except (OSError, ValueError):
+        return []
+    return [row for row in loaded if isinstance(row, dict)] if isinstance(loaded, list) else []
+
+
+def save_support(rows: list) -> None:
+    Path(SUPPORT_FILE).parent.mkdir(parents=True, exist_ok=True)
+    with open(SUPPORT_FILE, "w", encoding="utf-8") as handle:
+        json.dump(rows, handle, indent=2, ensure_ascii=False)
+        handle.write("\n")
+
+
+def span(days: int) -> str:
+    """A duration a person would say out loud.
+
+    Nobody says "1,503 days". Days while days are what you would count,
+    months while you would count those, years after that.
+    """
+    days = abs(int(days))
+    if days < 60:
+        return "1 day" if days == 1 else f"{days} days"
+    months = round(days / 30.44)
+    if months < 24:
+        return f"{months} months"
+    return f"{round(days / 365.25)} years"
+
+
+def support_clock(row: dict, today: date) -> str:
+    """The one cell that moves on its own: a colour, a date and how long."""
+    ends = row.get("ends")
+    if row.get("forever") or not ends:
+        return "\U0001F7E2 No end announced"
+    try:
+        when = date.fromisoformat(str(ends))
+    except ValueError:
+        return "\U0001F7E2 No end announced"
+    stamp = f"{when:%B} {when.day}, {when:%Y}"
+    left = (when - today).days
+    if left < 0:
+        return f"\U0001F534 Ended {stamp} \u00b7 {span(left)} ago"
+    if left == 0:
+        return f"\U0001F534 Ends today, {stamp}"
+    dot = "\U0001F7E1" if left <= SUPPORT_WARNING_DAYS else "\U0001F7E2"
+    return f"{dot} {stamp} \u00b7 {span(left)} left"
+
+
+def render_support_region(rows: list, when: datetime) -> str:
+    """What is current, and how long the current thing has left.
+
+    Every figure here is fetched or computed. Nothing in this region is a
+    number somebody typed, which is the whole reason it earns its place on a
+    page that is otherwise about what a person chose to write.
+    """
+    if not rows:
+        return "_The support clock fills in on the first refresh._"
+
+    today = local(when).date()
+    lines = [
+        "| Runtime | Line | Latest | Security support ends |",
+        "| :--- | :--- | :--- | :--- |",
+    ]
+    for row in rows:
+        name = md_inline(str(row.get("name", "")))
+        url = safe_url(str(row.get("url") or ""))
+        thing = f"[{name}]({url})" if url.startswith(SUPPORT_HOME) else name
+        cycle = version_cell(row.get("cycle", ""))
+        latest = version_cell(row.get("latest", ""))
+        lines.append(f"| {thing} | {cycle} | {latest} | {support_clock(row, today)} |")
+    lines += [
+        "",
+        "**Line** is the release series the date applies to; **Latest** is the "
+        "newest release on it. Dates are when security fixes stop, not when "
+        "support gets quieter. Operating systems are fixed; everything below "
+        "them is whatever this account's public repositories are written in, so "
+        "the table changes when the code does. "
+        "Source: [endoflife.date](https://endoflife.date) \u00b7 CC BY-SA 4.0.",
+    ]
+    return "\n".join(lines)
+
+
 # The three states, keyed by what the workflow's dropdown sends: the badge
 # message, and the palette token that carries its meaning. One pick, and the
 # badge says exactly that. The emoji the dropdown shows are the health colours

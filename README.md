@@ -1,6 +1,6 @@
 <!--
 title: "👋 HI, I'M TANNER GOLDEN"
-description: "Profile README for @tannergolden: what I work on, the developer news this page posts by itself, how the repositories fit together, and how to reach me."
+description: "Profile README for @tannergolden: what I work on, the developer news this page posts by itself, how the repositories fit together, and how long the things I build on have left."
 tags: [profile, ai-research, systems-engineering, automation]
 category: profile
 -->
@@ -89,8 +89,16 @@ category: profile
 
 ---
 
+## ⏳ Support Clock
+
+<!-- SUPPORT:BEGIN -->
+_The support clock fills in on the first refresh._
+<!-- SUPPORT:END -->
+
+---
+
 <!-- UPDATED:BEGIN -->
-Last updated 05:48 EDT on Wednesday, September 23, 2026.
+Last updated 06:06 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

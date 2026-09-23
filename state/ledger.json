@@ -1,6 +1,10 @@
 {
   "link": [
+    "lwn.net/Articles/1095553",
     "nodejs.org/en/blog/release/v26.10.0"
+  ],
+  "lwn": [
+    "https://lwn.net/Articles/1095553/"
   ],
   "node": [
     "/blog/release/v26.10.0?1790067829095"

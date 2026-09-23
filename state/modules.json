@@ -1,10 +1,10 @@
 {
   "tip": {
-    "id": "sed",
-    "command": "sed",
-    "summary": "Edit text in a scriptable manner.",
-    "description": "Replace all apple (basic regex) occurrences with mango (basic regex) in all input lines and print the result to stdout",
-    "example": "<command> | sed 's/apple/mango/g'",
-    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/sed.md"
+    "id": "lighthouse",
+    "command": "lighthouse",
+    "summary": "Analyzes web applications and web pages, collecting modern performance metrics and insights on developer best practices.",
+    "description": "Generate a JSON report and save it to a specific file",
+    "example": "lighthouse --output <json> --output-path <path/to/file.json> <https://example.com>",
+    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/lighthouse.md"
   }
 }

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="431" height="134" viewBox="0 0 431 134" role="img" aria-labelledby="t d">
 <title id="t">A terminal, and what it has been typing</title>
-<desc id="d">👋🏻 Hello World! / 🪞 Lint before a release / 🧹 Simplifying the boring parts / 🧭 Plain defaults over novelty / 🏷️ Every build carries a version / 📐 One way in with no side doors / 🚧 No step is copied twice / 🌱 No pipeline ages badly / 🧰 Tools I would make again / 🧮 Latency measured, not argued / ✂️ Cutting more than I write / ⛓️ A rule that cannot drift / 🗺️ Restored with one command</desc>
+<desc id="d">👋🏻 Hello World! / ⏱️ Tests in under a minute / 🚦 A red build means work now / 📐 One shape with no exceptions / 📊 Runs you can reproduce later / 🌱 No default ages into a mystery / 📦 Recording the exception once / 🧯 Recovery without a pager / 🧮 Cost measured, not argued / 🛟 A rollback when it goes wrong / 📌 Bound to a lockfile, not latest / ✂️ Pruning more than I ship / 💤 Pipelines that run without me</desc>
 <defs>
 <filter id="g" x="-10%" y="-45%" width="120%" height="190%" color-interpolation-filters="sRGB">
 <feGaussianBlur in="SourceGraphic" stdDeviation="1.7" result="near"/>
@@ -13,7 +13,7 @@
 <style>text{font-family:ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Mono', 'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace;font-size:20px;fill:#00ff41;white-space:pre;font-variant-ligatures:none;font-kerning:none;text-rendering:geometricPrecision}.p{opacity:0.5}</style>
 <g filter="url(#g)">
 <text x="16" y="29"><tspan class="p">❯</tspan> 👋🏻 Hello World!</text>
-<text x="16" y="58"><tspan class="p">❯</tspan> 🪞 Lint before a release</text>
-<text x="16" y="87"><tspan class="p">❯</tspan> 🧹 Simplifying the boring parts</text>
-<text x="16" y="116"><tspan class="p">❯</tspan> 🧭 Plain defaults over novelty</text>
+<text x="16" y="58"><tspan class="p">❯</tspan> ⏱️ Tests in under a minute</text>
+<text x="16" y="87"><tspan class="p">❯</tspan> 🚦 A red build means work now</text>
+<text x="16" y="116"><tspan class="p">❯</tspan> 📐 One shape with no exceptions</text>
 </g></svg>

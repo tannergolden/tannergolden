@@ -43,11 +43,14 @@ category: profile
 <!-- DISPATCHES:BEGIN -->
 ### Wednesday, September 23, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=313dcbd8)](dispatches/)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=3465b94a)](dispatches/2026/September.md)
 
-_No dispatches yet. The first lands at a random moment within the next twelve hours or so; nothing here is on a schedule._
+| Time | Commit | Dispatch |
+| :--- | :--- | :--- |
+| 05:37 | `docs(lwn)` | [\[$\] Compiling the kernel with gccrs](dispatches/2026/September.md#dispatch-20260923-053714) |
+| 05:35 | `feat(node)` | [Node.js 26.10.0 (Current)](dispatches/2026/September.md#dispatch-20260923-053543) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 0 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 2 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -99,7 +102,7 @@ _No dispatches yet. The first lands at a random moment within the next twelve ho
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 05:25 EDT on Wednesday, September 23, 2026.
+Last updated 05:37 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

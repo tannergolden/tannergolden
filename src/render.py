@@ -400,7 +400,7 @@ def render_dispatches_region(recent: list, when: datetime, month_count: int) -> 
         lines += [
             "",
             "<details>",
-            "<summary>Earlier entries</summary>",
+            "<summary>Earlier News</summary>",
             "",
             table_head,
             *[_row(item, today) for item in earlier],

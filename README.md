@@ -52,7 +52,7 @@ category: profile
 | Sep 22, 03:41 | `docs(hn)` | [Grok 4.7](dispatches/2026/September.md#dispatch-20260922-034111) |
 
 <details>
-<summary>Earlier entries</summary>
+<summary>Earlier News</summary>
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
@@ -110,15 +110,6 @@ category: profile
   <img alt="Top languages across public repositories: Python 89.4%, Shell 9.2%, Makefile 0.8%, JavaScript 0.7%." src="assets/languages-light.svg?v=4fd4179a">
 </picture>
 <!-- CARDS:END -->
-
----
-
-## 📫 Elsewhere
-
-| Where        | Link                                                         |
-| :----------- | :----------------------------------------------------------- |
-| **Website**  | [tannergolden.com](https://www.tannergolden.com)             |
-| **LinkedIn** | [in/tannergolden](https://www.linkedin.com/in/tannergolden/) |
 
 ---
 

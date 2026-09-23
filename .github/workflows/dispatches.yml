@@ -1,8 +1,8 @@
 # NOT installed from tannergolden/standards, and not a stub. This is the one
 # workflow this profile runs, and How-It-Works.md records the three places it
 # departs from those standards and why: a scheduled job that pushes to the
-# default branch, a cron on a minute other than 00, and logic living here
-# rather than being called by reference.
+# default branch, and logic living here rather than being called by
+# reference.
 #
 # WHAT ONE RUN DOES. It reads state/schedule.json. If a dispatch or a
 # page refresh is due inside the coming hour, it sleeps until that exact
@@ -12,21 +12,30 @@
 # is due, the run ends in seconds. The mean wait between entries is one
 # number in src/config.py.
 #
-# The cron fires at :17 rather than :00 deliberately. GitHub's scheduler is
-# most congested on the hour and runs there are delayed or dropped most
-# often; the minute is arbitrary, the avoidance is not.
+# The cron fires on the hour. GitHub's scheduler is most congested there and
+# a run can be delayed by several minutes or dropped, which an off-hour
+# minute avoids; this job can afford that. Nothing is due AT the cron. The
+# run reads the schedule, and if a moment falls inside the coming hour it
+# sleeps until that exact second, so a late start moves when the run begins
+# and not when the dispatch lands. A dropped hour is picked up by the next
+# one, because a moment already past is handled at once.
 #
 # EGRESS. The harden step audits rather than blocks, per the action's own
 # guidance: audit first, then block with the allowlist the audit reveals.
 # The endpoints this job is expected to reach, for that allowlist:
 #   api.github.com, raw.githubusercontent.com, github.com,
-#   hacker-news.firebaseio.com, lobste.rs
+#   hacker-news.firebaseio.com, lobste.rs,
+#   blog.rust-lang.org, feed.infoq.com, feeds.arstechnica.com
+#   feeds.bbci.co.uk, feeds.npr.org, github.blog, go.dev, hacks.mozilla.org
+#   kubernetes.io, lwn.net, nodejs.org, pythoninsider.blogspot.com
+#   spectrum.ieee.org, www.cisa.gov, www.phoronix.com, www.postgresql.org
+#   www.theguardian.com, www.theregister.com, www.theverge.com
 
 name: '📡 Dispatch'
 
 on:
   schedule:
-    - cron: '17 * * * *' # hourly, off the hour: the run decides whether anything is due
+    - cron: '0 * * * *' # hourly: the run decides whether anything is due
   workflow_dispatch:
     inputs:
       mode:

@@ -15,10 +15,14 @@ CHECKS = yaml.safe_load((ROOT / ".github/workflows/checks.yml").read_text(encodi
 JOB = DISPATCHES["jobs"]["write"]
 
 
-def test_the_cron_is_hourly_and_off_the_hour():
+def test_the_cron_is_hourly_and_nothing_is_due_at_it():
+    """Hourly, on the hour. The minute the cron fires is not the minute a
+    dispatch lands: the run reads the schedule and sleeps until the exact
+    second a moment falls due, so a scheduler running late moves when the
+    run starts and not when the entry arrives."""
     (cron,) = [s["cron"] for s in DISPATCHES[True]["schedule"]]
-    minute, hour, *_ = cron.split()
-    assert minute.isdigit() and minute != "0" and hour == "*"
+    minute, hour, *rest = cron.split()
+    assert (minute, hour, rest) == ("0", "*", ["*", "*", "*"]), cron
 
 
 def test_a_rehearsal_is_gated_on_the_event_not_on_a_field_schedule_events_lack():

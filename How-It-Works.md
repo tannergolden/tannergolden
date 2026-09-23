@@ -24,7 +24,7 @@ _Random by construction. Attributed by default._
 ## 💡 What Runs
 
 One workflow, [`dispatches.yml`](.github/workflows/dispatches.yml), fires
-every hour at seventeen minutes past. It reads [`state/schedule.json`](state/schedule.json),
+every hour, on the hour. It reads [`state/schedule.json`](state/schedule.json),
 which holds two moments: when the next dispatch is due and when the next
 page refresh is due. If either falls inside the coming hour, the run sleeps
 until that exact second, does the work, draws the next moment, and looks
@@ -371,7 +371,6 @@ exception nobody wrote down is a discrepancy somebody will find.
 | The standard says                                                  | This repository does                                                | Why                                                                                                                                                          |
 | :----------------------------------------------------------------- | :------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Nothing scheduled pushes to a protected branch; propose a pull request | The workflow pushes straight to the default branch                  | The page renders from the default branch and a pull request per random moment would be two thousand pull requests a year, reviewed by nobody                   |
-| Every cron fires at minute 00                                      | This one fires at :17                                               | The on-the-hour rule staggers many jobs sharing one API; this repository has one job, and GitHub's scheduler delays or drops runs most often on the hour       |
 | A repository holds a stub; the logic lives in `standards`          | The logic lives here, in `src/`                                     | This is a profile, not a pipeline, and its workflow is not reusable by anything else; publishing it from `standards` would bloat a library other repos consume |
 | The rulesets and the standard stubs are applied                     | Neither is applied                                                  | The ruleset would refuse the push above; the stubs gate code this repository does not have. `checks.yml` runs the same lint and tests a contributor runs      |
 | A commit's type carries the intent of the change                   | The type is a genre label for the content                           | Stated above. The exception holds only while this repository cuts no releases and runs no changelog tooling                                                   |

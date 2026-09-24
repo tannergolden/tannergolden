@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=ca4808de">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=476c2d60">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=8fc39db3">
-  <img alt="👋🏻 Hello World! / 📌 Pinned to a SHA, not a range / 🧭 Plain defaults over cleverness / 🏷️ Every image carries a changelog / 🌱 No config ages without warning / 💡 The failure obvious in the diff / 🚧 No workflow is half-migrated / 🧹 Documenting the boring parts / 🧯 A fix without a pager / 🩺 Find it before the pager does / 🗺️ Restored with one file / 🧰 Tools I would defend again / 🛟 A rollback when the fix is slow" src="assets/masthead-light.svg?v=2f78b6af">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=45f4619a">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=345a8149">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=3686aba1">
+  <img alt="👋🏻 Hello World! / 🪄 No hidden state in the build / 📮 A fix that arrives tested / 📊 Runs you can defend later / 🪞 Review before anyone asks / 🧾 A failure that says what broke / ⛓️ A rule that cannot drift / 💬 Code that reads as prose / 🔔 Alert only when it cannot wait / 🧪 Gates that nobody can skip / 🪵 The failure in one line / 🏗️ Leave the boring way easy / 🛠️ Fix the root, not the ticket" src="assets/masthead-light.svg?v=90009e79">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -278,7 +278,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 08:11 EDT on Thursday, September 24, 2026.
+Last updated 17:48 EDT on Thursday, September 24, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

@@ -34,10 +34,7 @@ jobs:
     permissions:
       contents: write # the SVGs, the README block and the ledger
       pull-requests: write # unused on the push path; the reusable workflow declares it
-    # Development, and the matching kit-ref, until tannergolden/trophies cuts
-    # its v1 tag; then both become @v1 and the kit-ref line goes.
-    uses: tannergolden/trophies/.github/workflows/trophies.yml@Development # zizmor: ignore[unpinned-uses] - first-party workflow on its moving branch, the way every stub calls standards.
+    uses: tannergolden/trophies/.github/workflows/trophies.yml@v1 # zizmor: ignore[unpinned-uses] - first-party workflow on its moving major, the way every stub calls standards.
     with:
       mode: profile
-      kit-ref: Development
     secrets: inherit

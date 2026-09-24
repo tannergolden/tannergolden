@@ -110,7 +110,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: tannergolden/emblems
-          ref: 5b00d969c0ea1c963ff949de2554da5dbe5ab7d0 # Development, 2026-09-20
+          ref: c30b6b52b36898e952b2a1d76f12525eef1ddbdf # Development, 2026-09-24
           path: .emblems
           persist-credentials: false
 

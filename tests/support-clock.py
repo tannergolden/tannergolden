@@ -65,7 +65,17 @@ def test_end_of_life_is_spelled_three_ways_and_two_of_them_mean_supported(fake_n
 
 
 def test_a_line_that_died_today_is_not_still_supported(fake_net, monkeypatch):
-    """The boundary, pinned: eol is the last day, so today is still covered."""
+    """The boundary, pinned: eol is the last day, so today is still covered.
+
+    Today is frozen at the day the fixtures were written for; left to the
+    clock, the test started failing the morning after."""
+
+    class Frozen(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return cls(2026, 9, 23, 12, 0, tzinfo=tz)
+
+    monkeypatch.setattr(support, "datetime", Frozen)
     fake_net.json(API + "x", cycles(cycle("9", eol="2026-09-23"), cycle("8", eol="2027-01-01")))
     assert support.fetch("X", "x").cycle == "9"
     fake_net.json(API + "y", cycles(cycle("9", eol="2026-09-22"), cycle("8", eol="2027-01-01")))

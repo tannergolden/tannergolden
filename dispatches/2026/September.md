@@ -47,3 +47,17 @@ practices, science.
 _[Lobsters](https://blog.melashri.net/posts/scientific-linux-mistake/) · submitted by rau · Title and score, reported as fact · [discussion](https://lobste.rs/s/qysrps/abandoning_scientific_linux_was_mistake)_
 
 ---
+<a name="dispatch-20260923-210732"></a>
+
+### 📖 Understanding Jensen Huang's AI optimism and how it influences President Trump
+
+`docs(npr)` · 21:07 EDT
+
+NPR Technology ran it today. The Nvidia CEO is a relentless AI optimist
+with the president's ear. Stephen Witt, author of The Thinking Machine,
+tells NPR's Juana Summers how their relationship could shape the future
+of AI. By Connor Donevan.
+
+_[NPR Technology](https://www.npr.org/2026/09/23/nx-s1-5976775/understanding-jensen-huangs-ai-optimism-and-how-it-influences-president-trump) · by Connor Donevan · Headline, summary and link, reported as fact_
+
+---

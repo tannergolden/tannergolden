@@ -43,14 +43,15 @@ category: profile
 <!-- DISPATCHES:BEGIN -->
 ### Wednesday, September 23, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=3465b94a)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
+| 21:07 | `docs(npr)` | [Understanding Jensen Huang's AI optimism and how it influences President Trump](dispatches/2026/September.md#dispatch-20260923-210732) |
 | 18:05 | `docs(lobsters)` | [Abandoning Scientific Linux Was a Mistake](dispatches/2026/September.md#dispatch-20260923-180518) |
 | 05:35 | `feat(node)` | [Node.js 26.10.0 (Current)](dispatches/2026/September.md#dispatch-20260923-053543) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 2 in September
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 3 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -107,7 +108,7 @@ category: profile
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 18:05 EDT on Wednesday, September 23, 2026.
+Last updated 21:07 EDT on Wednesday, September 23, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

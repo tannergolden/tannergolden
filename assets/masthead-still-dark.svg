@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="395" height="134" viewBox="0 0 395 134" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" width="467" height="134" viewBox="0 0 467 134" role="img" aria-labelledby="t d">
 <title id="t">A terminal, and what it has been typing</title>
-<desc id="d">👋🏻 Hello World! / 📖 Guides nobody can ignore / 📊 Runs you can rerun later / 🔗 No action without an SBOM / ⏱️ Feedback in under a minute / 🧮 Cost measured, not assumed / 🔔 Alert only when it is real / ⛓️ A rule that cannot rot quietly / 🧪 Linters that earn their runtime / 🪵 Every request in one place / 📉 One fewer decision to maintain / ✂️ Deleting more than I write / 📐 One way in with no exceptions</desc>
+<desc id="d">👋🏻 Hello World! / 📌 Pinned to a SHA, not a range / 🧭 Plain defaults over cleverness / 🏷️ Every image carries a changelog / 🌱 No config ages without warning / 💡 The failure obvious in the diff / 🚧 No workflow is half-migrated / 🧹 Documenting the boring parts / 🧯 A fix without a pager / 🩺 Find it before the pager does / 🗺️ Restored with one file / 🧰 Tools I would defend again / 🛟 A rollback when the fix is slow</desc>
 <defs>
 <filter id="g" x="-10%" y="-45%" width="120%" height="190%" color-interpolation-filters="sRGB">
 <feGaussianBlur in="SourceGraphic" stdDeviation="1.7" result="near"/>
@@ -13,7 +13,7 @@
 <style>text{font-family:ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Mono', 'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace;font-size:20px;fill:#00ff41;white-space:pre;font-variant-ligatures:none;font-kerning:none;text-rendering:geometricPrecision}.p{opacity:0.5}</style>
 <g filter="url(#g)">
 <text x="16" y="29"><tspan class="p">❯</tspan> 👋🏻 Hello World!</text>
-<text x="16" y="58"><tspan class="p">❯</tspan> 📖 Guides nobody can ignore</text>
-<text x="16" y="87"><tspan class="p">❯</tspan> 📊 Runs you can rerun later</text>
-<text x="16" y="116"><tspan class="p">❯</tspan> 🔗 No action without an SBOM</text>
+<text x="16" y="58"><tspan class="p">❯</tspan> 📌 Pinned to a SHA, not a range</text>
+<text x="16" y="87"><tspan class="p">❯</tspan> 🧭 Plain defaults over cleverness</text>
+<text x="16" y="116"><tspan class="p">❯</tspan> 🏷️ Every image carries a changelog</text>
 </g></svg>

@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=e929f92a">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=7eaeae07">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=9fdac2a7">
-  <img alt="👋🏻 Hello World! / 📖 Guides nobody can ignore / 📊 Runs you can rerun later / 🔗 No action without an SBOM / ⏱️ Feedback in under a minute / 🧮 Cost measured, not assumed / 🔔 Alert only when it is real / ⛓️ A rule that cannot rot quietly / 🧪 Linters that earn their runtime / 🪵 Every request in one place / 📉 One fewer decision to maintain / ✂️ Deleting more than I write / 📐 One way in with no exceptions" src="assets/masthead-light.svg?v=d81140db">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=ca4808de">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=476c2d60">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=8fc39db3">
+  <img alt="👋🏻 Hello World! / 📌 Pinned to a SHA, not a range / 🧭 Plain defaults over cleverness / 🏷️ Every image carries a changelog / 🌱 No config ages without warning / 💡 The failure obvious in the diff / 🚧 No workflow is half-migrated / 🧹 Documenting the boring parts / 🧯 A fix without a pager / 🩺 Find it before the pager does / 🗺️ Restored with one file / 🧰 Tools I would defend again / 🛟 A rollback when the fix is slow" src="assets/masthead-light.svg?v=2f78b6af">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -41,15 +41,15 @@ category: profile
 ## 📡 Dispatch
 
 <!-- DISPATCHES:BEGIN -->
-### Wednesday, September 23, 2026
+### Thursday, September 24, 2026
 
 [![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
-| 21:07 | `docs(npr)` | [Understanding Jensen Huang's AI optimism and how it influences President Trump](dispatches/2026/September.md#dispatch-20260923-210732) |
-| 18:05 | `docs(lobsters)` | [Abandoning Scientific Linux Was a Mistake](dispatches/2026/September.md#dispatch-20260923-180518) |
-| 05:35 | `feat(node)` | [Node.js 26.10.0 (Current)](dispatches/2026/September.md#dispatch-20260923-053543) |
+| Sep 23, 21:07 | `docs(npr)` | [Understanding Jensen Huang's AI optimism and how it influences President Trump](dispatches/2026/September.md#dispatch-20260923-210732) |
+| Sep 23, 18:05 | `docs(lobsters)` | [Abandoning Scientific Linux Was a Mistake](dispatches/2026/September.md#dispatch-20260923-180518) |
+| Sep 23, 05:35 | `feat(node)` | [Node.js 26.10.0 (Current)](dispatches/2026/September.md#dispatch-20260923-053543) |
 
 [All dispatches](dispatches/) · [How it works](How-It-Works.md) · 3 in September
 <!-- DISPATCHES:END -->
@@ -278,7 +278,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 21:07 EDT on Wednesday, September 23, 2026.
+Last updated 08:11 EDT on Thursday, September 24, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

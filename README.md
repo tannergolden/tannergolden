@@ -67,6 +67,20 @@ category: profile
 
 ---
 
+## 🏆 Trophies
+
+What this account has earned, measured every night by
+[`tannergolden/trophies`](https://github.com/tannergolden/trophies) and drawn
+as committed images: eight tiered trophies, a level card, and one hundred
+achievements in the dropdown. This page is the live example of its
+**profile mode**; the repository's own README shows **repository mode**.
+Click any card to read what it is for and how it is earned.
+
+<!-- trophies:start -->
+<!-- trophies:end -->
+
+---
+
 ## 📦 Repositories
 
 | Repository                                                     | What it is                                                                            |
@@ -75,6 +89,7 @@ category: profile
 | [`path`](https://github.com/tannergolden/path)                 | Repository template: structure, health files and wiring, already decided              |
 | [`intelligence`](https://github.com/tannergolden/intelligence) | Agent instructions, published once and pinned rather than pasted into each repository |
 | [`emblems`](https://github.com/tannergolden/emblems)           | Badges a repository draws for itself, so no README depends on an image service        |
+| [`trophies`](https://github.com/tannergolden/trophies)         | Trophies a profile or repository earns for itself, measured nightly, never fetched    |
 | [`.github`](https://github.com/tannergolden/.github)           | Default community health files for repositories that do not ship their own            |
 | [`dotfiles`](https://github.com/tannergolden/dotfiles)         | Shell, editor, and toolchain configuration, installed the same way everywhere         |
 | [`tannergolden`](https://github.com/tannergolden/tannergolden) | This file, and the workflow that keeps it current                                     |

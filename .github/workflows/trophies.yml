@@ -1,0 +1,43 @@
+# The profile's trophy case: the live example of tannergolden/trophies in
+# profile mode. The stub is the whole interface. Measuring, drawing and
+# committing happen in the called workflow; nothing of it lives here.
+#
+# WHAT ONE RUN DOES. It measures this account over GitHub's API, redraws the
+# SVGs under assets/trophies/, rewrites the block between the trophies
+# markers in README.md, and commits only when a value moved. The commit is
+# authored by the account owner and committed by the Actions identity, the
+# same path every generated commit here takes, and the kit sets its own
+# commits aside when it counts, so a refresh earns nothing.
+#
+# The cron fires on the hour at midnight. Nothing on a trophy changes faster
+# than daily, and a run GitHub delays or drops loses nothing: every run
+# recomputes everything.
+
+name: '🏆 Trophies'
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # daily, on the hour
+  workflow_dispatch:
+
+# Shares the writing group with the dispatch and availability workflows so no
+# two of them commit beside each other.
+concurrency:
+  group: profile-write
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  trophies:
+    name: '🏆 Measure and render'
+    permissions:
+      contents: write # the SVGs, the README block and the ledger
+      pull-requests: write # unused on the push path; the reusable workflow declares it
+    # Development, and the matching kit-ref, until tannergolden/trophies cuts
+    # its v1 tag; then both become @v1 and the kit-ref line goes.
+    uses: tannergolden/trophies/.github/workflows/trophies.yml@Development # zizmor: ignore[unpinned-uses] - first-party workflow on its moving branch, the way every stub calls standards.
+    with:
+      mode: profile
+      kit-ref: Development
+    secrets: inherit

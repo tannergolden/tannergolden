@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=67e9642f">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=584ae928">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=f1101c16">
-  <img alt="👋🏻 Hello World! / 💡 The intent obvious in the name / 🔭 Work another team can check / 📌 Bound to a lockfile, not a tag / 🌱 Nothing here ages badly / 🛟 A way back when it goes wrong / 🔐 Default to least access, always / 📉 One fewer thing to remember / 🧹 Automating what people forget / 🔍 Logs you can actually trust / ✂️ Cutting more than I add / 🧮 Latency measured, not assumed / 🚦 A red test means nobody merges" src="assets/masthead-light.svg?v=90faf5dd">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=6a1d0077">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=a992b50f">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=b28d60c6">
+  <img alt="👋🏻 Hello World! / 🔬 Claims that survive a rerun / 💤 Builds that wait until morning / 🏗️ Keep the safe way easy / 🧰 Conventions I would pick again / 🏷️ Every build carries a version / 🎯 Covers exactly what was asked / 🪞 Lint before the pager rings / 🪵 The context in one place / 🧯 A fix without a heroic night / 📊 Numbers you can rerun later / 📖 Standards nobody can ignore / 🪄 No surprises in the build" src="assets/masthead-light.svg?v=d05c0388">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -278,7 +278,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 08:12 EDT on Friday, September 25, 2026.
+Last updated 17:49 EDT on Friday, September 25, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

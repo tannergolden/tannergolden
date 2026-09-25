@@ -101,7 +101,7 @@ Actions tab, offers three choices, and commits the one picked:
 | 🔴 Not Available    | `Not Available`  | red    |
 
 A `workflow_dispatch` choice input is single select, so this is one pick
-rather than a combination. The badge is drawn by the emblems kit like every
+rather than a combination. The badge is drawn by the badges kit like every
 other image here, and its URL carries a hash of its bytes, because GitHub
 proxies images by URL and a status that changed would otherwise keep showing
 the old colour for hours.
@@ -482,7 +482,7 @@ with a month table the run regenerates between markers each time it writes.
 - [⌨️ The Masthead](Masthead.md), the terminal at the top of the page in full.
 - The [archive](dispatches/), one file per month, appended and never rewritten.
 - [`NOTICE`](NOTICE), the source and license terms in full.
-- [tannergolden/emblems](https://github.com/tannergolden/emblems), which draws every badge on the page as a committed file, so the page makes no request to an image service.
+- [tannergolden/badges](https://github.com/tannergolden/badges), which draws every badge on the page as a committed file, so the page makes no request to an image service.
 
 ---
 

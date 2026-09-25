@@ -46,9 +46,9 @@ jobs:
         # the dispatch workflow uses. They skip when it is absent.
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: tannergolden/emblems
+          repository: tannergolden/badges
           ref: c30b6b52b36898e952b2a1d76f12525eef1ddbdf # Development, 2026-09-24
-          path: .emblems
+          path: .badges
           persist-credentials: false
 
       - name: '🧰 Install the pinned tools'
@@ -59,7 +59,7 @@ jobs:
 
       - name: '🧪 Test'
         env:
-          EMBLEMS_KIT: .emblems/src/badge-kit.py
+          BADGES_KIT: .badges/src/badge-kit.py
         run: make test
 
       - name: '📄 Verify the page regions'

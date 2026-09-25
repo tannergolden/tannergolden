@@ -1,6 +1,6 @@
 # The badge kit is checked out beside this repository by the workflow and
-# pointed at by EMBLEMS_KIT; it is never part of this tree.
-.emblems/
+# pointed at by BADGES_KIT; it is never part of this tree.
+.badges/
 
 __pycache__/
 .pytest_cache/

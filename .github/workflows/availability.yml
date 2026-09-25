@@ -58,16 +58,16 @@ jobs:
       - name: '🏷️ Checkout the badge kit'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: tannergolden/emblems
+          repository: tannergolden/badges
           ref: c30b6b52b36898e952b2a1d76f12525eef1ddbdf # Development, 2026-09-24
-          path: .emblems
+          path: .badges
           persist-credentials: false
 
       - name: '🟢 Set the availability line'
         env:
           # Without the kit the badge keeps its last rendering, and the page
           # would carry a red image under a green alt text.
-          EMBLEMS_KIT: .emblems/src/badge-kit.py
+          BADGES_KIT: .badges/src/badge-kit.py
           # The dropdown's label travels through env, never interpolated into
           # the script body: a ${{ }} expansion inside run is an injection sink.
           AVAILABILITY_CHOICE: ${{ inputs.status }}

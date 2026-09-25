@@ -1,4 +1,4 @@
-# The badges this page draws for itself, rendered by tannergolden/emblems into
+# The badges this page draws for itself, rendered by tannergolden/badges into
 # assets/badges/. Edit this file, then `make badges`; the workflow re-renders
 # the two dynamic ones on every run through `--set`.
 #

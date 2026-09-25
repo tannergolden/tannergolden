@@ -177,15 +177,15 @@ def mark_passing() -> None:
 
 def render_badges(month_count: int, status: str = "Passing", color: str = "green",
                   availability: str = "") -> None:
-    """Re-render the committed badges through the emblems kit, when it is present.
+    """Re-render the committed badges through the badges kit, when it is present.
 
     The workflow checks the kit out beside this repository; locally, point
-    EMBLEMS_KIT at a clone. Without it the badges keep their last rendering,
+    BADGES_KIT at a clone. Without it the badges keep their last rendering,
     which is a stale number rather than a broken image.
     """
-    kit = os.environ.get("EMBLEMS_KIT", ".emblems/src/badge-kit.py")
+    kit = os.environ.get("BADGES_KIT", ".badges/src/badge-kit.py")
     if not Path(kit).exists():
-        print(f"::warning::emblems kit not found at {kit}; badges left as they are.")
+        print(f"::warning::badges kit not found at {kit}; badges left as they are.")
         return
     result = subprocess.run(
         [

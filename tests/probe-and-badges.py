@@ -19,7 +19,7 @@ import sources
 import support
 
 ROOT = Path(__file__).resolve().parents[1]
-KIT = Path(os.environ.get("EMBLEMS_KIT", ".emblems/src/badge-kit.py"))
+KIT = Path(os.environ.get("BADGES_KIT", ".badges/src/badge-kit.py"))
 
 
 def good(ledger, today):
@@ -114,9 +114,9 @@ def test_a_catalogue_that_raises_fails_the_probe_rather_than_going_unnoticed(rep
 @pytest.fixture
 def badge_repo(repo, monkeypatch):
     if not KIT.is_absolute() and not (ROOT / KIT).exists() and not KIT.exists():
-        pytest.skip("the emblems kit is not checked out; set EMBLEMS_KIT")
+        pytest.skip("the badges kit is not checked out; set BADGES_KIT")
     kit = KIT if KIT.is_absolute() else (ROOT / KIT)
-    monkeypatch.setenv("EMBLEMS_KIT", str(kit))
+    monkeypatch.setenv("BADGES_KIT", str(kit))
     (repo / ".github").mkdir()
     shutil.copy(ROOT / ".github" / "badges.yml", repo / ".github" / "badges.yml")
     subprocess.run(["git", "init", "--quiet", "-b", "Development"], check=True)

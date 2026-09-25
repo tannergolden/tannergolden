@@ -602,7 +602,7 @@ def load_availability() -> str:
 
 
 def availability_badge_set(state: str) -> str:
-    """The `--set` argument the emblems kit takes for this badge."""
+    """The `--set` argument the badges kit takes for this badge."""
     message, colour = AVAILABILITY[state]
     return f"availability={message}:{colour}"
 

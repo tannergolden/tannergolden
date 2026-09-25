@@ -69,8 +69,8 @@ def test_every_writing_workflow_checks_out_the_badge_kit():
     root = Path(__file__).resolve().parent.parent
     for name in ("dispatches.yml", "availability.yml"):
         text = (root / ".github/workflows" / name).read_text(encoding="utf-8")
-        assert "repository: tannergolden/emblems" in text, name
-        assert "EMBLEMS_KIT:" in text, name
+        assert "repository: tannergolden/badges" in text, name
+        assert "BADGES_KIT:" in text, name
 
 
 def test_the_documented_egress_is_what_the_code_actually_fetches():

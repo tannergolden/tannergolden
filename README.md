@@ -243,7 +243,7 @@ Click any card to read what it is for and how it is earned.
 | [`standards`](https://github.com/tannergolden/standards)       | Reusable workflows and the documented standards they enforce                          |
 | [`path`](https://github.com/tannergolden/path)                 | Repository template: structure, health files and wiring, already decided              |
 | [`intelligence`](https://github.com/tannergolden/intelligence) | Agent instructions, published once and pinned rather than pasted into each repository |
-| [`emblems`](https://github.com/tannergolden/emblems)           | Badges a repository draws for itself, so no README depends on an image service        |
+| [`badges`](https://github.com/tannergolden/badges)           | Badges a repository draws for itself, so no README depends on an image service        |
 | [`trophies`](https://github.com/tannergolden/trophies)         | Trophies a profile or repository earns for itself, measured nightly, never fetched    |
 | [`.github`](https://github.com/tannergolden/.github)           | Default community health files for repositories that do not ship their own            |
 | [`dotfiles`](https://github.com/tannergolden/dotfiles)         | Shell, editor, and toolchain configuration, installed the same way everywhere         |

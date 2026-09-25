@@ -12,7 +12,7 @@
 
 RUFF_VERSION ?= 0.15.8
 PYTEST_VERSION ?= 9.1.1
-EMBLEMS_KIT ?= .emblems/src/badge-kit.py
+BADGES_KIT ?= .badges/src/badge-kit.py
 
 .PHONY: help setup lint lint-fix test check render badges
 
@@ -39,5 +39,5 @@ check: ## Verify README.md still carries every machine-owned region
 render: ## Re-render the page from committed state, without the network
 	python3 src/dispatches.py --mode render
 
-badges: ## Render .github/badges.yml into committed SVGs via the emblems kit
-	python3 $(EMBLEMS_KIT) --root . --data .github/badges.yml --out assets/badges
+badges: ## Render .github/badges.yml into committed SVGs via the badges kit
+	python3 $(BADGES_KIT) --root . --data .github/badges.yml --out assets/badges

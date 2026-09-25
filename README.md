@@ -79,12 +79,12 @@ Click any card to read what it is for and how it is earned.
 <!-- trophies:start -->
 
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 24, 9,654 XP, case 37% complete, 6-day streak"></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Early Bird I 94%, Generous 94%, Longest Streak to Bronze 85%"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 24, 9,657 XP, case 37% complete, 6-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Early Bird I 96%, Generous 94%, Longest Streak to Bronze 85%"></picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 899, 26% to Gold, top 14%, newly reached"></picture></a>
+  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 909, 27% to Gold, top 14%, newly reached"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-pulls"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/pulls.svg"><img src="assets/trophies/pulls-day.svg" alt="Pull Requests trophy: Unranked, 2, 40% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-reviews"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/reviews.svg"><img src="assets/trophies/reviews-day.svg" alt="Reviews trophy: Unranked, 0, 0% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-issues"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/issues.svg"><img src="assets/trophies/issues-day.svg" alt="Issues trophy: Unranked, 0, 0% to Bronze"></picture></a>
@@ -95,7 +95,7 @@ Click any card to read what it is for and how it is earned.
 </p>
 
 <details>
-<summary><b>Achievements</b> · 40 of 104 earned · next: Early Bird I, 94%</summary>
+<summary><b>Achievements</b> · 40 of 104 earned · next: Early Bird I, 96%</summary>
 
 <p align="center"><b>Milestones</b></p>
 <p align="center">
@@ -124,9 +124,9 @@ Click any card to read what it is for and how it is earned.
 
 <p align="center"><b>Craft</b></p>
 <p align="center">
-  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 83% to By the Book II"></picture></a>
+  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 85% to By the Book II"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 40% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 47% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 19% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-toolsmith"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/toolsmith.svg"><img src="assets/trophies/achievements/toolsmith-day.svg" alt="Toolsmith: earned, Rare"></picture></a>
@@ -147,9 +147,9 @@ Click any card to read what it is for and how it is earned.
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-big-week"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/big-week.svg"><img src="assets/trophies/achievements/big-week-day.svg" alt="Big Week: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-night-owl"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/night-owl.svg"><img src="assets/trophies/achievements/night-owl-day.svg" alt="Night Owl I: earned, Uncommon, 22% to Night Owl II"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-comeback"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/comeback.svg"><img src="assets/trophies/achievements/comeback-day.svg" alt="Comeback: earned, Common"></picture></a>
-  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-early-bird"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/early-bird.svg"><img src="assets/trophies/achievements/early-bird-day.svg" alt="Early Bird: 94% (47 of 50)"></picture></a>
+  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-early-bird"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/early-bird.svg"><img src="assets/trophies/achievements/early-bird-day.svg" alt="Early Bird: 96% (48 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-long-game"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/long-game.svg"><img src="assets/trophies/achievements/long-game-day.svg" alt="Long Game: 66% (2 of 3)"></picture></a>
-  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 24% (12 of 50)"></picture></a>
+  <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 26% (13 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-weekender"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekender.svg"><img src="assets/trophies/achievements/weekender-day.svg" alt="Weekender: 7% (2 of 26)"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-weekday-warrior"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekday-warrior.svg"><img src="assets/trophies/achievements/weekday-warrior-day.svg" alt="Weekday Warrior: 5% (10 of 200)"></picture></a>
   <a href="https://github.com/tannergolden/trophies/blob/HEAD/docs/Catalogue.md#profile-year-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/year-of-code.svg"><img src="assets/trophies/achievements/year-of-code-day.svg" alt="Year of Code: 4% (14 of 300)"></picture></a>

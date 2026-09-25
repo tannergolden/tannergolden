@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=45f4619a">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=345a8149">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=3686aba1">
-  <img alt="👋🏻 Hello World! / 🪄 No hidden state in the build / 📮 A fix that arrives tested / 📊 Runs you can defend later / 🪞 Review before anyone asks / 🧾 A failure that says what broke / ⛓️ A rule that cannot drift / 💬 Code that reads as prose / 🔔 Alert only when it cannot wait / 🧪 Gates that nobody can skip / 🪵 The failure in one line / 🏗️ Leave the boring way easy / 🛠️ Fix the root, not the ticket" src="assets/masthead-light.svg?v=90009e79">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=67e9642f">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=584ae928">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=f1101c16">
+  <img alt="👋🏻 Hello World! / 💡 The intent obvious in the name / 🔭 Work another team can check / 📌 Bound to a lockfile, not a tag / 🌱 Nothing here ages badly / 🛟 A way back when it goes wrong / 🔐 Default to least access, always / 📉 One fewer thing to remember / 🧹 Automating what people forget / 🔍 Logs you can actually trust / ✂️ Cutting more than I add / 🧮 Latency measured, not assumed / 🚦 A red test means nobody merges" src="assets/masthead-light.svg?v=90faf5dd">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -278,7 +278,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 07:16 EDT on Friday, September 25, 2026.
+Last updated 08:12 EDT on Friday, September 25, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

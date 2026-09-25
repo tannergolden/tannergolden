@@ -41,7 +41,7 @@ category: profile
 ## 📡 Dispatch
 
 <!-- DISPATCHES:BEGIN -->
-### Thursday, September 24, 2026
+### Friday, September 25, 2026
 
 [![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
 
@@ -56,12 +56,12 @@ category: profile
 
 <!-- MODULES:BEGIN -->
 > [!TIP]
-> **brew leaves** · List installed formulas that are not dependencies of another installed formula or cask. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/brew-leaves.md)
+> **gh agent-task** · Manage GitHub agent tasks. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/gh-agent-task.md)
 >
-> Only list leaves that were installed as dependencies:
+> Create a new agent task for the current repository:
 >
 > ```bash
-> brew leaves --installed-as-dependency
+> gh <[agent|agent-task]> create "<Improve the performance of the data processing pipeline>"
 > ```
 <!-- MODULES:END -->
 
@@ -278,7 +278,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 17:48 EDT on Thursday, September 24, 2026.
+Last updated 07:16 EDT on Friday, September 25, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

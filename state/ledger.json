@@ -17,6 +17,7 @@
     "biber",
     "brew-leaves",
     "docker-compose-down",
+    "gh-agent-task",
     "lighthouse",
     "sed"
   ]

@@ -1,10 +1,10 @@
 {
   "tip": {
-    "id": "brew-leaves",
-    "command": "brew leaves",
-    "summary": "List installed formulas that are not dependencies of another installed formula or cask.",
-    "description": "Only list leaves that were installed as dependencies",
-    "example": "brew leaves --installed-as-dependency",
-    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/brew-leaves.md"
+    "id": "gh-agent-task",
+    "command": "gh agent-task",
+    "summary": "Manage GitHub agent tasks.",
+    "description": "Create a new agent task for the current repository",
+    "example": "gh <[agent|agent-task]> create \"<Improve the performance of the data processing pipeline>\"",
+    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/gh-agent-task.md"
   }
 }

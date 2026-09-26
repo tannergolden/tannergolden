@@ -14,10 +14,10 @@ category: profile
 <!-- MASTHEAD:BEGIN -->
 <picture>
   <source media="(max-width: 498px)" srcset="assets/masthead-blank.svg?v=a2358fd2">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=6a1d0077">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=a992b50f">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=b28d60c6">
-  <img alt="👋🏻 Hello World! / 🔬 Claims that survive a rerun / 💤 Builds that wait until morning / 🏗️ Keep the safe way easy / 🧰 Conventions I would pick again / 🏷️ Every build carries a version / 🎯 Covers exactly what was asked / 🪞 Lint before the pager rings / 🪵 The context in one place / 🧯 A fix without a heroic night / 📊 Numbers you can rerun later / 📖 Standards nobody can ignore / 🪄 No surprises in the build" src="assets/masthead-light.svg?v=d05c0388">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/masthead-still-dark.svg?v=94b58675">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/masthead-still-light.svg?v=aeea1ed7">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/masthead-dark.svg?v=617ad723">
+  <img alt="👋🏻 Hello World! / 📮 A release that arrives tested / 🗺️ Set up with one command / 🌱 Nothing here ages silently / 🧩 Repos that fit together / 📦 Deciding the exception once / 💡 The intent obvious in the log / 🔔 Notify only when it is real / ⛓️ A gate that cannot drift / 🧹 Simplifying what people forget / 🔍 Metrics you can actually grep / 🧪 Gates that earn their runtime / 📉 One fewer step to remember" src="assets/masthead-light.svg?v=d90c73f3">
 </picture>
 <!-- MASTHEAD:END -->
 
@@ -288,7 +288,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 05:10 EDT on Saturday, September 26, 2026.
+Last updated 07:46 EDT on Saturday, September 26, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

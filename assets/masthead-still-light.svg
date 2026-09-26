@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="455" height="134" viewBox="0 0 455 134" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" width="443" height="134" viewBox="0 0 443 134" role="img" aria-labelledby="t d">
 <title id="t">A terminal, and what it has been typing</title>
-<desc id="d">👋🏻 Hello World! / 🔬 Claims that survive a rerun / 💤 Builds that wait until morning / 🏗️ Keep the safe way easy / 🧰 Conventions I would pick again / 🏷️ Every build carries a version / 🎯 Covers exactly what was asked / 🪞 Lint before the pager rings / 🪵 The context in one place / 🧯 A fix without a heroic night / 📊 Numbers you can rerun later / 📖 Standards nobody can ignore / 🪄 No surprises in the build</desc>
+<desc id="d">👋🏻 Hello World! / 📮 A release that arrives tested / 🗺️ Set up with one command / 🌱 Nothing here ages silently / 🧩 Repos that fit together / 📦 Deciding the exception once / 💡 The intent obvious in the log / 🔔 Notify only when it is real / ⛓️ A gate that cannot drift / 🧹 Simplifying what people forget / 🔍 Metrics you can actually grep / 🧪 Gates that earn their runtime / 📉 One fewer step to remember</desc>
 <style>text{font-family:ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Mono', 'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace;font-size:20px;fill:#067d17;white-space:pre;font-variant-ligatures:none;font-kerning:none;text-rendering:geometricPrecision}.p{opacity:0.72}</style>
 <g>
 <text x="16" y="29"><tspan class="p">❯</tspan> 👋🏻 Hello World!</text>
-<text x="16" y="58"><tspan class="p">❯</tspan> 🔬 Claims that survive a rerun</text>
-<text x="16" y="87"><tspan class="p">❯</tspan> 💤 Builds that wait until morning</text>
-<text x="16" y="116"><tspan class="p">❯</tspan> 🏗️ Keep the safe way easy</text>
+<text x="16" y="58"><tspan class="p">❯</tspan> 📮 A release that arrives tested</text>
+<text x="16" y="87"><tspan class="p">❯</tspan> 🗺️ Set up with one command</text>
+<text x="16" y="116"><tspan class="p">❯</tspan> 🌱 Nothing here ages silently</text>
 </g></svg>

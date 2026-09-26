@@ -1,10 +1,10 @@
 {
   "tip": {
-    "id": "bun-create",
-    "command": "bun create",
-    "summary": "Create a new project from a template.",
-    "description": "Create a new project, overwriting the destination directory if it exists",
-    "example": "bun <[c|create]> <template> <path/to/destination> --force",
-    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/bun-create.md"
+    "id": "bunx",
+    "command": "bunx",
+    "summary": "Execute a package binary (installed locally or fetched remotely).",
+    "description": "Execute a binary that has a different name than its package",
+    "example": "bunx --package <package_name> <command>",
+    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/bunx.md"
   }
 }

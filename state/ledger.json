@@ -26,6 +26,7 @@
     "biber",
     "brew-leaves",
     "bun-create",
+    "bunx",
     "docker-compose-down",
     "gh-agent-task",
     "lighthouse",

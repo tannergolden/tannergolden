@@ -67,12 +67,12 @@ category: profile
 
 <!-- MODULES:BEGIN -->
 > [!TIP]
-> **bun create** · Create a new project from a template. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/bun-create.md)
+> **bunx** · Execute a package binary (installed locally or fetched remotely). · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/bunx.md)
 >
-> Create a new project, overwriting the destination directory if it exists:
+> Execute a binary that has a different name than its package:
 >
 > ```bash
-> bun <[c|create]> <template> <path/to/destination> --force
+> bunx --package <package_name> <command>
 > ```
 <!-- MODULES:END -->
 
@@ -289,7 +289,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 10:09 EDT on Saturday, September 26, 2026.
+Last updated 14:21 EDT on Saturday, September 26, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

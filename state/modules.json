@@ -1,10 +1,10 @@
 {
   "tip": {
-    "id": "gh-agent-task",
-    "command": "gh agent-task",
-    "summary": "Manage GitHub agent tasks.",
-    "description": "Create a new agent task for the current repository",
-    "example": "gh <[agent|agent-task]> create \"<Improve the performance of the data processing pipeline>\"",
-    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/gh-agent-task.md"
+    "id": "bun-create",
+    "command": "bun create",
+    "summary": "Create a new project from a template.",
+    "description": "Create a new project, overwriting the destination directory if it exists",
+    "example": "bun <[c|create]> <template> <path/to/destination> --force",
+    "url": "https://github.com/tldr-pages/tldr/blob/main/pages/common/bun-create.md"
   }
 }

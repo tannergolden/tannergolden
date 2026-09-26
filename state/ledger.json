@@ -21,6 +21,7 @@
   "tip": [
     "biber",
     "brew-leaves",
+    "bun-create",
     "docker-compose-down",
     "gh-agent-task",
     "lighthouse",

@@ -24,8 +24,8 @@
     "product": "linux",
     "url": "https://endoflife.date/linux",
     "cycle": "7.2",
-    "latest": "7.2.7",
-    "released": "2026-09-21",
+    "latest": "7.2.8",
+    "released": "2026-09-25",
     "ends": null,
     "forever": true
   },

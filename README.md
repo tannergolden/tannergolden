@@ -66,12 +66,12 @@ category: profile
 
 <!-- MODULES:BEGIN -->
 > [!TIP]
-> **gh agent-task** · Manage GitHub agent tasks. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/gh-agent-task.md)
+> **bun create** · Create a new project from a template. · [tldr](https://github.com/tldr-pages/tldr/blob/main/pages/common/bun-create.md)
 >
-> Create a new agent task for the current repository:
+> Create a new project, overwriting the destination directory if it exists:
 >
 > ```bash
-> gh <[agent|agent-task]> create "<Improve the performance of the data processing pipeline>"
+> bun <[c|create]> <template> <path/to/destination> --force
 > ```
 <!-- MODULES:END -->
 
@@ -278,7 +278,7 @@ Click any card to read what it is for and how it is earned.
 | :--- | :--- | :--- | :--- |
 | [macOS](https://endoflife.date/macos) | `27` | `27.0` | 🟢 No end announced |
 | [Windows](https://endoflife.date/windows) | `11 26H1` | `10.0.28000` | 🟢 March 14, 2028 · 18 months left |
-| [Linux kernel](https://endoflife.date/linux) | `7.2` | `7.2.7` | 🟢 No end announced |
+| [Linux kernel](https://endoflife.date/linux) | `7.2` | `7.2.8` | 🟢 No end announced |
 | [Python](https://endoflife.date/python) | `3.14` | `3.14.7` | 🟢 October 31, 2030 · 4 years left |
 | [Node.js](https://endoflife.date/nodejs) | `26` | `26.10.0` | 🟢 April 30, 2029 · 3 years left |
 

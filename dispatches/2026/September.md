@@ -77,3 +77,17 @@ operations. By David Chase and Junyang Shao.
 _[The Go Blog](https://go.dev/blog/simd-experiment) · by David Chase and Junyang Shao · Headline, summary and link, reported as fact_
 
 ---
+## Saturday, September 26, 2026
+
+<a name="dispatch-20260926-051004"></a>
+
+### ✨ drumih/turbo-fieldfare
+
+`feat(trending)` · 05:10 EDT
+
+6824 stars since it appeared 70 days ago. Gemma 4 26B-A4B inference in
+~2 GB of RAM on any M-series MacBook. Written in Swift.
+
+_[GitHub](https://github.com/drumih/turbo-fieldfare) · Repository metadata, reported as fact_
+
+---

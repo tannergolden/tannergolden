@@ -91,3 +91,17 @@ _[The Go Blog](https://go.dev/blog/simd-experiment) · by David Chase and Junyan
 _[GitHub](https://github.com/drumih/turbo-fieldfare) · Repository metadata, reported as fact_
 
 ---
+<a name="dispatch-20260926-100947"></a>
+
+### 📚 AI Bug Fixes, Crescent Island Power Brake & Nouveau Fixes For Linux 7.3-rc5 DRM
+
+`docs(phoronix)` · 10:09 EDT
+
+From Phoronix, today. The Direct Rendering Manager (DRM) subsystem fixes
+for the week are heavier on the side with many fixes to these kernel
+graphics/display drivers ahead of Sunday's Linux 7.3-rc5 release... By
+Michael Larabel.
+
+_[Phoronix](https://www.phoronix.com/news/Linux-7.3-rc5-DRM) · by Michael Larabel · Headline, summary and link, reported as fact_
+
+---

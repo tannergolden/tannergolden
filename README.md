@@ -43,15 +43,24 @@ category: profile
 <!-- DISPATCHES:BEGIN -->
 ### Friday, September 25, 2026
 
-[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=b5435749)](dispatches/2026/September.md)
+[![Dispatch workflow status](assets/badges/dynamic/dispatches.svg?v=10a98963)](https://github.com/tannergolden/tannergolden/actions/workflows/dispatches.yml) [![Dispatches this month](assets/badges/dynamic/month.svg?v=8d09e8be)](dispatches/2026/September.md)
 
 | Time | Commit | Dispatch |
 | :--- | :--- | :--- |
+| 23:46 | `feat(golang)` | [Platform-independent SIMD in Go](dispatches/2026/September.md#dispatch-20260925-234637) |
 | Sep 23, 21:07 | `docs(npr)` | [Understanding Jensen Huang's AI optimism and how it influences President Trump](dispatches/2026/September.md#dispatch-20260923-210732) |
 | Sep 23, 18:05 | `docs(lobsters)` | [Abandoning Scientific Linux Was a Mistake](dispatches/2026/September.md#dispatch-20260923-180518) |
+
+<details>
+<summary>Earlier News</summary>
+
+| Time | Commit | Dispatch |
+| :--- | :--- | :--- |
 | Sep 23, 05:35 | `feat(node)` | [Node.js 26.10.0 (Current)](dispatches/2026/September.md#dispatch-20260923-053543) |
 
-[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 3 in September
+</details>
+
+[All dispatches](dispatches/) · [How it works](How-It-Works.md) · 4 in September
 <!-- DISPATCHES:END -->
 
 <!-- MODULES:BEGIN -->
@@ -278,7 +287,7 @@ Click any card to read what it is for and how it is earned.
 ---
 
 <!-- UPDATED:BEGIN -->
-Last updated 17:49 EDT on Friday, September 25, 2026.
+Last updated 23:46 EDT on Friday, September 25, 2026.
 <!-- UPDATED:END -->
 
 <div align="center">

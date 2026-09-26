@@ -61,3 +61,19 @@ of AI. By Connor Donevan.
 _[NPR Technology](https://www.npr.org/2026/09/23/nx-s1-5976775/understanding-jensen-huangs-ai-optimism-and-how-it-influences-president-trump) · by Connor Donevan · Headline, summary and link, reported as fact_
 
 ---
+## Friday, September 25, 2026
+
+<a name="dispatch-20260925-234637"></a>
+
+### ✨ Platform-independent SIMD in Go
+
+`feat(golang)` · 23:46 EDT
+
+From The Go Blog, 2 days ago. The Go Blog Platform-independent SIMD in
+Go David Chase and Junyang Shao 24 September 2026 Go 1.26 and 1.27
+include experimental APIs for Single Instruction Multiple Data (SIMD)
+operations. By David Chase and Junyang Shao.
+
+_[The Go Blog](https://go.dev/blog/simd-experiment) · by David Chase and Junyang Shao · Headline, summary and link, reported as fact_
+
+---

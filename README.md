@@ -286,7 +286,7 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **Intermediate · TypeScript.** Under `strict`, the variable in `catch (err)` has type `unknown`, because JavaScript code can throw any value, not just `Error` objects, so it must be narrowed before `err.message` is read.
+> **GitHub changelog · 24 Sep.** [Default Enablement of Copilot features for Copilot Business and Enterprise](https://github.blog/changelog/2026-09-24-default-enablement-of-copilot-features-for-copilot-business-and-enterprise)
 
 > [!TIP]
 > **Advanced · Regex.** GNU `sed` can change case in a replacement: `sed -E 's/\b(.)/\u\1/g'` capitalizes every word, and `\U` up to `\E` uppercases a whole span. The BSD `sed` on macOS lacks these escapes, so such scripts aren't portable.
@@ -300,7 +300,7 @@ release. Redrawn every Wednesday.
 > [!CAUTION]
 > **Intermediate · Databases.** Copying a SQLite database with `cp` while the app is writing can produce a corrupt copy, and recent commits may still sit in the `-wal` file. Use the `sqlite3` shell's `.backup` command or `VACUUM INTO` instead.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 39 of 2026.</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 39 of 2026. Open data this week: GitHub changelog.</sub>
 
 <!-- notes:end -->
 

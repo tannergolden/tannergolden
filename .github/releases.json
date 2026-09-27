@@ -7,7 +7,7 @@
    "name": "banners",
    "icon": "package",
    "link": "https://github.com/tannergolden/banners/releases/tag/v1.7.0",
-   "desc": "Blueprint headers, footers and body elements a README draws for itself.",
+   "desc": "Blueprint headers and footers a README draws for itself. Measured nightly, never fetched, so they are up for as long as GitHub is.",
    "cells": [
     [
      "Release",

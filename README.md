@@ -264,7 +264,7 @@ release. Redrawn every Wednesday.
 <a href="https://github.com/tannergolden/banners/releases/tag/v1.7.0">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/releases/release-1-dark.svg">
-  <img alt="tannergolden/banners. Blueprint headers, footers and body elements a README draws for itself." src="assets/releases/release-1-day.svg">
+  <img alt="tannergolden/banners. Blueprint headers and footers a README draws for itself. Measured nightly, never fetched, so they are up for as long as GitHub is." src="assets/releases/release-1-day.svg">
 </picture>
 </a>
 <!-- elements:release-1:end -->

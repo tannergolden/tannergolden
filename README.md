@@ -327,7 +327,7 @@ release. Redrawn every Wednesday.
 </a>
 <!-- elements:issue-2:end -->
 
-<sub>The newest good first issue from each of the two most-starred projects that opened one this week, still open and unclaimed. Redrawn every Friday.</sub>
+<sub>The newest good first issue from each of the two most-starred projects that opened one lately, still open and unclaimed. Redrawn every Friday.</sub>
 
 </div>
 

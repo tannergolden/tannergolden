@@ -1,0 +1,49 @@
+{
+ "print": "rainbowprint",
+ "elements": {
+  "issue-1": {
+   "kind": "placard",
+   "owner": "example",
+   "name": "project",
+   "icon": "flag",
+   "link": "https://github.com/search?q=label%3A%22good+first+issue%22+is%3Aissue+is%3Aopen+no%3Aassignee&type=issues&s=created&o=desc",
+   "desc": "#1: Sample issue, shown until the workflow's first Friday draws a real one.",
+   "cells": [
+    [
+     "Stars",
+     "48.2K"
+    ],
+    [
+     "Language",
+     "PYTHON"
+    ],
+    [
+     "Opened",
+     "25 SEP"
+    ]
+   ]
+  },
+  "issue-2": {
+   "kind": "placard",
+   "owner": "example",
+   "name": "another-project",
+   "icon": "flag",
+   "link": "https://github.com/search?q=label%3A%22good+first+issue%22+is%3Aissue+is%3Aopen+no%3Aassignee&type=issues&s=created&o=desc",
+   "desc": "#2: Sample issue: the second most-starred project's newest one sits here.",
+   "cells": [
+    [
+     "Stars",
+     "12.3K"
+    ],
+    [
+     "Language",
+     "TYPESCRIPT"
+    ],
+    [
+     "Opened",
+     "26 SEP"
+    ]
+   ]
+  }
+ }
+}

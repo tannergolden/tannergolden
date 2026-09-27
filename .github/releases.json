@@ -1,0 +1,49 @@
+{
+ "print": "rainbowprint",
+ "elements": {
+  "release-1": {
+   "kind": "placard",
+   "owner": "tannergolden",
+   "name": "banners",
+   "icon": "package",
+   "link": "https://github.com/tannergolden/banners/releases/tag/v1.7.0",
+   "desc": "Blueprint headers, footers and body elements a README draws for itself.",
+   "cells": [
+    [
+     "Release",
+     "V1.7.0"
+    ],
+    [
+     "Published",
+     "27 SEP"
+    ],
+    [
+     "Pinned as",
+     "@V1"
+    ]
+   ]
+  },
+  "release-2": {
+   "kind": "placard",
+   "owner": "tannergolden",
+   "name": "standards",
+   "icon": "package",
+   "link": "https://github.com/tannergolden/standards/releases/tag/v1.9.1",
+   "desc": "Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain.",
+   "cells": [
+    [
+     "Release",
+     "V1.9.1"
+    ],
+    [
+     "Published",
+     "26 SEP"
+    ],
+    [
+     "Pinned as",
+     "@V1"
+    ]
+   ]
+  }
+ }
+}

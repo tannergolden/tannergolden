@@ -13,7 +13,7 @@ linked to an open pull request. The two most-starred projects with such an
 issue each give their newest one; a quiet week looks back a month. One
 search and a few queries: searching each project's issues instead runs
 into search's secondary rate limits within a minute. It writes them as two placards for the elements kit
-(tannergolden/banners/elements), which draws them in the blueprint print
+(tannergolden/banners/elements), which draws them in the page's one theme
 and fills the README's elements:issue-1 and elements:issue-2 blocks.
 
 If GitHub cannot be reached, or nothing qualifies, last week's placards
@@ -34,7 +34,7 @@ import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 
-from placards import API, EST, LETTERS, PRINT, Fetch, day, dump, eastern, fetch_url, github, graphql, letterable, sentence, write  # noqa: F401
+from placards import API, EST, LETTERS, Fetch, day, dump, eastern, fetch_url, github, graphql, letterable, sentence, write  # noqa: F401
 
 LABEL = "good first issue"
 SLOTS = ("issue-1", "issue-2")  # the README's element blocks, left to right
@@ -194,7 +194,7 @@ def document(picks: list[Pick]) -> dict:
     cards = [placard(p) for p in picks[:len(SLOTS)]]
     if len(cards) < len(SLOTS):
         cards.append(browse())
-    return {"print": PRINT, "elements": dict(zip(SLOTS, cards))}
+    return {"elements": dict(zip(SLOTS, cards))}
 
 
 def main(argv: list[str] | None = None, fetch: Fetch = fetch_url) -> int:

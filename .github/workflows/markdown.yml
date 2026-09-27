@@ -2,6 +2,10 @@ name: Markdown
 
 # Each kit's slot is an hour the README can name in EST (UTC-5): cron runs in UTC, so
 # 05:00, 13:00 and 21:00 UTC are 00:00, 08:00 and 16:00 EST.
+#
+# `theme` is the page's one theme: the header and footer, the badges and the elements are
+# all drawn in it, and Health and Elements read it from here too. Change it here and
+# nowhere else; the page takes it on the next run.
 on:
   schedule:
     - cron: '0 5 * * *'
@@ -22,4 +26,5 @@ jobs:
       badges: '0 13 * * *'   # 08:00 EST
       trophies: '0 21 * * *' # 16:00 EST
       mode: profile
+      theme: blackprint      # the page's one theme
       elements: false

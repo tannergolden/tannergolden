@@ -1,6 +1,6 @@
 # The badges under the header, rendered by tannergolden/badges into
 # assets/badges/. The static row is the conventional four, as plates in the
-# print the banners are drawn in, the blackprint. The live row is two gold
+# page's one theme, which .github/workflows/markdown.yml names. The live row is two gold
 # plates whose values .github/workflows/health.yml measures and sets, so
 # either can go yellow or red. Fields: tannergolden/badges/docs/badges.example.yml.
 
@@ -10,28 +10,24 @@ badges:
     message: Active
     icon: pulse
     style: blueprint-for-the-badge
-    print: blackprint
     link: ./
   - name: role
     label: Role
     message: Profile
     icon: home
     style: blueprint-for-the-badge
-    print: blackprint
     link: ./
   - name: context
     label: Context
     message: AI Infrastructure
     icon: chip
     style: blueprint-for-the-badge
-    print: blackprint
     link: ./
   - name: license
     label: License
     message: MIT
     icon: scale
     style: blueprint-for-the-badge
-    print: blackprint
     link: ./LICENSE
 
   - name: standards-ci

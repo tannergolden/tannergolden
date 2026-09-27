@@ -2,9 +2,8 @@
 # and every figure are read from GitHub on each run; only what is written
 # here is fixed. Every key and its default: tannergolden/banners/examples/banners.yml.
 mode: profile
-# blackprint: the page's one print. The badges and the elements name the
-# same print, so the header, the body and the footer match.
-theme: blackprint
+# The print is the page's one theme, named in .github/workflows/markdown.yml,
+# so the header, the badges, the body and the footer always match.
 motto: Built to be rebuilt.
 # More general notes, numbered after the motto: the second says how to read
 # every time on the page.

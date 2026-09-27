@@ -8,7 +8,7 @@
 Every Wednesday it lists the account's public repositories, leaving out forks
 and archived ones, and reads each one's latest release from GitHub's API.
 The two published most recently become two placards for the elements kit
-(tannergolden/banners/elements), which draws them in the page's print and
+(tannergolden/banners/elements), which draws them in the page's one theme and
 fills the README's elements:release-1 and elements:release-2 blocks. Each
 shows the version, the day it shipped and the major tag a stub pins, and
 links to its release notes. The account prunes superseded releases, so the
@@ -29,7 +29,7 @@ import urllib.error
 from dataclasses import dataclass
 from pathlib import Path
 
-from placards import LETTERS, PRINT, Fetch, day, eastern, fetch_url, github, letterable, sentence, write
+from placards import LETTERS, Fetch, day, eastern, fetch_url, github, letterable, sentence, write
 
 OWNER = "tannergolden"
 SLOTS = ("release-1", "release-2")  # the README's element blocks, left to right
@@ -126,7 +126,7 @@ def placard(r: Release) -> dict:
 
 
 def document(releases: list[Release]) -> dict:
-    return {"print": PRINT, "elements": dict(zip(SLOTS, (placard(r) for r in releases)))}
+    return {"elements": dict(zip(SLOTS, (placard(r) for r in releases)))}
 
 
 def main(argv: list[str] | None = None, fetch: Fetch = fetch_url) -> int:

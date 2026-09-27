@@ -125,10 +125,10 @@ class Data(unittest.TestCase):
     def run_main(self, fake: Fake) -> None:
         releases.main([str(self.data), "--owner", "me"], fetch=fake)
 
-    def test_the_data_file_names_the_page_print_and_both_slots(self):
+    def test_the_data_file_names_both_slots_and_leaves_the_print_to_the_stub(self):
         self.run_main(self.fake)
         doc = json.loads(self.data.read_text(encoding="utf-8"))
-        self.assertEqual(doc["print"], "blackprint")
+        self.assertNotIn("print", doc, "the Elements workflow draws them in the stub's theme")
         self.assertEqual(list(doc["elements"]), ["release-1", "release-2"])
 
     def test_an_unreachable_github_keeps_last_weeks_placards(self):

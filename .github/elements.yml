@@ -4,7 +4,7 @@
 # field: tannergolden/banners/docs/Elements-Kit.md. The kit lays the boxes out
 # from the wires, so a wire that skips a column would run through a box: the
 # kits' hours, in EST, sit on their boxes rather than on wires from Markdown.
-print: blackprint
+# The print is the page's one theme, named in .github/workflows/markdown.yml.
 subject: tannergolden
 elements:
   how-it-fits:
@@ -12,8 +12,8 @@ elements:
     title: Schematic of tannergolden
     desc: 'Standards holds the rules and the reusable workflows every repository calls at v1, and the Golden Path template
       follows them by link, so every new repository starts from it. A repository adds one Markdown stub, which runs the kits
-      that draw this page: the header and footer at 00:00, the badges at 08:00 and the trophies at 16:00 EST. The header sets
-      the page''s print, the blackprint, and the badges, the schematic and the placards match it.'
+      that draw this page: the header and footer at 00:00, the badges at 08:00 and the trophies at 16:00 EST. The stub names
+      the page''s one theme, the blackprint, and the header, the badges, the schematic and the placards are all drawn in it.'
     caption: HOW IT FITS TOGETHER  ·  TIMES IN EST  ·  NOT TO SCALE
     groups:
       page: THIS README  ·  EVERY IMAGE DRAWN, NEVER FETCHED

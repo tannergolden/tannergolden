@@ -1,7 +1,7 @@
 name: Elements
 
 # Draws the README's elements with the banners' elements kit, all in the
-# page's blackprint: the schematic under About Me (.github/elements.yml),
+# page's one theme, which the Markdown stub names: the schematic under About Me (.github/elements.yml),
 # the two latest-release placards (.github/releases.json) and the two good
 # first issue placards (.github/good-first-issue.json). It runs after every
 # Markdown run, so the drawings keep up with the kit that run used; a run
@@ -48,6 +48,13 @@ jobs:
         run: |
           python3 -m unittest discover -s .github/scripts -p 'test_issue.py'
           python3 -m unittest discover -s .github/scripts -p 'test_releases.py'
+          python3 -m unittest discover -s .github/scripts -p 'test_theme.py'
+
+      # The page's one theme, named in the Markdown stub: this run draws with the same kits as
+      # Markdown does, so it reads the theme from there rather than keep a copy.
+      - name: '🎨 Read the page''s theme'
+        id: theme
+        run: echo "theme=$(python3 .github/scripts/theme.py .github/workflows/markdown.yml)" >> "$GITHUB_OUTPUT"
 
       # Each pick runs on its own day's schedule, and on a manual run; following the colour and a
       # schematic edit just redraw.
@@ -68,6 +75,7 @@ jobs:
         with:
           mode: render
           data: .github/elements.yml
+          theme: ${{ steps.theme.outputs.theme }}
 
       # Each data file draws into its own folder: a render prunes drawings its data file does not name.
       - name: '📐 Draw the release placards'
@@ -77,6 +85,7 @@ jobs:
           mode: render
           data: .github/releases.json
           out: assets/releases
+          theme: ${{ steps.theme.outputs.theme }}
 
       - name: '📐 Draw the issue placards'
         if: hashFiles('.github/good-first-issue.json') != ''
@@ -85,6 +94,7 @@ jobs:
           mode: render
           data: .github/good-first-issue.json
           out: assets/issues
+          theme: ${{ steps.theme.outputs.theme }}
 
       - name: '💾 Commit when a drawing moved'
         shell: bash

@@ -25,6 +25,12 @@ jobs:
         with:
           persist-credentials: true # zizmor: ignore[artipacked] - the badges action commits and pushes what it redrew, and nothing else runs after it.
 
+      # The page's one theme, named in the Markdown stub: this run redraws the badges as
+      # Markdown does, so it reads the theme from there rather than keep a copy.
+      - name: '🎨 Read the page''s theme'
+        id: theme
+        run: echo "theme=$(python3 .github/scripts/theme.py .github/workflows/markdown.yml)" >> "$GITHUB_OUTPUT"
+
       - name: '📏 Measure'
         id: measure
         shell: bash
@@ -62,4 +68,5 @@ jobs:
         uses: tannergolden/badges@v1 # zizmor: ignore[unpinned-uses] - first-party action on its moving major, the way every stub calls it.
         with:
           set: ${{ steps.measure.outputs.set }}
+          theme: ${{ steps.theme.outputs.theme }} # the static plates, redrawn with the live ones
           commit: true

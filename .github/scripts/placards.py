@@ -32,11 +32,13 @@ LETTERS = ({chr(c) for c in range(0x20, 0x7F)} | {chr(c) for c in range(0xC0, 0x
            | {chr(c) for c in (0x2018, 0x2019, 0x201C, 0x201D, 0x2026)})
 ELLIPSIS = chr(0x2026)
 
-Fetch = Callable[[str, dict], bytes]
+Fetch = Callable[..., bytes]  # (url, headers) for a GET, (url, headers, data) for a POST
 
 
-def fetch_url(url: str, headers: dict) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, **headers})
+def fetch_url(url: str, headers: dict, data: bytes | None = None) -> bytes:
+    """A GET, or with `data` a POST, and the body of the answer."""
+    req = urllib.request.Request(url, data=data, headers={"User-Agent": UA, **headers},
+                                 method="GET" if data is None else "POST")
     with urllib.request.urlopen(req, timeout=20) as resp:
         return resp.read()
 
@@ -73,6 +75,13 @@ def wait_for(exc: urllib.error.HTTPError, said: str, now: float | None = None) -
     return wait if wait <= LONGEST_WAIT else None
 
 
+def _headers(token: str) -> dict:
+    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
 def github(fetch: Fetch, path: str, token: str = "", params: dict | None = None,
            sleep: Callable[[float], None] = time.sleep) -> Any:
     """One call to GitHub's REST API, parsed.
@@ -80,13 +89,27 @@ def github(fetch: Fetch, path: str, token: str = "", params: dict | None = None,
     A rate limit is waited out as GitHub asks, RETRIES times at most. Any other HTTPError (a 404
     included) reaches the caller, carrying GitHub's own reason so a notice can say why.
     """
-    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
     url = API + path + ("?" + urllib.parse.urlencode(params) if params else "")
+    return _answer(fetch, url, _headers(token), None, sleep)
+
+
+def graphql(fetch: Fetch, query: str, variables: dict, token: str,
+            sleep: Callable[[float], None] = time.sleep) -> dict:
+    """One GraphQL query, and its data. An answer that is only errors raises ValueError, naming them."""
+    body = json.dumps({"query": query, "variables": variables}).encode()
+    answer = _answer(fetch, API + "/graphql", _headers(token), body, sleep)
+    if not isinstance(answer, dict) or not isinstance(answer.get("data"), dict):
+        errors = answer.get("errors") if isinstance(answer, dict) else None
+        said = "; ".join(str(e.get("message", "")) for e in errors or [] if isinstance(e, dict))
+        raise ValueError(f"GraphQL: {said or 'no data'}"[:300])
+    return answer["data"]
+
+
+def _answer(fetch: Fetch, url: str, headers: dict, data: bytes | None, sleep: Callable[[float], None]) -> Any:
+    """The parsed answer to one request, rate limits waited out as GitHub asks."""
     for attempt in range(RETRIES + 1):
         try:
-            return json.loads(fetch(url, headers))
+            return json.loads(fetch(url, headers) if data is None else fetch(url, headers, data))
         except urllib.error.HTTPError as exc:
             said = said_by(exc)
             wait = wait_for(exc, said)

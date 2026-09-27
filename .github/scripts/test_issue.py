@@ -47,27 +47,42 @@ REPOS = [repo("big/one", 90_000), repo("mid/two", 40_000), repo("small/three", 1
          repo("gone/four", 80_000, archived=True), repo("fork/five", 70_000, fork=True)]
 
 
+def node(it: dict) -> dict:
+    """A table issue the way GraphQL gives it: counts where REST gives lists."""
+    taken = len(it.get("assignees") or []) + (1 if it.get("assignee") else 0)
+    return {"number": it["number"], "title": it["title"], "url": it["html_url"], "createdAt": it["created_at"],
+            "locked": it["locked"], "assignees": {"totalCount": taken},
+            "closedByPullRequestsReferences": {"totalCount": it.get("linked", 0)}}
+
+
 class Fake:
-    """Answers the search API from a table: the projects, then issues by the projects a query names."""
+    """Answers from a table: the search API for the projects, GraphQL for each project's newest issues."""
 
     def __init__(self, issues: list[dict], repos: list[dict] = REPOS, fail: bool = False):
-        self.issues, self.repos, self.fail, self.urls = issues, repos, fail, []
+        self.issues, self.repos, self.fail, self.urls, self.queries = issues, repos, fail, [], []
 
-    def __call__(self, url: str, headers: dict) -> bytes:
+    def __call__(self, url: str, headers: dict, data: bytes | None = None) -> bytes:
         self.urls.append(url)
         if self.fail:
             raise urllib.error.URLError("unreachable")
         if "/search/repositories" in url:
             return json.dumps({"items": self.repos}).encode()
-        q = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["q"][0]
-        since = dt.date.fromisoformat(q.split("created:>=")[1].split()[0])
-        names = {part[5:].lower() for part in q.split() if part.startswith("repo:")}
-        hits = [it for it in self.issues if issue.repo_of(it) in names and dt.date.fromisoformat(it["created_at"][:10]) >= since]
-        return json.dumps({"items": hits}).encode()
+        assert url.endswith("/graphql") and data is not None, url
+        ask = json.loads(data)
+        self.queries.append(ask)
+        answer = {}
+        for key, owner in ask["variables"].items():
+            if key.startswith("o"):
+                full = f"{owner}/{ask['variables']['n' + key[1:]]}".lower()
+                # GitHub's answer: open issues only, never a pull request, newest first.
+                mine = sorted((it for it in self.issues if issue.repo_of(it) == full and it["state"] == "open"
+                               and "pull_request" not in it), key=lambda it: it["created_at"], reverse=True)
+                answer["r" + key[1:]] = {"issues": {"nodes": [node(it) for it in mine[:issue.NEWEST]]}}
+        return json.dumps({"data": answer}).encode()
 
 
 def picked(fake: Fake, **kw) -> list[tuple[str, int]]:
-    return [(f"{p.owner}/{p.name}", p.number) for p in issue.choose(fake, TODAY, pause=0, **kw)]
+    return [(f"{p.owner}/{p.name}", p.number) for p in issue.choose(fake, TODAY, **kw)]
 
 
 class Draw(unittest.TestCase):
@@ -105,21 +120,34 @@ class Draw(unittest.TestCase):
         fake = Fake([item("big/one", 1, "2026-09-26", title=cjk), item("big/one", 2, "2026-09-24")])
         self.assertEqual(picked(fake), [("big/one", 2)])
 
-    def test_the_query_asks_for_open_unassigned_unlinked_issues(self):
+    def test_one_query_asks_every_kept_project_for_its_newest_open_good_first_issues(self):
         fake = Fake([item("big/one", 1, "2026-09-26")])
-        issue.choose(fake, TODAY, pause=0)
+        issue.choose(fake, TODAY)
         self.assertIn("/search/repositories", fake.urls[0])
-        q = urllib.parse.parse_qs(urllib.parse.urlparse(fake.urls[1]).query)["q"][0]
-        for part in ('label:"good first issue"', "is:issue", "is:open", "no:assignee", "-linked:pr",
-                     "archived:false", "created:>=2026-09-21", "repo:big/one"):
-            self.assertIn(part, q)
-        self.assertNotIn("repo:gone/four", q)
-        self.assertNotIn("repo:fork/five", q)
+        self.assertEqual(len(fake.queries), 1)
+        query, variables = fake.queries[0]["query"], fake.queries[0]["variables"]
+        for part in ('labels: ["good first issue"]', "states: OPEN", "orderBy: {field: CREATED_AT, direction: DESC}",
+                     f"first: {issue.NEWEST}", "assignees { totalCount }", "closedByPullRequestsReferences"):
+            self.assertIn(part, query)
+        self.assertEqual(sorted(v for k, v in variables.items() if k.startswith("n")), ["one", "three", "two"])
 
-    def test_the_search_stops_once_both_slots_are_filled(self):
+    def test_an_issue_with_a_pull_request_on_the_way_is_skipped(self):
+        fake = Fake([item("big/one", 1, "2026-09-26", linked=1), item("big/one", 2, "2026-09-25"),
+                     item("mid/two", 3, "2026-09-24")])
+        self.assertEqual(picked(fake), [("big/one", 2), ("mid/two", 3)])
+
+    def test_the_queries_stop_once_both_slots_are_filled(self):
         fake = Fake([item("mid/two", 1, "2026-09-26"), item("small/three", 2, "2026-09-26")])
         self.assertEqual(picked(fake, batch=1), [("mid/two", 1), ("small/three", 2)])
-        self.assertEqual(len(fake.urls), 4)  # the projects, then big/one, mid/two and small/three, one each
+        self.assertEqual(len(fake.urls), 4)  # the projects, then big/one, mid/two and small/three, one query each
+
+    def test_graphql_answering_only_errors_is_github_unavailable(self):
+        def fetch(url: str, headers: dict, data: bytes | None = None) -> bytes:
+            if "/search/repositories" in url:
+                return json.dumps({"items": REPOS}).encode()
+            return b'{"errors": [{"message": "Something went wrong"}]}'
+        with self.assertRaisesRegex(ValueError, "Something went wrong"):
+            issue.choose(fetch, TODAY)
 
 
 class RateLimits(unittest.TestCase):
@@ -181,7 +209,7 @@ class Text(unittest.TestCase):
 
 class Placards(unittest.TestCase):
     def pick(self) -> "issue.Pick":
-        return issue.choose(Fake([item("big/one", 7, "2026-09-26")]), TODAY, pause=0)[0]
+        return issue.choose(Fake([item("big/one", 7, "2026-09-26")]), TODAY)[0]
 
     def test_a_placard_carries_the_project_and_the_issue(self):
         card = issue.placard(self.pick())
@@ -194,7 +222,7 @@ class Placards(unittest.TestCase):
     def test_the_day_an_issue_opened_is_its_day_in_est(self):
         # 02:00 UTC on the 26th is 21:00 EST on the 25th.
         late = item("big/one", 7, "2026-09-26", created_at="2026-09-26T02:00:00Z")
-        pick = issue.choose(Fake([late]), TODAY, pause=0)[0]
+        pick = issue.choose(Fake([late]), TODAY)[0]
         self.assertEqual(pick.opened, dt.date(2026, 9, 25))
         self.assertEqual(issue.placard(pick)["cells"][2], ["Opened", "25 SEP"])
 
@@ -220,7 +248,7 @@ class Data(unittest.TestCase):
         self.tmp.cleanup()
 
     def run_main(self, fake: Fake) -> str:
-        issue.main([str(self.data), "--today", TODAY.isoformat()], fetch=fake, pause=0)
+        issue.main([str(self.data), "--today", TODAY.isoformat()], fetch=fake)
         return self.data.read_text(encoding="utf-8")
 
     def test_the_data_file_is_the_kits_json(self):

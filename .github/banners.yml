@@ -2,9 +2,9 @@
 # and every figure are read from GitHub on each run; only what is written
 # here is fixed. Every key and its default: tannergolden/banners/examples/banners.yml.
 mode: profile
-# rainbowprint: each update takes the next colour of the spectrum, and the
-# badges and elements follow the colour recorded in .github/banners.lock.json.
-theme: rainbowprint
+# blackprint: the page's one print. The badges and the elements name the
+# same print, so the header, the body and the footer match.
+theme: blackprint
 motto: Built to be rebuilt.
 # More general notes, numbered after the motto: the second says how to read
 # every time on the page.

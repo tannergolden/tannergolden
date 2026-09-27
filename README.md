@@ -88,7 +88,7 @@ nothing on this page depends on a third-party service.
   <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/how-it-fits-narrow-dark.svg">
   <source media="(max-width: 585px)" srcset="assets/elements/how-it-fits-narrow-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/how-it-fits-dark.svg">
-  <img alt="Schematic of tannergolden. Standards holds the rules and the reusable workflows every repository calls at v1, and the Golden Path template follows them by link, so every new repository starts from it. A repository adds one Markdown stub, which runs the kits that draw this page: the header and footer at 00:00, the badges at 08:00 and the trophies at 16:00 EST. The header owns the page&#x27;s color, and the badges, the schematic and the placards follow it." src="assets/elements/how-it-fits-day.svg">
+  <img alt="Schematic of tannergolden. Standards holds the rules and the reusable workflows every repository calls at v1, and the Golden Path template follows them by link, so every new repository starts from it. A repository adds one Markdown stub, which runs the kits that draw this page: the header and footer at 00:00, the badges at 08:00 and the trophies at 16:00 EST. The header sets the page&#x27;s print, the blackprint, and the badges, the schematic and the placards match it." src="assets/elements/how-it-fits-day.svg">
 </picture>
 <!-- elements:how-it-fits:end -->
 

@@ -128,7 +128,7 @@ class Data(unittest.TestCase):
     def test_the_data_file_names_the_page_print_and_both_slots(self):
         self.run_main(self.fake)
         doc = json.loads(self.data.read_text(encoding="utf-8"))
-        self.assertEqual(doc["print"], "rainbowprint")
+        self.assertEqual(doc["print"], "blackprint")
         self.assertEqual(list(doc["elements"]), ["release-1", "release-2"])
 
     def test_an_unreachable_github_keeps_last_weeks_placards(self):

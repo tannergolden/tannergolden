@@ -1,12 +1,11 @@
 name: Elements
 
 # Draws the README's elements with the banners' elements kit, all in the
-# page's rainbowprint: the schematic under About Me (.github/elements.yml),
+# page's blackprint: the schematic under About Me (.github/elements.yml),
 # the two latest-release placards (.github/releases.json) and the two good
-# first issue placards (.github/good-first-issue.json). The banners own the
-# page's colour, so this runs after every Markdown run and redraws the
-# elements in whatever colour the header took; a run that finds nothing
-# moved commits nothing. Each pick has a day of its own, at 09:30 EST (14:30
+# first issue placards (.github/good-first-issue.json). It runs after every
+# Markdown run, so the drawings keep up with the kit that run used; a run
+# that finds nothing moved commits nothing. Each pick has a day of its own, at 09:30 EST (14:30
 # UTC), between the badges (08:00 EST) and the trophies (16:00 EST): the
 # latest releases on Wednesdays and the good first issues on Fridays. An
 # edit to the schematic's data file redraws it straight away.

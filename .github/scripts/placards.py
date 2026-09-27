@@ -22,8 +22,8 @@ API = "https://api.github.com"
 UA = "tannergolden-profile"
 # The README tells time in EST: every date it shows is the day in UTC-5, whatever the season.
 EST = dt.timezone(dt.timedelta(hours=-5), "EST")
-# The page's print: the colour the banners are in now, so the header, the body and the footer change together.
-PRINT = "rainbowprint"
+# The page's print, the one the banners are drawn in, so the header, the body and the footer match.
+PRINT = "blackprint"
 BANNED = {chr(0x2013): "an en dash", chr(0x2014): "an em dash", chr(0x2015): "a horizontal bar"}
 # What the kit's outlines can letter: printable ASCII, the Latin-1 letters and a little typography.
 LETTERS = ({chr(c) for c in range(0x20, 0x7F)} | {chr(c) for c in range(0xC0, 0x100)} - {chr(0xF7)}

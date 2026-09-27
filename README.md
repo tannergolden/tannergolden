@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 9. Contributions, last year: 1,040. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 9. Contributions, last year: 1,054. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>

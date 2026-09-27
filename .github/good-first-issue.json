@@ -3,15 +3,15 @@
  "elements": {
   "issue-1": {
    "kind": "placard",
-   "owner": "example",
-   "name": "project",
+   "owner": "microsoft",
+   "name": "markitdown",
    "icon": "flag",
-   "link": "https://github.com/search?q=label%3A%22good+first+issue%22+is%3Aissue+is%3Aopen+no%3Aassignee&type=issues&s=created&o=desc",
-   "desc": "#1: Sample issue, shown until the workflow's first Friday draws a real one.",
+   "link": "https://github.com/microsoft/markitdown/issues/2386",
+   "desc": "#2386: Autonomous Agents, Unite!",
    "cells": [
     [
      "Stars",
-     "48.2K"
+     "187K"
     ],
     [
      "Language",
@@ -19,29 +19,29 @@
     ],
     [
      "Opened",
-     "25 SEP"
+     "4 SEP"
     ]
    ]
   },
   "issue-2": {
    "kind": "placard",
-   "owner": "example",
-   "name": "another-project",
+   "owner": "rtk-ai",
+   "name": "rtk",
    "icon": "flag",
-   "link": "https://github.com/search?q=label%3A%22good+first+issue%22+is%3Aissue+is%3Aopen+no%3Aassignee&type=issues&s=created&o=desc",
-   "desc": "#2: Sample issue: the second most-starred project's newest one sits here.",
+   "link": "https://github.com/rtk-ai/rtk/issues/4299",
+   "desc": "#4299: docs still say native Windows falls back to CLAUDE.md injection.",
    "cells": [
     [
      "Stars",
-     "12.3K"
+     "81.8K"
     ],
     [
      "Language",
-     "TYPESCRIPT"
+     "RUST"
     ],
     [
      "Opened",
-     "26 SEP"
+     "27 SEP"
     ]
    ]
   }

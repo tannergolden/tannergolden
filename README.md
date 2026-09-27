@@ -311,18 +311,18 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- elements:issue-1:start -->
-<a href="https://github.com/search?q=label%3A%22good+first+issue%22+is%3Aissue+is%3Aopen+no%3Aassignee&amp;type=issues&amp;s=created&amp;o=desc">
+<a href="https://github.com/microsoft/markitdown/issues/2386">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/issues/issue-1-dark.svg">
-  <img alt="example/project. #1: Sample issue, shown until the workflow&#x27;s first Friday draws a real one." src="assets/issues/issue-1-day.svg">
+  <img alt="microsoft/markitdown. #2386: Autonomous Agents, Unite!." src="assets/issues/issue-1-day.svg">
 </picture>
 </a>
 <!-- elements:issue-1:end -->
 <!-- elements:issue-2:start -->
-<a href="https://github.com/search?q=label%3A%22good+first+issue%22+is%3Aissue+is%3Aopen+no%3Aassignee&amp;type=issues&amp;s=created&amp;o=desc">
+<a href="https://github.com/rtk-ai/rtk/issues/4299">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/issues/issue-2-dark.svg">
-  <img alt="example/another-project. #2: Sample issue: the second most-starred project&#x27;s newest one sits here." src="assets/issues/issue-2-day.svg">
+  <img alt="rtk-ai/rtk. #4299: docs still say native Windows falls back to CLAUDE.md injection." src="assets/issues/issue-2-day.svg">
 </picture>
 </a>
 <!-- elements:issue-2:end -->

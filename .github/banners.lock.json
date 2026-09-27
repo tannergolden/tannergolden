@@ -1,0 +1,61 @@
+{
+ "last": {
+  "mode": "profile",
+  "profile": {
+   "bio": "Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons.",
+   "company": "",
+   "contributions": 1040,
+   "created": "2016-12-20",
+   "followers": 14,
+   "following": 5,
+   "language": "Python",
+   "location": "United States",
+   "login": "tannergolden",
+   "name": "Tanner Golden",
+   "repositories": 9,
+   "stars": 0,
+   "status": {
+    "message": "Focusing"
+   },
+   "twitter": "",
+   "website": "www.tannergolden.com"
+  },
+  "repository": {
+   "archived": false,
+   "branch": "Development",
+   "created": "2026-09-26",
+   "description": "Tanner Golden's self-updating GitHub profile README, drawn with GitHub Actions.",
+   "discussionsOn": false,
+   "forks": 0,
+   "full": "tannergolden/tannergolden",
+   "homepage": "www.tannergolden.com",
+   "issues": 0,
+   "issuesOn": true,
+   "language": "",
+   "license": "MIT",
+   "name": "tannergolden",
+   "org": false,
+   "owner": "tannergolden",
+   "private": false,
+   "pulls": 0,
+   "release": "",
+   "released": "",
+   "releases": 0,
+   "stars": 0,
+   "topics": [
+    "automation",
+    "github-actions",
+    "github-profile",
+    "readme"
+   ],
+   "updated": "2026-09-27",
+   "watchers": 0,
+   "workflows": 4
+  },
+  "subject": "tannergolden",
+  "today": "2026-09-27"
+ },
+ "rainbow": "redprint",
+ "snapshot": "2026-09-27",
+ "version": 1
+}

@@ -1,0 +1,3 @@
+# Python caches the scripts under .github/scripts leave behind when their tests run.
+__pycache__/
+*.pyc

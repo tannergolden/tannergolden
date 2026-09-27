@@ -1,0 +1,73 @@
+name: Notes
+
+# Redraws the Field Notes every Monday: five GitHub alerts, one of each
+# kind. For each alert a coin seeded by the week picks the curated library
+# in .github/notes or a public dataset that is always current (GitHub's
+# changelog, tldr-pages, endoflife.date, the GitHub Advisory Database and
+# CISA's Known Exploited Vulnerabilities); a source that cannot be read
+# hands its alert back to the library. It runs on Mondays at 09:30 EST (14:30
+# UTC): each weekly workflow has a day of its own, at an hour between the
+# Markdown slots, so no two workflows ever push at once. It commits only when
+# the block moved. The commit is the bot's, so a redraw never counts
+# as your contribution.
+on:
+  schedule:
+    - cron: '30 14 * * 1' # Monday, 09:30 EST
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  notes:
+    name: '📝 Notes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # the README block it redraws
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true # zizmor: ignore[artipacked] - the job pushes the README block, and nothing else runs after it.
+
+      # Only the command pages, a few megabytes. Without them the Tip falls back to the library.
+      - name: '📚 Fetch tldr-pages'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/tldr-pages/tldr "$RUNNER_TEMP/tldr"
+          git -C "$RUNNER_TEMP/tldr" sparse-checkout set pages/common
+
+      # No setup-python on purpose: the script is stdlib only.
+      - name: '🧪 Check the library and the sources'
+        run: python3 -m unittest discover -s .github/scripts -p 'test_notes.py'
+
+      - name: '📝 Draw the notes for this week'
+        env:
+          GH_TOKEN: ${{ github.token }} # read-only use: the Advisory Database API
+        run: python3 .github/scripts/notes.py README.md --tldr "$RUNNER_TEMP/tldr/pages/common"
+
+      - name: '💾 Commit when the block moved'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- README.md; then
+            echo "nothing moved"
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m 'chore(notes): 📝 redraw the field notes' \
+              -m "Week $(date -u +%V) of $(date -u +%G). Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+              -- README.md
+          # Another workflow may have pushed since the checkout: rebase onto it and try again.
+          branch="$(git symbolic-ref --quiet --short HEAD)"
+          for attempt in 1 2 3; do
+            if git pull --rebase --quiet origin "$branch" && git push origin "HEAD:$branch"; then
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push to $branch after three attempts"
+          exit 1

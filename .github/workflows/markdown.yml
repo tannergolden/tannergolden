@@ -1,0 +1,25 @@
+name: Markdown
+
+# Each kit's slot is an hour the README can name in EST (UTC-5): cron runs in UTC, so
+# 05:00, 13:00 and 21:00 UTC are 00:00, 08:00 and 16:00 EST.
+on:
+  schedule:
+    - cron: '0 5 * * *'
+    - cron: '0 13 * * *'
+    - cron: '0 21 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  markdown:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: tannergolden/markdown/.github/workflows/markdown.yml@v1
+    with:
+      banners: '0 5 * * *'   # 00:00 EST
+      badges: '0 13 * * *'   # 08:00 EST
+      trophies: '0 21 * * *' # 16:00 EST
+      mode: profile
+      elements: false

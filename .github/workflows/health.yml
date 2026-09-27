@@ -1,0 +1,65 @@
+name: Health
+
+# Measures the two live badges under the header and redraws them when a
+# value moved: whether tannergolden/standards passes its own checks, and how
+# long ago a person last committed. It runs every day at noon EST (17:00
+# UTC), so both stay current: between the Markdown slots and clear of the
+# weekly workflows at 09:30 EST, so no two workflows ever push at once.
+on:
+  schedule:
+    - cron: '0 17 * * *' # every day, 12:00 EST
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  health:
+    name: '🩺 Health'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # the badges it redraws
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true # zizmor: ignore[artipacked] - the badges action commits and pushes what it redrew, and nothing else runs after it.
+
+      - name: '📏 Measure'
+        id: measure
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          conclusion="$(gh run list --repo tannergolden/standards --workflow self-checks.yml \
+            --branch Development --status completed --limit 1 --json conclusion --jq '.[0].conclusion // ""')"
+          case "$conclusion" in
+            success) ci='Passing:green' ;;
+            failure | timed_out | startup_failure) ci='Failing:red' ;;
+            *) ci='No Data:slate' ;;
+          esac
+          # The newest commit a person made; the kits' own refresh commits do not count.
+          last="$(gh search commits --author tannergolden --sort committer-date --order desc --limit 50 --json commit \
+            --jq '[.[] | select(.commit.message | test("^chore\\((banners|badges|trophies|elements)\\):") | not)][0].commit.committer.date // ""')"
+          if [ -z "$last" ]; then
+            age='No Data:slate'
+          else
+            days=$(( ($(date -u +%s) - $(date -u -d "$last" +%s)) / 86400 ))
+            if [ "$days" -le 7 ]; then age='This Week:green'
+            elif [ "$days" -le 31 ]; then age='This Month:yellow'
+            else age='Over a Month:red'
+            fi
+          fi
+          {
+            echo 'set<<EOF'
+            echo "standards-ci=$ci"
+            echo "last-commit=$age"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: '🏷️ Redraw and commit'
+        uses: tannergolden/badges@v1 # zizmor: ignore[unpinned-uses] - first-party action on its moving major, the way every stub calls it.
+        with:
+          set: ${{ steps.measure.outputs.set }}
+          commit: true

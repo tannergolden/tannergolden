@@ -12,7 +12,9 @@ import datetime as dt
 import html
 import json
 import re
+import time
 import unicodedata
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -39,13 +41,61 @@ def fetch_url(url: str, headers: dict) -> bytes:
         return resp.read()
 
 
-def github(fetch: Fetch, path: str, token: str = "", params: dict | None = None) -> Any:
-    """One call to GitHub's REST API, parsed. An HTTPError (a 404 included) reaches the caller."""
+# A request GitHub turns away for a rate limit waits as long as GitHub asks and tries again, twice
+# at most. A longer wait than this means the limit will not lift within one run.
+RETRIES = 2
+LONGEST_WAIT = 90.0
+
+
+def said_by(exc: urllib.error.HTTPError) -> str:
+    """GitHub's own reason for an error response: the message in its JSON body, when it sent one."""
+    try:
+        return str(json.loads(exc.read() or b"{}").get("message", ""))[:200]
+    except (OSError, ValueError, AttributeError):
+        return ""
+
+
+def wait_for(exc: urllib.error.HTTPError, said: str, now: float | None = None) -> float | None:
+    """How long a rate-limited request should wait before trying again, or None when it should not."""
+    if exc.code not in (403, 429):
+        return None
+    headers = exc.headers or {}
+    retry, left, reset = (str(headers.get(k) or "").strip()
+                          for k in ("retry-after", "x-ratelimit-remaining", "x-ratelimit-reset"))
+    if retry.isdigit():
+        wait = float(retry)
+    elif left == "0" and reset.isdigit():
+        wait = max(0.0, float(reset) - (time.time() if now is None else now)) + 1
+    elif "rate limit" in said.lower():
+        wait = 60.0  # a secondary limit that names no time: GitHub asks for at least a minute
+    else:
+        return None
+    return wait if wait <= LONGEST_WAIT else None
+
+
+def github(fetch: Fetch, path: str, token: str = "", params: dict | None = None,
+           sleep: Callable[[float], None] = time.sleep) -> Any:
+    """One call to GitHub's REST API, parsed.
+
+    A rate limit is waited out as GitHub asks, RETRIES times at most. Any other HTTPError (a 404
+    included) reaches the caller, carrying GitHub's own reason so a notice can say why.
+    """
     headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
     url = API + path + ("?" + urllib.parse.urlencode(params) if params else "")
-    return json.loads(fetch(url, headers))
+    for attempt in range(RETRIES + 1):
+        try:
+            return json.loads(fetch(url, headers))
+        except urllib.error.HTTPError as exc:
+            said = said_by(exc)
+            wait = wait_for(exc, said)
+            if wait is None or attempt == RETRIES:
+                raise urllib.error.HTTPError(exc.url, exc.code, f"{exc.reason}: {said}" if said else exc.reason,
+                                             exc.headers, None) from exc
+            print(f"GitHub asked for a wait ({exc.code}{': ' + said if said else ''}); trying again in {wait:.0f}s")
+            sleep(wait)
+    raise AssertionError("unreachable")
 
 
 def letterable(text: str, limit: int = 150) -> str | None:

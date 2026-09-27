@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import datetime as dt
 import importlib.util
+import io
 import json
 import sys
 import tempfile
@@ -25,6 +26,7 @@ spec = importlib.util.spec_from_file_location("issue", HERE / "issue.py")
 issue = importlib.util.module_from_spec(spec)
 sys.modules["issue"] = issue  # dataclasses look their module up while the class is built
 spec.loader.exec_module(issue)
+import placards  # noqa: E402  (beside issue.py, on the path set above)
 TODAY = dt.date(2026, 9, 28)
 DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
 
@@ -118,6 +120,45 @@ class Draw(unittest.TestCase):
         fake = Fake([item("mid/two", 1, "2026-09-26"), item("small/three", 2, "2026-09-26")])
         self.assertEqual(picked(fake, batch=1), [("mid/two", 1), ("small/three", 2)])
         self.assertEqual(len(fake.urls), 4)  # the projects, then big/one, mid/two and small/three, one each
+
+
+class RateLimits(unittest.TestCase):
+    """A search GitHub turns away for a rate limit waits as asked; any other refusal says GitHub's reason."""
+
+    def refusing(self, times: int, headers: dict, body: bytes = b"{}"):
+        calls, waits = [], []
+
+        def fetch(url: str, _headers: dict) -> bytes:
+            calls.append(url)
+            if len(calls) <= times:
+                raise urllib.error.HTTPError(url, 403, "Forbidden", headers, io.BytesIO(body))
+            return b'{"items": []}'
+        return fetch, calls, waits
+
+    def test_a_rate_limited_search_waits_as_asked_and_tries_again(self):
+        fetch, calls, waits = self.refusing(1, {"retry-after": "7"})
+        self.assertEqual(placards.github(fetch, "/search/issues", "t", {"q": "x"}, sleep=waits.append), {"items": []})
+        self.assertEqual((len(calls), waits), (2, [7.0]))
+
+    def test_a_secondary_limit_that_names_no_time_waits_a_minute(self):
+        fetch, calls, waits = self.refusing(1, {}, b'{"message": "You have exceeded a secondary rate limit."}')
+        placards.github(fetch, "/search/issues", "t", {"q": "x"}, sleep=waits.append)
+        self.assertEqual(waits, [60.0])
+
+    def test_a_limit_that_does_not_lift_gives_up_with_githubs_reason(self):
+        fetch, calls, waits = self.refusing(9, {"retry-after": "5"}, b'{"message": "API rate limit exceeded."}')
+        with self.assertRaises(urllib.error.HTTPError) as err:
+            placards.github(fetch, "/search/issues", "t", {"q": "x"}, sleep=waits.append)
+        self.assertEqual((len(calls), waits), (placards.RETRIES + 1, [5.0] * placards.RETRIES))
+        self.assertIn("API rate limit exceeded", str(err.exception))
+
+    def test_a_refusal_that_is_not_a_rate_limit_is_not_retried(self):
+        fetch, calls, waits = self.refusing(1, {}, b'{"message": "Resource not accessible by integration"}')
+        with self.assertRaises(urllib.error.HTTPError) as err:
+            placards.github(fetch, "/search/issues", "t", {"q": "x"}, sleep=waits.append)
+        self.assertEqual((len(calls), waits), (1, []))
+        self.assertIn("Resource not accessible by integration", str(err.exception))
+        self.assertIsNone(placards.wait_for(urllib.error.HTTPError("u", 403, "x", {"retry-after": "600"}, None), ""))
 
 
 class Text(unittest.TestCase):

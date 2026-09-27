@@ -107,7 +107,7 @@ def make_pick(item: dict, repo: dict) -> Pick | None:
 
 
 def choose(fetch: Fetch, today: dt.date, token: str = "", want: int = len(SLOTS), batch: int = BATCH,
-           pause: float = 2.0) -> list[Pick]:
+           pause: float = 6.0) -> list[Pick]:
     """The newest usable issue from each of the most-starred projects that have one, this week or else this month."""
     ranked = projects(fetch, token)
     by_name = {r["full_name"].lower(): r for r in ranked}
@@ -122,7 +122,7 @@ def choose(fetch: Fetch, today: dt.date, token: str = "", want: int = len(SLOTS)
             query = (f'label:"{LABEL}" is:issue is:open no:assignee -linked:pr archived:false created:>={since} '
                      + " ".join(f"repo:{n}" for n in names))
             if pause and searches:
-                time.sleep(pause)  # the search API allows 30 requests a minute; stay well clear
+                time.sleep(pause)  # ten a minute: search's secondary limits turn quick bursts away
             searches += 1
             found = [it for it in search(fetch, "issues", query, "created", 50, token)
                      if usable(it) and repo_of(it) in by_name and repo_of(it) not in picks]
@@ -168,7 +168,7 @@ def document(picks: list[Pick]) -> dict:
     return {"print": PRINT, "elements": dict(zip(SLOTS, cards))}
 
 
-def main(argv: list[str] | None = None, fetch: Fetch = fetch_url, pause: float = 2.0) -> int:
+def main(argv: list[str] | None = None, fetch: Fetch = fetch_url, pause: float = 6.0) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     ap.add_argument("data", type=Path, help="the elements kit's data file for the two placards")
     ap.add_argument("--today", type=dt.date.fromisoformat, help="the day to draw for, for reproducible output")

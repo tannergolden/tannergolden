@@ -24,6 +24,7 @@ category: docs
 </div>
 <!-- banners:header:end -->
 
+<!-- markdown:badges:start -->
 <div align="center">
 
 <a href="./"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badges/static/status-dark.svg"><img alt="Status: Active" src="assets/badges/static/status.svg"></picture></a>
@@ -35,6 +36,7 @@ category: docs
 [![Last Commit: This Week](assets/badges/dynamic/last-commit.svg)](https://github.com/tannergolden?tab=repositories)
 
 </div>
+<!-- markdown:badges:end -->
 
 ---
 
@@ -76,12 +78,10 @@ a fix lands once and reaches every repository pinned to it.
 [`path`](https://github.com/tannergolden/path) is the template every new
 repository starts from, already wired to those workflows. A repository that
 wants a drawn README adds one
-[`markdown`](https://github.com/tannergolden/markdown) stub, which runs
-[`banners`](https://github.com/tannergolden/banners),
-[`badges`](https://github.com/tannergolden/badges) and
-[`trophies`](https://github.com/tannergolden/trophies) at their own hours.
-Each measures the repository, redraws what moved and commits it as an SVG, so
-nothing on this page depends on a third-party service.
+[`markdown`](https://github.com/tannergolden/markdown) stub. Once a day the kit
+it calls measures the repository, or here the account, redraws what moved and
+commits it as SVGs, header to footer in one commit, so nothing on this page
+depends on a third-party service.
 
 <!-- elements:how-it-fits:start -->
 <picture>

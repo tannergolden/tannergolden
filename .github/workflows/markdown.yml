@@ -1,16 +1,16 @@
 name: Markdown
 
-# Each kit's slot is an hour the README can name in EST (UTC-5): cron runs in UTC, so
-# 05:00, 13:00 and 21:00 UTC are 00:00, 08:00 and 16:00 EST.
+# The whole page, drawn by tannergolden/markdown in one run and one commit:
+# the header and footer, the badges, the schematic and the placards, and the
+# trophy case. Once a day at 05:00 UTC, which is midnight EST, so the page's
+# day, and a holiday's set with it, changes over at the page's own midnight.
+# Picks starts it too, as soon as it has picked new placards.
 #
-# `theme` is the page's one theme: the header and footer, the badges and the elements are
-# all drawn in it, and Health and Elements read it from here too. Change it here and
-# nowhere else; the page takes it on the next run.
+# `theme` is the page's one theme, and every part is drawn in it. Everything
+# else the page sets is in .github/markdown.yaml.
 on:
   schedule:
-    - cron: '0 5 * * *'
-    - cron: '0 13 * * *'
-    - cron: '0 21 * * *'
+    - cron: '0 5 * * *' # 00:00 EST
   workflow_dispatch:
 
 permissions: {}
@@ -18,13 +18,9 @@ permissions: {}
 jobs:
   markdown:
     permissions:
-      contents: write
-      pull-requests: write
-    uses: tannergolden/markdown/.github/workflows/markdown.yml@v1
+      contents: write # the images, the README's blocks and the lock
+      pull-requests: write # only used with commit: pr
+    uses: tannergolden/markdown/.github/workflows/markdown.yml@v1 # zizmor: ignore[unpinned-uses] - first-party workflow on its moving major, the way every stub calls it.
     with:
-      banners: '0 5 * * *'   # 00:00 EST
-      badges: '0 13 * * *'   # 08:00 EST
-      trophies: '0 21 * * *' # 16:00 EST
       mode: profile
-      theme: blackprint      # the page's one theme
-      elements: false
+      theme: blackprint # the page's one theme

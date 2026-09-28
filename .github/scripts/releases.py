@@ -3,13 +3,14 @@
 # SPDX-License-Identifier: MIT
 """Pick the README's latest releases: the two repositories on this account that shipped most recently.
 
-  python3 .github/scripts/releases.py .github/releases.json [--owner tannergolden]
+  python3 .github/scripts/releases.py .github/markdown.yaml [--owner tannergolden]
 
 Every Wednesday it lists the account's public repositories, leaving out forks
 and archived ones, and reads each one's latest release from GitHub's API.
-The two published most recently become two placards for the elements kit
-(tannergolden/banners/elements), which draws them in the page's one theme and
-fills the README's elements:release-1 and elements:release-2 blocks. Each
+The two published most recently become two placards in the page's settings,
+between its `# releases:start` and `# releases:end` lines, and
+tannergolden/markdown draws them in the page's one theme into the README's
+release-1 and release-2 blocks on its next run. Each
 shows the version, the day it shipped and the major tag a stub pins, and
 links to its release notes. The account prunes superseded releases, so the
 latest release is the only one a repository keeps.
@@ -29,10 +30,11 @@ import urllib.error
 from dataclasses import dataclass
 from pathlib import Path
 
-from placards import LETTERS, Fetch, day, eastern, fetch_url, github, letterable, sentence, write
+from placards import LETTERS, Fetch, day, eastern, fetch_url, github, letterable, read, sentence, write
 
 OWNER = "tannergolden"
 SLOTS = ("release-1", "release-2")  # the README's element blocks, left to right
+REGION = "releases"  # the settings' lines this picker owns
 SEMVER = re.compile(r"^v?(\d+)\.(\d+)\.(\d+)$")
 
 
@@ -116,7 +118,7 @@ def choose(fetch: Fetch, owner: str, token: str = "", want: int = len(SLOTS)) ->
 
 
 def placard(r: Release) -> dict:
-    """One placard for the elements kit: the repository on the plate, its release in the cells."""
+    """One placard for the kit: the repository on the plate, its release in the cells."""
     third = ["Pinned as", r.pinned.upper()] if r.pinned else ["Language", (r.language or "Not set").upper()]
     return {
         "kind": "placard", "owner": r.owner, "name": r.name, "icon": "package", "link": r.url,
@@ -131,7 +133,7 @@ def document(releases: list[Release]) -> dict:
 
 def main(argv: list[str] | None = None, fetch: Fetch = fetch_url) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
-    ap.add_argument("data", type=Path, help="the elements kit's data file for the two placards")
+    ap.add_argument("settings", type=Path, help="the page's settings, .github/markdown.yaml")
     ap.add_argument("--owner", default=os.environ.get("GITHUB_REPOSITORY_OWNER") or OWNER)
     args = ap.parse_args(argv)
     try:
@@ -140,9 +142,10 @@ def main(argv: list[str] | None = None, fetch: Fetch = fetch_url) -> int:
         print(f"::notice::GitHub unavailable ({type(exc).__name__}: {exc})")
         releases = []
     if not releases:
-        print("nothing drawn: " + ("last week's placards stay" if args.data.exists() else "no release to show yet"))
+        held = read(args.settings, REGION)["elements"]
+        print("nothing drawn: " + ("last week's placards stay" if held else "no release to show yet"))
         return 0
-    changed = write(args.data, document(releases))
+    changed = write(args.settings, REGION, document(releases))
     what = "; ".join(f"{r.name} {r.tag}" for r in releases)
     print(f"{what}: " + ("placards rewritten" if changed else "nothing moved"))
     return 0

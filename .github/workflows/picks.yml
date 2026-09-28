@@ -1,0 +1,85 @@
+name: Picks
+
+# Picks the placards the page shows each week: the two latest releases on
+# Wednesdays and the two good first issues on Fridays, both at 09:30 EST
+# (14:30 UTC), well clear of the Markdown run at midnight and of the Notes on
+# Mondays, so no two workflows ever push at once. A manual run picks both.
+#
+# Each picker rewrites only its own lines of .github/markdown.yaml. When
+# either moved, this commits them and starts the Markdown run, which draws
+# the placards in the page's one theme straight away.
+#
+# The commit is the bot's, so a pick never counts as your contribution, and
+# its message never names an issue: a reference in a commit message would
+# land on that issue's timeline.
+on:
+  schedule:
+    - cron: '30 14 * * 3' # Wednesday, 09:30 EST: the latest releases
+    - cron: '30 14 * * 5' # Friday, 09:30 EST: the good first issues
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: picks-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  picks:
+    name: '📌 Picks'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: write # start the Markdown run that draws the new placards
+      contents: write # the settings' placard lines
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true # zizmor: ignore[artipacked] - the job pushes the picks, and nothing else runs after it.
+
+      # No setup-python on purpose: the scripts are stdlib only.
+      - name: '🧪 Check the pickers'
+        run: |
+          python3 -m unittest discover -s .github/scripts -p 'test_issue.py'
+          python3 -m unittest discover -s .github/scripts -p 'test_releases.py'
+
+      - name: '📦 Pick the latest releases'
+        if: github.event.schedule == '30 14 * * 3' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }} # read-only use: public repositories and their releases
+        run: python3 .github/scripts/releases.py .github/markdown.yaml
+
+      - name: '🌿 Pick the good first issues'
+        if: github.event.schedule == '30 14 * * 5' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }} # read-only use: GitHub's search API, for its higher rate limit
+        run: python3 .github/scripts/issue.py .github/markdown.yaml
+
+      - name: '💾 Commit the picks and draw them'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }} # starts the Markdown run
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- .github/markdown.yaml; then
+            echo "nothing moved"
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m "chore(picks): 📌 pick this week's placards" \
+              -m "Week $(date -u +%V) of $(date -u +%G). Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+              -- .github/markdown.yaml
+          # Another workflow may have pushed since the checkout: rebase onto it and try again.
+          branch="$(git symbolic-ref --quiet --short HEAD)"
+          for attempt in 1 2 3; do
+            if git pull --rebase --quiet origin "$branch" && git push origin "HEAD:$branch"; then
+              # Drawn now rather than at midnight.
+              gh workflow run markdown.yml --ref "$branch"
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push to $branch after three attempts"
+          exit 1

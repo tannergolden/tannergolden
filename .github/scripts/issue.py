@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """Pick the README's good first issues: two open issues a newcomer could take this week.
 
-  python3 .github/scripts/issue.py .github/good-first-issue.json [--today YYYY-MM-DD]
+  python3 .github/scripts/issue.py .github/markdown.yaml [--today YYYY-MM-DD]
 
 Every Friday it asks GitHub's search API for the most-starred public
 projects that have open issues labeled `good first issue`, then asks
@@ -12,9 +12,10 @@ the ones opened in the past week that are still open, unassigned and not
 linked to an open pull request. The two most-starred projects with such an
 issue each give their newest one; a quiet week looks back a month. One
 search and a few queries: searching each project's issues instead runs
-into search's secondary rate limits within a minute. It writes them as two placards for the elements kit
-(tannergolden/banners/elements), which draws them in the page's one theme
-and fills the README's elements:issue-1 and elements:issue-2 blocks.
+into search's secondary rate limits within a minute. It writes them as two
+placards in the page's settings, between its `# issues:start` and
+`# issues:end` lines, and tannergolden/markdown draws them in the page's one
+theme into the README's issue-1 and issue-2 blocks on its next run.
 
 If GitHub cannot be reached, or nothing qualifies, last week's placards
 stay. A first run with nothing to show writes one placard that opens
@@ -34,10 +35,11 @@ import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 
-from placards import API, EST, LETTERS, Fetch, day, dump, eastern, fetch_url, github, graphql, letterable, sentence, write  # noqa: F401
+from placards import API, EST, LETTERS, Fetch, day, dump, eastern, fetch_url, github, graphql, letterable, read, sentence, write  # noqa: F401
 
 LABEL = "good first issue"
 SLOTS = ("issue-1", "issue-2")  # the README's element blocks, left to right
+REGION = "issues"  # the settings' lines this picker owns
 MIN_STARS = 1000  # a floor, so an issue always comes from a project people use
 PROJECTS = 60     # how many of the most-starred projects to look through
 BATCH = 10        # projects per GraphQL query
@@ -172,7 +174,7 @@ def choose(fetch: Fetch, today: dt.date, token: str = "", want: int = len(SLOTS)
 # -- the placards --------------------------------------------------------------------------------
 
 def placard(p: Pick) -> dict:
-    """One placard for the elements kit: the project on the plate, the issue as the description."""
+    """One placard for the kit: the project on the plate, the issue as the description."""
     return {
         "kind": "placard", "owner": p.owner, "name": p.name, "icon": "flag", "link": p.url,
         "desc": sentence(f"#{p.number}: {p.title}"),
@@ -199,7 +201,7 @@ def document(picks: list[Pick]) -> dict:
 
 def main(argv: list[str] | None = None, fetch: Fetch = fetch_url) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
-    ap.add_argument("data", type=Path, help="the elements kit's data file for the two placards")
+    ap.add_argument("settings", type=Path, help="the page's settings, .github/markdown.yaml")
     ap.add_argument("--today", type=dt.date.fromisoformat, help="the day to draw for, for reproducible output")
     args = ap.parse_args(argv)
     today = args.today or dt.datetime.now(EST).date()
@@ -208,10 +210,10 @@ def main(argv: list[str] | None = None, fetch: Fetch = fetch_url) -> int:
     except (urllib.error.URLError, TimeoutError, ValueError, KeyError) as exc:
         print(f"::notice::GitHub search unavailable ({type(exc).__name__}: {exc})")
         picks = []
-    if not picks and args.data.exists():
+    if not picks and read(args.settings, REGION)["elements"]:
         print("nothing drawn: last week's placards stay")
         return 0
-    changed = write(args.data, document(picks))
+    changed = write(args.settings, REGION, document(picks))
     what = "; ".join(f"{p.owner}/{p.name}#{p.number}" for p in picks) or "no issue, the search placard"
     print(f"{today}: {what}: " + ("placards rewritten" if changed else "nothing moved"))
     return 0

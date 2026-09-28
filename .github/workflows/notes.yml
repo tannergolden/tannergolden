@@ -6,8 +6,8 @@ name: Notes
 # changelog, tldr-pages, endoflife.date, the GitHub Advisory Database and
 # CISA's Known Exploited Vulnerabilities); a source that cannot be read
 # hands its alert back to the library. It runs on Mondays at 09:30 EST (14:30
-# UTC): each weekly workflow has a day of its own, at an hour between the
-# Markdown slots, so no two workflows ever push at once. It commits only when
+# UTC): each weekly workflow has a day of its own, at an hour well clear of
+# the Markdown run at midnight, so no two workflows ever push at once. It commits only when
 # the block moved. The commit is the bot's, so a redraw never counts
 # as your contribution.
 on:

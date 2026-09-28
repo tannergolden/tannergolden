@@ -1,11 +1,14 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""What the placard pickers share: GitHub's API, text the kit can letter, and the data file they write.
+"""What the placard pickers share: GitHub's API, text the kit can letter, and the settings they write.
 
 issue.py and releases.py each pick something from GitHub and write it as
-placards for the elements kit (tannergolden/banners/elements), which draws
-them in the page's one theme: the Elements workflow reads it from the
-Markdown stub, so the data files name no print. Stdlib only.
+placards into the page's settings, .github/markdown.yaml, where
+tannergolden/markdown reads every element it draws. Each picker owns one
+region of the settings' `elements:` section, the lines between
+`# NAME:start` and `# NAME:end`, and rewrites only those, so everything else
+in the file stays as it was written. The placards name no print: the kit
+draws them in the page's one theme. Stdlib only.
 """
 from __future__ import annotations
 
@@ -150,19 +153,64 @@ def day(d: dt.date) -> str:
     return f"{d.day} {d.strftime('%b').upper()}"
 
 
+def _text(value: Any) -> str:
+    """A value as YAML reads it back unchanged: double-quoted text, whose escapes JSON's are a part of."""
+    return json.dumps(value, ensure_ascii=False)
+
+
 def dump(doc: dict) -> str:
-    out = json.dumps(doc, indent=1, ensure_ascii=False) + "\n"
+    """The placards as entries of the settings' `elements:` section: two spaces in, one field a line."""
+    lines = []
+    for eid, card in doc["elements"].items():
+        lines.append(f"  {eid}:")
+        for key, value in card.items():
+            if key == "cells":
+                lines.append("    cells:")
+                lines += [f"      - [{_text(label)}, {_text(said)}]" for label, said in value]
+            else:
+                lines.append(f"    {key}: {_text(value)}")
+    out = "".join(line + "\n" for line in lines)
     for ch, name in BANNED.items():
         if ch in out:
             raise SystemExit(f"the placards contain {name}")
     return out
 
 
-def write(path: Path, doc: dict) -> bool:
-    """Write the data file when it changed. True when it did."""
-    text = dump(doc)
-    if path.exists() and path.read_text(encoding="utf-8") == text:
+def _region(lines: list[str], path: Path, name: str) -> tuple[int, int]:
+    """The indexes of the region's `# NAME:start` and `# NAME:end` lines."""
+    starts = [i for i, line in enumerate(lines) if line.strip().startswith(f"# {name}:start")]
+    ends = [i for i, line in enumerate(lines) if line.strip().startswith(f"# {name}:end")]
+    if len(starts) != 1 or len(ends) != 1 or ends[0] < starts[0]:
+        raise SystemExit(f"{path}: expected one '# {name}:start' line, and one '# {name}:end' line after it")
+    return starts[0], ends[0]
+
+
+def read(path: Path, name: str) -> dict:
+    """The placards the region holds now, as `dump` wrote them: {"elements": {id: placard}}."""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    a, b = _region(lines, path, name)
+    cards: dict = {}
+    card: dict = {}
+    for line in lines[a + 1:b]:
+        if not line.strip():
+            continue
+        if line.startswith("      - "):
+            card["cells"].append(json.loads(line[8:]))
+        elif line.startswith("    "):
+            key, _, value = line.strip().partition(":")
+            card[key] = [] if key == "cells" else json.loads(value)
+        else:
+            card = cards[line.strip().rstrip(":")] = {}
+    return {"elements": cards}
+
+
+def write(path: Path, name: str, doc: dict) -> bool:
+    """Write the placards into the region, when they changed. True when they did."""
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines(keepends=True)
+    a, b = _region(lines, path, name)
+    new = "".join(lines[:a + 1]) + dump(doc) + "".join(lines[b:])
+    if new == text:
         return False
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
+    path.write_text(new, encoding="utf-8")
     return True

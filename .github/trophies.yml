@@ -1,8 +1,0 @@
-# The case this profile draws for itself, measured across every public
-# repository the account owns. Every key and its default:
-# tannergolden/trophies/examples/trophies.yml.
-mode: profile
-style: trophy
-# Five trophies fill one row at GitHub's width, lit ones first. Reviews,
-# issues and stars join the row once they rank.
-core: [commits, repos, streak, followers, pulls]

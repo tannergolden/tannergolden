@@ -1,0 +1,169 @@
+# The page's settings, read by tannergolden/markdown on every run of the
+# Markdown stub (.github/workflows/markdown.yml), which names the page's one
+# theme. Whatever is not written here is read from GitHub: the name, the bio
+# and every figure. Every key and its default:
+# https://github.com/tannergolden/markdown/blob/Development/docs/Settings.md
+
+# The README tells time in EST, so the page's day, and a holiday's set with
+# it, changes over at midnight EST.
+timezone: EST
+
+banners:
+  motto: Built to be rebuilt.
+  # More general notes, numbered after the motto: the second says how to read
+  # every time on the page.
+  notes:
+    - All times in EST.
+  # Where to find me and what I work in, before any count that is still small.
+  figures: [account, repositories, contributions, language, since, site]
+  closing: Measured, never typed.
+  # The four buttons under the footer, in this order: everything published,
+  # then the three repositories a developer should open first. The standards
+  # every repository follows, the template every new one starts from, and
+  # the kit that draws this page.
+  links:
+    Repositories: https://github.com/tannergolden?tab=repositories
+    Standards: https://github.com/tannergolden/standards
+    Golden Path: https://github.com/tannergolden/path
+    Markdown: https://github.com/tannergolden/markdown
+
+# The row under the header: the conventional four, then two live badges the
+# run measures, whose gold labels say so and whose colour can go yellow or
+# red. In the page's print, every one is drawn as its plate.
+badges:
+  - name: status
+    label: Status
+    message: Active
+    icon: pulse
+    link: ./
+  - name: role
+    label: Role
+    message: Profile
+    icon: home
+    link: ./
+  - name: context
+    label: Context
+    message: AI Infrastructure
+    icon: chip
+    link: ./
+  - name: license
+    label: License
+    message: MIT
+    icon: scale
+    link: ./LICENSE
+  # Whether tannergolden/standards passes its own checks.
+  - name: standards-ci
+    label: Standards CI
+    icon: check
+    reserve: Failing, No Data
+    link: https://github.com/tannergolden/standards/actions/workflows/self-checks.yml
+    measure:
+      workflow: self-checks.yml
+      repository: tannergolden/standards
+      branch: Development
+  # How long ago I last committed anywhere; the kit's refreshes and the
+  # bot's commits never count.
+  - name: last-commit
+    label: Last Commit
+    icon: commit
+    reserve: This Month, Over a Month, No Data
+    link: https://github.com/tannergolden?tab=repositories
+    measure: last-commit
+
+# The drawings in the README's body, each where its markers stand. The
+# schematic is written by hand; the kit lays its boxes out from the wires.
+elements:
+  how-it-fits:
+    kind: schematic
+    title: Schematic of tannergolden
+    desc: >-
+      Standards holds the rules and the reusable workflows every repository
+      calls at v1, and the Golden Path template follows them by link, so every
+      new repository starts from it. A repository adds one Markdown stub, and
+      once a day, at 00:00 EST, the kit it calls measures the page and redraws
+      what moved in one commit: the header and footer, the badges, this
+      schematic and the placards, and the trophies. The stub names the page's
+      one theme, the blackprint, and every part is drawn in it.
+    caption: HOW IT FITS TOGETHER  ·  TIMES IN EST  ·  NOT TO SCALE
+    groups:
+      page: THIS README  ·  EVERY IMAGE DRAWN, NEVER FETCHED
+    boxes:
+      standards: {title: Standards, path: reusable workflows @v1, icon: scale}
+      path: {title: Golden Path, path: use this template, icon: compass}
+      repos: {title: Every repository, path: .github/workflows/, icon: layers}
+      markdown: {title: Markdown, path: one stub · 00:00, icon: sync, note: 1}
+      header: {title: Header and footer, path: name and figures, icon: grid, in: page}
+      badges: {title: Badges, path: two of them live, icon: tag, in: page}
+      drawings: {title: Schematic and placards, path: placards picked weekly, icon: layers, in: page, note: 2}
+      trophies: {title: Trophies, path: the case and its history, icon: trophy, in: page}
+    wires:
+      - [standards, path, BY LINK]
+      - [path, repos, TEMPLATE]
+      - [repos, markdown, ONE STUB]
+      # One run draws all four, so one of the four wires says so.
+      - [markdown, header]
+      - [markdown, badges]
+      - [markdown, drawings]
+      - [markdown, trophies, DRAWS]
+    notes:
+      - [1, "NAMES THE PAGE'S ONE THEME; EVERY PART MATCHES IT"]
+      - [2, PLACARDS PICKED WEDNESDAYS AND FRIDAYS]
+  # The two repositories on this account that shipped most recently. Every
+  # Wednesday .github/scripts/releases.py rewrites the lines between the next
+  # two, and nothing else in this file.
+  # releases:start
+  release-1:
+    kind: "placard"
+    owner: "tannergolden"
+    name: "banners"
+    icon: "package"
+    link: "https://github.com/tannergolden/banners/releases/tag/v1.7.0"
+    desc: "Blueprint headers and footers a README draws for itself. Measured nightly, never fetched, so they are up for as long as GitHub is."
+    cells:
+      - ["Release", "V1.7.0"]
+      - ["Published", "27 SEP"]
+      - ["Pinned as", "@V1"]
+  release-2:
+    kind: "placard"
+    owner: "tannergolden"
+    name: "standards"
+    icon: "package"
+    link: "https://github.com/tannergolden/standards/releases/tag/v1.9.1"
+    desc: "Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain."
+    cells:
+      - ["Release", "V1.9.1"]
+      - ["Published", "26 SEP"]
+      - ["Pinned as", "@V1"]
+  # releases:end
+  # The two good first issues. Every Friday .github/scripts/issue.py rewrites
+  # the lines between the next two, and nothing else in this file.
+  # issues:start
+  issue-1:
+    kind: "placard"
+    owner: "microsoft"
+    name: "markitdown"
+    icon: "flag"
+    link: "https://github.com/microsoft/markitdown/issues/2386"
+    desc: "#2386: Autonomous Agents, Unite!"
+    cells:
+      - ["Stars", "187K"]
+      - ["Language", "PYTHON"]
+      - ["Opened", "4 SEP"]
+  issue-2:
+    kind: "placard"
+    owner: "rtk-ai"
+    name: "rtk"
+    icon: "flag"
+    link: "https://github.com/rtk-ai/rtk/issues/4299"
+    desc: "#4299: docs still say native Windows falls back to CLAUDE.md injection."
+    cells:
+      - ["Stars", "81.8K"]
+      - ["Language", "RUST"]
+      - ["Opened", "27 SEP"]
+  # issues:end
+
+trophies:
+  style: trophy
+  # Five trophies fill one row at GitHub's width, lit ones first. Reviews,
+  # issues and stars join the row once they rank.
+  core: [commits, repos, streak, followers, pulls]

@@ -239,30 +239,49 @@ class Placards(unittest.TestCase):
             self.assertEqual(len(card["cells"]), 3)
 
 
+SETTINGS = """elements:
+  how-it-fits:
+    kind: schematic
+  # issues:start  written by issue.py
+  # issues:end
+"""
+
+
 class Data(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.data = Path(self.tmp.name) / ".github" / "good-first-issue.json"
+        self.settings = Path(self.tmp.name) / ".github" / "markdown.yaml"
+        self.settings.parent.mkdir()
+        self.settings.write_text(SETTINGS, encoding="utf-8")
 
     def tearDown(self):
         self.tmp.cleanup()
 
     def run_main(self, fake: Fake) -> str:
-        issue.main([str(self.data), "--today", TODAY.isoformat()], fetch=fake)
-        return self.data.read_text(encoding="utf-8")
+        issue.main([str(self.settings), "--today", TODAY.isoformat()], fetch=fake)
+        return self.settings.read_text(encoding="utf-8")
 
-    def test_the_data_file_is_the_kits_json(self):
-        doc = json.loads(self.run_main(Fake([item("big/one", 1, "2026-09-26"), item("mid/two", 2, "2026-09-25")])))
-        self.assertEqual([c["link"] for c in doc["elements"].values()],
+    def placards(self) -> dict:
+        return issue.read(self.settings, issue.REGION)["elements"]
+
+    def test_the_settings_hold_both_placards(self):
+        self.run_main(Fake([item("big/one", 1, "2026-09-26"), item("mid/two", 2, "2026-09-25")]))
+        self.assertEqual([c["link"] for c in self.placards().values()],
                          ["https://github.com/big/one/issues/1", "https://github.com/mid/two/issues/2"])
+        self.assertEqual(list(self.placards()), list(issue.SLOTS))
 
     def test_an_unreachable_github_keeps_last_weeks_placards(self):
         first = self.run_main(Fake([item("big/one", 1, "2026-09-26")]))
         self.assertEqual(self.run_main(Fake([], fail=True)), first)
 
     def test_a_first_run_with_nothing_writes_the_search_placard(self):
-        doc = json.loads(self.run_main(Fake([], fail=True)))
-        self.assertEqual([c["link"] for c in doc["elements"].values()], [issue.BROWSE])
+        self.run_main(Fake([], fail=True))
+        self.assertEqual([c["link"] for c in self.placards().values()], [issue.BROWSE])
+
+    def test_only_the_region_is_rewritten(self):
+        text = self.run_main(Fake([item("big/one", 1, "2026-09-26")]))
+        self.assertTrue(text.startswith("elements:\n  how-it-fits:\n    kind: schematic\n  # issues:start"))
+        self.assertTrue(text.endswith("  # issues:end\n"))
 
     def test_no_banned_dash_reaches_the_file(self):
         text = self.run_main(Fake([item("big/one", 1, "2026-09-26", title="Fix " + DASHES[0] + " and " + DASHES[1] + " in docs")]))

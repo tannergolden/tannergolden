@@ -112,39 +112,69 @@ class Placard(unittest.TestCase):
         self.assertTrue(releases.about("Note: " + "word " * 40).startswith("Note: word"))
 
 
+SETTINGS = """banners:
+  motto: Built to be rebuilt.
+elements:
+  how-it-fits:
+    kind: schematic
+  # releases:start  written by releases.py
+  # releases:end
+trophies:
+  style: trophy
+"""
+
+
 class Data(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.data = Path(self.tmp.name) / ".github" / "releases.json"
+        self.settings = Path(self.tmp.name) / ".github" / "markdown.yaml"
+        self.settings.parent.mkdir()
+        self.settings.write_text(SETTINGS, encoding="utf-8")
         self.fake = Fake([repo("a"), repo("b")], {"a": release("a", "v1.0.0", "2026-09-20"),
                                                    "b": release("b", "v1.1.0", "2026-09-26")})
 
     def tearDown(self):
         self.tmp.cleanup()
 
-    def run_main(self, fake: Fake) -> None:
-        releases.main([str(self.data), "--owner", "me"], fetch=fake)
+    def run_main(self, fake: Fake) -> str:
+        releases.main([str(self.settings), "--owner", "me"], fetch=fake)
+        return self.settings.read_text(encoding="utf-8")
 
-    def test_the_data_file_names_both_slots_and_leaves_the_print_to_the_stub(self):
+    def test_the_settings_name_both_slots_and_leave_the_print_to_the_stub(self):
         self.run_main(self.fake)
-        doc = json.loads(self.data.read_text(encoding="utf-8"))
-        self.assertNotIn("print", doc, "the Elements workflow draws them in the stub's theme")
+        doc = releases.read(self.settings, releases.REGION)
         self.assertEqual(list(doc["elements"]), ["release-1", "release-2"])
+        for card in doc["elements"].values():
+            self.assertNotIn("print", card, "the kit draws them in the stub's theme")
+
+    def test_the_region_reads_back_as_it_was_written(self):
+        self.run_main(self.fake)
+        wanted = releases.document(releases.choose(self.fake, "me", ""))
+        self.assertEqual(releases.read(self.settings, releases.REGION), json.loads(json.dumps(wanted)))
+
+    def test_only_the_region_is_rewritten(self):
+        def outside(text: str) -> str:
+            start = text.index("\n", text.index("  # releases:start")) + 1
+            return text[:start] + text[text.index("  # releases:end"):]
+        text = self.run_main(self.fake)
+        self.assertIn("  release-1:\n    kind: \"placard\"\n", text)
+        self.assertEqual(outside(text), outside(SETTINGS))
 
     def test_an_unreachable_github_keeps_last_weeks_placards(self):
-        self.run_main(self.fake)
-        before = self.data.read_text(encoding="utf-8")
-        self.run_main(Fake([], {}, fail=True))
-        self.assertEqual(self.data.read_text(encoding="utf-8"), before)
+        before = self.run_main(self.fake)
+        self.assertEqual(self.run_main(Fake([], {}, fail=True)), before)
 
     def test_a_first_run_with_nothing_writes_nothing(self):
-        self.run_main(Fake([], {}, fail=True))
-        self.assertFalse(self.data.exists())
+        self.assertEqual(self.run_main(Fake([], {}, fail=True)), SETTINGS)
+
+    def test_settings_without_the_region_are_refused(self):
+        self.settings.write_text("elements:\n  how-it-fits:\n    kind: schematic\n", encoding="utf-8")
+        with self.assertRaises(SystemExit):
+            self.run_main(self.fake)
 
     def test_no_banned_dash_reaches_the_file(self):
-        self.run_main(Fake([repo("a", description="Kits " + DASHES[1] + " drawn " + DASHES[0] + " daily")],
-                           {"a": release("a", "v1.0.0", "2026-09-20")}))
-        text = self.data.read_text(encoding="utf-8")
+        text = self.run_main(Fake([repo("a", description="Kits " + DASHES[1] + " drawn " + DASHES[0] + " daily")],
+                                  {"a": release("a", "v1.0.0", "2026-09-20")}))
         for ch in DASHES:
             self.assertNotIn(ch, text)
 

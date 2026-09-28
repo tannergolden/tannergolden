@@ -286,21 +286,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 24 Sep.** [Default Enablement of Copilot features for Copilot Business and Enterprise](https://github.blog/changelog/2026-09-24-default-enablement-of-copilot-features-for-copilot-business-and-enterprise)
+> **GitHub changelog · 25 Sep.** [CodeQL 2.27.1 adds C and C++ query and Kotlin 2.4.20 support](https://github.blog/changelog/2026-09-25-codeql-2-27-1-adds-c-and-c-query-and-kotlin-2-4-20-support)
 
 > [!TIP]
-> **Advanced · Regex.** GNU `sed` can change case in a replacement: `sed -E 's/\b(.)/\u\1/g'` capitalizes every word, and `\U` up to `\E` uppercases a whole span. The BSD `sed` on macOS lacks these escapes, so such scripts aren't portable.
+> **tldr-pages · [pip-download](https://github.com/tldr-pages/tldr/blob/main/pages/common/pip-download.md).** Download a package and its dependencies to a specific directory: `pip download <package> --dest <path/to/directory>`
 
 > [!IMPORTANT]
-> **Professional · Dependencies.** Check dependency licenses automatically in CI against a policy your legal team has approved. A package with incompatible or missing license terms found after launch can force a rewrite or a legal review under deadline.
+> **End of life · [Python 3.10](https://endoflife.date/python).** Python 3.10 stops getting security fixes on 31 October 2026. Move to 3.14, the newest release.
 
 > [!WARNING]
-> **Beginner · Web.** A relative URL inside a CSS file, like `url(img/bg.png)`, is resolved from the CSS file's location, not the page's. Adjust paths when your stylesheet lives in a subfolder.
+> **Advisory · [GHSA-r3r9-wp5j-pq5g](https://github.com/advisories/GHSA-r3r9-wp5j-pq5g) · npm.** `request-filtering-agent` (\< 3.2.1): request-filtering-agent: Synchronous throw from createConnection() for literal private-IP hosts bypasses req.on('error'), crashing the Node.js process. Update to `3.2.1` or later.
 
 > [!CAUTION]
-> **Intermediate · Databases.** Copying a SQLite database with `cp` while the app is writing can produce a corrupt copy, and recent commits may still sit in the `-wal` file. Use the `sqlite3` shell's `.backup` command or `VACUUM INTO` instead.
+> **Advanced · Tooling.** Sharing a terminal through `tmate` or a shared `tmux` socket gives every guest full control of your shell and every credential it holds, not just a view. Use a read-only link or `tmux attach -r` for demos, and end the session as soon as you finish.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 39 of 2026. Open data this week: GitHub changelog.</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 40 of 2026. Open data this week: GitHub changelog, tldr-pages (CC BY 4.0), endoflife.date, GitHub Advisory Database (CC BY 4.0).</sub>
 
 <!-- notes:end -->
 

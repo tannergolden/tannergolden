@@ -261,18 +261,18 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- elements:release-1:start -->
-<a href="https://github.com/tannergolden/banners/releases/tag/v1.7.0">
+<a href="https://github.com/tannergolden/trophies/releases/tag/v1.2.4">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/releases/release-1-dark.svg">
-  <img alt="tannergolden/banners. Blueprint headers and footers a README draws for itself. Measured nightly, never fetched, so they are up for as long as GitHub is." src="assets/releases/release-1-day.svg">
+  <img alt="tannergolden/trophies. Trophies and 100 achievements a GitHub profile or repository earns for itself." src="assets/releases/release-1-day.svg">
 </picture>
 </a>
 <!-- elements:release-1:end -->
 <!-- elements:release-2:start -->
-<a href="https://github.com/tannergolden/standards/releases/tag/v1.9.1">
+<a href="https://github.com/tannergolden/badges/releases/tag/v1.2.0">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/releases/release-2-dark.svg">
-  <img alt="tannergolden/standards. Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain." src="assets/releases/release-2-day.svg">
+  <img alt="tannergolden/badges. Badges a repository draws for itself." src="assets/releases/release-2-day.svg">
 </picture>
 </a>
 <!-- elements:release-2:end -->

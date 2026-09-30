@@ -3,14 +3,14 @@
   "release-1": {
    "kind": "placard",
    "owner": "tannergolden",
-   "name": "banners",
+   "name": "trophies",
    "icon": "package",
-   "link": "https://github.com/tannergolden/banners/releases/tag/v1.7.0",
-   "desc": "Blueprint headers and footers a README draws for itself. Measured nightly, never fetched, so they are up for as long as GitHub is.",
+   "link": "https://github.com/tannergolden/trophies/releases/tag/v1.2.4",
+   "desc": "Trophies and 100 achievements a GitHub profile or repository earns for itself.",
    "cells": [
     [
      "Release",
-     "V1.7.0"
+     "V1.2.4"
     ],
     [
      "Published",
@@ -25,18 +25,18 @@
   "release-2": {
    "kind": "placard",
    "owner": "tannergolden",
-   "name": "standards",
+   "name": "badges",
    "icon": "package",
-   "link": "https://github.com/tannergolden/standards/releases/tag/v1.9.1",
-   "desc": "Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain.",
+   "link": "https://github.com/tannergolden/badges/releases/tag/v1.2.0",
+   "desc": "Badges a repository draws for itself.",
    "cells": [
     [
      "Release",
-     "V1.9.1"
+     "V1.2.0"
     ],
     [
      "Published",
-     "26 SEP"
+     "27 SEP"
     ],
     [
      "Pinned as",

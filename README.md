@@ -319,10 +319,10 @@ release. Redrawn every Wednesday.
 </a>
 <!-- elements:issue-1:end -->
 <!-- elements:issue-2:start -->
-<a href="https://github.com/rtk-ai/rtk/issues/4299">
+<a href="https://github.com/google-gemini/gemini-cli/issues/29338">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/issues/issue-2-dark.svg">
-  <img alt="rtk-ai/rtk. #4299: docs still say native Windows falls back to CLAUDE.md injection." src="assets/issues/issue-2-day.svg">
+  <img alt="google-gemini/gemini-cli. #29338: Rootless podman sandbox hit EACCES because --userns=keep-id is not set." src="assets/issues/issue-2-day.svg">
 </picture>
 </a>
 <!-- elements:issue-2:end -->

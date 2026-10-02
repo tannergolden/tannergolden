@@ -10,7 +10,7 @@
    "cells": [
     [
      "Stars",
-     "187K"
+     "188K"
     ],
     [
      "Language",
@@ -24,23 +24,23 @@
   },
   "issue-2": {
    "kind": "placard",
-   "owner": "rtk-ai",
-   "name": "rtk",
+   "owner": "google-gemini",
+   "name": "gemini-cli",
    "icon": "flag",
-   "link": "https://github.com/rtk-ai/rtk/issues/4299",
-   "desc": "#4299: docs still say native Windows falls back to CLAUDE.md injection.",
+   "link": "https://github.com/google-gemini/gemini-cli/issues/29338",
+   "desc": "#29338: Rootless podman sandbox hit EACCES because --userns=keep-id is not set.",
    "cells": [
     [
      "Stars",
-     "81.8K"
+     "107K"
     ],
     [
      "Language",
-     "RUST"
+     "TYPESCRIPT"
     ],
     [
      "Opened",
-     "27 SEP"
+     "15 SEP"
     ]
    ]
   }

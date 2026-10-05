@@ -286,21 +286,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 25 Sep.** [CodeQL 2.27.1 adds C and C++ query and Kotlin 2.4.20 support](https://github.blog/changelog/2026-09-25-codeql-2-27-1-adds-c-and-c-query-and-kotlin-2-4-20-support)
+> **Professional · HTTP.** TLS 1.3 early data lets a returning client send its first request without waiting for the handshake, but an attacker can replay that data, so servers should accept only idempotent requests in it and can answer others with `425 Too Early`.
 
 > [!TIP]
-> **tldr-pages · [pip-download](https://github.com/tldr-pages/tldr/blob/main/pages/common/pip-download.md).** Download a package and its dependencies to a specific directory: `pip download <package> --dest <path/to/directory>`
+> **Beginner · Shell.** Insert a command's output into another command with `$(...)`, as in `echo "Backup from $(date +%F)"` or `cd "$(git rev-parse --show-toplevel)"` to reach the repository root.
 
 > [!IMPORTANT]
-> **End of life · [Python 3.10](https://endoflife.date/python).** Python 3.10 stops getting security fixes on 31 October 2026. Move to 3.14, the newest release.
+> **End of life · [Ruby 3.3](https://endoflife.date/ruby).** Ruby 3.3 stops getting security fixes on 31 March 2027. Move to 4.0, the newest release.
 
 > [!WARNING]
-> **Advisory · [GHSA-r3r9-wp5j-pq5g](https://github.com/advisories/GHSA-r3r9-wp5j-pq5g) · npm.** `request-filtering-agent` (\< 3.2.1): request-filtering-agent: Synchronous throw from createConnection() for literal private-IP hosts bypasses req.on('error'), crashing the Node.js process. Update to `3.2.1` or later.
+> **Advanced · Algorithms.** A Bloom filter's false-positive rate climbs steeply once it holds more items than it was sized for, and entries cannot be removed. Size it for the maximum item count and target rate, and rebuild it when you outgrow that.
 
 > [!CAUTION]
-> **Advanced · Tooling.** Sharing a terminal through `tmate` or a shared `tmux` socket gives every guest full control of your shell and every credential it holds, not just a view. Use a read-only link or `tmux attach -r` for demos, and end the session as soon as you finish.
+> **Professional · Incidents.** Rehearse failing over to your disaster recovery region, and failing back, on a schedule. A first attempt made during a real disaster often stalls on a dependency nobody remembered.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 40 of 2026. Open data this week: GitHub changelog, tldr-pages (CC BY 4.0), endoflife.date, GitHub Advisory Database (CC BY 4.0).</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 41 of 2026. Open data this week: endoflife.date.</sub>
 
 <!-- notes:end -->
 

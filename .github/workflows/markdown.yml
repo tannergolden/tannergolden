@@ -1,10 +1,12 @@
-name: Markdown
+name: '📝 Markdown'
 
-# The whole page, drawn by tannergolden/markdown in one run and one commit:
-# the header and footer, the badges, the schematic and the placards, and the
-# trophy case. Once a day at 05:00 UTC, which is midnight EST, so the page's
-# day, and a holiday's set with it, changes over at the page's own midnight.
-# Picks starts it too, as soon as it has picked new placards.
+# The stub tannergolden/markdown's README gives every page, with this page's two
+# choices: profile mode and the blackprint. It draws the whole page in one run
+# and one commit: the header and footer, the badges, the schematic and the
+# placards, and the trophy case. Once a day at 05:00 UTC, which is midnight
+# EST, so the page's day, and a holiday's set with it, changes over at the
+# page's own midnight. Picks starts it too, as soon as it has picked new
+# placards.
 #
 # `theme` is the page's one theme, and every part is drawn in it. Everything
 # else the page sets is in .github/markdown.yaml.
@@ -24,3 +26,4 @@ jobs:
     with:
       mode: profile
       theme: blackprint # the page's one theme
+    secrets: inherit # zizmor: ignore[secrets-inherit] - first-party callee at the ref pinned above.

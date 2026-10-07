@@ -1,6 +1,6 @@
 {
  "drawn": {
-  "day": "2026-10-06",
+  "day": "2026-10-07",
   "holiday": null,
   "rainbow": null,
   "theme": "blackprint"
@@ -24,7 +24,7 @@
     "profile": {
      "bio": "Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons.",
      "company": "",
-     "contributions": 1100,
+     "contributions": 956,
      "created": "2016-12-20",
      "followers": 14,
      "following": 5,
@@ -32,7 +32,7 @@
      "location": "United States",
      "login": "tannergolden",
      "name": "Tanner Golden",
-     "repositories": 11,
+     "repositories": 8,
      "stars": 0,
      "status": {
       "message": "Focusing"
@@ -73,7 +73,7 @@
      "workflows": 3
     },
     "subject": "tannergolden",
-    "today": "2026-10-06"
+    "today": "2026-10-07"
    }
   },
   "elements": {
@@ -90,7 +90,8 @@
    "history": {
     "commits": {
      "2026-09-27": 919,
-     "2026-10-06": 925
+     "2026-10-06": 925,
+     "2026-10-07": 819
     },
     "followers": {
      "2026-09-27": 14
@@ -100,7 +101,8 @@
     },
     "repos": {
      "2026-09-27": 9,
-     "2026-10-06": 11
+     "2026-10-06": 11,
+     "2026-10-07": 8
     },
     "streak": {
      "2026-09-27": 6
@@ -109,55 +111,55 @@
    "last": {
     "curs": {
      "answer-key": 0,
-     "auto-pilot": 10,
+     "auto-pilot": 7,
      "backed": 0,
      "badge-maker": 1,
      "big-week": 584,
      "blueprint": 1,
-     "branching-out": 2,
+     "branching-out": 3,
      "bug-hunter": 2,
-     "by-the-book": 445,
+     "by-the-book": 336,
      "century": 159,
-     "closer": 9,
+     "closer": 1,
      "comeback": 1,
      "constellation": 0,
      "conversation-starter": 0,
      "crew": null,
-     "curator": 10,
+     "curator": 7,
      "curious": 5,
-     "documented": 11,
-     "duet": 236,
-     "early-bird": 31,
+     "documented": 8,
+     "duet": 133,
+     "early-bird": 1,
      "fan-club": 0,
-     "first-light": 11,
-     "fixer": 68,
+     "first-light": 8,
+     "fixer": 50,
      "forked": 0,
-     "form-filler": 7,
+     "form-filler": 4,
      "founder": null,
      "four-seasons": 0,
      "friday-deploy": 0,
      "friday-the-13th": 0,
      "front-door": 1,
      "full-house": 0,
-     "gatekeeper": 9,
+     "gatekeeper": 6,
      "generous": 94,
      "ghost": 1,
      "gist-keeper": null,
      "gitmoji": 0,
      "green-light": 0,
-     "green-machine": 316,
+     "green-machine": 265,
      "green-wall": 0,
-     "heavy-lifter": 38,
-     "hello-world": 925,
+     "heavy-lifter": 23,
+     "hello-world": 819,
      "homecoming": 0,
-     "house-rules": 11,
+     "house-rules": 8,
      "inbox-zero": 0,
      "introduced": 1,
      "label-maker": 72,
      "landed": 2,
      "leap-day": 0,
-     "licensed": 11,
-     "locksmith": 11,
+     "licensed": 8,
+     "locksmith": 8,
      "long-game": 2,
      "long-haul": 0,
      "lunch-break": 12,
@@ -166,7 +168,7 @@
      "midnight-oil": 0,
      "monolith": 159,
      "new-year": 0,
-     "night-owl": 132,
+     "night-owl": 113,
      "open-door": 5,
      "open-hand": 0,
      "opening-move": 2,
@@ -175,53 +177,53 @@
      "patron": 0,
      "perfect-month": 0,
      "planner": 0,
-     "polyglot": 6,
+     "polyglot": 4,
      "red-pen": 0,
      "registry": 0,
      "reporter": 0,
      "roadmap": 0,
      "round-number": 0,
      "roundtable": 0,
-     "scribe": 135,
+     "scribe": 103,
      "second-opinion": 0,
      "second-pair-of-eyes": 0,
-     "semver": 5,
-     "shipped": 5,
-     "shipwright": 5,
-     "signed": 207,
+     "semver": 2,
+     "shipped": 2,
+     "shipwright": 2,
+     "signed": 141,
      "sprint": 864,
      "standard-bearer": 1,
      "stargazer": 0,
-     "surgeon": 199,
-     "sweeping-change": 17,
+     "surgeon": 169,
+     "sweeping-change": 7,
      "team-player": 0,
-     "tested": 10,
+     "tested": 4,
      "the-answer": 0,
      "ticket": 0,
      "tidy": 0,
-     "toolsmith": 3,
-     "town-hall": 5,
+     "toolsmith": 0,
+     "town-hall": 2,
      "trophy-maker": 1,
      "undo": 0,
      "upstream": 0,
      "veteran": 9,
      "voice": 0,
      "watched": 0,
-     "weekday-warrior": 12,
+     "weekday-warrior": 11,
      "weekender": 3,
-     "welcome-mat": 7,
+     "welcome-mat": 4,
      "well-maintained": 5,
-     "year-of-code": 17
+     "year-of-code": 16
     },
     "delta": {
-     "commits": 6,
+     "commits": 0,
      "followers": 0,
      "pulls": 0,
-     "repos": 2,
+     "repos": 0,
      "streak": 0
     },
     "extra": {
-     "currentStreak": 0,
+     "currentStreak": 1,
      "streak": 6,
      "years": 9
     },
@@ -239,13 +241,13 @@
      "tannergolden/standards": "tannergolden"
     },
     "subject": "tannergolden",
-    "today": "2026-10-06",
+    "today": "2026-10-07",
     "values": {
-     "commits": 925,
+     "commits": 819,
      "followers": 14,
      "issues": 0,
      "pulls": 2,
-     "repos": 11,
+     "repos": 8,
      "reviews": 0,
      "stars": 0,
      "streak": 6
@@ -622,7 +624,7 @@
     "tannergolden/path": {
      "complete": true,
      "cursor": null,
-     "head": "56ef60feecec5948c49015a69a0257d59c6c9c0c",
+     "head": "f16417d8d21e52359c97ec968750ba0f81718abe",
      "stats": {
       "authors": {
        "tannergolden": 94
@@ -659,7 +661,7 @@
     "tannergolden/standards": {
      "complete": true,
      "cursor": null,
-     "head": "d56aaf38810c3305646cf772aab8a7f6311ef795",
+     "head": "c7b1adfbcbbf3d9237b687f5acbd7787c13a557e",
      "stats": {
       "authors": {
        "tannergolden": 159
@@ -703,7 +705,7 @@
     "tannergolden/tannergolden": {
      "complete": true,
      "cursor": null,
-     "head": "ddb8b0794521e9e892af9e6d903eaceb62994033",
+     "head": "3b5dafce7327c46b0470523adf97575f88509fca",
      "stats": {
       "authors": {
        "tannergolden": 12
@@ -727,9 +729,10 @@
       "midnight": 0,
       "night": 2,
       "onefile": 2,
-      "refresh": 5,
+      "refresh": 6,
       "refresh_days": {
-       "2026-09-27": 5
+       "2026-09-27": 5,
+       "2026-10-07": 1
       },
       "revert": 0,
       "signed": 10,
@@ -737,7 +740,7 @@
       "test": 0,
       "total": 12
      },
-     "total": 17
+     "total": 18
     },
     "tannergolden/trophies": {
      "complete": true,

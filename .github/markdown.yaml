@@ -115,24 +115,24 @@ elements:
   release-1:
     kind: "placard"
     owner: "tannergolden"
-    name: "banners"
+    name: "markdown"
     icon: "package"
-    link: "https://github.com/tannergolden/banners/releases/tag/v1.7.0"
-    desc: "Blueprint headers and footers a README draws for itself. Measured nightly, never fetched, so they are up for as long as GitHub is."
+    link: "https://github.com/tannergolden/markdown/releases/tag/v1.0.0"
+    desc: "Automated SVG generator for README headers, badges, trophies, and footers, rendered locally from a single stub to bypass API rate limits."
     cells:
-      - ["Release", "V1.7.0"]
-      - ["Published", "27 SEP"]
+      - ["Release", "V1.0.0"]
+      - ["Published", "6 OCT"]
       - ["Pinned as", "@V1"]
   release-2:
     kind: "placard"
     owner: "tannergolden"
-    name: "standards"
+    name: "trophies"
     icon: "package"
-    link: "https://github.com/tannergolden/standards/releases/tag/v1.9.1"
-    desc: "Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain."
+    link: "https://github.com/tannergolden/trophies/releases/tag/v1.2.4"
+    desc: "Trophies and 100 achievements a GitHub profile or repository earns for itself."
     cells:
-      - ["Release", "V1.9.1"]
-      - ["Published", "26 SEP"]
+      - ["Release", "V1.2.4"]
+      - ["Published", "27 SEP"]
       - ["Pinned as", "@V1"]
   # releases:end
   # The two good first issues. Every Friday .github/scripts/issue.py rewrites
@@ -140,26 +140,26 @@ elements:
   # issues:start
   issue-1:
     kind: "placard"
-    owner: "microsoft"
-    name: "markitdown"
+    owner: "google-gemini"
+    name: "gemini-cli"
     icon: "flag"
-    link: "https://github.com/microsoft/markitdown/issues/2386"
-    desc: "#2386: Autonomous Agents, Unite!"
+    link: "https://github.com/google-gemini/gemini-cli/issues/29338"
+    desc: "#29338: Rootless podman sandbox hit EACCES because --userns=keep-id is not set."
     cells:
-      - ["Stars", "187K"]
-      - ["Language", "PYTHON"]
-      - ["Opened", "4 SEP"]
+      - ["Stars", "107K"]
+      - ["Language", "TYPESCRIPT"]
+      - ["Opened", "15 SEP"]
   issue-2:
     kind: "placard"
-    owner: "rtk-ai"
-    name: "rtk"
+    owner: "tt-a1i"
+    name: "archify"
     icon: "flag"
-    link: "https://github.com/rtk-ai/rtk/issues/4299"
-    desc: "#4299: docs still say native Windows falls back to CLAUDE.md injection."
+    link: "https://github.com/tt-a1i/archify/issues/681"
+    desc: "#681: [Proposal]: Normalize brand-source provenance links for shared diagrams."
     cells:
-      - ["Stars", "81.8K"]
-      - ["Language", "RUST"]
-      - ["Opened", "27 SEP"]
+      - ["Stars", "78.7K"]
+      - ["Language", "JAVASCRIPT"]
+      - ["Opened", "3 OCT"]
   # issues:end
 
 trophies:

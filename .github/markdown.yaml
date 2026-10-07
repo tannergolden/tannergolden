@@ -115,24 +115,24 @@ elements:
   release-1:
     kind: "placard"
     owner: "tannergolden"
-    name: "markdown"
+    name: "standards"
     icon: "package"
-    link: "https://github.com/tannergolden/markdown/releases/tag/v1.0.0"
-    desc: "Automated SVG generator for README headers, badges, trophies, and footers, rendered locally from a single stub to bypass API rate limits."
+    link: "https://github.com/tannergolden/standards/releases/tag/v1.10.0"
+    desc: "Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain."
     cells:
-      - ["Release", "V1.0.0"]
-      - ["Published", "6 OCT"]
+      - ["Release", "V1.10.0"]
+      - ["Published", "7 OCT"]
       - ["Pinned as", "@V1"]
   release-2:
     kind: "placard"
     owner: "tannergolden"
-    name: "trophies"
+    name: "markdown"
     icon: "package"
-    link: "https://github.com/tannergolden/trophies/releases/tag/v1.2.4"
-    desc: "Trophies and 100 achievements a GitHub profile or repository earns for itself."
+    link: "https://github.com/tannergolden/markdown/releases/tag/v1.0.1"
+    desc: "Automated SVG generator for README headers, badges, trophies, and footers, rendered locally from a single stub to bypass API rate limits."
     cells:
-      - ["Release", "V1.2.4"]
-      - ["Published", "27 SEP"]
+      - ["Release", "V1.0.1"]
+      - ["Published", "6 OCT"]
       - ["Pinned as", "@V1"]
   # releases:end
   # The two good first issues. Every Friday .github/scripts/issue.py rewrites

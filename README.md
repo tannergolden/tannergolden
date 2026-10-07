@@ -261,18 +261,18 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- elements:release-1:start -->
-<a href="https://github.com/tannergolden/banners/releases/tag/v1.7.0">
+<a href="https://github.com/tannergolden/trophies/releases/tag/v1.2.4">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/releases/release-1-dark.svg">
-  <img alt="tannergolden/banners. Blueprint headers and footers a README draws for itself. Measured nightly, never fetched, so they are up for as long as GitHub is." src="assets/releases/release-1-day.svg">
+  <img alt="tannergolden/trophies. Trophies and 100 achievements a GitHub profile or repository earns for itself." src="assets/releases/release-1-day.svg">
 </picture>
 </a>
 <!-- elements:release-1:end -->
 <!-- elements:release-2:start -->
-<a href="https://github.com/tannergolden/standards/releases/tag/v1.9.1">
+<a href="https://github.com/tannergolden/badges/releases/tag/v1.2.0">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/releases/release-2-dark.svg">
-  <img alt="tannergolden/standards. Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain." src="assets/releases/release-2-day.svg">
+  <img alt="tannergolden/badges. Badges a repository draws for itself." src="assets/releases/release-2-day.svg">
 </picture>
 </a>
 <!-- elements:release-2:end -->
@@ -286,21 +286,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 24 Sep.** [Default Enablement of Copilot features for Copilot Business and Enterprise](https://github.blog/changelog/2026-09-24-default-enablement-of-copilot-features-for-copilot-business-and-enterprise)
+> **Professional · HTTP.** TLS 1.3 early data lets a returning client send its first request without waiting for the handshake, but an attacker can replay that data, so servers should accept only idempotent requests in it and can answer others with `425 Too Early`.
 
 > [!TIP]
-> **Advanced · Regex.** GNU `sed` can change case in a replacement: `sed -E 's/\b(.)/\u\1/g'` capitalizes every word, and `\U` up to `\E` uppercases a whole span. The BSD `sed` on macOS lacks these escapes, so such scripts aren't portable.
+> **Beginner · Shell.** Insert a command's output into another command with `$(...)`, as in `echo "Backup from $(date +%F)"` or `cd "$(git rev-parse --show-toplevel)"` to reach the repository root.
 
 > [!IMPORTANT]
-> **Professional · Dependencies.** Check dependency licenses automatically in CI against a policy your legal team has approved. A package with incompatible or missing license terms found after launch can force a rewrite or a legal review under deadline.
+> **End of life · [Ruby 3.3](https://endoflife.date/ruby).** Ruby 3.3 stops getting security fixes on 31 March 2027. Move to 4.0, the newest release.
 
 > [!WARNING]
-> **Beginner · Web.** A relative URL inside a CSS file, like `url(img/bg.png)`, is resolved from the CSS file's location, not the page's. Adjust paths when your stylesheet lives in a subfolder.
+> **Advanced · Algorithms.** A Bloom filter's false-positive rate climbs steeply once it holds more items than it was sized for, and entries cannot be removed. Size it for the maximum item count and target rate, and rebuild it when you outgrow that.
 
 > [!CAUTION]
-> **Intermediate · Databases.** Copying a SQLite database with `cp` while the app is writing can produce a corrupt copy, and recent commits may still sit in the `-wal` file. Use the `sqlite3` shell's `.backup` command or `VACUUM INTO` instead.
+> **Professional · Incidents.** Rehearse failing over to your disaster recovery region, and failing back, on a schedule. A first attempt made during a real disaster often stalls on a dependency nobody remembered.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 39 of 2026. Open data this week: GitHub changelog.</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 41 of 2026. Open data this week: endoflife.date.</sub>
 
 <!-- notes:end -->
 
@@ -319,10 +319,10 @@ release. Redrawn every Wednesday.
 </a>
 <!-- elements:issue-1:end -->
 <!-- elements:issue-2:start -->
-<a href="https://github.com/rtk-ai/rtk/issues/4299">
+<a href="https://github.com/google-gemini/gemini-cli/issues/29338">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/issues/issue-2-dark.svg">
-  <img alt="rtk-ai/rtk. #4299: docs still say native Windows falls back to CLAUDE.md injection." src="assets/issues/issue-2-day.svg">
+  <img alt="google-gemini/gemini-cli. #29338: Rootless podman sandbox hit EACCES because --userns=keep-id is not set." src="assets/issues/issue-2-day.svg">
 </picture>
 </a>
 <!-- elements:issue-2:end -->

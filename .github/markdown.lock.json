@@ -1,0 +1,833 @@
+{
+ "drawn": {
+  "day": "2026-10-06",
+  "holiday": null,
+  "rainbow": null,
+  "theme": "blackprint"
+ },
+ "parts": {
+  "badges": {
+   "measured": {
+    "last-commit": {
+     "message": "This Week",
+     "state": "green"
+    },
+    "standards-ci": {
+     "message": "Passing",
+     "state": "green"
+    }
+   }
+  },
+  "banners": {
+   "last": {
+    "mode": "profile",
+    "profile": {
+     "bio": "Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons.",
+     "company": "",
+     "contributions": 1100,
+     "created": "2016-12-20",
+     "followers": 14,
+     "following": 5,
+     "language": "Python",
+     "location": "United States",
+     "login": "tannergolden",
+     "name": "Tanner Golden",
+     "repositories": 11,
+     "stars": 0,
+     "status": {
+      "message": "Focusing"
+     },
+     "twitter": "",
+     "website": "www.tannergolden.com"
+    },
+    "repository": {
+     "archived": false,
+     "branch": "Development",
+     "created": "2026-09-26",
+     "description": "Tanner Golden's self-updating GitHub profile README, drawn with GitHub Actions.",
+     "discussionsOn": false,
+     "forks": 0,
+     "full": "tannergolden/tannergolden",
+     "homepage": "www.tannergolden.com",
+     "issues": 0,
+     "issuesOn": true,
+     "language": "",
+     "license": "MIT",
+     "name": "tannergolden",
+     "org": false,
+     "owner": "tannergolden",
+     "private": false,
+     "pulls": 0,
+     "release": "",
+     "released": "",
+     "releases": 0,
+     "stars": 0,
+     "topics": [
+      "automation",
+      "github-actions",
+      "github-profile",
+      "readme"
+     ],
+     "updated": "2026-10-07",
+     "watchers": 0,
+     "workflows": 3
+    },
+    "subject": "tannergolden",
+    "today": "2026-10-06"
+   }
+  },
+  "elements": {
+   "drawn": [
+    "how-it-fits",
+    "release-1",
+    "release-2",
+    "issue-1",
+    "issue-2"
+   ],
+   "measured": {}
+  },
+  "trophies": {
+   "history": {
+    "commits": {
+     "2026-09-27": 919,
+     "2026-10-06": 925
+    },
+    "followers": {
+     "2026-09-27": 14
+    },
+    "pulls": {
+     "2026-09-27": 2
+    },
+    "repos": {
+     "2026-09-27": 9,
+     "2026-10-06": 11
+    },
+    "streak": {
+     "2026-09-27": 6
+    }
+   },
+   "last": {
+    "curs": {
+     "answer-key": 0,
+     "auto-pilot": 10,
+     "backed": 0,
+     "badge-maker": 1,
+     "big-week": 584,
+     "blueprint": 1,
+     "branching-out": 2,
+     "bug-hunter": 2,
+     "by-the-book": 445,
+     "century": 159,
+     "closer": 9,
+     "comeback": 1,
+     "constellation": 0,
+     "conversation-starter": 0,
+     "crew": null,
+     "curator": 10,
+     "curious": 5,
+     "documented": 11,
+     "duet": 236,
+     "early-bird": 31,
+     "fan-club": 0,
+     "first-light": 11,
+     "fixer": 68,
+     "forked": 0,
+     "form-filler": 7,
+     "founder": null,
+     "four-seasons": 0,
+     "friday-deploy": 0,
+     "friday-the-13th": 0,
+     "front-door": 1,
+     "full-house": 0,
+     "gatekeeper": 9,
+     "generous": 94,
+     "ghost": 1,
+     "gist-keeper": null,
+     "gitmoji": 0,
+     "green-light": 0,
+     "green-machine": 316,
+     "green-wall": 0,
+     "heavy-lifter": 38,
+     "hello-world": 925,
+     "homecoming": 0,
+     "house-rules": 11,
+     "inbox-zero": 0,
+     "introduced": 1,
+     "label-maker": 72,
+     "landed": 2,
+     "leap-day": 0,
+     "licensed": 11,
+     "locksmith": 11,
+     "long-game": 2,
+     "long-haul": 0,
+     "lunch-break": 12,
+     "marathon-day": 416,
+     "merge-master": 2,
+     "midnight-oil": 0,
+     "monolith": 159,
+     "new-year": 0,
+     "night-owl": 132,
+     "open-door": 5,
+     "open-hand": 0,
+     "opening-move": 2,
+     "packager": 0,
+     "pathfinder": 1,
+     "patron": 0,
+     "perfect-month": 0,
+     "planner": 0,
+     "polyglot": 6,
+     "red-pen": 0,
+     "registry": 0,
+     "reporter": 0,
+     "roadmap": 0,
+     "round-number": 0,
+     "roundtable": 0,
+     "scribe": 135,
+     "second-opinion": 0,
+     "second-pair-of-eyes": 0,
+     "semver": 5,
+     "shipped": 5,
+     "shipwright": 5,
+     "signed": 207,
+     "sprint": 864,
+     "standard-bearer": 1,
+     "stargazer": 0,
+     "surgeon": 199,
+     "sweeping-change": 17,
+     "team-player": 0,
+     "tested": 10,
+     "the-answer": 0,
+     "ticket": 0,
+     "tidy": 0,
+     "toolsmith": 3,
+     "town-hall": 5,
+     "trophy-maker": 1,
+     "undo": 0,
+     "upstream": 0,
+     "veteran": 9,
+     "voice": 0,
+     "watched": 0,
+     "weekday-warrior": 12,
+     "weekender": 3,
+     "welcome-mat": 7,
+     "well-maintained": 5,
+     "year-of-code": 17
+    },
+    "delta": {
+     "commits": 6,
+     "followers": 0,
+     "pulls": 0,
+     "repos": 2,
+     "streak": 0
+    },
+    "extra": {
+     "currentStreak": 0,
+     "streak": 6,
+     "years": 9
+    },
+    "mode": "profile",
+    "new": {
+     "commits": false,
+     "followers": false,
+     "pulls": false,
+     "repos": false,
+     "streak": false
+    },
+    "owners": {
+     "tannergolden/markdown": "tannergolden",
+     "tannergolden/path": "tannergolden",
+     "tannergolden/standards": "tannergolden"
+    },
+    "subject": "tannergolden",
+    "today": "2026-10-06",
+    "values": {
+     "commits": 925,
+     "followers": 14,
+     "issues": 0,
+     "pulls": 2,
+     "repos": 11,
+     "reviews": 0,
+     "stars": 0,
+     "streak": 6
+    }
+   },
+   "reached": {
+    "ach:auto-pilot": {
+     "1": "2026-09-27"
+    },
+    "ach:badge-maker": {
+     "1": "2026-09-27"
+    },
+    "ach:big-week": {
+     "1": "2026-09-27"
+    },
+    "ach:blueprint": {
+     "1": "2026-09-27"
+    },
+    "ach:by-the-book": {
+     "1": "2026-09-27"
+    },
+    "ach:century": {
+     "1": "2026-09-27"
+    },
+    "ach:comeback": {
+     "1": "2026-09-27"
+    },
+    "ach:curator": {
+     "1": "2026-09-27"
+    },
+    "ach:documented": {
+     "2": "2026-09-27"
+    },
+    "ach:duet": {
+     "1": "2026-09-27"
+    },
+    "ach:first-light": {
+     "1": "2026-09-27"
+    },
+    "ach:fixer": {
+     "1": "2026-09-27"
+    },
+    "ach:form-filler": {
+     "1": "2026-09-27"
+    },
+    "ach:gatekeeper": {
+     "1": "2026-09-27"
+    },
+    "ach:ghost": {
+     "1": "2026-09-27"
+    },
+    "ach:green-machine": {
+     "1": "2026-09-27"
+    },
+    "ach:heavy-lifter": {
+     "1": "2026-09-27"
+    },
+    "ach:hello-world": {
+     "1": "2026-09-27"
+    },
+    "ach:house-rules": {
+     "1": "2026-09-27"
+    },
+    "ach:introduced": {
+     "1": "2026-09-27"
+    },
+    "ach:label-maker": {
+     "1": "2026-09-27"
+    },
+    "ach:landed": {
+     "1": "2026-09-27"
+    },
+    "ach:licensed": {
+     "2": "2026-09-27"
+    },
+    "ach:locksmith": {
+     "1": "2026-09-27"
+    },
+    "ach:marathon-day": {
+     "3": "2026-09-27"
+    },
+    "ach:night-owl": {
+     "1": "2026-09-27"
+    },
+    "ach:open-door": {
+     "1": "2026-09-27"
+    },
+    "ach:opening-move": {
+     "1": "2026-09-27"
+    },
+    "ach:pathfinder": {
+     "1": "2026-09-27"
+    },
+    "ach:polyglot": {
+     "1": "2026-09-27"
+    },
+    "ach:scribe": {
+     "1": "2026-09-27"
+    },
+    "ach:shipped": {
+     "1": "2026-09-27"
+    },
+    "ach:signed": {
+     "1": "2026-09-27"
+    },
+    "ach:sprint": {
+     "1": "2026-09-27"
+    },
+    "ach:standard-bearer": {
+     "1": "2026-09-27"
+    },
+    "ach:surgeon": {
+     "1": "2026-09-27"
+    },
+    "ach:sweeping-change": {
+     "1": "2026-09-27"
+    },
+    "ach:toolsmith": {
+     "1": "2026-09-27"
+    },
+    "ach:town-hall": {
+     "1": "2026-09-27"
+    },
+    "ach:trophy-maker": {
+     "1": "2026-09-27"
+    },
+    "ach:veteran": {
+     "2": "2026-09-27"
+    },
+    "ach:welcome-mat": {
+     "1": "2026-09-27"
+    },
+    "commits": {
+     "2.0": "2026-09-27"
+    },
+    "followers": {},
+    "pulls": {},
+    "repos": {
+     "1.0": "2026-09-27"
+    },
+    "streak": {}
+   },
+   "scan": {
+    "tannergolden/.github": {
+     "complete": true,
+     "cursor": null,
+     "head": "2de3987f8b1d626ef858824d1da51289913ed892",
+     "stats": {
+      "authors": {
+       "tannergolden": 34
+      },
+      "coauthored": 9,
+      "conventional": 34,
+      "days": [
+       "2026-07-31",
+       "2026-07-25",
+       "2026-07-24",
+       "2026-07-23"
+      ],
+      "docs": 9,
+      "early": 0,
+      "emoji": 0,
+      "fix": 0,
+      "heavy": 0,
+      "lunch": 2,
+      "max_files": 6,
+      "max_lines": 301,
+      "midnight": 0,
+      "night": 0,
+      "onefile": 29,
+      "refresh": 0,
+      "refresh_days": {},
+      "revert": 0,
+      "signed": 26,
+      "sweeping": 0,
+      "test": 0,
+      "total": 34
+     },
+     "total": 34
+    },
+    "tannergolden/badges": {
+     "complete": true,
+     "cursor": null,
+     "head": "d7e687fbf6c2e77be2131a1802838db5062e38a5",
+     "stats": {
+      "authors": {
+       "tannergolden": 24
+      },
+      "coauthored": 22,
+      "conventional": 24,
+      "days": [
+       "2026-09-27",
+       "2026-09-26",
+       "2026-09-25",
+       "2026-09-24"
+      ],
+      "docs": 9,
+      "early": 6,
+      "emoji": 0,
+      "fix": 0,
+      "heavy": 5,
+      "lunch": 0,
+      "max_files": 254,
+      "max_lines": 9561,
+      "midnight": 0,
+      "night": 4,
+      "onefile": 8,
+      "refresh": 1,
+      "refresh_days": {
+       "2026-09-26": 1
+      },
+      "revert": 0,
+      "signed": 14,
+      "sweeping": 5,
+      "test": 1,
+      "total": 24
+     },
+     "total": 25
+    },
+    "tannergolden/banners": {
+     "complete": true,
+     "cursor": null,
+     "head": "dcabaead0e6ca406a3117ca82c2ce0c8db1c99fb",
+     "stats": {
+      "authors": {
+       "tannergolden": 43
+      },
+      "coauthored": 42,
+      "conventional": 43,
+      "days": [
+       "2026-09-27",
+       "2026-09-26",
+       "2026-09-25"
+      ],
+      "docs": 14,
+      "early": 0,
+      "emoji": 0,
+      "fix": 8,
+      "heavy": 4,
+      "lunch": 0,
+      "max_files": 98,
+      "max_lines": 9561,
+      "midnight": 0,
+      "night": 10,
+      "onefile": 9,
+      "refresh": 19,
+      "refresh_days": {
+       "2026-09-25": 3,
+       "2026-09-26": 4,
+       "2026-09-27": 1,
+       "2026-09-28": 2,
+       "2026-09-29": 1,
+       "2026-09-30": 1,
+       "2026-10-01": 1,
+       "2026-10-02": 2,
+       "2026-10-03": 1,
+       "2026-10-04": 1,
+       "2026-10-05": 1,
+       "2026-10-06": 1
+      },
+      "revert": 0,
+      "signed": 25,
+      "sweeping": 3,
+      "test": 3,
+      "total": 43
+     },
+     "total": 62
+    },
+    "tannergolden/dotfiles": {
+     "complete": true,
+     "cursor": null,
+     "head": "47bd40a18ebaae943be386f273b4e077d906b00a",
+     "stats": {
+      "authors": {
+       "tannergolden": 1
+      },
+      "coauthored": 0,
+      "conventional": 1,
+      "days": [
+       "2026-09-26"
+      ],
+      "docs": 0,
+      "early": 0,
+      "emoji": 0,
+      "fix": 0,
+      "heavy": 1,
+      "lunch": 0,
+      "max_files": 61,
+      "max_lines": 7138,
+      "midnight": 0,
+      "night": 0,
+      "onefile": 0,
+      "refresh": 0,
+      "refresh_days": {},
+      "revert": 0,
+      "signed": 0,
+      "sweeping": 1,
+      "test": 0,
+      "total": 1
+     },
+     "total": 1
+    },
+    "tannergolden/knowledge": {
+     "complete": true,
+     "cursor": null,
+     "head": "7d48483b9bf97379ca9fbaa8b8cf4275245dcfe2",
+     "stats": {
+      "authors": {
+       "tannergolden": 1
+      },
+      "coauthored": 0,
+      "conventional": 1,
+      "days": [
+       "2026-09-29"
+      ],
+      "docs": 0,
+      "early": 0,
+      "emoji": 0,
+      "fix": 0,
+      "heavy": 1,
+      "lunch": 0,
+      "max_files": 61,
+      "max_lines": 7138,
+      "midnight": 0,
+      "night": 0,
+      "onefile": 0,
+      "refresh": 0,
+      "refresh_days": {},
+      "revert": 0,
+      "signed": 0,
+      "sweeping": 1,
+      "test": 0,
+      "total": 1
+     },
+     "total": 1
+    },
+    "tannergolden/markdown": {
+     "complete": true,
+     "cursor": null,
+     "head": "52b6a87d1852ab27c246cb15c037d2bada25f639",
+     "stats": {
+      "authors": {
+       "tannergolden": 39
+      },
+      "coauthored": 38,
+      "conventional": 39,
+      "days": [
+       "2026-10-07",
+       "2026-09-28"
+      ],
+      "docs": 7,
+      "early": 1,
+      "emoji": 0,
+      "fix": 9,
+      "heavy": 16,
+      "lunch": 2,
+      "max_files": 1320,
+      "max_lines": 9561,
+      "midnight": 0,
+      "night": 14,
+      "onefile": 4,
+      "refresh": 2,
+      "refresh_days": {
+       "2026-10-07": 2
+      },
+      "revert": 0,
+      "signed": 18,
+      "sweeping": 3,
+      "test": 1,
+      "total": 39
+     },
+     "total": 41
+    },
+    "tannergolden/path": {
+     "complete": true,
+     "cursor": null,
+     "head": "56ef60feecec5948c49015a69a0257d59c6c9c0c",
+     "stats": {
+      "authors": {
+       "tannergolden": 94
+      },
+      "coauthored": 5,
+      "conventional": 94,
+      "days": [
+       "2026-09-19",
+       "2026-07-30",
+       "2026-07-28",
+       "2026-07-27"
+      ],
+      "docs": 42,
+      "early": 0,
+      "emoji": 0,
+      "fix": 1,
+      "heavy": 0,
+      "lunch": 0,
+      "max_files": 12,
+      "max_lines": 294,
+      "midnight": 0,
+      "night": 87,
+      "onefile": 85,
+      "refresh": 0,
+      "refresh_days": {},
+      "revert": 0,
+      "signed": 0,
+      "sweeping": 0,
+      "test": 0,
+      "total": 94
+     },
+     "total": 94
+    },
+    "tannergolden/standards": {
+     "complete": true,
+     "cursor": null,
+     "head": "d56aaf38810c3305646cf772aab8a7f6311ef795",
+     "stats": {
+      "authors": {
+       "tannergolden": 159
+      },
+      "coauthored": 70,
+      "conventional": 155,
+      "days": [
+       "2026-09-28",
+       "2026-09-26",
+       "2026-09-25",
+       "2026-09-24",
+       "2026-09-19",
+       "2026-07-31",
+       "2026-07-30",
+       "2026-07-28",
+       "2026-07-27",
+       "2026-07-26",
+       "2026-07-24"
+      ],
+      "docs": 44,
+      "early": 0,
+      "emoji": 0,
+      "fix": 38,
+      "heavy": 1,
+      "lunch": 8,
+      "max_files": 39,
+      "max_lines": 1756,
+      "midnight": 0,
+      "night": 10,
+      "onefile": 49,
+      "refresh": 0,
+      "refresh_days": {},
+      "revert": 0,
+      "signed": 87,
+      "sweeping": 0,
+      "test": 3,
+      "total": 159
+     },
+     "total": 159
+    },
+    "tannergolden/tannergolden": {
+     "complete": true,
+     "cursor": null,
+     "head": "ddb8b0794521e9e892af9e6d903eaceb62994033",
+     "stats": {
+      "authors": {
+       "tannergolden": 12
+      },
+      "coauthored": 11,
+      "conventional": 11,
+      "days": [
+       "2026-10-07",
+       "2026-09-28",
+       "2026-09-27",
+       "2026-09-26"
+      ],
+      "docs": 1,
+      "early": 0,
+      "emoji": 0,
+      "fix": 2,
+      "heavy": 3,
+      "lunch": 0,
+      "max_files": 256,
+      "max_lines": 25657,
+      "midnight": 0,
+      "night": 2,
+      "onefile": 2,
+      "refresh": 5,
+      "refresh_days": {
+       "2026-09-27": 5
+      },
+      "revert": 0,
+      "signed": 10,
+      "sweeping": 1,
+      "test": 0,
+      "total": 12
+     },
+     "total": 17
+    },
+    "tannergolden/trophies": {
+     "complete": true,
+     "cursor": null,
+     "head": "f173ab27076edb60371082bb210b755ede873848",
+     "stats": {
+      "authors": {
+       "tannergolden": 42
+      },
+      "coauthored": 39,
+      "conventional": 42,
+      "days": [
+       "2026-10-01",
+       "2026-09-27",
+       "2026-09-26",
+       "2026-09-25",
+       "2026-09-24"
+      ],
+      "docs": 9,
+      "early": 24,
+      "emoji": 0,
+      "fix": 10,
+      "heavy": 6,
+      "lunch": 0,
+      "max_files": 231,
+      "max_lines": 9561,
+      "midnight": 0,
+      "night": 5,
+      "onefile": 13,
+      "refresh": 16,
+      "refresh_days": {
+       "2026-09-24": 3,
+       "2026-09-25": 2,
+       "2026-09-26": 1,
+       "2026-09-27": 1,
+       "2026-09-28": 1,
+       "2026-09-29": 1,
+       "2026-09-30": 1,
+       "2026-10-01": 1,
+       "2026-10-02": 1,
+       "2026-10-03": 1,
+       "2026-10-04": 1,
+       "2026-10-05": 1,
+       "2026-10-06": 1
+      },
+      "revert": 0,
+      "signed": 27,
+      "sweeping": 2,
+      "test": 2,
+      "total": 42
+     },
+     "total": 58
+    },
+    "tannergolden/workforce": {
+     "complete": true,
+     "cursor": null,
+     "head": "715be92c7f2d64be17f6db8b784082768aa28687",
+     "stats": {
+      "authors": {
+       "tannergolden": 1
+      },
+      "coauthored": 0,
+      "conventional": 1,
+      "days": [
+       "2026-09-29"
+      ],
+      "docs": 0,
+      "early": 0,
+      "emoji": 0,
+      "fix": 0,
+      "heavy": 1,
+      "lunch": 0,
+      "max_files": 98,
+      "max_lines": 9561,
+      "midnight": 0,
+      "night": 0,
+      "onefile": 0,
+      "refresh": 0,
+      "refresh_days": {},
+      "revert": 0,
+      "signed": 0,
+      "sweeping": 1,
+      "test": 0,
+      "total": 1
+     },
+     "total": 1
+    }
+   }
+  }
+ },
+ "snapshot": "2026-10-06",
+ "version": 1
+}

@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/markdown/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/markdown/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/markdown/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 8. Contributions, last year: 956. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/markdown/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 8. Contributions, last year: 957. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/markdown/header-day.svg">
 </picture>
 
 </div>
@@ -140,7 +140,7 @@ depends on a third-party service.
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/by-the-book.svg"><img src="assets/markdown/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 67% to By the Book II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/duet.svg"><img src="assets/markdown/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/green-machine.svg"><img src="assets/markdown/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 26% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/green-machine.svg"><img src="assets/markdown/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 27% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/scribe.svg"><img src="assets/markdown/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/signed.svg"><img src="assets/markdown/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 14% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-fixer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/fixer.svg"><img src="assets/markdown/trophies/achievements/fixer-day.svg" alt="Fixer: earned, Uncommon"></picture></a>
@@ -260,18 +260,18 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- markdown:element:release-1:start -->
-<a href="https://github.com/tannergolden/markdown/releases/tag/v1.0.0">
+<a href="https://github.com/tannergolden/standards/releases/tag/v1.10.0">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/markdown/elements/release-1-dark.svg">
-  <img alt="tannergolden/markdown. Automated SVG generator for README headers, badges, trophies, and footers, rendered locally from a single stub to bypass API rate limits." src="assets/markdown/elements/release-1-day.svg">
+  <img alt="tannergolden/standards. Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain." src="assets/markdown/elements/release-1-day.svg">
 </picture>
 </a>
 <!-- markdown:element:release-1:end -->
 <!-- markdown:element:release-2:start -->
-<a href="https://github.com/tannergolden/trophies/releases/tag/v1.2.4">
+<a href="https://github.com/tannergolden/markdown/releases/tag/v1.0.1">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/markdown/elements/release-2-dark.svg">
-  <img alt="tannergolden/trophies. Trophies and 100 achievements a GitHub profile or repository earns for itself." src="assets/markdown/elements/release-2-day.svg">
+  <img alt="tannergolden/markdown. Automated SVG generator for README headers, badges, trophies, and footers, rendered locally from a single stub to bypass API rate limits." src="assets/markdown/elements/release-2-day.svg">
 </picture>
 </a>
 <!-- markdown:element:release-2:end -->

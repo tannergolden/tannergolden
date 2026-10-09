@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/markdown/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/markdown/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/markdown/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 8. Contributions, last year: 961. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/markdown/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 8. Contributions, last year: 962. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/markdown/header-day.svg">
 </picture>
 
 </div>
@@ -140,7 +140,7 @@ depends on a third-party service.
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/by-the-book.svg"><img src="assets/markdown/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 67% to By the Book II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/duet.svg"><img src="assets/markdown/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/green-machine.svg"><img src="assets/markdown/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 29% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/green-machine.svg"><img src="assets/markdown/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 30% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/scribe.svg"><img src="assets/markdown/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/signed.svg"><img src="assets/markdown/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 14% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-fixer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/markdown/trophies/achievements/fixer.svg"><img src="assets/markdown/trophies/achievements/fixer-day.svg" alt="Fixer: earned, Uncommon"></picture></a>
@@ -310,10 +310,10 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- markdown:element:issue-1:start -->
-<a href="https://github.com/google-gemini/gemini-cli/issues/29338">
+<a href="https://github.com/langgenius/dify/issues/43768">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/markdown/elements/issue-1-dark.svg">
-  <img alt="google-gemini/gemini-cli. #29338: Rootless podman sandbox hit EACCES because --userns=keep-id is not set." src="assets/markdown/elements/issue-1-day.svg">
+  <img alt="langgenius/dify. #43768: bump to python 3.14." src="assets/markdown/elements/issue-1-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-1:end -->

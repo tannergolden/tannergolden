@@ -140,15 +140,15 @@ elements:
   # issues:start
   issue-1:
     kind: "placard"
-    owner: "google-gemini"
-    name: "gemini-cli"
+    owner: "langgenius"
+    name: "dify"
     icon: "flag"
-    link: "https://github.com/google-gemini/gemini-cli/issues/29338"
-    desc: "#29338: Rootless podman sandbox hit EACCES because --userns=keep-id is not set."
+    link: "https://github.com/langgenius/dify/issues/43768"
+    desc: "#43768: bump to python 3.14."
     cells:
-      - ["Stars", "107K"]
+      - ["Stars", "158K"]
       - ["Language", "TYPESCRIPT"]
-      - ["Opened", "15 SEP"]
+      - ["Opened", "9 OCT"]
   issue-2:
     kind: "placard"
     owner: "tt-a1i"
@@ -157,7 +157,7 @@ elements:
     link: "https://github.com/tt-a1i/archify/issues/681"
     desc: "#681: [Proposal]: Normalize brand-source provenance links for shared diagrams."
     cells:
-      - ["Stars", "78.7K"]
+      - ["Stars", "81.1K"]
       - ["Language", "JAVASCRIPT"]
       - ["Opened", "3 OCT"]
   # issues:end

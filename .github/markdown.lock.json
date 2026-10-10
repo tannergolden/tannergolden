@@ -24,7 +24,7 @@
     "profile": {
      "bio": "Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons.",
      "company": "",
-     "contributions": 964,
+     "contributions": 1046,
      "created": "2016-12-20",
      "followers": 14,
      "following": 5,
@@ -32,7 +32,7 @@
      "location": "United States",
      "login": "tannergolden",
      "name": "Tanner Golden",
-     "repositories": 8,
+     "repositories": 9,
      "stars": 0,
      "status": {
       "message": "Focusing"
@@ -91,7 +91,8 @@
     "commits": {
      "2026-09-27": 919,
      "2026-10-06": 925,
-     "2026-10-07": 819
+     "2026-10-07": 819,
+     "2026-10-10": 898
     },
     "followers": {
      "2026-09-27": 14
@@ -102,7 +103,8 @@
     "repos": {
      "2026-09-27": 9,
      "2026-10-06": 11,
-     "2026-10-07": 8
+     "2026-10-07": 8,
+     "2026-10-10": 9
     },
     "streak": {
      "2026-09-27": 6
@@ -118,21 +120,21 @@
      "blueprint": 1,
      "branching-out": 3,
      "bug-hunter": 2,
-     "by-the-book": 336,
+     "by-the-book": 415,
      "century": 159,
      "closer": 1,
      "comeback": 1,
      "constellation": 0,
      "conversation-starter": 0,
      "crew": null,
-     "curator": 7,
+     "curator": 8,
      "curious": 5,
-     "documented": 8,
-     "duet": 133,
-     "early-bird": 1,
+     "documented": 9,
+     "duet": 212,
+     "early-bird": 11,
      "fan-club": 0,
-     "first-light": 8,
-     "fixer": 50,
+     "first-light": 9,
+     "fixer": 63,
      "forked": 0,
      "form-filler": 4,
      "founder": null,
@@ -147,19 +149,19 @@
      "gist-keeper": null,
      "gitmoji": 0,
      "green-light": 0,
-     "green-machine": 307,
+     "green-machine": 345,
      "green-wall": 0,
-     "heavy-lifter": 23,
-     "hello-world": 819,
+     "heavy-lifter": 52,
+     "hello-world": 898,
      "homecoming": 0,
-     "house-rules": 8,
+     "house-rules": 9,
      "inbox-zero": 0,
      "introduced": 1,
      "label-maker": 72,
      "landed": 2,
      "leap-day": 0,
-     "licensed": 8,
-     "locksmith": 8,
+     "licensed": 9,
+     "locksmith": 9,
      "long-game": 2,
      "long-haul": 0,
      "lunch-break": 12,
@@ -168,7 +170,7 @@
      "midnight-oil": 0,
      "monolith": 159,
      "new-year": 0,
-     "night-owl": 113,
+     "night-owl": 132,
      "open-door": 5,
      "open-hand": 0,
      "opening-move": 2,
@@ -184,20 +186,20 @@
      "roadmap": 0,
      "round-number": 0,
      "roundtable": 0,
-     "scribe": 103,
+     "scribe": 109,
      "second-opinion": 0,
      "second-pair-of-eyes": 0,
      "semver": 2,
      "shipped": 2,
      "shipwright": 2,
-     "signed": 141,
+     "signed": 218,
      "sprint": 864,
      "standard-bearer": 1,
      "stargazer": 0,
-     "surgeon": 169,
-     "sweeping-change": 7,
+     "surgeon": 171,
+     "sweeping-change": 10,
      "team-player": 0,
-     "tested": 4,
+     "tested": 6,
      "the-answer": 0,
      "ticket": 0,
      "tidy": 0,
@@ -209,11 +211,11 @@
      "veteran": 9,
      "voice": 0,
      "watched": 0,
-     "weekday-warrior": 11,
-     "weekender": 3,
+     "weekday-warrior": 12,
+     "weekender": 4,
      "welcome-mat": 4,
      "well-maintained": 5,
-     "year-of-code": 16
+     "year-of-code": 18
     },
     "delta": {
      "commits": 0,
@@ -223,7 +225,7 @@
      "streak": 0
     },
     "extra": {
-     "currentStreak": 0,
+     "currentStreak": 1,
      "streak": 6,
      "years": 9
     },
@@ -243,11 +245,11 @@
     "subject": "tannergolden",
     "today": "2026-10-10",
     "values": {
-     "commits": 819,
+     "commits": 898,
      "followers": 14,
      "issues": 0,
      "pulls": 2,
-     "repos": 8,
+     "repos": 9,
      "reviews": 0,
      "stars": 0,
      "streak": 6
@@ -587,42 +589,44 @@
     "tannergolden/markdown": {
      "complete": true,
      "cursor": null,
-     "head": "1b2abaf7db685445e6ccac8b59247dca262f3ddf",
+     "head": "7cae55280ad32115a6a5fa2a176f263d1698aa60",
      "stats": {
       "authors": {
-       "tannergolden": 39
+       "tannergolden": 118
       },
-      "coauthored": 38,
-      "conventional": 39,
+      "coauthored": 117,
+      "conventional": 118,
       "days": [
+       "2026-10-10",
+       "2026-10-08",
        "2026-10-07",
        "2026-09-28"
       ],
-      "docs": 7,
-      "early": 1,
+      "docs": 13,
+      "early": 11,
       "emoji": 0,
-      "fix": 9,
-      "heavy": 16,
+      "fix": 22,
+      "heavy": 45,
       "lunch": 2,
       "max_files": 1320,
       "max_lines": 9561,
       "midnight": 0,
-      "night": 14,
-      "onefile": 4,
-      "refresh": 5,
+      "night": 33,
+      "onefile": 6,
+      "refresh": 6,
       "refresh_days": {
        "2026-10-07": 2,
        "2026-10-08": 1,
        "2026-10-09": 1,
-       "2026-10-10": 1
+       "2026-10-10": 2
       },
       "revert": 0,
-      "signed": 18,
-      "sweeping": 3,
-      "test": 1,
-      "total": 39
+      "signed": 94,
+      "sweeping": 6,
+      "test": 3,
+      "total": 118
      },
-     "total": 44
+     "total": 124
     },
     "tannergolden/path": {
      "complete": true,
@@ -708,7 +712,7 @@
     "tannergolden/tannergolden": {
      "complete": true,
      "cursor": null,
-     "head": "7006c9838ef9d63000984fd015b0fbc9630f7760",
+     "head": "e3a870629b11f29b3d404b28302ea13e37e53ecd",
      "stats": {
       "authors": {
        "tannergolden": 12
@@ -732,12 +736,13 @@
       "midnight": 0,
       "night": 2,
       "onefile": 2,
-      "refresh": 11,
+      "refresh": 12,
       "refresh_days": {
        "2026-09-27": 5,
        "2026-10-07": 3,
        "2026-10-08": 1,
-       "2026-10-09": 2
+       "2026-10-09": 2,
+       "2026-10-10": 1
       },
       "revert": 0,
       "signed": 10,
@@ -745,7 +750,7 @@
       "test": 0,
       "total": 12
      },
-     "total": 23
+     "total": 24
     },
     "tannergolden/trophies": {
      "complete": true,
@@ -800,6 +805,40 @@
      "total": 58
     },
     "tannergolden/workforce": {
+     "complete": true,
+     "cursor": null,
+     "head": "cc3051b396bb8e00ef51daa808486021a7903e34",
+     "stats": {
+      "authors": {
+       "tannergolden": 1
+      },
+      "coauthored": 0,
+      "conventional": 0,
+      "days": [
+       "2026-10-10"
+      ],
+      "docs": 0,
+      "early": 0,
+      "emoji": 0,
+      "fix": 0,
+      "heavy": 0,
+      "lunch": 0,
+      "max_files": 2,
+      "max_lines": 23,
+      "midnight": 0,
+      "night": 0,
+      "onefile": 0,
+      "refresh": 0,
+      "refresh_days": {},
+      "revert": 0,
+      "signed": 1,
+      "sweeping": 0,
+      "test": 0,
+      "total": 1
+     },
+     "total": 1
+    },
+    "tannergolden/workforce-OLD": {
      "complete": true,
      "cursor": null,
      "head": "715be92c7f2d64be17f6db8b784082768aa28687",

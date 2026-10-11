@@ -24,7 +24,7 @@
     "profile": {
      "bio": "Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons.",
      "company": "",
-     "contributions": 982,
+     "contributions": 990,
      "created": "2016-12-20",
      "followers": 14,
      "following": 5,
@@ -83,9 +83,14 @@
     "release-2",
     "issue-1",
     "issue-2",
-    "chess"
+    "chess",
+    "chess-hall"
    ],
-   "measured": {}
+   "measured": {
+    "chess-hall": {
+     "names": {}
+    }
+   }
   },
   "trophies": {
    "history": {
@@ -94,7 +99,7 @@
      "2026-10-06": 925,
      "2026-10-07": 819,
      "2026-10-10": 898,
-     "2026-10-11": 827
+     "2026-10-11": 834
     },
     "followers": {
      "2026-09-27": 14
@@ -121,9 +126,9 @@
      "badge-maker": 1,
      "big-week": 584,
      "blueprint": 1,
-     "branching-out": 4,
+     "branching-out": 5,
      "bug-hunter": 2,
-     "by-the-book": 345,
+     "by-the-book": 352,
      "century": 173,
      "closer": 1,
      "comeback": 1,
@@ -133,11 +138,11 @@
      "curator": 6,
      "curious": 5,
      "documented": 7,
-     "duet": 143,
+     "duet": 150,
      "early-bird": 0,
      "fan-club": 0,
      "first-light": 7,
-     "fixer": 49,
+     "fixer": 51,
      "forked": 0,
      "form-filler": 4,
      "founder": null,
@@ -152,10 +157,10 @@
      "gist-keeper": null,
      "gitmoji": 0,
      "green-light": 0,
-     "green-machine": 335,
+     "green-machine": 358,
      "green-wall": 0,
-     "heavy-lifter": 15,
-     "hello-world": 827,
+     "heavy-lifter": 16,
+     "hello-world": 834,
      "homecoming": 0,
      "house-rules": 7,
      "inbox-zero": 0,
@@ -195,14 +200,14 @@
      "semver": 3,
      "shipped": 3,
      "shipwright": 3,
-     "signed": 171,
+     "signed": 178,
      "sprint": 864,
      "standard-bearer": 1,
      "stargazer": 0,
      "surgeon": 175,
      "sweeping-change": 5,
      "team-player": 0,
-     "tested": 5,
+     "tested": 6,
      "the-answer": 0,
      "ticket": 0,
      "tidy": 0,
@@ -248,7 +253,7 @@
     "subject": "tannergolden",
     "today": "2026-10-11",
     "values": {
-     "commits": 827,
+     "commits": 834,
      "followers": 14,
      "issues": 0,
      "pulls": 2,
@@ -592,13 +597,13 @@
     "tannergolden/markdown": {
      "complete": true,
      "cursor": null,
-     "head": "d0c9c6c902e1e62782270dd0e5fbdc03eedce326",
+     "head": "683cf9f05874a7fda016b1563fc8d5947deecbe0",
      "stats": {
       "authors": {
-       "tannergolden": 7
+       "tannergolden": 10
       },
-      "coauthored": 6,
-      "conventional": 7,
+      "coauthored": 9,
+      "conventional": 10,
       "days": [
        "2026-10-11",
        "2026-10-10"
@@ -606,8 +611,8 @@
       "docs": 1,
       "early": 0,
       "emoji": 0,
-      "fix": 0,
-      "heavy": 4,
+      "fix": 1,
+      "heavy": 5,
       "lunch": 0,
       "max_files": 2793,
       "max_lines": 109054,
@@ -620,12 +625,12 @@
        "2026-10-11": 1
       },
       "revert": 0,
-      "signed": 6,
+      "signed": 9,
       "sweeping": 2,
-      "test": 1,
-      "total": 7
+      "test": 2,
+      "total": 10
      },
-     "total": 9
+     "total": 12
     },
     "tannergolden/path": {
      "complete": true,
@@ -749,13 +754,13 @@
     "tannergolden/tannergolden": {
      "complete": true,
      "cursor": null,
-     "head": "13160a151bb6554bda1ebc0dc5825c24485ce685",
+     "head": "507173a24ce80c1667b6abfc208a80eda3a03ac9",
      "stats": {
       "authors": {
-       "tannergolden": 17
+       "tannergolden": 21
       },
-      "coauthored": 16,
-      "conventional": 16,
+      "coauthored": 20,
+      "conventional": 20,
       "days": [
        "2026-10-11",
        "2026-10-07",
@@ -766,7 +771,7 @@
       "docs": 2,
       "early": 0,
       "emoji": 0,
-      "fix": 2,
+      "fix": 3,
       "heavy": 3,
       "lunch": 0,
       "max_files": 256,
@@ -774,22 +779,22 @@
       "midnight": 0,
       "night": 2,
       "onefile": 4,
-      "refresh": 14,
+      "refresh": 15,
       "refresh_days": {
        "2026-09-27": 5,
        "2026-10-07": 3,
        "2026-10-08": 1,
        "2026-10-09": 2,
        "2026-10-10": 2,
-       "2026-10-11": 1
+       "2026-10-11": 2
       },
       "revert": 0,
-      "signed": 15,
+      "signed": 19,
       "sweeping": 1,
       "test": 0,
-      "total": 17
+      "total": 21
      },
-     "total": 31
+     "total": 36
     },
     "tannergolden/trophies": {
      "complete": true,

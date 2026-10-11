@@ -139,7 +139,7 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 ### 🏆 Hall of Fame
 
 Every game ends by the rules, and the move that mates wins its player a place
-here: mine count the same as anyone's.
+here.
 
 <!-- markdown:element:chess-hall:start -->
 <picture>

@@ -285,8 +285,9 @@ def perft(position: Position, depth: int) -> int:
     return sum(perft(make(position, move), depth - 1) for move in moves)
 
 
-def san(position: Position, move: Move, legal: list[Move] | None = None) -> str:
-    """The move's name in standard algebraic notation, with + for check and # for mate."""
+def san(position: Position, move: Move, legal: list[Move] | None = None, replies: list[Move] | None = None) -> str:
+    """The move's name in standard algebraic notation, with + for check and # for mate. `legal` and `replies`, the
+    position's legal moves and the other side's after this one, save working them out again when they are known."""
     legal = legal_moves(position) if legal is None else legal
     piece = position.board[move.start]
     kind = piece.lower()
@@ -311,7 +312,7 @@ def san(position: Position, move: Move, legal: list[Move] | None = None) -> str:
         name = kind.upper() + which + ("x" if position.board[move.end] else "") + label(move.end)
     after = make(position, move)
     if in_check(after):
-        name += "#" if not legal_moves(after) else "+"
+        name += "#" if not (legal_moves(after) if replies is None else replies) else "+"
     return name
 
 

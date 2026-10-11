@@ -13,8 +13,9 @@ name: Chess
 # game ends only by the rules, at checkmate, stalemate or a draw FIDE makes
 # automatic; its record goes into the Hall of Fame and the next game starts
 # at once, with the owner to open it. The state lives in .github/chess, and
-# every run sets the board out between the chess markers of the page's
-# settings, for the Markdown run to draw.
+# every run sets the board, every legal move named, and the Hall of Fame out
+# between the chess markers of the page's settings, for the Markdown run to
+# draw.
 #
 # Every input is written by a stranger, by way of an issue title. Each one
 # reaches the script through an environment variable, never as an expression

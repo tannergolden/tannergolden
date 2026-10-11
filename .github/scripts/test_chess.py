@@ -37,10 +37,17 @@ HUBOT, HUBOT_ID = "hubot", 480938
 T0 = chess.parse("2026-10-11T16:00:00Z")
 FOOLS_MATE = ["f2f3", "e7e5", "g2g4", "d8h4"]
 SCHOLARS_MATE = ["e2e4", "e7e5", "f1c4", "b8c6", "d1h5", "g8f6", "h5f7"]
-# What tannergolden/markdown accepts under the board: a move in SAN, and a link that opens a ready-made issue.
-KIT_SAN = re.compile(r"(?:O-O(?:-O)?|[KQRBN]?[a-h]?[1-8]?x?[a-h][1-8](?:=[QRBN])?)[+#]?")
-KIT_LINK = re.compile(r"https://github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+/issues/new\?[A-Za-z0-9._~%&=+-]+")
+# What tannergolden/markdown accepts from the game (src/domain/elements/chess/game.py): a move in SAN, its link to a
+# ready-made issue, its emoji, title and words, a line of the README, who played a move, and a day.
+KIT_SAN = re.compile(r"(?:O-O(?:-O)?|[KQRBN][a-h]?[1-8]?x?[a-h][1-8]|[a-h](?:x[a-h])?[1-8](?:=[QRBN])?)[+#]?")
+KIT_LINK = re.compile(r"https://github\.com/tannergolden/play/issues/new\?template=move\.yml&title=chess%3A%20"
+                      r"[a-h][1-8][a-h][1-8][qrbn]?%20%C2%B7%20game%20[1-9][0-9]{0,8}%20%C2%B7%20move%20[1-9][0-9]{0,8}")
 KIT_LINE = re.compile(r"[^<>|\n\r]{1,400}")
+KIT_TITLE = re.compile(r"[A-Za-z0-9][A-Za-z0-9 ,.'!-]{0,47}")
+KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
+KIT_EMOJI = re.compile("[\u2190-\u2bff\U0001f000-\U0001faff\u200d\ufe0f]{1,8}")
+KIT_WHO = re.compile(r"@[A-Za-z0-9][A-Za-z0-9-]{0,38}|the Arbiter")
+KIT_DAY = re.compile(r"[1-9][0-9]? [A-Za-z]{3}")
 SETTINGS = "elements:\n  # chess:start\n  # chess:end\n  other:\n    kind: placard\n"
 LOYDS_STALEMATE = ("e2e3 a7a5 d1h5 a8a6 h5a5 h7h5 h2h4 a6h6 a5c7 f7f6 c7d7 e8f7 d7b7 d8d3 b7b8 d3h7 b8c8 f7g6 "
                    "c8e6").split()
@@ -100,7 +107,8 @@ class Turns(unittest.TestCase):
         self.assertEqual(outcome.game["moves"][0]["san"], "e4")
         self.assertEqual(outcome.game["started"], "2026-10-11T17:00:00Z")
         self.assertEqual(outcome.issue, 101)
-        self.assertIn("**1. e4 is on the board.** It is GitHub's turn", outcome.comment)
+        self.assertRegex(outcome.comment, r"^♟️ \*\*1\. e4 is on the board\*\*: \S+ \*[^*]+\*, pawn from e2 to e4, two "
+                                          r"squares\. It is GitHub's turn")
         self.assertTrue(outcome.commit.startswith("chore(chess): ♟️ play 1. e4 in game 1\n\nMove 1, by tannergolden."))
 
     def test_nobody_else_can_open_it(self):
@@ -114,8 +122,8 @@ class Turns(unittest.TestCase):
         table = Table()
         table.move("e2e4")
         outcome = table.move("c7c5")
-        self.assertIn("**1... c5 is on the board**, played by @octocat. @tannergolden, it is your move.",
-                      outcome.comment)
+        self.assertRegex(outcome.comment, r"\*\*1\.\.\. c5 is on the board\*\*, played by @octocat: \S+ \*[^*]+\*, "
+                                          r"pawn from c7 to c5, two squares\. @tannergolden, it is your move\.")
 
     def test_the_owner_cannot_play_for_github(self):
         table = Table()
@@ -258,7 +266,7 @@ class Clock(unittest.TestCase):
         outcome = table.wait(dt.timedelta(days=8))
         self.assertEqual(outcome.issue, 102)  # the last move GitHub played
         self.assertIn("A week went by without a move from tannergolden", outcome.comment)
-        self.assertIn("at random for White. It is GitHub's turn", outcome.comment)
+        self.assertRegex(outcome.comment, r"at random for White: \S+ \*[^*]+\*, [^.]+\. It is GitHub's turn")
         self.assertNotIn("@tannergolden", outcome.comment)
 
     def test_the_arbiters_pick_is_the_same_however_often_it_is_asked(self):
@@ -287,73 +295,128 @@ class Clock(unittest.TestCase):
 
 
 class Board(unittest.TestCase):
-    """What the page's chess element is given, after each turn of a game."""
+    """What the page's chess elements are given, after each turn of a game."""
+
+    def entries(self, element: dict) -> list:
+        return [entry for group in element["moves"] for entry in group["list"]]
 
     def test_a_game_nobody_has_opened_waits_for_the_owner(self):
         element = chess.board(None, [], OWNER)
-        self.assertEqual((element["fen"], element["game"], element["move"]), (rules.START, 1, 1))
-        self.assertEqual(element["turn_note"], "Only tannergolden opens the game")
-        self.assertIn("**@tannergolden opens the game.**", element["prompt"])
+        self.assertEqual((element["fen"], element["game"], element["move"], element["players"]), (rules.START, 1, 1, 0))
+        self.assertTrue(element["prompt"].startswith("🛑 **@tannergolden's turn!** @tannergolden opens game 1 as White"))
         self.assertNotIn("last", element)
-        self.assertEqual(sum(len(group["links"]) for group in element["moves"]), 20)
+        self.assertNotIn("due", element, "the clock starts with the first move")
+        self.assertEqual(element["history"], [[1, "", "", ""]])
+        self.assertEqual(len(self.entries(element)), 20)
         self.assertEqual([group["piece"] for group in element["moves"]], ["knight", "pawn"])
-        self.assertNotIn("Hall of Fame", element["note"])
+        self.assertNotIn("PGN", element["note"])
 
-    def test_every_move_links_to_its_own_ready_made_issue(self):
+    def test_every_move_is_named_and_links_to_its_own_ready_made_issue(self):
         table = Table()
         table.move("e2e4")
         element = chess.board(table.game, table.hall, OWNER)
-        for group in element["moves"]:
-            for name, url in group["links"]:
-                self.assertRegex(name, KIT_SAN)
-                self.assertRegex(url, KIT_LINK)
-                title = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["title"][0]
-                self.assertRegex(title, r"^chess: [a-h][1-8][a-h][1-8][qrbn]? \u00b7 game 1 \u00b7 move 2$")
-        self.assertIn(["e5", chess.link(OWNER, "e7e5", 1, 2)], element["moves"][-1]["links"])
-        self.assertEqual(chess.link(OWNER, "e7e5", 1, 2), "https://github.com/tannergolden/play/issues/new?"
-                         "template=move.yml&title=chess%3A%20e7e5%20%C2%B7%20game%201%20%C2%B7%20move%202")
+        entries = self.entries(element)
+        for emoji, title, name, words, url in entries:
+            self.assertRegex(emoji, KIT_EMOJI)
+            self.assertRegex(title, KIT_TITLE)
+            self.assertRegex(name, KIT_SAN)
+            self.assertRegex(words, KIT_WORDS)
+            self.assertRegex(url, KIT_LINK)
+            issue = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["title"][0]
+            self.assertRegex(issue, r"^chess: [a-h][1-8][a-h][1-8][qrbn]? \u00b7 game 1 \u00b7 move 2$")
+        self.assertEqual(len({entry[1] for entry in entries}), len(entries), "no two moves on a board share a title")
+        e5 = next(entry for entry in entries if entry[2] == "e5")
+        self.assertEqual((e5[3], e5[4]), ("Pawn from e7 to e5, two squares", chess.link(OWNER, "e7e5", 1, 2)))
+        self.assertEqual(chess.board(table.game, table.hall, OWNER), element, "the same board, the same names")
 
-    def test_the_turn_says_until_when_in_the_pages_time(self):
+    def test_the_last_move_the_turn_and_the_score_sheet(self):
         table = Table()
         table.move("e2e4")  # at 17:00 UTC, so GitHub has until noon EST a week on
         element = chess.board(table.game, table.hall, OWNER)
-        self.assertEqual(element["turn_note"], "Anyone but tannergolden, by 18 Oct, 12:00 EST")
-        self.assertTrue(element["prompt"].startswith("**GitHub's move**, until 18 Oct, 12:00 EST. Anyone but"))
-        self.assertEqual((element["last"], element["last_san"], element["last_by"]), ("e2e4", "1. e4", "@tannergolden"))
+        self.assertEqual(element["last"], {"san": "e4", "from": "e2", "to": "e4", "piece": "pawn", "captured": "",
+                                           "words": "Pawn from e2 to e4, two squares", "by": "@tannergolden",
+                                           "when": "11 Oct"})
+        self.assertEqual(element["due"], "18 Oct")
+        self.assertIn("@tannergolden played 1. e4. Pick a move below by 18 Oct, 12:00 EST:", element["prompt"])
+        self.assertEqual(element["history"], [[1, "e4", "", ""]])
         table.move("c7c5")
         element = chess.board(table.game, table.hall, OWNER)
-        self.assertEqual(element["turn_note"], "Only tannergolden, by 18 Oct, 13:00 EST")
-        self.assertEqual(element["history"], [["1", "e4", "c5"]])
+        self.assertEqual(element["history"], [[1, "e4", "c5", "@octocat"], [2, "", "", ""]])
+        self.assertIn("🛑 **@tannergolden's turn!** GitHub played 1... c5. The next move is @tannergolden's by 18 Oct, "
+                      "13:00 EST.", element["prompt"])
+        self.assertEqual((element["players"], element["move"]), (1, 2))
 
     def test_a_check_marks_the_king_and_the_arbiter_is_named(self):
         table = Table()
         table.play(["e2e4", "f7f6", "d2d4"])
         table.wait(dt.timedelta(days=7))
         element = chess.board(table.game, table.hall, OWNER)
-        self.assertEqual(element["last_by"], "the Arbiter")
+        self.assertEqual(element["last"]["by"], "the Arbiter")
+        self.assertIn("The Arbiter played", element["prompt"])
         table = Table()
         table.play(["e2e4", "f7f6", "d1h5"])
-        self.assertEqual(chess.board(table.game, table.hall, OWNER)["check"], "e8")
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertEqual(element["check"], "e8")
+        self.assertIn("You're in check.", element["prompt"])
 
-    def test_the_hall_of_fame_shows_the_latest_games(self):
+    def test_what_each_side_took_is_counted_from_the_game(self):
+        table = Table()
+        table.play(["e2e4", "d7d5", "e4d5", "g8f6", "d5d6", "e7e5", "d6c7", "d8c7"])
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertEqual(element["taken"], {"white": "pp", "black": "p"})
+        self.assertEqual(element["last"]["captured"], "pawn")
+        table = Table()
+        table.play(["e2e4", "a7a6", "e4e5", "d7d5", "e5d6"])  # en passant
+        self.assertEqual(chess.board(table.game, table.hall, OWNER)["taken"], {"white": "p", "black": ""})
+
+    def test_the_hall_of_fame_ranks_whoever_mated(self):
         table = Table()
         table.play(FOOLS_MATE)
         table.play(LOYDS_STALEMATE)
+        table.play(SCHOLARS_MATE)
+        hall = chess.hall_element(table.hall, OWNER)
+        self.assertEqual({k: hall[k] for k in ("games", "house", "world", "draws")},
+                         {"games": 3, "house": 1, "world": 1, "draws": 1})
+        self.assertEqual(hall["people"], [["tannergolden", 1, "12 Oct", 3], ["octocat", 1, "11 Oct", 3]],
+                         "the newest win first; @octocat played Black in all three games")
+        self.assertEqual(hall["measure"], {}, "the kit reads each winner's name from their profile")
         element = chess.board(table.game, table.hall, OWNER)
-        self.assertEqual(element["hall"], [["1", "0-1", "@octocat", "Qh4#"], ["2", "1/2-1/2", "stalemate", "Qe6"]])
-        self.assertIn("[Hall of Fame](https://github.com/tannergolden/tannergolden/blob/HEAD/.github/chess/"
-                      "hall-of-fame.json)", element["note"])
+        self.assertIn("Game 3 went to @tannergolden, and @tannergolden opens game 4 as White", element["prompt"])
+        self.assertIn("[PGN](https://github.com/tannergolden/tannergolden/tree/HEAD/.github/chess/games)",
+                      element["note"])
+
+    def test_a_mate_the_arbiter_played_scores_nobody(self):
+        table = Table()
+        table.play(FOOLS_MATE)
+        record = table.hall[0]
+        by_the_clock = {**record, "deciding": {**record["deciding"], "player": None, "player_id": None, "arbiter": True}}
+        hall = chess.hall_element([by_the_clock], OWNER)
+        self.assertEqual((hall["world"], hall["people"]), (1, []), "GitHub wins the game, and nobody the point")
 
     def test_what_the_readme_carries_is_text_the_kit_accepts(self):
-        table = Table()
-        for moves in ([], ["e2e4"], ["e2e4", "c7c5"]):
+        for moves in ([], ["e2e4"], ["e2e4", "c7c5"], FOOLS_MATE):
             table = Table()
             table.play(moves) if moves else None
             element = chess.board(table.game, table.hall, OWNER)
-            for key in ("prompt", "note", "turn_note"):
+            for key in ("prompt", "note"):
                 self.assertRegex(element[key], KIT_LINE)
                 for dash in DASHES:
                     self.assertNotIn(dash, element[key])
+            for row in element["history"]:
+                self.assertTrue(row[3] == "" or KIT_WHO.fullmatch(row[3]), row)
+            if "last" in element:
+                self.assertRegex(element["last"]["by"], KIT_WHO)
+                self.assertRegex(element["last"]["when"], KIT_DAY)
+                self.assertRegex(element["last"]["words"], KIT_WORDS)
+            for row in chess.hall_element(table.hall, OWNER)["people"]:
+                self.assertRegex(row[2], KIT_DAY)
+
+    def test_a_reply_names_the_move_as_the_board_listed_it(self):
+        table = Table()
+        listed = {entry[2]: entry for entry in self.entries(chess.board(None, [], OWNER))}
+        outcome = table.move("g1f3")
+        emoji, title = listed["Nf3"][0], listed["Nf3"][1]
+        self.assertIn(f"**1. Nf3 is on the board**: {emoji} *{title}*, knight from g1 to f3.", outcome.comment)
 
 
 class Words(unittest.TestCase):
@@ -419,6 +482,7 @@ class Script(unittest.TestCase):
             self.assertEqual(code, 0)
             text = (Path(temp) / "markdown.yaml").read_text(encoding="utf-8")
             self.assertTrue(text.startswith("elements:\n  # chess:start\n  chess:\n    kind: \"chess\"\n"))
+            self.assertIn("\n  chess-hall:\n    kind: \"chess-hall\"\n    games: 0\n", text)
             self.assertTrue(text.endswith("  # chess:end\n  other:\n    kind: placard\n"))
             self.assertEqual((out / "commit.txt").read_text(encoding="utf-8").splitlines()[0],
                              "chore(chess): 🖌️ set the board out for the page")

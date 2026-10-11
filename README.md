@@ -80,6 +80,14 @@ it, answers on your issue, and redraws this board within a few minutes.
 <!-- markdown:element:chess:start -->
 <!-- markdown:element:chess:end -->
 
+### 🏆 Hall of Fame
+
+Every game ends by the rules, and the move that mates wins its player a place
+here: mine count the same as anyone's.
+
+<!-- markdown:element:chess-hall:start -->
+<!-- markdown:element:chess-hall:end -->
+
 ---
 
 ## 💡 How It Fits Together

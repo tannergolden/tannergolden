@@ -28,16 +28,19 @@ starts at once, with the owner to open it.
   .github/chess/hall-of-fame.json   every finished game: result, deciding move, players
   .github/chess/games/game-N.pgn    each finished game, every move with who played it
 
-After every run it sets the board out for the page: the position, the last
-move, any check, the score sheet, the Hall of Fame, whose turn it is and until
-when, and every legal move as a link that opens its ready-made issue. They go
-between the `# chess:start` and `# chess:end` lines of .github/markdown.yaml,
-and nothing else in that file, for tannergolden/markdown to draw in the page's
-one theme.
+After every run it sets the game out for the page as two elements. The board:
+the position, the last move in words with who played it when, any check, whose
+turn it is and until when, how many have played for GitHub, what each side has
+taken, the score sheet's latest rows, the turn's banner, and every legal move
+named by chess_names.py, with a link that opens its ready-made issue. The Hall
+of Fame: the series between the owner and GitHub, and its leading winners, a
+point to whoever made a mating move. They go between the `# chess:start` and
+`# chess:end` lines of .github/markdown.yaml, and nothing else in that file,
+for tannergolden/markdown to draw in the page's one theme.
 
 It writes comment.md, the reply to post, and commit.txt into the run's
 temporary folder (--out), and sets `changed` and `issue` as step outputs.
-Stdlib only, with chess_rules.py beside it.
+Stdlib only, with chess_rules.py and chess_names.py beside it.
 """
 from __future__ import annotations
 
@@ -53,13 +56,15 @@ import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 
+from chess_names import listing
+from chess_names import words as move_words
 from chess_rules import (START, Ending, Move, Position, ending, in_check, king, label, legal_moves, make, pseudo_moves,
                          san, side, square)
 
 WEEK = dt.timedelta(days=7)
 EST = dt.timezone(dt.timedelta(hours=-5), "EST")  # the page tells time in EST, as its settings say
 GROUPS = {"k": "king", "q": "queen", "r": "rook", "b": "bishop", "n": "knight", "p": "pawn"}
-ROWS, HALL = 8, 3  # the score sheet's latest rows and the Hall of Fame's latest games the page is given
+ROWS, PODIUM = 3, 5  # the score sheet's latest rows, and the winners the Hall of Fame ranks
 UCI = re.compile(r"[a-h][1-8][a-h][1-8][qrbn]?")
 NUMBER = re.compile(r"[1-9][0-9]{0,8}")
 LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})")
@@ -128,6 +133,12 @@ def replay(game: dict) -> list[Position]:
 def numbered(position: Position, name: str) -> str:
     """A move with its number, as a score sheet writes it: `12. Nf3` for White, `12... Nf6` for Black."""
     return f"{position.fullmove}. {name}" if position.turn == "w" else f"{position.fullmove}... {name}"
+
+
+def named(position: Position, game: int, ply: int, move: Move) -> str:
+    """A move as its reply names it, as the board listed it: its emoji, its title and what it does."""
+    entry = next(m for m in listing(position, game, ply) if m["uci"] == move.uci)
+    return f"{entry['emoji']} *{entry['title']}*, {entry['words'][0].lower()}{entry['words'][1:]}"
 
 
 def who(played: dict) -> str:
@@ -272,17 +283,19 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
                       f" Nothing was played. Pick a move from {board}.\n", "illegal")
 
     mover = {"player": request.player, "player_id": request.player_id, "issue": request.issue, "arbiter": False}
+    name = named(position, number, ply, moves[request.uci])
     outcome, shown, end = apply(current, hall, positions, moves[request.uci], mover, owner, moment)
     outcome.issue = request.issue
     if end:
         outcome.comment = ended_text(end, shown, number, mover, owner)
         outcome.commit = f"chore(chess): 🏆 play {shown}, ending game {number} {end.result}"
     elif position.turn == "w":
-        outcome.comment = (f"♟️ **{shown} is on the board.** It is GitHub's turn: anyone but @{owner} can play"
-                           f" the next move, from {board}.\n")
+        outcome.comment = (f"♟️ **{shown} is on the board**: {name}. It is GitHub's turn: anyone but @{owner} can"
+                           f" play the next move, from {board}.\n")
         outcome.commit = f"chore(chess): ♟️ play {shown} in game {number}"
     else:
-        outcome.comment = f"♟️ **{shown} is on the board**, played by @{request.player}. @{owner}, it is your move.\n"
+        outcome.comment = (f"♟️ **{shown} is on the board**, played by @{request.player}: {name}. @{owner}, it is"
+                           " your move.\n")
         outcome.commit = f"chore(chess): ♟️ play {shown} in game {number}"
     outcome.commit += f"\n\nMove {ply}, by {request.player}."
     outcome.log = f"played {shown}" + (f", {end.reason}" if end else "")
@@ -306,6 +319,7 @@ def tick(game: dict | None, hall: list, owner: str, moment: dt.datetime) -> Outc
     move = random.Random(int.from_bytes(seed, "big")).choice(legal)  # noqa: S311 - a fair pick, not a secret
     mover = {"player": None, "player_id": None, "issue": None, "arbiter": True}
     number = game["game"]
+    name = named(position, number, ply, move)
     outcome, shown, end = apply(game, hall, positions, move, mover, owner, moment)
     for earlier in reversed(game["moves"]):
         if earlier.get("issue"):
@@ -314,11 +328,11 @@ def tick(game: dict | None, hall: list, owner: str, moment: dt.datetime) -> Outc
     board = f"[the board]({profile(owner)})"
     if position.turn == "b":
         text = (f"⏰ **A week went by without a move from GitHub**, so the Arbiter played {shown} at random"
-                f" for Black.")
+                f" for Black: {name}.")
         follow = f" @{owner}, it is your move.\n"
     else:
         text = (f"⏰ **A week went by without a move from {owner}**, so the Arbiter played {shown} at random"
-                f" for White.")
+                f" for White: {name}.")
         follow = f" It is GitHub's turn: anyone but {owner} can play the next move, from {board}.\n"
     outcome.comment = text + (" " + ended_text(end, shown, number, mover, owner) if end else follow)
     outcome.commit = (f"chore(chess): ⏰ play {shown} for {'White' if position.turn == 'w' else 'Black'}"
@@ -341,83 +355,154 @@ def until(moment: dt.datetime) -> str:
     return f"{local.day} {local:%b}, {local:%H:%M} EST"
 
 
+def day(moment: dt.datetime) -> str:
+    """A day as the page's sheets letter it, in the page's time: `18 Oct`."""
+    local = moment.astimezone(EST)
+    return f"{local.day} {local:%b}"
+
+
+def taken(game: dict, positions: list[Position]) -> dict:
+    """What each side has taken so far, as piece letters: {"white": "pn", "black": "p"}."""
+    took = {"white": "", "black": ""}
+    for position, played in zip(positions, game["moves"]):
+        move = Move.from_uci(played["uci"])
+        piece = position.board[move.end]
+        if not piece and position.board[move.start].lower() == "p" and move.end == position.ep:
+            piece = "p"
+        if piece:
+            took["white" if position.turn == "w" else "black"] += piece.lower()
+    return took
+
+
+def score_sheet(game: dict, position: Position) -> list[list]:
+    """The score sheet's latest rows: each move's number, White's move, Black's and who chose it, and the row the
+    next move goes on."""
+    moves, rows = game["moves"], []
+    for i in range(0, len(moves), 2):
+        black = moves[i + 1] if i + 1 < len(moves) else None
+        rows.append([i // 2 + 1, moves[i]["san"], black["san"] if black else "", who(black) if black else ""])
+    if position.turn == "w":
+        rows.append([position.fullmove, "", "", ""])
+    return rows[-ROWS:]
+
+
 def board(game: dict | None, hall: list, owner: str) -> dict:
-    """The page's chess element: what the board draws, and what the README carries under it."""
+    """The page's chess element: what the board draws, and what the README carries round it."""
     current = game or {"game": 1, "started": None, "moves": []}  # a first game nobody has opened yet
     positions = replay(current)
     position, ply, number = positions[-1], len(current["moves"]) + 1, current["game"]
-    legal = legal_moves(position)
-    groups: dict[str, list] = {kind: [] for kind in GROUPS.values()}
-    for move in sorted(legal, key=lambda move: move.uci):
-        groups[GROUPS[position.board[move.start].lower()]].append(
-            [san(position, move, legal), link(owner, move.uci, number, ply)])
+    groups: dict[str, list] = {}
+    for entry in listing(position, number, ply):
+        groups.setdefault(entry["piece"], []).append(
+            [entry["emoji"], entry["title"], entry["san"], entry["words"], link(owner, entry["uci"], number, ply)])
     started = game is not None and (current["moves"] or current.get("started"))
     clock = parse(current["moves"][-1]["at"] if current["moves"] else current["started"]) + WEEK if started else None
-    deadline = until(clock) if clock else ""
-    play_url = f"https://github.com/{owner}/play"
-    if position.turn == "w" and not current["moves"] and game is None:
-        note, prompt = (f"Only {owner} opens the game",
-                        f"**@{owner} opens the game.** White moves first, and GitHub plays Black from the next move on.")
-    elif position.turn == "w":
-        note, prompt = (f"Only {owner}, by {deadline}",
-                        f"**@{owner}'s move**, until {deadline}. Only @{owner} plays White; GitHub's turn comes next.")
-    else:
-        note, prompt = (f"Anyone but {owner}, by {deadline}",
-                        f"**GitHub's move**, until {deadline}. Anyone but @{owner} can play: pick a move below, and its"
-                        f" link opens a ready-made issue in [{owner}/play]({play_url}). The first move to arrive is"
-                        " the one played.")
-    element = {"kind": "chess", "fen": position.fen, "game": number, "move": ply, "white": owner, "black": "GitHub"}
+    element = {"kind": "chess", "fen": position.fen, "game": number, "move": position.fullmove,
+               "players": len(contributors(current))}
+    if clock:
+        element["due"] = day(clock)
+    shown, arbiter = "", False
     if current["moves"]:
-        last = current["moves"][-1]
-        element.update(last=last["uci"], last_san=numbered(positions[-2], last["san"]),
-                       last_by="the Arbiter" if last.get("arbiter") else f"@{last['player']}")
+        played, before = current["moves"][-1], positions[-2]
+        arbiter = bool(played.get("arbiter"))
+        move = Move.from_uci(played["uci"])
+        took = before.board[move.end] or ("p" if before.board[move.start].lower() == "p" and move.end == before.ep
+                                          else "")
+        shown = numbered(before, played["san"])
+        element["last"] = {"san": played["san"], "from": label(move.start), "to": label(move.end),
+                           "piece": PIECES[before.board[move.start].lower()], "captured": PIECES.get(took.lower(), ""),
+                           "words": move_words(before, move), "by": who(played), "when": day(parse(played["at"]))}
     if in_check(position):
         element["check"] = label(king(position, position.turn))
-    element["turn_note"] = note
-    moves = current["moves"]
-    element["history"] = [[str(i // 2 + 1), moves[i]["san"], moves[i + 1]["san"] if i + 1 < len(moves) else ""]
-                          for i in range(0, len(moves), 2)][-ROWS:]
-    element["hall"] = [[str(record["game"]), record["result"],
-                        ("the Arbiter" if record["deciding"]["arbiter"] else f"@{record['deciding']['player']}")
-                        if record["reason"] == "checkmate" else record["reason"],
-                        record["deciding"]["move"].split()[-1]] for record in hall[-HALL:]]
-    element["prompt"] = prompt
-    rest = ("A side that goes a week without moving gets a random legal move from the Arbiter, so no game"
-            " stalls.")
+    element["taken"] = taken(current, positions)
+    element["history"] = score_sheet(current, position)
+    by = f" by {until(clock)}" if clock else ""
+    if position.turn == "b":
+        check = "You're in check. " if in_check(position) else ""
+        mover = f"the Arbiter played {shown} for @{owner}" if arbiter else f"@{owner} played {shown}"
+        element["prompt"] = (f"🟢 **GitHub's turn!** {mover[0].upper()}{mover[1:]}. {check}Pick a move below{by}:"
+                             f" anyone but @{owner} can play it, and the first one in is played.")
+        element["note"] = ("Each move opens a ready-made issue in [tannergolden/play](https://github.com/"
+                           f"{owner}/play). Submit it as it opens, and the board redraws within a few minutes.")
+    else:
+        if shown:
+            head = f"The Arbiter played {shown} for GitHub." if arbiter else f"GitHub played {shown}."
+            head += f" The next move is @{owner}'s{by}."
+        elif hall:
+            last = hall[-1]
+            result = (f"went to {'@' + owner if last['winner'] == owner else 'GitHub'}" if last["winner"]
+                      else f"was drawn by {REASONS[last['reason']]}")
+            head = f"Game {last['game']} {result}, and @{owner} opens game {number} as White{by}."
+        else:
+            head = f"@{owner} opens game {number} as White{by}, and GitHub plays Black from the next move on."
+        element["prompt"] = f"🛑 **@{owner}'s turn!** {head}"
+        element["note"] = (f"Only @{owner} can play on this turn: a pick from anyone else is turned away with a"
+                           " comment on its issue.")
+    element["note"] += " A side that goes a week without moving gets a random legal move from the Arbiter."
     if hall:
-        base = f"https://github.com/{owner}/{owner}"
-        rest += (f" Every finished game is kept in the [Hall of Fame]({base}/blob/HEAD/.github/chess/hall-of-fame.json)"
-                 f" and as a [PGN]({base}/tree/HEAD/.github/chess/games).")
-    element["note"] = rest
-    element["moves"] = [{"piece": piece, "links": links} for piece, links in groups.items() if links]
+        element["note"] += (f" Every finished game is kept as a [PGN](https://github.com/{owner}/{owner}/tree/HEAD/"
+                            ".github/chess/games).")
+    element["moves"] = [{"piece": piece, "list": entries} for piece, entries in groups.items()]
     return element
 
 
-def element_yaml(element: dict) -> str:
-    """The element as an entry of the settings' `elements:` section: two spaces in, one field a line."""
-    out = ["  chess:"]
+def hall_element(hall: list, owner: str) -> dict:
+    """The page's Hall of Fame: the series between the owner and GitHub, and its leading winners. A win is a point
+    for whoever made the mating move, the owner included; a draw scores nobody, and nor does the Arbiter's mate."""
+    house = sum(1 for record in hall if record["winner"] == owner)
+    world = sum(1 for record in hall if record["winner"] == "GitHub")
+    wins: dict = {}
+    for record in hall:
+        deciding = record["deciding"]
+        if record["reason"] != "checkmate" or deciding.get("arbiter"):
+            continue
+        key = owner if record["winner"] == owner else deciding["player_id"]
+        entry = wins.setdefault(key, {"login": owner if key == owner else deciding["player"], "wins": 0})
+        if key != owner:
+            entry["login"] = deciding["player"]  # the newest login, should it have changed
+        entry["wins"] += 1
+        entry["last"] = record["ended"]
+    for key, entry in wins.items():
+        entry["games"] = len(hall) if key == owner else sum(
+            1 for record in hall if any(p["player_id"] == key for p in record["players"]))
+    ranked = sorted(wins.values(), key=lambda e: (-e["wins"], -parse(e["last"]).timestamp(), e["login"].casefold()))
+    return {"kind": "chess-hall", "games": len(hall), "house": house, "world": world,
+            "draws": len(hall) - house - world,
+            "people": [[e["login"], e["wins"], day(parse(e["last"])), e["games"]] for e in ranked[:PODIUM]],
+            "measure": {}}
+
+
+def flow(value) -> str:
+    """A value as YAML's inline form, which JSON is: emoji and all written as themselves."""
+    return json.dumps(value, ensure_ascii=False)
+
+
+def element_yaml(eid: str, element: dict) -> str:
+    """An element as an entry of the settings' `elements:` section: two spaces in, one field a line, each list's
+    items one a line."""
+    out = [f"  {eid}:"]
     for key, value in element.items():
         if key == "moves":
             out.append("    moves:")
             for group in value:
-                out += [f"      - piece: {json.dumps(group['piece'])}", "        links:"]
-                out += [f"          - [{json.dumps(name)}, {json.dumps(url)}]" for name, url in group["links"]]
-        elif key in ("history", "hall"):
+                out += [f"      - piece: {flow(group['piece'])}", "        list:"]
+                out += [f"          - {flow(move)}" for move in group["list"]]
+        elif key in ("history", "people"):
             out.append(f"    {key}:" if value else f"    {key}: []")
-            out += [f"      - [{', '.join(json.dumps(cell) for cell in row)}]" for row in value]
+            out += [f"      - {flow(row)}" for row in value]
         else:
-            out.append(f"    {key}: {json.dumps(value, ensure_ascii=False)}")
+            out.append(f"    {key}: {flow(value)}")
     return "".join(line + "\n" for line in out)
 
 
-def set_out(settings: Path, element: dict) -> bool:
-    """Writes the element between the settings' chess markers, when it changed. True when it did."""
+def set_out(settings: Path, elements: list[tuple[str, dict]]) -> bool:
+    """Writes the elements between the settings' chess markers, when they changed. True when they did."""
     lines = settings.read_text(encoding="utf-8").splitlines(keepends=True)
     marks = [i for i, line in enumerate(lines) if line.strip() in ("# chess:start", "# chess:end")]
     if len(marks) != 2 or lines[marks[0]].strip() != "# chess:start":
         raise ValueError(f"{settings} needs one '# chess:start' line, then one '# chess:end' line, under elements:")
     a, b = marks
-    new = "".join(lines[:a + 1]) + element_yaml(element) + "".join(lines[b:])
+    new = "".join(lines[:a + 1]) + "".join(element_yaml(eid, el) for eid, el in elements) + "".join(lines[b:])
     if new == "".join(lines):
         return False
     settings.write_text(new, encoding="utf-8")
@@ -488,7 +573,8 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
         save(args.folder, outcome)
     after = (outcome.game, outcome.hall) if outcome.changed else (game, hall)
     try:
-        drawn = set_out(args.settings, board(*after, owner))
+        drawn = set_out(args.settings, [("chess", board(*after, owner)),
+                                        ("chess-hall", hall_element(after[1], owner))])
     except ValueError as exc:
         print(f"::error::{exc}")
         return 1

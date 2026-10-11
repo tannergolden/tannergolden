@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from chess_names import OWN, PLACES, listing, read, theme, words  # noqa: E402
+from chess_names import COMMANDS, OWN, PLACES, listing, read, theme, words  # noqa: E402
 from chess_names import THEMES as THEME_PATTERNS  # noqa: E402
 from chess_rules import START, Move, Position, legal_moves, make  # noqa: E402
 
@@ -84,9 +84,19 @@ class Titles(unittest.TestCase):
             self.assertEqual(len(named), len(legal_moves(position)))
             self.assertEqual(len({m["title"] for m in named}), len(named), position.fen)
             for m in named:
-                self.assertRegex(m["emoji"], KIT_EMOJI)
-                self.assertRegex(m["title"], KIT_TITLE)
-                self.assertRegex(m["words"], KIT_WORDS)
+                self.assertTrue(KIT_EMOJI.fullmatch(m["emoji"]), m["emoji"])
+                self.assertTrue(KIT_TITLE.fullmatch(m["title"]), m["title"])
+                self.assertTrue(KIT_WORDS.fullmatch(m["words"]), m["words"])
+
+    def test_every_title_is_an_order_and_never_names_a_square(self):
+        for game, position in boards(60):
+            for m in listing(position, game, 1):
+                self.assertIn(m["title"].split()[0].rstrip(",!"), COMMANDS, m["title"])
+                self.assertTrue(m["title"].endswith("!"), m["title"])
+                self.assertNotRegex(m["title"], r"\b[a-h][1-8]\b|\b[a-h]-[Ff]ile\b")
+        opening = [m["title"] for m in listing(Position.from_fen(START), 1, 1)]
+        self.assertEqual(opening[:4], ["Leave the Barracks!", "Deploy the Outriders!", "Muster the Knights!",
+                                       "Join the Fray, Cavalry!"])
 
     def test_a_board_is_named_the_same_every_time_and_another_game_differently(self):
         position = Position.from_fen(START)
@@ -101,14 +111,14 @@ class Titles(unittest.TestCase):
         seen = {m["title"] for game, position in boards(60) for m in listing(position, game, 1)}
         self.assertGreater(len(seen - fixed), len(fixed), "more titles made than every fixed phrase put together")
 
-    def test_a_title_s_article_and_its_place_s_preposition_fit_the_words_they_go_with(self):
-        wrong = [f"{word} {place}" for options in PLACES.values() for at, place in options
-                 for word in ("at", "in", "on", "behind") if word != at]
+    def test_a_title_s_article_fits_and_a_place_brings_its_own_preposition(self):
         for game, position in boards(60):
             for m in listing(position, game, 1):
                 self.assertNotRegex(m["title"], r"\bA [AEIOU]|\bAn [^AEIOU]")
-                self.assertFalse([w for w in wrong if w in m["title"]], m["title"])
-        self.assertEqual(listing(Position.from_fen(START), 1, 1)[7]["title"], "An Unsung Advance to b3")
+        patterns = [p for _, ps in THEME_PATTERNS.values() for p in ps] + [p for ps in OWN.values() for p in ps]
+        for pattern in patterns:
+            self.assertNotRegex(pattern, r"\b(?:at|in|on|behind) \{place\}", "a place's own word comes with {at}")
+        self.assertTrue(all(at in ("at", "in", "on", "behind") for options in PLACES.values() for at, _ in options))
 
     def test_the_list_runs_from_the_king_to_the_pawns(self):
         pieces = [m["piece"] for m in listing(Position.from_fen("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1"),

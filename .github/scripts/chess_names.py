@@ -5,16 +5,21 @@
 
   from chess_names import listing, words
 
+Every title is an order, as if the player commanded an army: "Send In the
+Cavalry!", "Trample Their Pikemen!", "Raise the Drawbridge!". It opens with a
+word of command and ends with "!", and it never names a square, since the
+notation beside it in the list already does.
+
 `read` takes a move apart for what it does: which piece moves and from where,
 what it takes, whether it checks, discovers a check, mates or stalemates,
 castles or promotes, whether it forks, leaves its home square, takes the
 center, runs for the last rank, retreats, or steps where it can be taken for
 nothing. The most telling of those picks the move's theme, and the theme
-builds its title from phrases of its own and from words kept for each piece,
-each piece taken and each part of the board: a knight's move reads as
-cavalry's and a pawn's as a footsoldier's, a capture names what fell, and a
-place names where it happened. The phrases and words between them make
-millions of titles, so two boards seldom share one.
+builds its order from orders of its own and from the words kept for each
+piece as a unit of the army: the pawns are its pikemen and the knights its
+cavalry, a capture names what fell and the unit it fell from, and a place
+names where it happened. Between them they make millions of orders, so two
+boards seldom share one.
 
 The choice is seeded by the game, the move number and the position, so a board
 names its moves the same way however often it is drawn, and differently in
@@ -41,186 +46,237 @@ HOME = {"w": {1: "n", 6: "n", 2: "b", 5: "b", 3: "q", 0: "r", 7: "r", 4: "k"},
         "b": {57: "n", 62: "n", 58: "b", 61: "b", 59: "q", 56: "r", 63: "r", 60: "k"}}
 FIANCHETTO = {"w": {9, 14}, "b": {49, 54}}  # b2 and g2, b7 and g7
 
-# --- the words each piece is made of ---------------------------------------------------------------------------
-ADJ = {
-    "n": ("Galloping", "Midnight", "Crooked", "Restless", "Thundering", "Wild", "Wandering", "Silver", "Hooded",
-          "Daring", "Phantom", "Nimble", "Moonlit", "Sudden", "Reckless", "Feral", "Errant", "Swift"),
-    "b": ("Holy", "Silent", "Slanted", "Hallowed", "Solemn", "Shadowed", "Gilded", "Oblique", "Pious", "Sacred",
-          "Candlelit", "Cloistered", "Devout", "Veiled", "Distant", "Patient"),
-    "r": ("Stone", "Iron", "Granite", "Unyielding", "Towering", "Grim", "Steadfast", "Heavy", "Rumbling",
-          "Fortified", "Thunderous", "Relentless", "Ironbound", "Weathered", "Mighty"),
-    "q": ("Royal", "Imperial", "Sovereign", "Radiant", "Fearless", "Relentless", "Starlit", "Regal", "Gilded",
-          "Majestic", "Tempestuous", "Glittering", "Unbowed", "Peerless"),
-    "k": ("Royal", "Weary", "Careful", "Stately", "Solemn", "Measured", "Defiant", "Cautious", "Ancient",
-          "Unhurried", "Crowned", "Lonely"),
-    "p": ("Humble", "Steady", "Brave", "Muddy", "Stubborn", "Patient", "Lowly", "Dauntless", "Weathered", "Loyal",
-          "Unsung", "Faithful", "Gritty", "Plucky"),
+# --- the army: each piece a unit, and the orders it takes ---------------------------------------------------------
+# Every title is an order shouted down the line: it opens with one of COMMANDS and ends with "!". Each piece is a
+# unit of the army (the pawns its pikemen, the knights its cavalry, the rooks its siege towers), so a move reads as
+# the order that sent it, and no title ever names a square: the notation beside it does that.
+TROOP = {  # the unit an order sends: "Advance the Pikemen!"
+    "p": ("Pikemen", "Footmen", "Infantry", "Spearmen", "Vanguard", "Militia", "Shield Wall", "Front Line", "Levies",
+          "Skirmishers", "Yeomen", "Halberdiers"),
+    "n": ("Cavalry", "Horsemen", "Riders", "Lancers", "Dragoons", "Hussars", "Outriders", "Light Horse",
+          "Heavy Horse", "Knights"),
+    "b": ("Bishops", "Templars", "Crusaders", "Clergy", "Zealots", "Holy Order", "Paladins", "Battle Priests",
+          "Inquisitors", "Abbots"),
+    "r": ("Siege Towers", "Rams", "Garrison", "Towers", "Catapults", "Trebuchets", "Engineers", "Siege Engines",
+          "Battlements", "War Wagons"),
+    "q": ("Queen", "Warrior Queen", "War Queen", "Iron Queen", "Queen of Blades", "Crown's Champion"),
+    "k": ("King", "Crown", "Old King", "Sovereign", "Royal Court"),
 }
-NOUN = {
-    "n": ("Charge", "Gallop", "Leap", "Canter", "Raid", "Sortie", "Foray", "Ride", "Pounce", "Stride", "Hoofbeat",
-          "Vanguard", "Outrider", "Errand", "Hop", "Joust"),
-    "b": ("Blessing", "Sermon", "Pilgrimage", "Diagonal", "Vigil", "Benediction", "Procession", "Prayer", "Psalm",
-          "Vespers", "Litany", "Crusade", "Homily", "Absolution"),
-    "r": ("Siege", "Rampart", "Tower", "Bulwark", "Barbican", "Watchtower", "Parapet", "Portcullis", "Citadel",
-          "Battering Ram", "Wall", "Keep", "Bastion", "Advance"),
-    "q": ("Tempest", "Decree", "Reach", "Command", "Edict", "Storm", "Wrath", "Grace", "Sovereignty", "Procession",
-          "Audience", "Proclamation", "Sweep", "Verdict"),
-    "k": ("Stroll", "Step", "Walk", "March", "Procession", "Vigil", "Refuge", "Progress", "Pilgrimage", "Promenade",
-          "Passage"),
-    "p": ("March", "Advance", "Stride", "Footfall", "Muster", "Trudge", "Vanguard", "Shield Wall", "Pike Line",
-          "Sally"),
+ONE = {  # one soldier of it: "Crown the Pikeman!"
+    "p": ("Pikeman", "Footman", "Spearman", "Foot Soldier", "Militiaman", "Yeoman", "Halberdier", "Conscript"),
+    "n": ("Rider", "Horseman", "Lancer", "Dragoon", "Hussar", "Outrider", "Knight"),
+    "b": ("Bishop", "Templar", "Crusader", "Zealot", "Paladin", "Inquisitor"),
+    "r": ("Siege Tower", "Ram", "Catapult", "Trebuchet", "War Wagon", "Tower"),
+    "q": ("Queen", "Warrior Queen", "War Queen", "Iron Queen"),
+    "k": ("King", "Old King", "Sovereign"),
 }
-# How each piece goes somewhere: the patterns that take it to a place use these.
-MOVE = {
-    "n": ("Gallop", "Ride", "Charge", "Leap", "Canter", "Raid", "Sortie", "Foray", "Hop", "Pounce"),
-    "b": ("Procession", "Pilgrimage", "Passage", "Crossing", "Glide", "Journey", "Progress"),
-    "r": ("Advance", "Roll", "March", "Lift", "Rumble", "Sweep", "Drive"),
-    "q": ("Sweep", "Procession", "Flight", "Advance", "Progress", "Glide", "Surge"),
-    "k": ("Stroll", "Walk", "Progress", "Step", "Promenade", "Passage"),
-    "p": ("March", "Advance", "Stride", "Trudge", "Muster", "Sally", "Step"),
+CALL = {  # the unit called to at the end of an order: "Charge, Cavalry!"
+    "p": ("Footmen", "Pikemen", "Infantry", "Spearmen", "Soldiers", "Militia", "Vanguard", "Lads"),
+    "n": ("Cavalry", "Riders", "Horsemen", "Lancers", "Knights", "Hussars"),
+    "b": ("Templars", "Crusaders", "Brothers", "Zealots", "Paladins", "Father"),
+    "r": ("Garrison", "Engineers", "Towers", "Siege Crews", "Sappers"),
+    "q": ("My Queen", "Majesty", "Your Majesty", "My Lady"),
+    "k": ("Sire", "Majesty", "My King", "Your Majesty"),
 }
-# What each piece does when it takes something.
-STRIKE = {
-    "n": ("Ambush", "Raid", "Charge", "Trampling", "Onslaught"),
-    "b": ("Judgement", "Smiting", "Verdict", "Reckoning", "Penance"),
-    "r": ("Onslaught", "Siege", "Breach", "Battering", "Avalanche"),
-    "q": ("Wrath", "Justice", "Fury", "Vengeance", "Decree"),
-    "k": ("Blade", "Reprisal", "Justice"),
-    "p": ("Ambush", "Uprising", "Revolt", "Skirmish", "Pitchfork"),
+SEND = {  # the orders that move the unit: "{send} the {troop}!"
+    "p": ("Advance", "March", "Push Up", "Move Up", "Send Forward", "Rally", "Muster", "Drive", "Lead Out"),
+    "n": ("Send In", "Spur On", "Unleash", "Loose", "Wheel In", "Swing Out", "Rally", "Lead Out", "Turn Loose"),
+    "b": ("Send Forth", "Rally", "Loose", "Unleash", "Dispatch", "Station", "Post", "Lead Out", "Summon"),
+    "r": ("Roll Up", "Wheel In", "Bring Up", "Haul Up", "Move Up", "Raise", "Station", "Roll Out", "Post"),
+    "q": ("Unleash", "Send In", "Dispatch", "Loose", "Deploy", "Summon", "Turn Loose"),
+    "k": ("Shelter", "Move", "Guard", "Escort", "Shield", "Lead Out"),
 }
-FIERCE = ("Ruthless", "Merciless", "Savage", "Grim", "Bloody", "Brutal", "Pitiless", "Cold", "Swift", "Fearsome")
+CRY = {  # the orders shouted to it: "{cry}, {call}!"
+    "p": ("Advance", "Forward", "March", "Hold Fast", "Press On", "Step Up", "Dig In", "Push On", "Quick March",
+          "Close Ranks"),
+    "n": ("Charge", "Ride", "Ride Hard", "Ride Out", "Leap", "Gallop", "Wheel About", "Hit Them Hard",
+          "Run Them Down"),
+    "b": ("Strike", "Sweep In", "Advance", "Cut Across", "Slip Through", "Go Forth", "Move Out", "Strike True"),
+    "r": ("Roll Forward", "Advance", "Hold Fast", "Push On", "Fire", "Move Up", "Grind On", "Batter On"),
+    "q": ("Ride", "Strike", "Sweep In", "Go Forth", "Show No Mercy", "Rule the Field", "Lead Us"),
+    "k": ("Step Back", "Stand Fast", "Step Lively", "Hold Firm", "Move Out", "Take Cover", "Mind Your Step"),
+}
+TOWARD = {  # the orders that take it toward the fight: "March on the Crossroads!"
+    "p": ("March on", "Push toward", "Press toward", "Advance on", "Close on", "Move on"),
+    "n": ("Ride for", "Gallop toward", "Charge toward", "Ride on", "Make for", "Wheel toward"),
+    "b": ("Slip toward", "Sweep toward", "Strike toward", "Make for", "Cut toward"),
+    "r": ("Roll toward", "Drive on", "Bear Down on", "Advance on", "Grind toward"),
+    "q": ("Sweep toward", "Bear Down on", "Ride for", "Strike toward", "Make for", "Fly toward"),
+    "k": ("Walk toward", "Step toward", "Make for", "Retire toward", "Head for"),
+}
+FORM = ("Form Up", "Hold Position", "Take Position", "Stand Guard", "Make Camp", "Close Ranks")  # on its own ground
+STRIKE = {  # how each unit takes what it takes: "{strike} the {T}!"
+    "p": ("Stab", "Spear", "Skewer", "Pitchfork", "Overrun", "Mob", "Bring Down", "Swarm"),
+    "n": ("Trample", "Ride Down", "Run Down", "Ambush", "Overrun", "Hack Down", "Cut Down"),
+    "b": ("Smite", "Condemn", "Judge", "Banish", "Excommunicate", "Strike Down", "Purge"),
+    "r": ("Crush", "Batter", "Flatten", "Bury", "Grind Down", "Demolish", "Pound"),
+    "q": ("Destroy", "Annihilate", "Sweep Away", "Erase", "Obliterate", "Cut Down"),
+    "k": ("Slay", "Strike Down", "Cut Down", "Dispatch", "Behead"),
+}
+FIERCE = ("without Mercy", "Where It Stands", "at Once", "Swiftly", "Now")  # how hard: "Crush the Knight at Once!"
 EMOJI = {
     "n": ("🐴", "🐎", "🏇", "🦄", "🌙"), "b": ("⛪", "🕯️", "📿", "🕊️", "📜", "🔔"),
     "r": ("🏰", "🗼", "🧱", "🛡️", "🪨", "⛓️"), "q": ("👸", "👑", "💎", "🌪️", "🌟", "⚜️"),
     "k": ("🤴", "👑", "🚶", "🛡️", "🏰"), "p": ("🥾", "🛡️", "🚩", "🌱", "👣", "🪖"),
 }
+# The words of command every title opens with, the drill the whole army knows.
+COMMANDS = frozenset("""
+    Accuse Advance Aim Ambush Annihilate Answer Back Bait Banish Bare Batter Bear Behead Bless Brace Break Bring
+    Bury Call Castle Catch Charge Check Checkmate Circle Claim Clear Close Collect Condemn Corner Cross Crown Crush
+    Cut Dare Deliver Demand Demolish Deploy Destroy Dethrone Dig Dispatch Divide Double Drag Draw Drive Drop End
+    Erase Escort Excommunicate Fall Finish Fire Flank Flatten Fly Fork Form Fortify Forward Freeze Gallop Garrison
+    Get Give Go Grind Guard Hack Hail Haul Head Hit Hold Hound Hunt Jab Join Judge Jump Keep Knock Lead Leap Leave
+    Lengthen Let Light Lock Loose Make Man March Mind Mob Move Muster Obliterate Offer Open Overrun Own Pass Patrol
+    Pin Pitchfork Plant Post Pound Press Prod Promote Pull Purge Push Put Quick Race Raid Raise Rally Ram Rattle
+    Ravage Reach Regroup Reign Reinforce Retire Retreat Reveal Ride Ring Roll Rule Run Saddle Scout Seal Seize Send
+    Set Shelter Shield Shift Shore Show Skewer Slay Slip Smite Smother Snatch Sound Spear Spill Split Spur Stab
+    Stand Station Step Storm Stride Strike Summon Swarm Sweep Swing Take Tempt Threaten Topple Trample Trap Turn
+    Unleash Unmask Walk Watch Wheel Withdraw
+""".split())
 
 # --- the themes: each a list of title patterns, and the emoji it is drawn from ------------------------------------
-# A pattern's fields: {P} the piece that moves, {T} the piece it takes, {sq} where it lands, {place} a name for that
-# part of the board, {adj}, {noun} and {move} from the moving piece's words, {fierce} and {strike} for a capture,
-# {file} the file it lands on.
+# A pattern's fields: {troop}, {one} and {call} the unit that moves, as an order sends it, as one soldier and as
+# called to; {send}, {cry} and {strike} the orders it takes, and {go} one that takes it to where it lands; {P} the
+# piece it is or becomes, {T} the piece it takes and {foe} that piece's unit; {fierce} how hard it strikes; {place}
+# and {at} where it lands, the second with the word that puts it there; {pair} the two pieces a fork catches.
 THEMES = {
     "mate": (("💀", "☠️", "🏁", "👑"), (
-        "The Final Word", "Long Live the Board", "Checkmate on {sq}", "The Last Bell", "The Crown Falls", "Game Over",
-        "The Throne Is Taken", "The End of the Road", "The {P}'s Final Word", "Mate {at}")),
-    "smothered": (("💀", "🐴"), ("The Smothered Mate", "Smothered", "No Room to Breathe")),
-    "back-rank": (("💀", "🏁"), ("The Back-Rank Mate", "Trapped on the Back Rank", "No Way Out")),
-    "stalemate": (("🧊", "🤝"), (
-        "The Frozen Throne", "Nowhere to Run", "Peace by Default", "The Stalemate Trap", "A Draw from Nowhere")),
+        "Topple the King!", "Seize the Throne!", "Finish It!", "End It Here!", "Take the Crown!", "Claim the Throne!",
+        "Bring Down the King!", "Checkmate Them!", "Leave the King No Escape!", "Corner the King {at}!",
+        "Trap the King {at}!", "End the War {at}!")),
+    "smothered": (("💀", "🐴"), ("Smother the King!", "Bury Him in His Own Court!", "Leave Him No Room!",
+                                "Seal the King In!")),
+    "back-rank": (("💀", "🏁"), ("Strike the Back Rank!", "Seal the Back Rank!", "Trap Him Behind His Walls!",
+                                "Pin Him to His Own Wall!")),
+    "stalemate": (("🧊", "🤝"), ("Freeze the Field!", "Leave Them No Move!", "Call the Truce!", "Lock the Board!",
+                                "Hold Them Frozen!")),
     "crown": (("👑", "⭐", "✨"), (
-        "A Crown for a Footsoldier", "Rise Through the Ranks", "From Pawn to Queen", "The Coronation",
-        "Long Live the New Queen", "The Long Road Ends", "A Queen Is Born on {sq}")),
-    "crown-taking": (("👑", "🩸"), ("Crowned in Blood", "A Crown Taken by Force", "The Bloody Coronation")),
-    "underpromote": (("🎖️", "✨"), ("Knighted in the Field", "A Humbler Crown", "The Unexpected {P}", "Raised to {P}")),
+        "Crown the {one}!", "Raise a New Queen!", "Crown a Queen in the Field!", "Promote the {one}!",
+        "Make Way for the New Queen!", "Hail the New Queen!")),
+    "crown-taking": (("👑", "🩸"), ("Cut Through and Take the Crown!", "Crown the {one} in Blood!",
+                                   "Take It and Be Crowned!")),
+    "underpromote": (("🎖️", "✨"), ("Make the {one} a {P}!", "Raise a {P} from the Ranks!",
+                                   "Promote the {one} to {P}!")),
     "castle-king": (("🏰", "🏯"), (
-        "Raise the Drawbridge", "Into the Keep", "The Kingside Fortress", "Close the Gates", "Safe Behind the Walls",
-        "The King Takes Shelter")),
+        "Raise the Drawbridge!", "Retreat to the Keep!", "Close the Gates!", "Garrison the King!",
+        "Shelter the Crown!", "Man the Kingside Walls!")),
     "castle-queen": (("🏰", "🏯"), (
-        "The Long Castle", "The Queenside Citadel", "Across the Great Hall", "The Grand Retreat", "Castle Long")),
+        "Castle Long!", "Fortify the Queenside!", "Move the Court West!", "Shelter the King in the Great Hall!",
+        "Bring the Rook to the Center!")),
     "double": (("🌩️", "⚡"), (
-        "Twin Thunder", "The Pincer", "Two Swords Drawn", "Double Jeopardy", "The Crossfire", "Nowhere to Hide")),
+        "Close the Pincer!", "Strike from Both Flanks!", "Double the Assault!", "Hit the King Twice!",
+        "Draw Both Blades!", "Catch Him in the Crossfire!")),
     "discovery": (("🎭", "🪞"), (
-        "The Veil Lifts", "Unmasked", "Out of the Shadows", "The Hidden Blade", "Behind the Curtain", "Revealed")),
-    "royal-fork": (("🍴", "🔱"), ("The Royal Fork", "Crown and Queen", "The Grand Fork", "A Fork for the Family")),
+        "Unmask the Battery!", "Open the Line of Fire!", "Pull Back the Curtain!", "Step Aside and Let Them Strike!",
+        "Reveal the Hidden Blade!", "Clear the Way for the Strike!")),
+    "royal-fork": (("🍴", "🔱"), ("Fork the King and Queen!", "Split the Royal Family!", "Strike at Crown and Queen!",
+                                 "Hit the King, Take the Queen!")),
     "fork": (("🍴", "🔱"), (
-        "Two Birds, One Stone", "The Fork in the Road", "The Trident", "Double Trouble", "Two Targets, One {P}",
-        "The {adj} Fork")),
+        "Strike Two at Once!", "Split Their Ranks!", "Divide and Conquer!", "Hit Them Both!", "Fork the {pair}!",
+        "Catch the {pair} Together!")),
     "queen-taken": (("💔", "⚰️", "👑"), (
-        "The Queen Is Fallen", "Dethroned", "The Crown Topples", "Fall of the Queen", "The Queen's Last Stand",
-        "Queenslayer", "No Queen Survives {place}")),
+        "Take Down the Queen!", "Dethrone Her!", "Cut Down the Queen!", "Bring the Queen to Her Knees!",
+        "Show the Queen No Mercy!", "{strike} the Queen!", "End the Queen's Reign!")),
     "strike": (("🌩️", "⚡"), (
-        "Blood and Thunder", "Strike and Warn", "{T} Down, King Next", "Take and Threaten", "A Blow and a Warning",
-        "The {fierce} {strike}")),
-    "passing": (("👻",), ("En Passant", "In Passing", "The Ghost Capture", "Caught in Passing", "The Phantom Strike")),
-    "first-blood": (("🩸", "🗡️"), ("First Blood", "First Blood on {sq}", "The First to Fall", "Opening Blood",
-                                  "The First {strike}", "First Blood {at}", "The {T} Falls First")),
-    "giant": (("🪨", "⚔️"), ("Giant Slayer", "David and Goliath", "The Peasant's Revenge", "Pitchforks Raised",
-                            "A Pawn Fells the {T}", "The {T} Felled at {sq}")),
+        "Take the {T} and Warn the King!", "Cut Down the {T}, Then the King!", "Strike and Threaten!",
+        "Take It with Check!", "{strike} the {T}, Check the King!")),
+    "passing": (("👻",), ("Strike in Passing!", "Catch Them Crossing!", "Take the Passing Pawn!", "Ambush the Runner!",
+                         "Snatch It en Passant!")),
+    "first-blood": (("🩸", "🗡️"), ("Draw First Blood!", "Strike First!", "Open the Killing!", "Take the First {T}!",
+                                  "Spill First Blood {at}!", "{strike} Their {foe} First!")),
+    "giant": (("🪨", "⚔️"), ("Bring Down the {T}!", "Topple the {T}!", "Raise Pitchforks, Take the {T}!",
+                            "Let the Footmen Fell the {T}!", "Drag Down Their {foe}!")),
     "capture": (("⚔️", "🗡️", "🩸", "💥", "🪓", "🏹"), (
-        "Blood for Blood", "The Fall of the {T}", "Down Goes the {T}", "{T}slayer", "No Quarter for the {T}",
-        "Spoils of {sq}", "The {fierce} {strike}", "{fierce} Harvest on {sq}", "The {T} Falls {at}",
-        "A {T} for the Taking", "Cut Down on {sq}", "The Reckoning", "Break Their Ranks")),
+        "Take the {T}!", "Cut Down the {T}!", "Seize Their {T}!", "Give the {T} No Quarter!", "{strike} the {T}!",
+        "{strike} Their {foe}!", "{strike} the {T} {fierce}!", "{strike} Their {foe} {at}!", "Break Their {foe}!",
+        "Claim the {T} {at}!")),
     "check": (("⚡", "🔔", "🎯", "📯", "🚨"), (
-        "Sound the Alarm", "The King Trembles", "A Knock at the Gate", "The Bell Tolls", "Check from {place}",
-        "The {adj} Warning", "Eyes on the Crown", "Target the King", "The Throne Shakes", "Royal Summons")),
+        "Check the King!", "Sound the Alarm!", "Threaten the Crown!", "Knock on the King's Door!",
+        "Put the King on Notice!", "Hound the King!", "Strike at the Throne!", "Rattle the Throne!",
+        "Give Check from {place}!", "Call Out the King!")),
     "offering": (("🎲", "🎁", "🦁"), (
-        "The Bold Offering", "A Gift for the Enemy", "Into the Lion's Den", "Fortune Favors the Bold", "Bait on {sq}",
-        "The Daring Sacrifice", "Come and Take It", "The {adj} Gamble", "A {adj} {move} into Danger",
-        "A {P} for the Taking", "The {P} Stands Alone", "Alone {at}", "Unguarded on {sq}",
-        "Daring Them to Take {sq}")),
+        "Bait the Trap!", "Dare Them to Take It!", "Offer Them the {one}!", "Leave the {one} as Bait!",
+        "Stand Firm and Tempt Them!", "Hold Your Ground, {call}!", "Tempt Them {at}!")),
     "doorstep": (("🌠", "✨"), (
-        "Within Sight of the Crown", "One Step from Glory", "The Crown Beckons", "Knocking at the Palace Door",
-        "Almost Crowned", "The Last Step but One", "The {adj} {move} to {sq}")),
+        "Push for the Crown!", "Reach for the Crown!", "Storm the Palace Door!", "Take One More Step!",
+        "Knock on the Palace Gate!", "Press On, the Crown Awaits!")),
     "runner": (("🏃", "💨"), (
-        "The Runaway", "Nothing in the Way", "The Open Road Home", "Freedom March", "The Lone Runner",
-        "Chasing the Crown", "The {adj} Runaway", "A Clear Road from {sq}")),
+        "Run for the Crown!", "Break for the Last Rank!", "Clear the Road Ahead!", "Run, {call}, Run!",
+        "Race for the Far Shore!", "Make for the Last Rank!")),
     "stride": (("👣", "🥾"), (
-        "Two Steps Forward", "The Long Stride", "The Bold Advance", "Double Time", "Two Squares to {sq}",
-        "The {adj} Double Step")),
+        "Quick March!", "Lengthen Your Stride!", "Take Two Steps, {call}!", "Double the Pace!", "Step Out Smartly!",
+        "Stride Forward, {call}!")),
     "center": (("🎯", "🏛️", "🧭"), (
-        "Take the Center", "Heart of the Board", "Claim the Crossroads", "Stake a Claim at {sq}",
-        "The {adj} {move} to the Center", "Hold the High Ground", "The {adj} Claim on {sq}", "Center Stage at {sq}")),
+        "Seize the Center!", "Take the Crossroads!", "Hold the High Ground!", "Plant the Flag {at}!",
+        "Claim the Heart of the Board!", "{send} the {troop} to the Center!", "Hold the Center, {call}!")),
     "develop": (("🌅", "🚪"), (
-        "Into the Fray", "First Light", "Off the Back Rank", "The {adj} Debut", "The First {move}",
-        "The {adj} {move} Begins", "A {adj} Debut at {sq}", "The {P} Enters the Fray", "A {adj} Start on {sq}")),
+        "Deploy the {troop}!", "Send Out the {troop}!", "Muster the {troop}!", "Join the Fray, {call}!",
+        "Take the Field, {call}!", "Leave the Barracks!", "Answer the Call, {call}!")),
     "fianchetto": (("🔭", "🎯"), (
-        "The Fianchetto", "The Long Watch", "Eye on the Long Diagonal", "The Hidden Sniper", "The {adj} Watch")),
+        "Post the Sniper!", "Watch the Long Diagonal!", "Set the Bishop on Watch!", "Aim Down the Long Diagonal!",
+        "Guard the Long Road!")),
     "seventh": (("🐗", "🔥"), (
-        "Pig on the Seventh", "Behind Enemy Lines", "The Raid on the Seventh", "The {adj} {move} to the Seventh")),
+        "Raid Their Back Lines!", "Storm the Seventh!", "Get Behind Their Lines!", "Ravage the Seventh Rank!",
+        "{send} the {troop} Behind Their Lines!")),
     "open-file": (("🛣️",), (
-        "The Open Road", "Command of the {file}-File", "Down the {file}-File", "Master of the {file}-File",
-        "The Open File")),
+        "Take the Open Road!", "Seize the Open File!", "Charge Down the Open File!", "Own the Open File!",
+        "Roll Down the Open Road!")),
     "sortie": (("👸",), (
-        "Her Majesty's Early Outing", "The Queen Rides Out", "An Early Audience", "The Queen Will Not Wait",
-        "The Queen's Early {move} to {sq}", "Her Majesty Rides to {place}", "An Early {move} for the Queen")),
+        "Send Out the Queen!", "Unleash Her Majesty!", "Let the Queen Ride!", "Ride Out, My Queen!",
+        "Show Them the Queen!", "Send the Queen to {place}!")),
     "royal-walk": (("🚶", "🤴"), (
-        "The King's Walk", "A Royal Stroll", "The King Takes the Field", "The Wandering Monarch",
-        "One Small Step for the Crown", "The {adj} {move}", "The Royal Progress", "The Monarch Moves",
-        "The Crown on the Move", "A Royal Visit to {place}", "The King Surveys {place}", "The {adj} King")),
-    "rim": (("🌑", "🌲"), ("Dim on the Rim", "The Edge of the Map", "Lost in the Woods", "The Lonely Outpost",
-                          "A {adj} {move} to the Rim", "Dim on {sq}", "The Lonely Ride to {sq}")),
+        "Walk the King Forward!", "Move the Crown!", "Step Aside, Your Majesty!", "Lead from the Front, Sire!",
+        "Shift the Royal Court!", "Escort the King to {place}!", "Guard the King's Steps!", "{cry}, {call}!")),
+    "rim": (("🌑", "🌲"), (
+        "Ride for the Rim!", "Scout the Edge!", "Guard the Flank!", "Patrol the Border!", "Hold the Edge of the Map!",
+        "Watch the Woods, {call}!")),
     "retreat": (("↩️", "🔙", "🧭"), (
-        "Strategic Withdrawal", "Fall Back to {place}", "Regroup", "The Long Way Home", "A Tactical Retreat",
-        "The {adj} Retreat", "Back to {place}", "The {move} Home", "A {adj} {move} Back to {sq}",
-        "The {P} Withdraws to {sq}", "Regroup {at}")),
-    "long": (("🏹", "🌠"), ("Across the Board", "The Long {move}", "From Edge to Edge", "The Far Reach",
-                           "The {adj} Sweep")),
+        "Fall Back!", "Regroup {at}!", "Pull Back to {place}!", "Withdraw and Regroup!", "Retreat in Good Order!",
+        "Back to the Lines!", "Fall Back, {call}!", "Draw Back to {place}!")),
+    "long": (("🏹", "🌠"), (
+        "Sweep the Board!", "Strike from Afar!", "Cross the Whole Field!", "Sweep from Edge to Edge!",
+        "Sweep Across the Board, {call}!")),
     "quiet": ((), (
-        "The {adj} {noun}", "{adj} {noun}", "The {move} to {place}", "A {adj} {move} to {sq}", "The {P}'s {move}",
-        "{move} toward {place}")),
+        "{send} the {troop}!", "{send} the {troop} {at}!", "{cry}, {call}!", "{go}!", "{go}, {call}!",
+        "{send} the {troop} to {place}!")),
 }
-# Each piece adds phrases of its own to a theme.
+# Each piece adds orders of its own to a theme.
 OWN = {
-    ("develop", "n"): ("Saddle Up", "Out of the Stables", "The Cavalry Rides Out"),
-    ("develop", "b"): ("Out of the Cloister", "The Bishop Takes Up Office", "The First Sermon"),
-    ("capture", "n"): ("The Ambush on {sq}", "Trampled Underhoof", "The Cavalry Strikes", "Hooves over the {T}"),
-    ("capture", "b"): ("Judgement on {sq}", "The Bishop's Verdict", "Excommunicated", "Smite the {T}"),
-    ("capture", "r"): ("The Ram Breaks Through", "Crushed Under Stone", "The Siege of {sq}", "The Walls Close In"),
-    ("capture", "q"): ("The Queen's Justice", "Royal Wrath on {sq}", "By Royal Decree", "Her Majesty Collects"),
-    ("capture", "k"): ("The King's Own Blade", "The King Draws His Sword", "The Crown Bares Its Teeth"),
-    ("capture", "p"): ("The Footsoldier's Prize", "Pitchforks Raised"),
-    ("check", "n"): ("Hooves at the Throne", "The Knight's Challenge"),
-    ("check", "b"): ("The Bishop's Accusation", "A Slanted Threat"),
-    ("check", "r"): ("The Ram at the Door", "Siege of the King"),
-    ("check", "q"): ("The Queen's Ultimatum", "Her Majesty Demands"),
-    ("check", "p"): ("The Footsoldier's Challenge", "A Pitchfork at the Throne"),
-    ("fork", "n"): ("The Knight's Fork", "The Cavalry Splits Them"),
-    ("fork", "p"): ("The Pitchfork", "The Peasant's Fork"),
-    ("mate", "p"): ("The Peasant's Revenge", "Mate by a Footsoldier"),
-    ("mate", "q"): ("The Queen's Final Word", "Long Live the Queen"),
-    ("quiet", "p"): ("Forward March", "One Step Closer", "Shield Wall", "Plant the Flag", "Boots on the Ground",
-                     "The Infantry Advances", "Small Beginnings", "Taking Root", "Hold the Field", "Brick by Brick"),
-    ("quiet", "n"): ("The Cavalry Charge", "Flanking Maneuver", "Knight Errant", "The Unexpected Leap", "Over the Wall",
-                     "Hoofbeats", "The Wild Hop", "Night Ride", "Across the Field"),
-    ("quiet", "b"): ("The Bishop's Blessing", "The Long Diagonal", "Holy Fire", "A Divine Angle", "The Cathedral Path",
-                     "Eclipse", "Wings of the Church"),
-    ("quiet", "r"): ("Hold the Line", "Siege Tower", "The Watchtower", "Fortress Wall", "Raise the Ramparts",
-                     "Man the Walls", "The Iron Gate", "Stone by Stone", "Hold the Bridge", "Drop Anchor"),
-    ("quiet", "q"): ("Her Majesty Advances", "The Queen's Tempest", "The Royal Hunt", "Crown Jewel",
-                     "Star of the Court", "Royal Decree", "Her Royal Reach", "The Queen's Sight", "Shooting Star"),
-    ("quiet", "k"): ("A Royal Stroll", "The Last Stand", "The King Steps Aside", "Close the Gates",
-                     "The Royal Retreat"),
+    ("develop", "n"): ("Saddle Up!", "Open the Stables!", "Ride Out, {call}!"),
+    ("develop", "b"): ("Ring the Bells!", "Open the Cathedral Doors!", "Bless the Troops!"),
+    ("capture", "n"): ("Ride Them Down!", "Trample Them Underhoof!", "Hit Them from the Flank!"),
+    ("capture", "b"): ("Pass Judgement on the {T}!", "Excommunicate the {T}!", "Bring Holy Wrath!"),
+    ("capture", "r"): ("Break Through the Wall!", "Crush Them Under Stone!", "Bring the Walls Down!"),
+    ("capture", "q"): ("Deliver the Queen's Justice!", "Collect Their {T}, Majesty!", "Strike by Royal Decree!"),
+    ("capture", "k"): ("Draw the King's Sword!", "Bare the Crown's Teeth!", "Strike, Sire!"),
+    ("capture", "p"): ("Raise the Pitchforks!", "Claim the Footman's Prize!"),
+    ("check", "n"): ("Ride at the King!", "Jump the King's Guard!"),
+    ("check", "b"): ("Strike the King on the Slant!", "Accuse the King!"),
+    ("check", "r"): ("Batter the King's Gate!", "Ram the Royal Door!"),
+    ("check", "q"): ("Demand His Surrender!", "Hunt the King, My Queen!"),
+    ("check", "p"): ("Prod the King!", "Jab at the Crown!"),
+    ("fork", "n"): ("Split Them with the Cavalry!", "Ride Between Them!"),
+    ("fork", "p"): ("Raise the Pitchfork!", "Stab Two at Once!"),
+    ("mate", "p"): ("Let the Footmen Take the Crown!", "Topple the King with a Pike!"),
+    ("mate", "q"): ("Let the Queen End It!", "Finish It, My Queen!"),
+    ("quiet", "p"): ("Hold the Line!", "Dig In!", "Plant the Flag!", "Raise the Shields!", "Close Ranks!",
+                     "Brace for the Charge!", "Keep Formation!", "Hold the Field!", "Shore Up the Line!",
+                     "Forward March!"),
+    ("quiet", "n"): ("Flank Them!", "Leap the Wall!", "Ride Through the Night!", "Wheel and Strike!",
+                     "Circle Behind Them!", "Scout Ahead!", "Jump the Line!"),
+    ("quiet", "b"): ("Bless the Advance!", "Light the Long Road!", "Guard the Diagonal!", "Slip Through the Gap!",
+                     "Watch from Afar!", "Hold the Holy Ground!"),
+    ("quiet", "r"): ("Raise the Ramparts!", "Man the Walls!", "Hold the Bridge!", "Drop Anchor!",
+                     "Reinforce the Line!", "Shore Up the Walls!"),
+    ("quiet", "q"): ("Sweep the Field, My Queen!", "Reign over the Board!", "Watch over Them, Majesty!",
+                     "Rule the Field!", "Hunt Them Down!"),
+    ("quiet", "k"): ("Hold Court!", "Stand Fast, Sire!", "Take Cover, Majesty!", "Guard the Throne!",
+                     "Mind the King!"),
 }
+# What a busy board puts on the end of an order its theme has already given, so no two moves share a title.
+URGE = (", Now!", ", Again!", ", Together!", ", at Once!", ", All of You!", ", to a Man!")
+LONGEST = 48  # the longest title tannergolden/markdown draws in the list
+
 # What a part of the board is called, from the side of the piece that lands there.
 # Each place with the word that puts a move there: at the Crossroads, behind Enemy Lines, in the Eastern Woods.
 PLACES = {
@@ -418,21 +474,30 @@ def places(r: Reading) -> tuple[tuple[str, str], ...]:
     return tuple(out)
 
 
-def title(r: Reading, rng: random.Random, used: set[str] = frozenset()) -> tuple[str, str, str]:
-    """One emoji, title and the pattern it came from, drawn from the move's theme with `rng`: a pattern and an emoji
-    the board has not `used` yet when its theme has one left."""
-    key = theme(r)
+def title(r: Reading, rng: random.Random, used: set[str] = frozenset(), key: str = "") -> tuple[str, str, str]:
+    """One emoji, title and the pattern it came from, drawn with `rng` from the move's theme, or from `key`'s: a
+    pattern and an emoji the board has not `used` yet when the theme has one left, and a title short enough to draw."""
+    key = key or theme(r)
     emoji, patterns = THEMES[key]
-    # a pattern with fields to fill comes up twice as often as a fixed phrase, so the titles keep surprising
+    # a pattern with fields to fill comes up twice as often as a fixed order, so the titles keep surprising
     patterns = [p for p in patterns + OWN.get((key, r.kind), ()) for _ in range(2 if "{" in p else 1)]
-    pattern = rng.choice([p for p in patterns if p not in used] or patterns)
-    at, place = rng.choice(places(r))
-    name = pattern.format(
-        P=PIECES[r.crown or r.kind].capitalize(), T=PIECES.get(r.taken, "").capitalize(), sq=FILES[r.end % 8] +
-        str(r.end // 8 + 1), place=place, at=f"{at} {place}", adj=rng.choice(ADJ[r.kind]),
-        noun=rng.choice(NOUN[r.kind]), move=rng.choice(MOVE[r.kind]), fierce=rng.choice(FIERCE),
-        strike=rng.choice(STRIKE[r.kind]), file=FILES[r.end % 8])
-    name = re.sub(r"\bA (?=[AEIOU])", "An ", name)  # the article goes with the word filled in after it: An Unsung ...
+    fresh = [p for p in patterns if p not in used] or patterns
+    for _ in range(16):
+        pattern = rng.choice(fresh)
+        at, place = rng.choice(places(r))
+        name = pattern.format(
+            P=PIECES[r.crown or r.kind].capitalize(), T=PIECES.get(r.taken, "").capitalize(),
+            troop=rng.choice(TROOP[r.kind]), one=rng.choice(ONE[r.kind]), call=rng.choice(CALL[r.kind]),
+            send=rng.choice(SEND[r.kind]), cry=rng.choice(CRY[r.kind]),
+            go=f"{rng.choice(FORM)} {at} {place}" if (at, place) in PLACES["home"] else
+            f"{rng.choice(TOWARD[r.kind])} {place}",
+            strike=rng.choice(STRIKE[r.kind]), foe=rng.choice(TROOP.get(r.taken) or ("",)), fierce=rng.choice(FIERCE),
+            place=place, at=f"{at} {place}", pair=" and ".join(PIECES[k].capitalize() for k in r.fork[:2]))
+        name = re.sub(r"\bA (?=[AEIOU])", "An ", name)  # the article goes with the word filled in after it
+        if len(name) <= LONGEST:
+            break
+    else:  # sixteen orders too long to draw: the theme's shortest fixed one
+        pattern = name = min((p for p in patterns if "{" not in p), key=len)
     emoji = emoji or EMOJI[r.kind]
     return rng.choice([e for e in emoji if e not in used] or emoji), name, pattern
 
@@ -486,12 +551,17 @@ def _listing(fen: str, game: int, ply: int) -> list[dict]:
         after = make(position, move)
         replies = legal_moves(after)
         reading = read(position, move, after, replies)
-        for _ in range(64):
-            emoji, name, pattern = title(reading, rng, seen)
-            if name not in seen:
-                break
-        else:  # a theme with too few titles for a board this busy: the square makes it its own
-            name = f"{name} on {FILES[move.end % 8]}{move.end // 8 + 1}"
+        for key in ("", "quiet"):  # the move's own theme, then, on a board too busy for it, the piece's plain orders
+            for _ in range(64):
+                emoji, name, pattern = title(reading, rng, seen, key)
+                if name not in seen:
+                    break
+            else:
+                continue
+            break
+        else:  # every order already given here: the last one, urged on
+            name = next((name[:-1] + urge for urge in URGE
+                         if name[:-1] + urge not in seen and len(name[:-1] + urge) <= LONGEST), name)
         seen |= {name, pattern, emoji}
         out.append({"uci": move.uci, "san": san(position, move, legal, replies),
                     "piece": PIECES[position.board[move.start].lower()], "emoji": emoji, "title": name,

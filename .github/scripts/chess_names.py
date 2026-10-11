@@ -27,6 +27,7 @@ import copy
 import functools
 import hashlib
 import random
+import re
 from dataclasses import dataclass
 
 from chess_rules import (DIAGONAL, FILES, KING, KNIGHT, ORTHOGONAL, Move, Position, attacked, in_check, legal_moves,
@@ -101,7 +102,7 @@ EMOJI = {
 THEMES = {
     "mate": (("💀", "☠️", "🏁", "👑"), (
         "The Final Word", "Long Live the Board", "Checkmate on {sq}", "The Last Bell", "The Crown Falls", "Game Over",
-        "The Throne Is Taken", "The End of the Road", "The {P}'s Final Word", "Mate at {place}")),
+        "The Throne Is Taken", "The End of the Road", "The {P}'s Final Word", "Mate {at}")),
     "smothered": (("💀", "🐴"), ("The Smothered Mate", "Smothered", "No Room to Breathe")),
     "back-rank": (("💀", "🏁"), ("The Back-Rank Mate", "Trapped on the Back Rank", "No Way Out")),
     "stalemate": (("🧊", "🤝"), (
@@ -132,12 +133,12 @@ THEMES = {
         "The {fierce} {strike}")),
     "passing": (("👻",), ("En Passant", "In Passing", "The Ghost Capture", "Caught in Passing", "The Phantom Strike")),
     "first-blood": (("🩸", "🗡️"), ("First Blood", "First Blood on {sq}", "The First to Fall", "Opening Blood",
-                                  "The First {strike}", "First Blood at {place}", "The {T} Falls First")),
+                                  "The First {strike}", "First Blood {at}", "The {T} Falls First")),
     "giant": (("🪨", "⚔️"), ("Giant Slayer", "David and Goliath", "The Peasant's Revenge", "Pitchforks Raised",
                             "A Pawn Fells the {T}", "The {T} Felled at {sq}")),
     "capture": (("⚔️", "🗡️", "🩸", "💥", "🪓", "🏹"), (
         "Blood for Blood", "The Fall of the {T}", "Down Goes the {T}", "{T}slayer", "No Quarter for the {T}",
-        "Spoils of {sq}", "The {fierce} {strike}", "{fierce} Harvest on {sq}", "The {T} Falls at {place}",
+        "Spoils of {sq}", "The {fierce} {strike}", "{fierce} Harvest on {sq}", "The {T} Falls {at}",
         "A {T} for the Taking", "Cut Down on {sq}", "The Reckoning", "Break Their Ranks")),
     "check": (("⚡", "🔔", "🎯", "📯", "🚨"), (
         "Sound the Alarm", "The King Trembles", "A Knock at the Gate", "The Bell Tolls", "Check from {place}",
@@ -145,7 +146,7 @@ THEMES = {
     "offering": (("🎲", "🎁", "🦁"), (
         "The Bold Offering", "A Gift for the Enemy", "Into the Lion's Den", "Fortune Favors the Bold", "Bait on {sq}",
         "The Daring Sacrifice", "Come and Take It", "The {adj} Gamble", "A {adj} {move} into Danger",
-        "A {P} for the Taking", "The {P} Stands Alone", "Alone at {place}", "Unguarded on {sq}",
+        "A {P} for the Taking", "The {P} Stands Alone", "Alone {at}", "Unguarded on {sq}",
         "Daring Them to Take {sq}")),
     "doorstep": (("🌠", "✨"), (
         "Within Sight of the Crown", "One Step from Glory", "The Crown Beckons", "Knocking at the Palace Door",
@@ -181,7 +182,7 @@ THEMES = {
     "retreat": (("↩️", "🔙", "🧭"), (
         "Strategic Withdrawal", "Fall Back to {place}", "Regroup", "The Long Way Home", "A Tactical Retreat",
         "The {adj} Retreat", "Back to {place}", "The {move} Home", "A {adj} {move} Back to {sq}",
-        "The {P} Withdraws to {sq}", "Regroup at {place}")),
+        "The {P} Withdraws to {sq}", "Regroup {at}")),
     "long": (("🏹", "🌠"), ("Across the Board", "The Long {move}", "From Edge to Edge", "The Far Reach",
                            "The {adj} Sweep")),
     "quiet": ((), (
@@ -221,15 +222,19 @@ OWN = {
                      "The Royal Retreat"),
 }
 # What a part of the board is called, from the side of the piece that lands there.
+# Each place with the word that puts a move there: at the Crossroads, behind Enemy Lines, in the Eastern Woods.
 PLACES = {
-    "center": ("the Crossroads", "the Heart of the Board", "the Center", "the Market Square", "the High Ground"),
-    "throne": ("the Enemy Throne Room", "the Enemy Gates", "the Last Rank", "the Far Shore"),
-    "deep": ("Enemy Lines", "the Enemy's Doorstep", "the Far Bank", "Hostile Ground"),
-    "middle": ("No Man's Land", "the Front", "the Middle Ground", "the Border"),
-    "home": ("Home Ground", "the Near Fields", "the Home Front", "Friendly Soil"),
-    "queenside": ("the Queen's Wing", "the Queenside", "the Western Marches"),
-    "kingside": ("the King's Wing", "the Kingside", "the Eastern Woods"),
-    "rim": ("the Edge of the Map", "the Rim", "the Board's Edge"),
+    "center": (("at", "the Crossroads"), ("at", "the Heart of the Board"), ("in", "the Center"),
+               ("in", "the Market Square"), ("on", "the High Ground")),
+    "throne": (("in", "the Enemy Throne Room"), ("at", "the Enemy Gates"), ("on", "the Last Rank"),
+               ("on", "the Far Shore")),
+    "deep": (("behind", "Enemy Lines"), ("on", "the Enemy's Doorstep"), ("on", "the Far Bank"),
+             ("on", "Hostile Ground")),
+    "middle": (("in", "No Man's Land"), ("at", "the Front"), ("on", "the Middle Ground"), ("at", "the Border")),
+    "home": (("on", "Home Ground"), ("in", "the Near Fields"), ("on", "the Home Front"), ("on", "Friendly Soil")),
+    "queenside": (("on", "the Queen's Wing"), ("on", "the Queenside"), ("in", "the Western Marches")),
+    "kingside": (("on", "the King's Wing"), ("on", "the Kingside"), ("in", "the Eastern Woods")),
+    "rim": (("at", "the Edge of the Map"), ("on", "the Rim"), ("at", "the Board's Edge")),
 }
 
 
@@ -396,8 +401,8 @@ def theme(r: Reading) -> str:
     return "quiet"
 
 
-def places(r: Reading) -> tuple[str, ...]:
-    """What the square it lands on can be called."""
+def places(r: Reading) -> tuple[tuple[str, str], ...]:
+    """What the square it lands on can be called, each with the word that puts a move there."""
     out = []
     rank = rank_of(r.end, r.turn)
     if r.end in CENTER:
@@ -421,11 +426,13 @@ def title(r: Reading, rng: random.Random, used: set[str] = frozenset()) -> tuple
     # a pattern with fields to fill comes up twice as often as a fixed phrase, so the titles keep surprising
     patterns = [p for p in patterns + OWN.get((key, r.kind), ()) for _ in range(2 if "{" in p else 1)]
     pattern = rng.choice([p for p in patterns if p not in used] or patterns)
+    at, place = rng.choice(places(r))
     name = pattern.format(
         P=PIECES[r.crown or r.kind].capitalize(), T=PIECES.get(r.taken, "").capitalize(), sq=FILES[r.end % 8] +
-        str(r.end // 8 + 1), place=rng.choice(places(r)), adj=rng.choice(ADJ[r.kind]), noun=rng.choice(NOUN[r.kind]),
-        move=rng.choice(MOVE[r.kind]), fierce=rng.choice(FIERCE), strike=rng.choice(STRIKE[r.kind]),
-        file=FILES[r.end % 8])
+        str(r.end // 8 + 1), place=place, at=f"{at} {place}", adj=rng.choice(ADJ[r.kind]),
+        noun=rng.choice(NOUN[r.kind]), move=rng.choice(MOVE[r.kind]), fierce=rng.choice(FIERCE),
+        strike=rng.choice(STRIKE[r.kind]), file=FILES[r.end % 8])
+    name = re.sub(r"\bA (?=[AEIOU])", "An ", name)  # the article goes with the word filled in after it: An Unsung ...
     emoji = emoji or EMOJI[r.kind]
     return rng.choice([e for e in emoji if e not in used] or emoji), name, pattern
 

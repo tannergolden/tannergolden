@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from chess_names import OWN, listing, read, theme, words  # noqa: E402
+from chess_names import OWN, PLACES, listing, read, theme, words  # noqa: E402
 from chess_names import THEMES as THEME_PATTERNS  # noqa: E402
 from chess_rules import START, Move, Position, legal_moves, make  # noqa: E402
 
@@ -100,6 +100,15 @@ class Titles(unittest.TestCase):
         fixed |= {p for patterns in OWN.values() for p in patterns if "{" not in p}
         seen = {m["title"] for game, position in boards(60) for m in listing(position, game, 1)}
         self.assertGreater(len(seen - fixed), len(fixed), "more titles made than every fixed phrase put together")
+
+    def test_a_title_s_article_and_its_place_s_preposition_fit_the_words_they_go_with(self):
+        wrong = [f"{word} {place}" for options in PLACES.values() for at, place in options
+                 for word in ("at", "in", "on", "behind") if word != at]
+        for game, position in boards(60):
+            for m in listing(position, game, 1):
+                self.assertNotRegex(m["title"], r"\bA [AEIOU]|\bAn [^AEIOU]")
+                self.assertFalse([w for w in wrong if w in m["title"]], m["title"])
+        self.assertEqual(listing(Position.from_fen(START), 1, 1)[7]["title"], "An Unsung Advance to b3")
 
     def test_the_list_runs_from_the_king_to_the_pawns(self):
         pieces = [m["piece"] for m in listing(Position.from_fen("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1"),

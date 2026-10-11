@@ -28,6 +28,13 @@ starts at once, with the owner to open it.
   .github/chess/hall-of-fame.json   every finished game: result, deciding move, players
   .github/chess/games/game-N.pgn    each finished game, every move with who played it
 
+After every run it sets the board out for the page: the position, the last
+move, any check, the score sheet, the Hall of Fame, whose turn it is and until
+when, and every legal move as a link that opens its ready-made issue. They go
+between the `# chess:start` and `# chess:end` lines of .github/markdown.yaml,
+and nothing else in that file, for tannergolden/markdown to draw in the page's
+one theme.
+
 It writes comment.md, the reply to post, and commit.txt into the run's
 temporary folder (--out), and sets `changed` and `issue` as step outputs.
 Stdlib only, with chess_rules.py beside it.
@@ -42,12 +49,17 @@ import os
 import random
 import re
 import sys
+import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 
-from chess_rules import START, Ending, Move, Position, ending, legal_moves, make, pseudo_moves, san, side, square
+from chess_rules import (START, Ending, Move, Position, ending, in_check, king, label, legal_moves, make, pseudo_moves,
+                         san, side, square)
 
 WEEK = dt.timedelta(days=7)
+EST = dt.timezone(dt.timedelta(hours=-5), "EST")  # the page tells time in EST, as its settings say
+GROUPS = {"k": "king", "q": "queen", "r": "rook", "b": "bishop", "n": "knight", "p": "pawn"}
+ROWS, HALL = 8, 3  # the score sheet's latest rows and the Hall of Fame's latest games the page is given
 UCI = re.compile(r"[a-h][1-8][a-h][1-8][qrbn]?")
 NUMBER = re.compile(r"[1-9][0-9]{0,8}")
 LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})")
@@ -317,6 +329,101 @@ def tick(game: dict | None, hall: list, owner: str, moment: dt.datetime) -> Outc
     return outcome
 
 
+def link(owner: str, uci: str, game: int, ply: int) -> str:
+    """The link that opens a move's ready-made issue in the intake, its title already written."""
+    title = urllib.parse.quote(f"chess: {uci} \u00b7 game {game} \u00b7 move {ply}", safe="")
+    return f"https://github.com/{owner}/play/issues/new?template=move.yml&title={title}"
+
+
+def until(moment: dt.datetime) -> str:
+    """A deadline as the page tells time: `18 Oct, 12:31 EST`."""
+    local = moment.astimezone(EST)
+    return f"{local.day} {local:%b}, {local:%H:%M} EST"
+
+
+def board(game: dict | None, hall: list, owner: str) -> dict:
+    """The page's chess element: what the board draws, and what the README carries under it."""
+    current = game or {"game": 1, "started": None, "moves": []}  # a first game nobody has opened yet
+    positions = replay(current)
+    position, ply, number = positions[-1], len(current["moves"]) + 1, current["game"]
+    legal = legal_moves(position)
+    groups: dict[str, list] = {kind: [] for kind in GROUPS.values()}
+    for move in sorted(legal, key=lambda move: move.uci):
+        groups[GROUPS[position.board[move.start].lower()]].append(
+            [san(position, move, legal), link(owner, move.uci, number, ply)])
+    started = game is not None and (current["moves"] or current.get("started"))
+    clock = parse(current["moves"][-1]["at"] if current["moves"] else current["started"]) + WEEK if started else None
+    deadline = until(clock) if clock else ""
+    play_url = f"https://github.com/{owner}/play"
+    if position.turn == "w" and not current["moves"] and game is None:
+        note, prompt = (f"Only {owner} opens the game",
+                        f"**@{owner} opens the game.** White moves first, and GitHub plays Black from the next move on.")
+    elif position.turn == "w":
+        note, prompt = (f"Only {owner}, by {deadline}",
+                        f"**@{owner}'s move**, until {deadline}. Only @{owner} plays White; GitHub's turn comes next.")
+    else:
+        note, prompt = (f"Anyone but {owner}, by {deadline}",
+                        f"**GitHub's move**, until {deadline}. Anyone but @{owner} can play: pick a move below, and its"
+                        f" link opens a ready-made issue in [{owner}/play]({play_url}). The first move to arrive is"
+                        " the one played.")
+    element = {"kind": "chess", "fen": position.fen, "game": number, "move": ply, "white": owner, "black": "GitHub"}
+    if current["moves"]:
+        last = current["moves"][-1]
+        element.update(last=last["uci"], last_san=numbered(positions[-2], last["san"]),
+                       last_by="the Arbiter" if last.get("arbiter") else f"@{last['player']}")
+    if in_check(position):
+        element["check"] = label(king(position, position.turn))
+    element["turn_note"] = note
+    moves = current["moves"]
+    element["history"] = [[str(i // 2 + 1), moves[i]["san"], moves[i + 1]["san"] if i + 1 < len(moves) else ""]
+                          for i in range(0, len(moves), 2)][-ROWS:]
+    element["hall"] = [[str(record["game"]), record["result"],
+                        ("the Arbiter" if record["deciding"]["arbiter"] else f"@{record['deciding']['player']}")
+                        if record["reason"] == "checkmate" else record["reason"],
+                        record["deciding"]["move"].split()[-1]] for record in hall[-HALL:]]
+    element["prompt"] = prompt
+    rest = ("A side that goes a week without moving gets a random legal move from the Arbiter, so no game"
+            " stalls.")
+    if hall:
+        base = f"https://github.com/{owner}/{owner}"
+        rest += (f" Every finished game is kept in the [Hall of Fame]({base}/blob/HEAD/.github/chess/hall-of-fame.json)"
+                 f" and as a [PGN]({base}/tree/HEAD/.github/chess/games).")
+    element["note"] = rest
+    element["moves"] = [{"piece": piece, "links": links} for piece, links in groups.items() if links]
+    return element
+
+
+def element_yaml(element: dict) -> str:
+    """The element as an entry of the settings' `elements:` section: two spaces in, one field a line."""
+    out = ["  chess:"]
+    for key, value in element.items():
+        if key == "moves":
+            out.append("    moves:")
+            for group in value:
+                out += [f"      - piece: {json.dumps(group['piece'])}", "        links:"]
+                out += [f"          - [{json.dumps(name)}, {json.dumps(url)}]" for name, url in group["links"]]
+        elif key in ("history", "hall"):
+            out.append(f"    {key}:" if value else f"    {key}: []")
+            out += [f"      - [{', '.join(json.dumps(cell) for cell in row)}]" for row in value]
+        else:
+            out.append(f"    {key}: {json.dumps(value, ensure_ascii=False)}")
+    return "".join(line + "\n" for line in out)
+
+
+def set_out(settings: Path, element: dict) -> bool:
+    """Writes the element between the settings' chess markers, when it changed. True when it did."""
+    lines = settings.read_text(encoding="utf-8").splitlines(keepends=True)
+    marks = [i for i, line in enumerate(lines) if line.strip() in ("# chess:start", "# chess:end")]
+    if len(marks) != 2 or lines[marks[0]].strip() != "# chess:start":
+        raise ValueError(f"{settings} needs one '# chess:start' line, then one '# chess:end' line, under elements:")
+    a, b = marks
+    new = "".join(lines[:a + 1]) + element_yaml(element) + "".join(lines[b:])
+    if new == "".join(lines):
+        return False
+    settings.write_text(new, encoding="utf-8")
+    return True
+
+
 def load(folder: Path) -> tuple[dict | None, list]:
     path, hall = folder / "game.json", folder / "hall-of-fame.json"
     game = json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
@@ -358,6 +465,8 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
     parser.add_argument("folder", type=Path, help="where the game's state lives, .github/chess")
     parser.add_argument("--out", type=Path, help="where comment.md and commit.txt go (default: $RUNNER_TEMP)")
     parser.add_argument("--now", help="the time to play at, ISO 8601 (default: now)")
+    parser.add_argument("--settings", type=Path, default=Path(".github/markdown.yaml"),
+                        help="the page's settings, where the board is set out (default: .github/markdown.yaml)")
     args = parser.parse_args(argv)
     env = dict(os.environ) if env is None else env
     owner, owner_id = env.get("OWNER", ""), env.get("OWNER_ID", "")
@@ -377,6 +486,14 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
         outcome = tick(game, hall, owner, moment)
     if outcome.changed:
         save(args.folder, outcome)
+    after = (outcome.game, outcome.hall) if outcome.changed else (game, hall)
+    try:
+        drawn = set_out(args.settings, board(*after, owner))
+    except ValueError as exc:
+        print(f"::error::{exc}")
+        return 1
+    if drawn and not outcome.commit:
+        outcome.commit = "chore(chess): 🖌️ set the board out for the page"
     out = args.out or Path(env.get("RUNNER_TEMP", "."))
     out.mkdir(parents=True, exist_ok=True)
     run = env.get("RUN_URL", "")
@@ -385,7 +502,7 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
                                     encoding="utf-8")
     if "GITHUB_OUTPUT" in env:
         with open(env["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-            handle.write(f"changed={'true' if outcome.changed else 'false'}\n")
+            handle.write(f"changed={'true' if outcome.changed or drawn else 'false'}\n")
             handle.write(f"issue={outcome.issue or ''}\n")
     target = f" (game {request.game}, move {request.move}, @{request.player})" if request else ""
     print(f"{'Move ' + request.uci if request else 'Clock'}{target}: {outcome.log}.")

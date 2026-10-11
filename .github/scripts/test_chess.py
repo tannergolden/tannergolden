@@ -16,8 +16,10 @@ import importlib.util
 import io
 import json
 import sys
+import re
 import tempfile
 import unittest
+import urllib.parse
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -35,6 +37,11 @@ HUBOT, HUBOT_ID = "hubot", 480938
 T0 = chess.parse("2026-10-11T16:00:00Z")
 FOOLS_MATE = ["f2f3", "e7e5", "g2g4", "d8h4"]
 SCHOLARS_MATE = ["e2e4", "e7e5", "f1c4", "b8c6", "d1h5", "g8f6", "h5f7"]
+# What tannergolden/markdown accepts under the board: a move in SAN, and a link that opens a ready-made issue.
+KIT_SAN = re.compile(r"(?:O-O(?:-O)?|[KQRBN]?[a-h]?[1-8]?x?[a-h][1-8](?:=[QRBN])?)[+#]?")
+KIT_LINK = re.compile(r"https://github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+/issues/new\?[A-Za-z0-9._~%&=+-]+")
+KIT_LINE = re.compile(r"[^<>|\n\r]{1,400}")
+SETTINGS = "elements:\n  # chess:start\n  # chess:end\n  other:\n    kind: placard\n"
 LOYDS_STALEMATE = ("e2e3 a7a5 d1h5 a8a6 h5a5 h7h5 h2h4 a6h6 a5c7 f7f6 c7d7 e8f7 d7b7 d8d3 b7b8 d3h7 b8c8 f7g6 "
                    "c8e6").split()
 
@@ -279,6 +286,76 @@ class Clock(unittest.TestCase):
         self.assertIsNone(outcome.issue)
 
 
+class Board(unittest.TestCase):
+    """What the page's chess element is given, after each turn of a game."""
+
+    def test_a_game_nobody_has_opened_waits_for_the_owner(self):
+        element = chess.board(None, [], OWNER)
+        self.assertEqual((element["fen"], element["game"], element["move"]), (rules.START, 1, 1))
+        self.assertEqual(element["turn_note"], "Only tannergolden opens the game")
+        self.assertIn("**@tannergolden opens the game.**", element["prompt"])
+        self.assertNotIn("last", element)
+        self.assertEqual(sum(len(group["links"]) for group in element["moves"]), 20)
+        self.assertEqual([group["piece"] for group in element["moves"]], ["knight", "pawn"])
+        self.assertNotIn("Hall of Fame", element["note"])
+
+    def test_every_move_links_to_its_own_ready_made_issue(self):
+        table = Table()
+        table.move("e2e4")
+        element = chess.board(table.game, table.hall, OWNER)
+        for group in element["moves"]:
+            for name, url in group["links"]:
+                self.assertRegex(name, KIT_SAN)
+                self.assertRegex(url, KIT_LINK)
+                title = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["title"][0]
+                self.assertRegex(title, r"^chess: [a-h][1-8][a-h][1-8][qrbn]? \u00b7 game 1 \u00b7 move 2$")
+        self.assertIn(["e5", chess.link(OWNER, "e7e5", 1, 2)], element["moves"][-1]["links"])
+        self.assertEqual(chess.link(OWNER, "e7e5", 1, 2), "https://github.com/tannergolden/play/issues/new?"
+                         "template=move.yml&title=chess%3A%20e7e5%20%C2%B7%20game%201%20%C2%B7%20move%202")
+
+    def test_the_turn_says_until_when_in_the_pages_time(self):
+        table = Table()
+        table.move("e2e4")  # at 17:00 UTC, so GitHub has until noon EST a week on
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertEqual(element["turn_note"], "Anyone but tannergolden, by 18 Oct, 12:00 EST")
+        self.assertTrue(element["prompt"].startswith("**GitHub's move**, until 18 Oct, 12:00 EST. Anyone but"))
+        self.assertEqual((element["last"], element["last_san"], element["last_by"]), ("e2e4", "1. e4", "@tannergolden"))
+        table.move("c7c5")
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertEqual(element["turn_note"], "Only tannergolden, by 18 Oct, 13:00 EST")
+        self.assertEqual(element["history"], [["1", "e4", "c5"]])
+
+    def test_a_check_marks_the_king_and_the_arbiter_is_named(self):
+        table = Table()
+        table.play(["e2e4", "f7f6", "d2d4"])
+        table.wait(dt.timedelta(days=7))
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertEqual(element["last_by"], "the Arbiter")
+        table = Table()
+        table.play(["e2e4", "f7f6", "d1h5"])
+        self.assertEqual(chess.board(table.game, table.hall, OWNER)["check"], "e8")
+
+    def test_the_hall_of_fame_shows_the_latest_games(self):
+        table = Table()
+        table.play(FOOLS_MATE)
+        table.play(LOYDS_STALEMATE)
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertEqual(element["hall"], [["1", "0-1", "@octocat", "Qh4#"], ["2", "1/2-1/2", "stalemate", "Qe6"]])
+        self.assertIn("[Hall of Fame](https://github.com/tannergolden/tannergolden/blob/HEAD/.github/chess/"
+                      "hall-of-fame.json)", element["note"])
+
+    def test_what_the_readme_carries_is_text_the_kit_accepts(self):
+        table = Table()
+        for moves in ([], ["e2e4"], ["e2e4", "c7c5"]):
+            table = Table()
+            table.play(moves) if moves else None
+            element = chess.board(table.game, table.hall, OWNER)
+            for key in ("prompt", "note", "turn_note"):
+                self.assertRegex(element[key], KIT_LINE)
+                for dash in DASHES:
+                    self.assertNotIn(dash, element[key])
+
+
 class Words(unittest.TestCase):
     def test_no_reply_or_commit_has_a_long_dash(self):
         table = Table()
@@ -300,10 +377,13 @@ class Script(unittest.TestCase):
     def run_script(self, folder: Path, now: str, **values) -> tuple[int, Path]:
         out = folder.parent / "out"
         output = folder.parent / "output.txt"
+        settings = folder.parent / "markdown.yaml"
+        if not settings.exists():
+            settings.write_text(SETTINGS, encoding="utf-8")
         env = {"OWNER": OWNER, "OWNER_ID": str(OWNER_ID), "GITHUB_OUTPUT": str(output),
                "RUN_URL": "https://github.com/tannergolden/tannergolden/actions/runs/1", **values}
         with contextlib.redirect_stdout(io.StringIO()):  # the run's log line
-            code = chess.main([str(folder), "--out", str(out), "--now", now], env)
+            code = chess.main([str(folder), "--out", str(out), "--now", now, "--settings", str(settings)], env)
         return code, out
 
     def test_a_move_is_saved_and_its_reply_written(self):
@@ -323,12 +403,35 @@ class Script(unittest.TestCase):
     def test_a_turned_away_move_saves_nothing_and_still_replies(self):
         with tempfile.TemporaryDirectory() as temp:
             folder = Path(temp) / "chess"
+            self.run_script(folder, "2026-10-11T15:00:00Z")  # the clock, which sets the opening board out
+            (Path(temp) / "output.txt").unlink()
             code, out = self.run_script(folder, "2026-10-11T16:00:00Z", UCI="e7e5", GAME="1", MOVE_NUMBER="1",
                                         ISSUE="13", PLAYER=OCTOCAT, PLAYER_ID=str(OCTOCAT_ID))
             self.assertEqual(code, 0)
             self.assertFalse(folder.exists())
             self.assertIn("It is tannergolden's turn", (out / "comment.md").read_text(encoding="utf-8"))
             self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"), "changed=false\nissue=13\n")
+
+    def test_every_run_sets_the_board_out_between_its_markers_and_nowhere_else(self):
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp) / "chess"
+            code, out = self.run_script(folder, "2026-10-11T16:00:00Z")
+            self.assertEqual(code, 0)
+            text = (Path(temp) / "markdown.yaml").read_text(encoding="utf-8")
+            self.assertTrue(text.startswith("elements:\n  # chess:start\n  chess:\n    kind: \"chess\"\n"))
+            self.assertTrue(text.endswith("  # chess:end\n  other:\n    kind: placard\n"))
+            self.assertEqual((out / "commit.txt").read_text(encoding="utf-8").splitlines()[0],
+                             "chore(chess): 🖌️ set the board out for the page")
+            self.assertIn("changed=true", (Path(temp) / "output.txt").read_text(encoding="utf-8"))
+            (Path(temp) / "output.txt").unlink()
+            self.run_script(folder, "2026-10-11T17:00:00Z")
+            self.assertIn("changed=false", (Path(temp) / "output.txt").read_text(encoding="utf-8"))
+
+    def test_settings_without_the_markers_stop_the_run(self):
+        with tempfile.TemporaryDirectory() as temp:
+            (Path(temp) / "markdown.yaml").write_text("elements:\n", encoding="utf-8")
+            code, _ = self.run_script(Path(temp) / "chess", "2026-10-11T16:00:00Z")
+            self.assertEqual(code, 1)
 
     def test_a_whole_game_ends_in_the_hall_of_fame_and_a_pgn(self):
         with tempfile.TemporaryDirectory() as temp:

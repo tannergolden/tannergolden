@@ -12,7 +12,9 @@ name: Chess
 # moving, the Arbiter plays a random legal move for it, so no game stalls. A
 # game ends only by the rules, at checkmate, stalemate or a draw FIDE makes
 # automatic; its record goes into the Hall of Fame and the next game starts
-# at once, with the owner to open it. The state lives in .github/chess.
+# at once, with the owner to open it. The state lives in .github/chess, and
+# every run sets the board out between the chess markers of the page's
+# settings, for the Markdown run to draw.
 #
 # Every input is written by a stranger, by way of an issue title. Each one
 # reaches the script through an environment variable, never as an expression
@@ -73,7 +75,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       actions: write # start the Markdown run that redraws the board
-      contents: write # the game's state under .github/chess
+      contents: write # the game's state under .github/chess, and the board's lines in the settings
     steps:
       - name: '📥 Checkout'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -109,7 +111,7 @@ jobs:
             if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard -- .github/chess)" ]; then
               break # nothing to save: a move turned away, or a week not yet up
             fi
-            git add -- .github/chess
+            git add -- .github/chess .github/markdown.yaml
             git -c user.name='github-actions[bot]' \
                 -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
                 commit --quiet -F "$RUNNER_TEMP/chess/commit.txt"

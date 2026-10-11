@@ -1,0 +1,150 @@
+name: Chess
+
+# The game on the profile: the owner, always White, against GitHub, anyone
+# else, as Black. Every move reaches it from tannergolden/play's Move Intake:
+# a player picks a move on the board, its link opens an issue there, and the
+# intake starts this through the Official Arbiter with the move, the game and
+# move it was picked at, the issue and who opened it. .github/scripts/chess.py
+# plays it or turns it away, the Arbiter replies on the issue with which and
+# why, and the Markdown run redraws the page.
+#
+# Once an hour it is the clock: when the side to move has gone a week without
+# moving, the Arbiter plays a random legal move for it, so no game stalls. A
+# game ends only by the rules, at checkmate, stalemate or a draw FIDE makes
+# automatic; its record goes into the Hall of Fame and the next game starts
+# at once, with the owner to open it. The state lives in .github/chess.
+#
+# Every input is written by a stranger, by way of an issue title. Each one
+# reaches the script through an environment variable, never as an expression
+# inside a script, and the script checks each again before it reads the board.
+#
+# One move at a time, without a queue: GitHub keeps one run waiting in a
+# concurrency group and cancels the rest, which would lose their replies. So
+# runs here never wait. Each plays its move on the latest state and pushes,
+# and a push that loses the race starts again from the state that won, where
+# the move may now be stale and the reply says so.
+#
+# The commits are the bot's, so a move never counts as your contribution, and
+# their messages never name an issue. Replying on tannergolden/play needs the
+# Official Arbiter's PLAY_APP_CLIENT_ID variable and PLAY_APP_PRIVATE_KEY
+# secret here; without them a move is still played, and its reply fails.
+on:
+  workflow_dispatch:
+    inputs:
+      uci:
+        description: 'The move in UCI, such as e2e4, or e7e8q for a promotion. Empty runs the clock.'
+        required: false
+        default: ''
+        type: string
+      game:
+        description: 'The game the move was picked in.'
+        required: false
+        default: ''
+        type: string
+      move_number:
+        description: 'The move the board was on when it was picked, from 1 for White''s first.'
+        required: false
+        default: ''
+        type: string
+      issue:
+        description: 'The issue in tannergolden/play the move came from, for the reply.'
+        required: false
+        default: ''
+        type: string
+      player:
+        description: 'The login of whoever opened the issue.'
+        required: false
+        default: ''
+        type: string
+      player_id:
+        description: 'Their numeric ID, the same after a change of login.'
+        required: false
+        default: ''
+        type: string
+  schedule:
+    - cron: '41 * * * *' # every hour, at 41 past: the Arbiter's week
+
+permissions: {}
+
+jobs:
+  chess:
+    name: '♟️ Chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: write # start the Markdown run that redraws the board
+      contents: write # the game's state under .github/chess
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true # zizmor: ignore[artipacked] - the job pushes the game's state, and nothing that runs after it reads the checkout.
+
+      # No setup-python on purpose: the scripts are stdlib only.
+      - name: '🧪 Check the rules'
+        run: python3 -m unittest discover -s .github/scripts -p 'test_chess*.py'
+
+      - name: '♟️ Play the move, or run the clock'
+        id: play
+        env:
+          UCI: ${{ inputs.uci }}
+          GAME: ${{ inputs.game }}
+          MOVE_NUMBER: ${{ inputs.move_number }}
+          ISSUE: ${{ inputs.issue }}
+          PLAYER: ${{ inputs.player }}
+          PLAYER_ID: ${{ inputs.player_id }}
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.repository_owner_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="$(git symbolic-ref --quiet --short HEAD)"
+          for attempt in 1 2 3 4 5; do
+            # Always from the latest state: a move decided on an older one may no longer stand.
+            git fetch --quiet origin "$branch"
+            git reset --quiet --hard "origin/$branch"
+            : > "$RUNNER_TEMP/chess-outputs"
+            GITHUB_OUTPUT="$RUNNER_TEMP/chess-outputs" python3 .github/scripts/chess.py .github/chess --out "$RUNNER_TEMP/chess"
+            if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard -- .github/chess)" ]; then
+              break # nothing to save: a move turned away, or a week not yet up
+            fi
+            git add -- .github/chess
+            git -c user.name='github-actions[bot]' \
+                -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                commit --quiet -F "$RUNNER_TEMP/chess/commit.txt"
+            if git push --quiet origin "HEAD:$branch"; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              echo "::error::could not save the game to $branch after five attempts"
+              exit 1
+            fi
+            sleep $((attempt * 2))
+          done
+          cat "$RUNNER_TEMP/chess-outputs" >> "$GITHUB_OUTPUT"
+
+      - name: '🖌️ Redraw the board'
+        if: ${{ steps.play.outputs.changed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run markdown.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
+
+      - name: '🔑 Mint the reply token'
+        id: app
+        if: ${{ steps.play.outputs.issue != '' }}
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.PLAY_APP_CLIENT_ID }}
+          private-key: ${{ secrets.PLAY_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: play
+          permission-issues: write
+
+      - name: '💬 Reply on the move'
+        if: ${{ steps.play.outputs.issue != '' }}
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          ISSUE: ${{ steps.play.outputs.issue }}
+          PLAY: ${{ github.repository_owner }}/play
+        run: gh issue comment "$ISSUE" --repo "$PLAY" --body-file "$RUNNER_TEMP/chess/comment.md"

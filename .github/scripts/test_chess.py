@@ -472,6 +472,55 @@ class Board(unittest.TestCase):
         self.assertTrue(KIT_LINE.fullmatch(element["note"]), len(element["note"]))
         self.assertLessEqual(len(element["prompt"]), chess.BANNER)
 
+    def test_the_leaderboard_puts_the_owner_on_top_and_counts_the_game_on_the_board(self):
+        table = Table()
+        self.assertEqual(chess.hall_element([], OWNER)["leaders"], [[OWNER, 0, 0, 0]], "the owner's row from the start")
+        self.assertEqual(chess.hall_element([], OWNER, chess.new_game(1, T0))["leaders"], [[OWNER, 0, 0, 0]])
+        table.play(FOOLS_MATE)  # the owner plays f3 and g4; @octocat plays both of Black's moves and mates
+        table.move("e2e4")
+        table.move("e7e5", player=HUBOT, player_id=HUBOT_ID)
+        table.move("d2d4")
+        table.move("d7d6", player=HUBOT, player_id=HUBOT_ID)
+        hall = chess.hall_element(table.hall, OWNER, table.game)
+        self.assertEqual(hall["leaders"], [[OWNER, 4, 0, 2], ["octocat", 2, 1, 1], ["hubot", 2, 0, 1]],
+                         "the owner on top, then wins first and moves next, with the game on the board as it goes")
+        self.assertEqual(chess.hall_element(table.hall, OWNER)["leaders"], [[OWNER, 2, 0, 1], ["octocat", 2, 1, 1]])
+
+    def test_the_owner_s_own_mate_is_their_win_and_ten_of_github_follow(self):
+        table = Table()
+        table.play(SCHOLARS_MATE)  # the owner mates with their fourth move; @octocat played Black's three
+        self.assertEqual(chess.hall_element(table.hall, OWNER)["leaders"], [[OWNER, 4, 1, 1], ["octocat", 3, 0, 1]])
+        crowd = dict(table.hall[0], players=[{"player": f"p{i:02}", "player_id": 1000 + i, "moves": i}
+                                             for i in range(1, 13)])
+        leaders = chess.hall_element([crowd], OWNER)["leaders"]
+        self.assertEqual([row[0] for row in leaders], [OWNER, *(f"p{i:02}" for i in range(12, 2, -1))])
+
+    def test_a_move_or_a_mate_the_arbiter_played_counts_for_nobody_on_either_side(self):
+        arbiter = {"player": None, "player_id": None, "issue": None, "arbiter": True}
+        table = Table()
+        for moves in (FOOLS_MATE, SCHOLARS_MATE):  # the Arbiter plays the mate: for GitHub, then for the owner
+            table.play(moves[:-1])
+            positions = chess.replay(table.game)
+            mate = next(move for move in rules.legal_moves(positions[-1]) if move.uci == moves[-1])
+            outcome, _, end = chess.apply(table.game, table.hall, positions, mate, arbiter, OWNER, table.clock)
+            self.assertEqual(end.reason, "checkmate")
+            table.game, table.hall = outcome.game, outcome.hall
+        table.move("e2e4")
+        table.wait(chess.WEEK)  # the Arbiter plays for GitHub
+        table.wait(chess.WEEK)  # and for the owner
+        self.assertEqual(sum(1 for played in table.game["moves"] if played["arbiter"]), 2)
+        hall = chess.hall_element(table.hall, OWNER, table.game)
+        self.assertEqual(hall["leaders"], [[OWNER, 2 + 3 + 1, 0, 3], ["octocat", 1 + 3, 0, 2]])
+        self.assertEqual(hall["people"], [], "and nobody is on the podium")
+
+    def test_the_leaderboard_names_a_player_by_the_newest_login_they_played_as(self):
+        table = Table()
+        table.play(FOOLS_MATE)  # @octocat mates
+        table.move("e2e4")
+        table.move("e7e5", player="octocat-renamed")
+        self.assertEqual(chess.hall_element(table.hall, OWNER, table.game)["leaders"],
+                         [[OWNER, 3, 0, 2], ["octocat-renamed", 3, 1, 2]])
+
     def test_a_mate_the_arbiter_played_scores_nobody(self):
         table = Table()
         table.play(FOOLS_MATE)

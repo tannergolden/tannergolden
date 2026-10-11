@@ -49,6 +49,20 @@ KIT_EMOJI = re.compile("[\u2190-\u2bff\U0001f000-\U0001faff\u200d\ufe0f]{1,8}")
 KIT_WHO = re.compile(r"@[A-Za-z0-9][A-Za-z0-9-]{0,38}|the Arbiter")
 KIT_DAY = re.compile(r"[1-9][0-9]? [A-Za-z]{3}")
 # A mention GitHub notifies: an @handle outside the text of a link.
+# What tannergolden/play's intake takes as a move link's title (its intake/routes.json): any move, game and move
+# number up to nine digits each, the same as the game's own.
+INTAKE = re.compile(r"chess: (?P<uci>[a-h][1-8][a-h][1-8][qrbn]?) \u00b7 game (?P<game>[1-9][0-9]{0,8})"
+                    r" \u00b7 move (?P<move>[1-9][0-9]{0,8})")
+# Games that reach every kind of move there is, each line checked against python-chess when it was written.
+SPECIAL = {
+    "White castles kingside, Black queenside": "e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 e1g1 f8c5 d2d3 d7d6 c1g5 c8g4 b1c3 d8d7 "
+                                               "d1d2 e8c8",
+    "White castles queenside, Black kingside": "d2d4 d7d5 b1c3 g8f6 c1f4 e7e6 d1d2 f8e7 e1c1 e8g8",
+    "White takes en passant": "e2e4 a7a6 e4e5 d7d5 e5d6",
+    "Black takes en passant": "a2a3 e7e5 a3a4 e5e4 d2d4 e4d3",
+    "White promotes, by push and by capture": "a2a4 b7b5 a4b5 a7a6 b5a6 c8b7 a6b7 b8c6 b7a8q",
+    "Black promotes, by push and by capture": "h2h3 g7g5 h3h4 g5h4 g2g3 h4g3 g1f3 g3g2 f3g5 g2h1q",
+}
 PING = re.compile(r"(?<![\[\w])@[A-Za-z0-9][A-Za-z0-9-]*")
 LINKED = "[@tannergolden](https://github.com/tannergolden)"
 SETTINGS = "elements:\n  # chess:start\n  # chess:end\n  other:\n    kind: placard\n"
@@ -110,8 +124,8 @@ class Turns(unittest.TestCase):
         self.assertEqual(outcome.game["moves"][0]["san"], "e4")
         self.assertEqual(outcome.game["started"], "2026-10-11T17:00:00Z")
         self.assertEqual(outcome.issue, 101)
-        self.assertRegex(outcome.comment, r"^♟️ \*\*1\. e4 is on the board\.\*\*\n\S+ \*[^*]+!\* · Pawn from e2 to e4, two"
-                                          r" squares\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\) can pick"
+        self.assertRegex(outcome.comment, r"^♟️ \*\*1\. e4 is on the board\.\*\*\n\S+ \*[^*]+!\* · Pawn from e2 to e4,"
+                                          r" two squares\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\) can pick"
                                           r" Black's reply on \[the board\]")
         self.assertTrue(outcome.commit.startswith("chore(chess): ♟️ play 1. e4 in game 1\n\nMove 1, by tannergolden."))
 
@@ -126,8 +140,9 @@ class Turns(unittest.TestCase):
         table = Table()
         table.move("e2e4")
         outcome = table.move("c7c5")
-        self.assertRegex(outcome.comment, r"\*\*1\.\.\. c5 is on the board\.\*\* Well played, @octocat\.\n\S+ \*[^*]+!\*"
-                                          r" · Pawn from c7 to c5, two squares\n@tannergolden, it's your move\.\n$")
+        self.assertRegex(outcome.comment, r"\*\*1\.\.\. c5 is on the board\.\*\* Well played, @octocat\.\n"
+                                          r"\S+ \*[^*]+!\* · Pawn from c7 to c5, two squares\n@tannergolden, it's your"
+                                          r" move\.\n$")
 
     def test_the_owner_cannot_play_for_github(self):
         table = Table()
@@ -489,6 +504,59 @@ class Board(unittest.TestCase):
         outcome = table.move("g1f3")
         emoji, title = listed["Nf3"][0], listed["Nf3"][1]
         self.assertIn(f"**1. Nf3 is on the board.**\n{emoji} *{title}* · Knight from g1 to f3\n", outcome.comment)
+
+
+class EveryMove(unittest.TestCase):
+    """Every legal move on the board, of every piece and in every kind of position, is listed once, behind a link
+    the intake takes for that move, game and move number, and is played when its issue comes back."""
+
+    def test_every_legal_move_is_listed_once_and_its_link_plays_it(self):
+        kinds = set()
+        for label, line in SPECIAL.items():
+            table = Table()
+            for ply, uci in enumerate(line.split(), 1):
+                position = chess.replay(table.game)[-1] if table.game else rules.Position.from_fen(rules.START)
+                legal = {move.uci: move for move in rules.legal_moves(position)}
+                element = chess.board(table.game, table.hall, OWNER)
+                entries = [entry for group in element["moves"] for entry in group["list"]]
+                titles = [urllib.parse.parse_qs(urllib.parse.urlparse(entry[4]).query)["title"][0] for entry in entries]
+                links = [INTAKE.fullmatch(title) for title in titles]
+                self.assertTrue(all(links), (label, ply, titles))
+                self.assertEqual(sorted(link["uci"] for link in links), sorted(legal), (label, ply))
+                self.assertEqual({(link["game"], link["move"]) for link in links}, {(str(element["game"]), str(ply))})
+                for entry in entries:
+                    self.assertTrue(KIT_EMOJI.fullmatch(entry[0]) and KIT_TITLE.fullmatch(entry[1])
+                                    and KIT_SAN.fullmatch(entry[2]) and KIT_WORDS.fullmatch(entry[3])
+                                    and KIT_LINK.fullmatch(entry[4]), (label, ply, entry))
+                found = {link["uci"]: self.kind(position, legal[link["uci"]]) for link in links}
+                kinds |= set(found.values())
+                # every link is played back, wherever a castle, an en passant or a promotion is on the board
+                if ply == 1 or set(found.values()) - {"move", "capture"}:
+                    player = (OWNER, OWNER_ID) if position.turn == "w" else (OCTOCAT, OCTOCAT_ID)
+                    for each in found:
+                        outcome = chess.play(table.game, table.hall, request(each, ply, element["game"], 7, *player),
+                                             OWNER, OWNER_ID, table.clock)
+                        self.assertTrue(outcome.changed, (label, ply, each, outcome.comment))
+                self.assertTrue(table.move(uci).changed, (label, ply, uci))
+        self.assertEqual(kinds, {"castle", "en passant", "promotion", "capture", "move"})
+
+    @staticmethod
+    def kind(position, move) -> str:
+        piece = position.board[move.start].lower()
+        if piece == "k" and abs(move.end - move.start) == 2:
+            return "castle"
+        if piece == "p" and move.end == position.ep:
+            return "en passant"
+        return "promotion" if move.promotion else "capture" if position.board[move.end] else "move"
+
+    def test_a_link_reaches_any_game_and_move_the_rules_allow(self):
+        # A game can run past 17,000 moves before the seventy-five-move rule and fivefold repetition end it.
+        for game, ply in ((1, 1), (1, 999), (1, 1000), (10000, 17697), (999999999, 999999999)):
+            url = chess.link(OWNER, "e7e8q", game, ply)
+            title = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["title"][0]
+            link = INTAKE.fullmatch(title)
+            self.assertTrue(link and KIT_LINK.fullmatch(url), (game, ply))
+            self.assertEqual((link["game"], link["move"]), (str(game), str(ply)))
 
 
 class Words(unittest.TestCase):

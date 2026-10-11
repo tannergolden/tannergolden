@@ -48,6 +48,9 @@ KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
 KIT_EMOJI = re.compile("[\u2190-\u2bff\U0001f000-\U0001faff\u200d\ufe0f]{1,8}")
 KIT_WHO = re.compile(r"@[A-Za-z0-9][A-Za-z0-9-]{0,38}|the Arbiter")
 KIT_DAY = re.compile(r"[1-9][0-9]? [A-Za-z]{3}")
+# A mention GitHub notifies: an @handle outside the text of a link.
+PING = re.compile(r"(?<![\[\w])@[A-Za-z0-9][A-Za-z0-9-]*")
+LINKED = "[@tannergolden](https://github.com/tannergolden)"
 SETTINGS = "elements:\n  # chess:start\n  # chess:end\n  other:\n    kind: placard\n"
 LOYDS_STALEMATE = ("e2e3 a7a5 d1h5 a8a6 h5a5 h7h5 h2h4 a6h6 a5c7 f7f6 c7d7 e8f7 d7b7 d8d3 b7b8 d3h7 b8c8 f7g6 "
                    "c8e6").split()
@@ -107,30 +110,32 @@ class Turns(unittest.TestCase):
         self.assertEqual(outcome.game["moves"][0]["san"], "e4")
         self.assertEqual(outcome.game["started"], "2026-10-11T17:00:00Z")
         self.assertEqual(outcome.issue, 101)
-        self.assertRegex(outcome.comment, r"^♟️ \*\*1\. e4 is on the board\*\*: \S+ \*[^*]+\*, pawn from e2 to e4, two "
-                                          r"squares\. It is GitHub's turn")
+        self.assertRegex(outcome.comment, r"^♟️ \*\*1\. e4 is on the board\.\*\*\n\S+ \*[^*]+!\* · Pawn from e2 to e4, two"
+                                          r" squares\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\) can pick"
+                                          r" Black's reply on \[the board\]")
         self.assertTrue(outcome.commit.startswith("chore(chess): ♟️ play 1. e4 in game 1\n\nMove 1, by tannergolden."))
 
     def test_nobody_else_can_open_it(self):
         outcome = Table().move("e2e4", player=OCTOCAT)
         self.assertFalse(outcome.changed)
         self.assertIsNone(outcome.game)
-        self.assertIn("It is tannergolden's turn as White", outcome.comment)
-        self.assertNotIn("@tannergolden", outcome.comment)  # a turn away never pings the owner
+        self.assertIn(f"⏳ **It's {LINKED}'s turn as White**, so `e2e4` wasn't played.", outcome.comment)
+        self.assertIsNone(PING.search(outcome.comment), "a turn away never pings the owner")
 
     def test_a_move_for_github_hands_the_turn_to_the_owner(self):
         table = Table()
         table.move("e2e4")
         outcome = table.move("c7c5")
-        self.assertRegex(outcome.comment, r"\*\*1\.\.\. c5 is on the board\*\*, played by @octocat: \S+ \*[^*]+\*, "
-                                          r"pawn from c7 to c5, two squares\. @tannergolden, it is your move\.")
+        self.assertRegex(outcome.comment, r"\*\*1\.\.\. c5 is on the board\.\*\* Well played, @octocat\.\n\S+ \*[^*]+!\*"
+                                          r" · Pawn from c7 to c5, two squares\n@tannergolden, it's your move\.\n$")
 
     def test_the_owner_cannot_play_for_github(self):
         table = Table()
         table.move("e2e4")
         outcome = table.move("e7e5", player=OWNER)
         self.assertFalse(outcome.changed)
-        self.assertIn("It is GitHub's turn as Black", outcome.comment)
+        self.assertIn("⏳ **It's GitHub's turn as Black**, so `e7e5` wasn't played.\nBlack's moves are for everyone"
+                      " but you.", outcome.comment)
 
     def test_the_first_move_to_arrive_is_the_one_played(self):
         table = Table()
@@ -139,21 +144,22 @@ class Turns(unittest.TestCase):
         late = table.move("e7e5", player=HUBOT, player_id=HUBOT_ID, move=2)
         self.assertTrue(first.changed)
         self.assertFalse(late.changed)
-        self.assertIn("**The board moved on**, so e7e5 was not played: move 2 is already on it, 1... c5,"
-                      " by @octocat.", late.comment)
+        self.assertIn("**Too late: move 2 is already on the board**, so `e7e5` wasn't played.\n1... c5 got there first,"
+                      " played by [@octocat](https://github.com/octocat).", late.comment)
+        self.assertIsNone(PING.search(late.comment), "a turn away pings nobody, not even the player it names")
 
     def test_a_move_sent_twice_is_told_it_was_its_own(self):
         table = Table()
         table.move("e2e4")
         table.move("c7c5", move=2)
         again = table.move("c7c5", player=OCTOCAT, move=2)
-        self.assertIn("1... c5, by you.", again.comment)
+        self.assertIn("1... c5 got there first, played by you.", again.comment)
 
     def test_a_move_for_another_game_or_move_is_turned_away(self):
         table = Table()
         table.move("e2e4")
-        self.assertIn("There is no game 2 yet", table.move("e7e5", game=2, move=1).comment)
-        self.assertIn("The board is on move 2**, not move 5", table.move("e7e5", move=5).comment)
+        self.assertIn("There's no game 2 yet", table.move("e7e5", game=2, move=1).comment)
+        self.assertIn("The board is on move 2, not move 5**", table.move("e7e5", move=5).comment)
         self.assertEqual(len(table.game["moves"]), 1)
 
 
@@ -162,22 +168,22 @@ class Legality(unittest.TestCase):
         return chess.why_illegal(rules.Position.from_fen(fen), uci)
 
     def test_says_why_a_move_is_not_legal(self):
-        self.assertEqual(self.reason(rules.START, "e3e4"), "there is no piece on e3")
+        self.assertEqual(self.reason(rules.START, "e3e4"), "there's no piece on e3")
         self.assertEqual(self.reason(rules.START, "e7e5"), "the pawn on e7 is Black's")
-        self.assertEqual(self.reason(rules.START, "e2e5"), "the pawn on e2 cannot move to e5")
+        self.assertEqual(self.reason(rules.START, "e2e5"), "the pawn on e2 can't move to e5")
         self.assertEqual(self.reason(rules.START, "e2e4q"),
-                         "only a pawn reaching the last rank names a piece to become, so it is e2e4")
+                         "only a pawn reaching the last rank names a piece to become, so the move is `e2e4`")
         self.assertEqual(self.reason("7k/P7/8/8/8/8/8/K7 w - - 0 1", "a7a8"),
-                         "a pawn reaching the last rank has to say what it becomes, such as a7a8q")
+                         "a pawn reaching the last rank has to say what it becomes, such as `a7a8q` for a queen")
         # The bishop on e2 is pinned to its king by the rook on e7.
-        self.assertEqual(self.reason("4k3/4r3/8/8/8/8/4B3/4K3 w - - 0 1", "e2d3"), "it would leave the king in check")
-        self.assertEqual(self.reason("4k3/8/8/8/8/8/8/R3K3 w Q - 0 1", "e1c2"), "the king on e1 cannot move to c2")
+        self.assertEqual(self.reason("4k3/4r3/8/8/8/8/4B3/4K3 w - - 0 1", "e2d3"), "it would leave your king in check")
+        self.assertEqual(self.reason("4k3/8/8/8/8/8/8/R3K3 w Q - 0 1", "e1c2"), "the king on e1 can't move to c2")
 
     def test_an_illegal_move_changes_nothing_and_says_why(self):
         table = Table()
         outcome = table.move("e2e5")
         self.assertFalse(outcome.changed)
-        self.assertIn("🚫 **e2e5 is not a legal move here**: the pawn on e2 cannot move to e5. Nothing was played.",
+        self.assertIn("🚫 **`e2e5` isn't a legal move here**: the pawn on e2 can't move to e5.\nNothing was played.",
                       outcome.comment)
 
 
@@ -185,14 +191,15 @@ class Endings(unittest.TestCase):
     def test_a_checkmate_for_github_puts_its_player_in_the_hall_of_fame(self):
         table = Table()
         outcome = table.play(FOOLS_MATE)
-        self.assertIn("🏆 **2... Qh4#: checkmate.** GitHub wins game 1, and @octocat goes into the Hall of Fame",
-                      outcome.comment)
+        self.assertIn("🏆 **2... Qh4#: checkmate!** GitHub wins game 1, and @octocat takes a place in the [Hall of Fame]"
+                      "(https://github.com/tannergolden) for the winning move.\n", outcome.comment)
+        self.assertRegex(outcome.comment, r"\n\S+ \*[^*]+!\* · Queen from d8 to h4, checkmate\n")
         self.assertIn("Game 2 starts now, and @tannergolden opens it as White.", outcome.comment)
         record = table.hall[-1]
         self.assertEqual((record["game"], record["result"], record["reason"], record["winner"], record["plies"]),
                          (1, "0-1", "checkmate", "GitHub", 4))
         self.assertEqual(record["deciding"], {"move": "2... Qh4#", "player": OCTOCAT, "player_id": OCTOCAT_ID,
-                                              "arbiter": False})
+                                              "arbiter": False, "issue": 104})
         self.assertEqual(record["players"], [{"player": OCTOCAT, "player_id": OCTOCAT_ID, "moves": 2}])
         self.assertEqual(table.game, {"game": 2, "started": record["ended"], "fen": rules.START, "moves": []})
         self.assertEqual(outcome.pgn[0], "game-1.pgn")
@@ -200,12 +207,14 @@ class Endings(unittest.TestCase):
 
     def test_a_checkmate_for_the_owner_says_so(self):
         outcome = Table().play(SCHOLARS_MATE)
-        self.assertIn("🏆 **4. Qxf7#: checkmate.** @tannergolden wins game 1. Game 2 starts now", outcome.comment)
+        self.assertIn("🏆 **4. Qxf7#: checkmate!** @tannergolden wins game 1.\n", outcome.comment)
+        self.assertTrue(outcome.comment.endswith("\nGame 2 starts now, and @tannergolden opens it as White.\n"))
 
     def test_a_stalemate_is_drawn_and_the_next_game_starts(self):
         table = Table()
         outcome = table.play(LOYDS_STALEMATE)
-        self.assertIn("🤝 **10. Qe6: game 1 is drawn by stalemate.** Game 2 starts now", outcome.comment)
+        self.assertIn("🤝 **10. Qe6: game 1 is drawn by stalemate.**\n", outcome.comment)
+        self.assertIn("· Queen from c8 to e6, stalemate\nGame 2 starts now", outcome.comment)
         self.assertEqual((table.hall[-1]["result"], table.hall[-1]["winner"]), ("1/2-1/2", None))
         self.assertIn("Game 1 is over", table.move("e2e4", game=1, move=20).comment)
         self.assertTrue(table.move("d2d4").changed)
@@ -255,8 +264,8 @@ class Clock(unittest.TestCase):
         self.assertEqual((played["arbiter"], played["player"], played["issue"]), (True, None, None))
         self.assertIn(played["uci"], {move.uci for move in rules.legal_moves(chess.replay(table.game)[1])})
         self.assertEqual(outcome.issue, 101)  # the owner's own move, so the notice reaches them
-        self.assertIn("⏰ **A week went by without a move from GitHub**, so the Arbiter played 1... ", outcome.comment)
-        self.assertIn("@tannergolden, it is your move.", outcome.comment)
+        self.assertIn("⏰ **A week passed without a move from GitHub**, so the Arbiter played 1... ", outcome.comment)
+        self.assertTrue(outcome.comment.endswith("\n@tannergolden, it's your move.\n"))
         self.assertIn("after a week without a move\n\nMove 2 of game 1, by the Arbiter.", outcome.commit)
 
     def test_after_a_week_the_arbiter_moves_for_the_owner_and_tells_github(self):
@@ -265,9 +274,9 @@ class Clock(unittest.TestCase):
         table.move("c7c5")
         outcome = table.wait(dt.timedelta(days=8))
         self.assertEqual(outcome.issue, 102)  # the last move GitHub played
-        self.assertIn("A week went by without a move from tannergolden", outcome.comment)
-        self.assertRegex(outcome.comment, r"at random for White: \S+ \*[^*]+\*, [^.]+\. It is GitHub's turn")
-        self.assertNotIn("@tannergolden", outcome.comment)
+        self.assertIn(f"⏰ **A week passed without a move from {LINKED}**, so the Arbiter played 2. ", outcome.comment)
+        self.assertRegex(outcome.comment, r"for White, at random\.\n\S+ \*[^*]+!\* · [^\n]+\nGitHub's turn")
+        self.assertIsNone(PING.search(outcome.comment), "the owner's own lapse goes to GitHub's player, unpinged")
 
     def test_the_arbiters_pick_is_the_same_however_often_it_is_asked(self):
         table = Table()
@@ -285,13 +294,38 @@ class Clock(unittest.TestCase):
         self.assertTrue(table.wait(dt.timedelta(days=1)).changed)
         self.assertEqual(len(table.game["moves"]), 3)
 
-    def test_an_opening_left_a_week_is_played_with_nobody_to_tell(self):
+    def test_an_opening_left_a_week_is_told_on_the_move_that_ended_the_last_game(self):
         table = Table()
         table.play(FOOLS_MATE)
         outcome = table.wait(dt.timedelta(days=7))
         self.assertTrue(outcome.changed)
         self.assertEqual((table.game["game"], len(table.game["moves"])), (2, 1))
-        self.assertIsNone(outcome.issue)
+        self.assertEqual(outcome.issue, 104, "the issue of the mate that ended game 1")
+        self.assertIn(f"without a move from {LINKED}**, so the Arbiter played 1. ", outcome.comment)
+
+    def test_a_check_is_announced_and_the_side_in_it_told(self):
+        table = Table()
+        table.play(["e2e4", "f7f6"])
+        outcome = table.move("d1h5")
+        self.assertIn("♟️ **2. Qh5+ is on the board. Check!**\n", outcome.comment)
+        self.assertIn("GitHub's turn, in check: anyone but [@tannergolden]", outcome.comment)
+        self.assertIn("can pick Black's way out on [the board]", outcome.comment)
+        table = Table()
+        table.play(["f2f3", "e7e5"])
+        outcome = table.move("e1f2")
+        outcome = table.move("d8h4")
+        self.assertIn("♟️ **2... Qh4+ is on the board. Check!** Well played, @octocat.\n", outcome.comment)
+        self.assertIn("@tannergolden, it's your move, and you are in check.", outcome.comment)
+
+    def test_a_turned_away_move_pings_nobody(self):
+        table = Table()
+        table.play(["e2e4", "c7c5"])
+        refusals = [table.move("d2d4", player=OCTOCAT), table.move("e7e5", player=OWNER, move=3),
+                    table.move("d2d4", move=1), table.move("d2d4", move=9), table.move("d2d4", game=4),
+                    table.move("e2e5"), table.move("e3e4"), table.move("e7e6")]
+        for outcome in refusals:
+            self.assertFalse(outcome.changed, outcome.comment)
+            self.assertIsNone(PING.search(outcome.comment), outcome.comment)
 
 
 class Board(unittest.TestCase):
@@ -454,7 +488,7 @@ class Board(unittest.TestCase):
         listed = {entry[2]: entry for entry in self.entries(chess.board(None, [], OWNER))}
         outcome = table.move("g1f3")
         emoji, title = listed["Nf3"][0], listed["Nf3"][1]
-        self.assertIn(f"**1. Nf3 is on the board**: {emoji} *{title}*, knight from g1 to f3.", outcome.comment)
+        self.assertIn(f"**1. Nf3 is on the board.**\n{emoji} *{title}* · Knight from g1 to f3\n", outcome.comment)
 
 
 class Words(unittest.TestCase):
@@ -510,7 +544,7 @@ class Script(unittest.TestCase):
                                         ISSUE="13", PLAYER=OCTOCAT, PLAYER_ID=str(OCTOCAT_ID))
             self.assertEqual(code, 0)
             self.assertFalse(folder.exists())
-            self.assertIn("It is tannergolden's turn", (out / "comment.md").read_text(encoding="utf-8"))
+            self.assertIn(f"It's {LINKED}'s turn", (out / "comment.md").read_text(encoding="utf-8"))
             self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"), "changed=false\nissue=13\n")
 
     def test_every_run_sets_the_board_out_between_its_markers_and_nowhere_else(self):

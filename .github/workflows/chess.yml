@@ -30,7 +30,9 @@ name: Chess
 # The commits are the bot's, so a move never counts as your contribution, and
 # their messages never name an issue. Replying on tannergolden/play needs the
 # Official Arbiter's PLAY_APP_CLIENT_ID variable and PLAY_APP_PRIVATE_KEY
-# secret here; without them a move is still played, and its reply fails.
+# secret here; without them a move is still played, and its reply fails. A
+# run that fails before the game rules on a move still answers its issue,
+# and pings the owner.
 on:
   workflow_dispatch:
     inputs:
@@ -151,3 +153,35 @@ jobs:
           ISSUE: ${{ steps.play.outputs.issue }}
           PLAY: ${{ github.repository_owner }}/play
         run: gh issue comment "$ISSUE" --repo "$PLAY" --body-file "$RUNNER_TEMP/chess/comment.md"
+
+      # A run that fails before the game rules on a move (its checks, the game, or its save) still answers the
+      # move's issue, and pings the owner. A run that played the move and failed afterwards says nothing more.
+      - name: '🔑 Mint the token for the failure notice'
+        id: app-failed
+        if: ${{ failure() && inputs.issue != '' && steps.play.outcome != 'success' }}
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.PLAY_APP_CLIENT_ID }}
+          private-key: ${{ secrets.PLAY_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: play
+          permission-issues: write
+
+      - name: '🧯 Say the move was not ruled on'
+        if: ${{ failure() && inputs.issue != '' && steps.play.outcome != 'success' && steps.app-failed.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ steps.app-failed.outputs.token }}
+          ISSUE: ${{ inputs.issue }}
+          UCI: ${{ inputs.uci }}
+          OWNER: ${{ github.repository_owner }}
+          PLAY: ${{ github.repository_owner }}/play
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$ISSUE" =~ ^[1-9][0-9]*$ ]] || exit 0
+          move='this move'
+          if [[ "$UCI" =~ ^[a-h][1-8][a-h][1-8][qrbn]?$ ]]; then move="\`$UCI\`"; fi
+          printf '%s\n' "⚠️ **The Arbiter couldn't rule on $move**, so nothing was played." \
+            "@$OWNER has been told. Try the same move again from [the board](https://github.com/$OWNER) in a few minutes." \
+            > "$RUNNER_TEMP/failed.md"
+          gh issue comment "$ISSUE" --repo "$PLAY" --body-file "$RUNNER_TEMP/failed.md"

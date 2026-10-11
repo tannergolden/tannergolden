@@ -136,30 +136,45 @@ def numbered(position: Position, name: str) -> str:
 
 
 def named(position: Position, game: int, ply: int, move: Move) -> str:
-    """A move as its reply names it, as the board listed it: its emoji, its title and what it does."""
+    """A move as its reply names it, as the board listed it: its emoji, its order and what it does."""
     entry = next(m for m in listing(position, game, ply) if m["uci"] == move.uci)
-    return f"{entry['emoji']} *{entry['title']}*, {entry['words'][0].lower()}{entry['words'][1:]}"
+    return f"{entry['emoji']} *{entry['title']}* · {entry['words']}"
+
+
+def next_turn(turn: str, owner: str, check: bool, board: str) -> str:
+    """The line a reply ends on: whose turn it is now, and whether that side is in check. The owner is pinged when
+    the move is theirs, and only then."""
+    if turn == "w":
+        return f"@{owner}, it's your move{', and you are in check' if check else ''}."
+    return (f"GitHub's turn{', in check' if check else ''}: anyone but {handle(owner)} can pick Black's"
+            f" {'way out' if check else 'reply'} on {board}.")
 
 
 def who(played: dict) -> str:
     return "the Arbiter" if played.get("arbiter") else f"@{played['player']}"
 
 
+def handle(login: str) -> str:
+    """A player named without a ping: the @handle as a link to their profile, which GitHub never turns into a
+    mention. A turned-away move pings nobody, so nobody can ping anyone by opening issues."""
+    return f"[@{login}]({profile(login)})"
+
+
 def why_illegal(position: Position, uci: str) -> str:
     """Why a move that is not legal is not, in a few words."""
     piece = position.board[square(uci[0:2])]
     if not piece:
-        return f"there is no piece on {uci[0:2]}"
+        return f"there's no piece on {uci[0:2]}"
     if side(piece) != position.turn:
         return f"the {PIECES[piece.lower()]} on {uci[0:2]} is {'White' if side(piece) == 'w' else 'Black'}'s"
     legal = {move.uci for move in legal_moves(position)}
     if len(uci) == 4 and uci + "q" in legal:
-        return f"a pawn reaching the last rank has to say what it becomes, such as {uci}q"
+        return f"a pawn reaching the last rank has to say what it becomes, such as `{uci}q` for a queen"
     if len(uci) == 5 and uci[:4] in legal:
-        return f"only a pawn reaching the last rank names a piece to become, so it is {uci[:4]}"
+        return f"only a pawn reaching the last rank names a piece to become, so the move is `{uci[:4]}`"
     if any(move.uci == uci for move in pseudo_moves(position)):
-        return "it would leave the king in check"
-    return f"the {PIECES[piece.lower()]} on {uci[0:2]} cannot move to {uci[2:4]}"
+        return "it would leave your king in check"
+    return f"the {PIECES[piece.lower()]} on {uci[0:2]} can't move to {uci[2:4]}"
 
 
 def profile(owner: str) -> str:
@@ -214,7 +229,7 @@ def apply(game: dict, hall: list, positions: list[Position], move: Move, mover: 
     end = ending(positions)
     outcome = Outcome(game=game, hall=hall, changed=True)
     if end:
-        deciding = {"move": shown, **{key: mover[key] for key in ("player", "player_id", "arbiter")}}
+        deciding = {"move": shown, **{key: mover.get(key) for key in ("player", "player_id", "arbiter", "issue")}}
         winner = {"w": owner, "b": "GitHub"}.get(end.winner or "")
         record = {"game": game["game"], "result": end.result, "reason": end.reason, "winner": winner,
                   "plies": len(game["moves"]), "started": game["started"], "ended": stamp(moment),
@@ -226,20 +241,21 @@ def apply(game: dict, hall: list, positions: list[Position], move: Move, mover: 
     return outcome, shown, end
 
 
-def ended_text(end: Ending, shown: str, number: int, mover: dict, owner: str) -> str:
-    """What the reply says when a move ends the game, and that the next one has started."""
+def ended_text(end: Ending, shown: str, number: int, mover: dict, owner: str, name: str) -> str:
+    """What the reply says when a move ends the game: how it ended, the move that did it, and that the next game has
+    started."""
     if end.reason == "checkmate":
-        if end.winner == "w":
-            head = f"🏆 **{shown}: checkmate.** @{owner} wins game {number}" + (
-                ", with the Arbiter's move." if mover.get("arbiter") else ".")
-        elif mover.get("arbiter"):
-            head = f"🏆 **{shown}: checkmate.** GitHub wins game {number}, with the Arbiter's move."
+        winner = f"@{owner}" if end.winner == "w" else "GitHub"
+        if mover.get("arbiter"):
+            head = f"🏆 **{shown}: checkmate!** {winner} wins game {number} on the Arbiter's move."
+        elif end.winner == "w":
+            head = f"🏆 **{shown}: checkmate!** @{owner} wins game {number}."
         else:
-            head = (f"🏆 **{shown}: checkmate.** GitHub wins game {number}, and @{mover['player']} goes into"
-                    " the Hall of Fame for the winning move.")
+            head = (f"🏆 **{shown}: checkmate!** GitHub wins game {number}, and @{mover['player']} takes a place in"
+                    f" the [Hall of Fame]({profile(owner)}) for the winning move.")
     else:
         head = f"🤝 **{shown}: game {number} is drawn by {REASONS[end.reason]}.**"
-    return f"{head} Game {number + 1} starts now, and @{owner} opens it as White.\n"
+    return f"{head}\n{name}\nGame {number + 1} starts now, and @{owner} opens it as White.\n"
 
 
 def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: int,
@@ -254,48 +270,51 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
         return outcome
 
     if request.game < number:
-        return refuse(f"⌛ **Game {request.game} is over**, so {request.uci} was not played. Game {number} is on"
-                      f" {board} now: pick a move there.\n", "an earlier game")
+        return refuse(f"⌛ **Game {request.game} is over**, so `{request.uci}` wasn't played.\nGame {number} is under"
+                      f" way on {board}: pick a move there.\n", "an earlier game")
     if request.game > number:
-        return refuse(f"❓ **There is no game {request.game} yet**, so {request.uci} was not played. Game {number}"
-                      f" is on {board}: pick a move there.\n", "a later game")
+        return refuse(f"❓ **There's no game {request.game} yet**, so `{request.uci}` wasn't played.\nGame {number}"
+                      f" is under way on {board}: pick a move there.\n", "a later game")
     positions = replay(current)
     position, ply = positions[-1], len(current["moves"]) + 1
     if request.move < ply:
         earlier = current["moves"][request.move - 1]
         shown = numbered(positions[request.move - 1], earlier["san"])
-        by = "you" if not earlier.get("arbiter") and earlier["player_id"] == request.player_id else who(earlier)
-        return refuse(f"⌛ **The board moved on**, so {request.uci} was not played: move {request.move} is"
-                      f" already on it, {shown}, by {by}. Pick a move from {board} as it stands now.\n", "stale")
+        by = ("you" if not earlier.get("arbiter") and earlier["player_id"] == request.player_id else
+              "the Arbiter" if earlier.get("arbiter") else handle(earlier["player"]))
+        return refuse(f"⌛ **Too late: move {request.move} is already on the board**, so `{request.uci}` wasn't"
+                      f" played.\n{shown} got there first, played by {by}. Pick a move from {board} as it stands"
+                      " now.\n", "stale")
     if request.move > ply:
-        return refuse(f"❓ **The board is on move {ply}**, not move {request.move}, so {request.uci} was not"
-                      f" played. Pick a move from {board}.\n", "a later move")
+        return refuse(f"❓ **The board is on move {ply}, not move {request.move}**, so `{request.uci}` wasn't"
+                      f" played.\nPick a move from {board} as it stands now.\n", "a later move")
     is_owner = request.player_id == owner_id
     if position.turn == "w" and not is_owner:
-        return refuse(f"⏳ **It is {owner}'s turn as White**, so {request.uci} was not played. GitHub plays Black,"
-                      f" and its turn comes next, on {board}.\n", "White's turn")
+        return refuse(f"⏳ **It's {handle(owner)}'s turn as White**, so `{request.uci}` wasn't played.\n"
+                      f"GitHub plays Black: once White moves, pick Black's reply on {board}.\n", "White's turn")
     if position.turn == "b" and is_owner:
-        return refuse(f"⏳ **It is GitHub's turn as Black**, so {request.uci} was not played: anyone but you plays"
-                      " Black's moves. Your turn comes next.\n", "Black's turn")
+        return refuse(f"⏳ **It's GitHub's turn as Black**, so `{request.uci}` wasn't played.\nBlack's moves are"
+                      " for everyone but you. Your turn comes next.\n", "Black's turn")
     moves = {move.uci: move for move in legal_moves(position)}
     if request.uci not in moves:
-        return refuse(f"🚫 **{request.uci} is not a legal move here**: {why_illegal(position, request.uci)}."
-                      f" Nothing was played. Pick a move from {board}.\n", "illegal")
+        return refuse(f"🚫 **`{request.uci}` isn't a legal move here**: {why_illegal(position, request.uci)}.\n"
+                      f"Nothing was played. Every move listed under {board} is legal: pick one there.\n", "illegal")
 
     mover = {"player": request.player, "player_id": request.player_id, "issue": request.issue, "arbiter": False}
     name = named(position, number, ply, moves[request.uci])
     outcome, shown, end = apply(current, hall, positions, moves[request.uci], mover, owner, moment)
     outcome.issue = request.issue
+    check = shown.endswith("+")
     if end:
-        outcome.comment = ended_text(end, shown, number, mover, owner)
+        outcome.comment = ended_text(end, shown, number, mover, owner, name)
         outcome.commit = f"chore(chess): 🏆 play {shown}, ending game {number} {end.result}"
     elif position.turn == "w":
-        outcome.comment = (f"♟️ **{shown} is on the board**: {name}. It is GitHub's turn: anyone but @{owner} can"
-                           f" play the next move, from {board}.\n")
+        outcome.comment = (f"♟️ **{shown} is on the board.{' Check!' if check else ''}**\n{name}\n"
+                           f"{next_turn('b', owner, check, board)}\n")
         outcome.commit = f"chore(chess): ♟️ play {shown} in game {number}"
     else:
-        outcome.comment = (f"♟️ **{shown} is on the board**, played by @{request.player}: {name}. @{owner}, it is"
-                           " your move.\n")
+        outcome.comment = (f"♟️ **{shown} is on the board.{' Check!' if check else ''}** Well played,"
+                           f" @{request.player}.\n{name}\n{next_turn('w', owner, check, board)}\n")
         outcome.commit = f"chore(chess): ♟️ play {shown} in game {number}"
     outcome.commit += f"\n\nMove {ply}, by {request.player}."
     outcome.log = f"played {shown}" + (f", {end.reason}" if end else "")
@@ -321,20 +340,21 @@ def tick(game: dict | None, hall: list, owner: str, moment: dt.datetime) -> Outc
     number = game["game"]
     name = named(position, number, ply, move)
     outcome, shown, end = apply(game, hall, positions, move, mover, owner, moment)
-    for earlier in reversed(game["moves"]):
-        if earlier.get("issue"):
-            outcome.issue = earlier["issue"]
-            break
+    # the reply goes on the issue of the game's last move, or, when the Arbiter opens a new game, of the move that
+    # ended the one before
+    issues = [earlier.get("issue") for earlier in game["moves"]]
+    if not game["moves"] and hall:
+        issues = [hall[-1].get("deciding", {}).get("issue")]
+    outcome.issue = next((issue for issue in reversed(issues) if issue), None)
     board = f"[the board]({profile(owner)})"
-    if position.turn == "b":
-        text = (f"⏰ **A week went by without a move from GitHub**, so the Arbiter played {shown} at random"
-                f" for Black: {name}.")
-        follow = f" @{owner}, it is your move.\n"
+    late = "GitHub" if position.turn == "b" else handle(owner)
+    head = (f"⏰ **A week passed without a move from {late}**, so the Arbiter played {shown} for"
+            f" {'Black' if position.turn == 'b' else 'White'}, at random.")
+    if end:
+        outcome.comment = f"{head}\n\n{ended_text(end, shown, number, mover, owner, name)}"
     else:
-        text = (f"⏰ **A week went by without a move from {owner}**, so the Arbiter played {shown} at random"
-                f" for White: {name}.")
-        follow = f" It is GitHub's turn: anyone but {owner} can play the next move, from {board}.\n"
-    outcome.comment = text + (" " + ended_text(end, shown, number, mover, owner) if end else follow)
+        turn = "w" if position.turn == "b" else "b"
+        outcome.comment = f"{head}\n{name}\n{next_turn(turn, owner, shown.endswith('+'), board)}\n"
     outcome.commit = (f"chore(chess): ⏰ play {shown} for {'White' if position.turn == 'w' else 'Black'}"
                       f" after a week without a move\n\nMove {ply} of game {number}, by the Arbiter.")
     if end:

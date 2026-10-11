@@ -303,7 +303,8 @@ class Board(unittest.TestCase):
     def test_a_game_nobody_has_opened_waits_for_the_owner(self):
         element = chess.board(None, [], OWNER)
         self.assertEqual((element["fen"], element["game"], element["move"], element["players"]), (rules.START, 1, 1, 0))
-        self.assertTrue(element["prompt"].startswith("🛑 **@tannergolden's turn!** @tannergolden opens game 1 as White"))
+        self.assertEqual(element["prompt"],
+                         "🛑 **@tannergolden's turn!** @tannergolden opens game 1 as White, and GitHub plays Black.")
         self.assertNotIn("last", element)
         self.assertNotIn("due", element, "the clock starts with the first move")
         self.assertEqual(element["history"], [[1, "", "", ""]])
@@ -337,13 +338,16 @@ class Board(unittest.TestCase):
                                            "words": "Pawn from e2 to e4, two squares", "by": "@tannergolden",
                                            "when": "11 Oct"})
         self.assertEqual(element["due"], "18 Oct")
-        self.assertIn("@tannergolden played 1. e4. Pick a move below by 18 Oct, 12:00 EST:", element["prompt"])
+        self.assertEqual(element["prompt"],
+                         "🟢 **GitHub's turn!** @tannergolden played 1. e4. Pick a move below by 18 Oct.")
+        self.assertIn("The move is due by 18 Oct, 12:00 EST, or the Arbiter plays a random legal move.",
+                      element["note"])
         self.assertEqual(element["history"], [[1, "e4", "", ""]])
         table.move("c7c5")
         element = chess.board(table.game, table.hall, OWNER)
         self.assertEqual(element["history"], [[1, "e4", "c5", "@octocat"], [2, "", "", ""]])
-        self.assertIn("🛑 **@tannergolden's turn!** GitHub played 1... c5. The next move is @tannergolden's by 18 Oct, "
-                      "13:00 EST.", element["prompt"])
+        self.assertEqual(element["prompt"], "🛑 **@tannergolden's turn!** GitHub played 1... c5. Reply due by 18 Oct.")
+        self.assertIn("The move is due by 18 Oct, 13:00 EST", element["note"])
         self.assertEqual((element["players"], element["move"]), (1, 2))
 
     def test_a_check_marks_the_king_and_the_arbiter_is_named(self):
@@ -357,7 +361,7 @@ class Board(unittest.TestCase):
         table.play(["e2e4", "f7f6", "d1h5"])
         element = chess.board(table.game, table.hall, OWNER)
         self.assertEqual(element["check"], "e8")
-        self.assertIn("You're in check.", element["prompt"])
+        self.assertIn("played 2. Qh5+. Check! Pick a move below by", element["prompt"])
 
     def test_what_each_side_took_is_counted_from_the_game(self):
         table = Table()
@@ -381,9 +385,43 @@ class Board(unittest.TestCase):
                          "the newest win first; @octocat played Black in all three games")
         self.assertEqual(hall["measure"], {}, "the kit reads each winner's name from their profile")
         element = chess.board(table.game, table.hall, OWNER)
-        self.assertIn("Game 3 went to @tannergolden, and @tannergolden opens game 4 as White", element["prompt"])
+        self.assertEqual(element["prompt"],
+                         "🛑 **@tannergolden's turn!** @tannergolden won game 3. Game 4 opens by 19 Oct.")
         self.assertIn("[PGN](https://github.com/tannergolden/tannergolden/tree/HEAD/.github/chess/games)",
                       element["note"])
+
+    def test_a_new_game_s_banner_says_how_the_last_one_ended(self):
+        table = Table()
+        table.play(FOOLS_MATE)
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertRegex(element["prompt"],
+                         r"^🛑 \*\*@tannergolden's turn!\*\* GitHub won game 1\. Game 2 opens by \d+ Oct\.$")
+        table.play(LOYDS_STALEMATE)
+        element = chess.board(table.game, table.hall, OWNER)
+        self.assertRegex(element["prompt"],
+                         r"^🛑 \*\*@tannergolden's turn!\*\* Game 2 was drawn\. Game 3 opens by \d+ Oct\.$")
+        self.assertTrue(element["note"].startswith("Game 2 was drawn by stalemate. Only @tannergolden can play"))
+
+    def test_every_banner_fits_one_line_of_the_readme(self):
+        """The longest banner each turn can have, at game 123 and move 123, fits the line (`BANNER`); and every note,
+        the longest draw's too, fits the kit's 400 characters."""
+        late = ("123. Qh4xe1+", "123... Qh4xe1+")
+        banners = [chess.prompt(OWNER, False, 123, late[0], arbiter, check, "28 Sep")
+                   for arbiter in (False, True) for check in (False, True)]
+        banners += [chess.prompt(OWNER, True, 123, late[1], arbiter, check, "28 Sep")
+                    for arbiter in (False, True) for check in (False, True)]
+        banners += [chess.prompt(OWNER, True, 124, result=result, due="28 Sep")
+                    for result in ("GitHub won game 123", "@tannergolden won game 123", "Game 123 was drawn")]
+        banners.append(chess.prompt(OWNER, True, 1))
+        for line in banners:
+            self.assertLessEqual(len(line), chess.BANNER, line)
+        wrapped = ("🛑 **@tannergolden's turn!** @tannergolden opens game 1 as White, and GitHub plays Black from the"
+                   " next move on.")
+        self.assertGreater(len(wrapped), chess.BANNER, "the banner that wrapped would not pass")
+        ended = {"game": 123, "result": "1/2-1/2", "reason": "seventy-five-move rule", "winner": None}
+        element = chess.board(chess.new_game(124, T0), [ended], OWNER)
+        self.assertTrue(KIT_LINE.fullmatch(element["note"]), len(element["note"]))
+        self.assertLessEqual(len(element["prompt"]), chess.BANNER)
 
     def test_a_mate_the_arbiter_played_scores_nobody(self):
         table = Table()
@@ -399,7 +437,7 @@ class Board(unittest.TestCase):
             table.play(moves) if moves else None
             element = chess.board(table.game, table.hall, OWNER)
             for key in ("prompt", "note"):
-                self.assertRegex(element[key], KIT_LINE)
+                self.assertTrue(KIT_LINE.fullmatch(element[key]), element[key])
                 for dash in DASHES:
                     self.assertNotIn(dash, element[key])
             for row in element["history"]:

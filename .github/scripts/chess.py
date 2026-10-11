@@ -386,6 +386,28 @@ def score_sheet(game: dict, position: Position) -> list[list]:
     return rows[-ROWS:]
 
 
+# The banner over the board stays on one line of the profile's README. Measured in the README's own type, a banner
+# of up to this many characters, its markdown included, fits that line with room to spare.
+BANNER = 91
+
+
+def prompt(owner: str, white: bool, number: int, shown: str = "", arbiter: bool = False, check: bool = False,
+           due: str = "", result: str = "") -> str:
+    """The banner over the board, one line long (`BANNER`): whose turn it is, the move just played or how the last
+    game ended, and the day the turn is due. The exact time and the rules go in the note under the moves."""
+    by = f" by {due}" if due else ""
+    alarm = "Check! " if check else ""
+    if not white:
+        mover = "The Arbiter" if arbiter else f"@{owner}"
+        return f"🟢 **GitHub's turn!** {mover} played {shown}. {alarm}Pick a move below{by}."
+    head = f"🛑 **@{owner}'s turn!**"
+    if shown:
+        return f"{head} {'The Arbiter' if arbiter else 'GitHub'} played {shown}. {alarm}Reply due{by}."
+    if result:
+        return f"{head} {result}. Game {number} opens{by}."
+    return f"{head} @{owner} opens game {number} as White, and GitHub plays Black."
+
+
 def board(game: dict | None, hall: list, owner: str) -> dict:
     """The page's chess element: what the board draws, and what the README carries round it."""
     current = game or {"game": 1, "started": None, "moves": []}  # a first game nobody has opened yet
@@ -416,29 +438,23 @@ def board(game: dict | None, hall: list, owner: str) -> dict:
         element["check"] = label(king(position, position.turn))
     element["taken"] = taken(current, positions)
     element["history"] = score_sheet(current, position)
-    by = f" by {until(clock)}" if clock else ""
+    due, checked = day(clock) if clock else "", in_check(position)
     if position.turn == "b":
-        check = "You're in check. " if in_check(position) else ""
-        mover = f"the Arbiter played {shown} for @{owner}" if arbiter else f"@{owner} played {shown}"
-        element["prompt"] = (f"🟢 **GitHub's turn!** {mover[0].upper()}{mover[1:]}. {check}Pick a move below{by}:"
-                             f" anyone but @{owner} can play it, and the first one in is played.")
-        element["note"] = ("Each move opens a ready-made issue in [tannergolden/play](https://github.com/"
-                           f"{owner}/play). Submit it as it opens, and the board redraws within a few minutes.")
+        element["prompt"] = prompt(owner, False, number, shown, arbiter, checked, due)
+        element["note"] = f"Anyone but @{owner} can play on this turn, and the first pick in is played."
     else:
-        if shown:
-            head = f"The Arbiter played {shown} for GitHub." if arbiter else f"GitHub played {shown}."
-            head += f" The next move is @{owner}'s{by}."
-        elif hall:
-            last = hall[-1]
-            result = (f"went to {'@' + owner if last['winner'] == owner else 'GitHub'}" if last["winner"]
-                      else f"was drawn by {REASONS[last['reason']]}")
-            head = f"Game {last['game']} {result}, and @{owner} opens game {number} as White{by}."
-        else:
-            head = f"@{owner} opens game {number} as White{by}, and GitHub plays Black from the next move on."
-        element["prompt"] = f"🛑 **@{owner}'s turn!** {head}"
+        last = hall[-1] if hall and not shown else None  # the game that just ended, when this one has yet to start
+        result = ""
+        if last:
+            result = (f"{'@' + owner if last['winner'] == owner else 'GitHub'} won game {last['game']}"
+                      if last["winner"] else f"Game {last['game']} was drawn")
+        element["prompt"] = prompt(owner, True, number, shown, arbiter, checked, due, result)
         element["note"] = (f"Only @{owner} can play on this turn: a pick from anyone else is turned away with a"
                            " comment on its issue.")
-    element["note"] += " A side that goes a week without moving gets a random legal move from the Arbiter."
+        if last and not last["winner"]:
+            element["note"] = f"Game {last['game']} was drawn by {REASONS[last['reason']]}. {element['note']}"
+    element["note"] += (f" The move is due by {until(clock)}, or the Arbiter plays a random legal move." if clock
+                        else " A side that goes a week without moving gets a random legal move from the Arbiter.")
     if hall:
         element["note"] += (f" Every finished game is kept as a [PGN](https://github.com/{owner}/{owner}/tree/HEAD/"
                             ".github/chess/games).")

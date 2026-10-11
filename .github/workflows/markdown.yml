@@ -15,6 +15,15 @@ on:
     - cron: '0 5 * * *' # 00:00 EST
   workflow_dispatch:
 
+# One drawing at a time. Every move redraws the page, and two runs at once
+# would each push the board as it stood when they began, so the older could
+# land last and leave the page a move behind, every link on it stale. A run
+# that starts while one is drawing waits for it, then draws the page as it is
+# by then; GitHub keeps only the newest waiting run, which is the one needed.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 permissions: {}
 
 jobs:

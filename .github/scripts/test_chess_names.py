@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from chess_names import COMMANDS, OWN, PLACES, listing, read, theme, words  # noqa: E402
+from chess_names import COMMANDS, OWN, PLACES, SHORT, listing, read, theme, words  # noqa: E402
 from chess_names import THEMES as THEME_PATTERNS  # noqa: E402
 from chess_rules import START, Move, Position, legal_moves, make  # noqa: E402
 
@@ -41,7 +41,14 @@ THEMES = {
     "center": (START, "e2e4"),
     "stride": (START, "a2a4"),
     "fianchetto": ("rnbqkbnr/pppppppp/8/8/8/6P1/PPPPPP1P/RNBQKBNR w KQkq - 0 1", "f1g2"),
+    "pin": ("4k3/8/2n5/8/8/8/8/4KB2 w - - 0 1", "f1b5"),  # the knight held to its king
+    "threat": ("4k3/8/8/3q4/8/8/8/1N2K3 w - - 0 1", "b1c3"),  # the queen, alone
+    "escape": ("4k3/8/3p4/4N3/8/8/8/4K3 w - - 0 1", "e5f3"),  # out of the pawn's reach
+    "guard": ("4k3/8/8/b7/8/2N5/8/4K3 w - - 0 1", "e1d2"),  # the king covers the knight the bishop eyes
 }
+# Orders that send a unit forward, which a move along its own rank never gets.
+FORWARD = tuple(f"{order} the " for order in ("Advance", "March", "Push Up", "Move Up", "Send Forward", "Drive",
+                                              "Send In", "Spur On"))
 
 
 def boards(n: int, seed: int = 7):
@@ -89,11 +96,17 @@ class Titles(unittest.TestCase):
                 self.assertTrue(KIT_WORDS.fullmatch(m["words"]), m["words"])
 
     def test_every_title_is_an_order_and_never_names_a_square(self):
+        short = total = 0
         for game, position in boards(60):
             for m in listing(position, game, 1):
                 self.assertIn(m["title"].split()[0].rstrip(",!"), COMMANDS, m["title"])
                 self.assertTrue(m["title"].endswith("!"), m["title"])
                 self.assertNotRegex(m["title"], r"\b[a-h][1-8]\b|\b[a-h]-[Ff]ile\b")
+                reading = read(position, Move.from_uci(m["uci"]))
+                if reading.advance == 0 and reading.kind in "rqk" and theme(reading) == "quiet":
+                    self.assertFalse(m["title"].startswith(FORWARD), f"{m['title']} sends sideways forward")
+                short, total = short + (len(m["title"]) <= SHORT), total + 1
+        self.assertGreater(short / total, 0.85, "most orders read at a glance")
         opening = [m["title"] for m in listing(Position.from_fen(START), 1, 1)]
         self.assertEqual(opening[:4], ["Leave the Barracks!", "Deploy the Outriders!", "Muster the Knights!",
                                        "Join the Fray, Cavalry!"])

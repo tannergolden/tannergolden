@@ -86,6 +86,11 @@ SEND = {  # the orders that move the unit: "{send} the {troop}!"
     "q": ("Unleash", "Send In", "Dispatch", "Loose", "Deploy", "Summon", "Turn Loose"),
     "k": ("Shelter", "Move", "Guard", "Escort", "Shield", "Lead Out"),
 }
+SHIFT = {  # the orders that move it along its own rank: "Swing the Siege Towers!"
+    "r": ("Swing", "Shift", "Wheel", "Redeploy", "Slide Over"),
+    "q": ("Shift", "Swing", "Redeploy", "Wheel Out"),
+    "k": ("Shift", "Move", "Walk", "Edge Over"),
+}
 CRY = {  # the orders shouted to it: "{cry}, {call}!"
     "p": ("Advance", "Forward", "March", "Hold Fast", "Press On", "Step Up", "Dig In", "Push On", "Quick March",
           "Close Ranks"),
@@ -122,23 +127,26 @@ EMOJI = {
 # The words of command every title opens with, the drill the whole army knows.
 COMMANDS = frozenset("""
     Accuse Advance Aim Ambush Annihilate Answer Back Bait Banish Bare Batter Bear Behead Bless Brace Break Bring
-    Bury Call Castle Catch Charge Check Checkmate Circle Claim Clear Close Collect Condemn Corner Cross Crown Crush
-    Cut Dare Deliver Demand Demolish Deploy Destroy Dethrone Dig Dispatch Divide Double Drag Draw Drive Drop End
-    Erase Escort Excommunicate Fall Finish Fire Flank Flatten Fly Fork Form Fortify Forward Freeze Gallop Garrison
-    Get Give Go Grind Guard Hack Hail Haul Head Hit Hold Hound Hunt Jab Join Judge Jump Keep Knock Lead Leap Leave
-    Lengthen Let Light Lock Loose Make Man March Mind Mob Move Muster Obliterate Offer Open Overrun Own Pass Patrol
-    Pin Pitchfork Plant Post Pound Press Prod Promote Pull Purge Push Put Quick Race Raid Raise Rally Ram Rattle
-    Ravage Reach Regroup Reign Reinforce Retire Retreat Reveal Ride Ring Roll Rule Run Saddle Scout Seal Seize Send
-    Set Shelter Shield Shift Shore Show Skewer Slay Slip Smite Smother Snatch Sound Spear Spill Split Spur Stab
-    Stand Station Step Storm Stride Strike Summon Swarm Sweep Swing Take Tempt Threaten Topple Trample Trap Turn
-    Unleash Unmask Walk Watch Wheel Withdraw
+    Bury Call Castle Catch Chain Charge Check Checkmate Circle Claim Clear Close Collect Condemn Corner Cover Cross
+    Crown Crush Cut Dare Deliver Demand Demolish Deploy Destroy Dethrone Dig Dispatch Divide Double Drag Draw Drive
+    Drop Duck Edge End Erase Escape Escort Excommunicate Fall Finish Fire Flank Flatten Fly Fork Form Fortify
+    Forward Freeze Gallop Garrison Get Give Go Grind Guard Hack Hail Haul Head Hit Hold Hound Hunt Jab Join Judge
+    Jump Keep Knock Lead Leap Leave Lengthen Let Light Lock Loose Make Man March Mark Menace Mind Mob Move Muster
+    Nail Never Obliterate Offer Open Outflank Overrun Own Pass Patrol Pick Pin Pitchfork Plant Post Pound Press Prod
+    Promote Protect Pull Purge Push Put Quick Race Raid Raise Rally Ram Rattle Ravage Reach Redeploy Regroup Reign
+    Reinforce Retire Retreat Reveal Ride Ring Roll Rule Run Saddle Save Scout Seal Seize Send Set Shelter Shield
+    Shift Shore Show Skewer Slay Slice Slide Slip Smite Smother Snatch Sound Spear Spill Split Spur Stab Stalk Stand
+    Station Steady Step Storm Stride Strike Summon Swarm Sweep Swing Take Tempt Threaten Thunder Topple Train
+    Trample Trap Turn Unleash Unmask Walk Watch Wheel Withdraw
 """.split())
 
 # --- the themes: each a list of title patterns, and the emoji it is drawn from ------------------------------------
 # A pattern's fields: {troop}, {one} and {call} the unit that moves, as an order sends it, as one soldier and as
 # called to; {send}, {cry} and {strike} the orders it takes, and {go} one that takes it to where it lands; {P} the
 # piece it is or becomes, {T} the piece it takes and {foe} that piece's unit; {fierce} how hard it strikes; {place}
-# and {at} where it lands, the second with the word that puts it there; {pair} the two pieces a fork catches.
+# and {at} where it lands, the second with the word that puts it there; {pair} the two pieces a fork catches; {X}
+# the other piece a move is about (the one it threatens, pins or saves), {xone} and {xfoe} as a soldier and a unit,
+# and {Y} what a pinned piece shields.
 THEMES = {
     "mate": (("💀", "☠️", "🏁", "👑"), (
         "Topple the King!", "Seize the Throne!", "Finish It!", "End It Here!", "Take the Crown!", "Claim the Throne!",
@@ -194,6 +202,19 @@ THEMES = {
         "Check the King!", "Sound the Alarm!", "Threaten the Crown!", "Knock on the King's Door!",
         "Put the King on Notice!", "Hound the King!", "Strike at the Throne!", "Rattle the Throne!",
         "Give Check from {place}!", "Call Out the King!")),
+    "pin": (("📌", "⛓️"), (
+        "Pin Their {X} to the {Y}!", "Nail the {X} to Its {Y}!", "Chain Their {X} in Place!", "Freeze Their {xfoe}!",
+        "Hold Their {X} Fast!", "Lock Down the {xone}!", "Pin Down Their {xfoe}!")),
+    "threat": (("🎯", "🏹", "👁️"), (
+        "Threaten Their {X}!", "Menace the {xone}!", "Hunt Their {X}!", "Mark the {xone} for the Taking!",
+        "Close In on the {X}!", "Bear Down on Their {xfoe}!", "Put Their {X} on Notice!", "Stalk Their {xfoe}!",
+        "Train Our Sights on the {X}!")),
+    "escape": (("💨", "🏃"), (
+        "Pull the {one} Out of Danger!", "Get the {one} to Safety!", "Slip the Noose!", "Escape the Trap!",
+        "Save the {one}!", "Withdraw Before They Strike!", "Duck Out of Reach!")),
+    "guard": (("🛡️", "🤝"), (
+        "Cover the {xone}!", "Guard the {X}!", "Shield the {xone}!", "Stand by the {xone}!", "Protect Our {X}!",
+        "Watch the {xone}'s Back!", "Leave No {xone} Behind!")),
     "offering": (("🎲", "🎁", "🦁"), (
         "Bait the Trap!", "Dare Them to Take It!", "Offer Them the {one}!", "Leave the {one} as Bait!",
         "Stand Firm and Tempt Them!", "Hold Your Ground, {call}!", "Tempt Them {at}!")),
@@ -204,8 +225,8 @@ THEMES = {
         "Run for the Crown!", "Break for the Last Rank!", "Clear the Road Ahead!", "Run, {call}, Run!",
         "Race for the Far Shore!", "Make for the Last Rank!")),
     "stride": (("👣", "🥾"), (
-        "Quick March!", "Lengthen Your Stride!", "Take Two Steps, {call}!", "Double the Pace!", "Step Out Smartly!",
-        "Stride Forward, {call}!")),
+        "Quick March!", "Lengthen Your Stride!", "Take Two Steps, {call}!", "Double the Pace!", "Pick Up the Pace!",
+        "Stride Forward, {call}!", "Double Time, {call}!")),
     "center": (("🎯", "🏛️", "🧭"), (
         "Seize the Center!", "Take the Crossroads!", "Hold the High Ground!", "Plant the Flag {at}!",
         "Claim the Heart of the Board!", "{send} the {troop} to the Center!", "Hold the Center, {call}!")),
@@ -261,21 +282,25 @@ OWN = {
     ("mate", "q"): ("Let the Queen End It!", "Finish It, My Queen!"),
     ("quiet", "p"): ("Hold the Line!", "Dig In!", "Plant the Flag!", "Raise the Shields!", "Close Ranks!",
                      "Brace for the Charge!", "Keep Formation!", "Hold the Field!", "Shore Up the Line!",
-                     "Forward March!"),
+                     "Forward March!", "Never Retreat!", "Stand Your Ground!"),
     ("quiet", "n"): ("Flank Them!", "Leap the Wall!", "Ride Through the Night!", "Wheel and Strike!",
-                     "Circle Behind Them!", "Scout Ahead!", "Jump the Line!"),
+                     "Circle Behind Them!", "Scout Ahead!", "Jump the Line!", "Ride Like the Wind!",
+                     "Sound the Charge!", "Outflank Them!", "Thunder Across the Field!"),
     ("quiet", "b"): ("Bless the Advance!", "Light the Long Road!", "Guard the Diagonal!", "Slip Through the Gap!",
-                     "Watch from Afar!", "Hold the Holy Ground!"),
+                     "Watch from Afar!", "Hold the Holy Ground!", "Strike from the Shadows!",
+                     "Slice Through Their Lines!", "Cut Along the Diagonal!"),
     ("quiet", "r"): ("Raise the Ramparts!", "Man the Walls!", "Hold the Bridge!", "Drop Anchor!",
-                     "Reinforce the Line!", "Shore Up the Walls!"),
+                     "Reinforce the Line!", "Shore Up the Walls!", "Bring Up the Heavy Siege!", "Hold the Fortress!",
+                     "Fortify the File!"),
     ("quiet", "q"): ("Sweep the Field, My Queen!", "Reign over the Board!", "Watch over Them, Majesty!",
-                     "Rule the Field!", "Hunt Them Down!"),
+                     "Rule the Field!", "Hunt Them Down!", "Unleash Her Fury!", "Let the Queen Hunt!"),
     ("quiet", "k"): ("Hold Court!", "Stand Fast, Sire!", "Take Cover, Majesty!", "Guard the Throne!",
-                     "Mind the King!"),
+                     "Mind the King!", "Hold the Keep!", "Steady, Sire!"),
 }
 # What a busy board puts on the end of an order its theme has already given, so no two moves share a title.
 URGE = (", Now!", ", Again!", ", Together!", ", at Once!", ", All of You!", ", to a Man!")
 LONGEST = 48  # the longest title tannergolden/markdown draws in the list
+SHORT = 34  # an order this long or shorter reads at a glance, so the namer tries for one first
 
 # What a part of the board is called, from the side of the piece that lands there.
 # Each place with the word that puts a move there: at the Crossroads, behind Enemy Lines, in the Eastern Woods.
@@ -320,6 +345,10 @@ class Reading:
     smothered: bool = False  # a knight's mate on a king boxed in by its own pieces
     back_rank: bool = False  # a mate on the back rank the king never left
     open_file: bool = False  # a rook on a file with no pawns
+    pin: tuple[str, ...] = ()  # the piece it pins and what it is pinned to: ("n", "k") for a knight held to its king
+    threat: str = ""  # the one piece worth having that it now attacks, when it attacks just one
+    escaped: bool = False  # it was in danger where it stood, and is not where it lands
+    guarded: str = ""  # a piece of its own that was in danger, and is not once it moves
 
 
 def rank_of(index: int, turn: str) -> int:
@@ -344,6 +373,68 @@ def reach(board: tuple[str, ...], index: int) -> list[int]:
                 break
             target = step(target, df, dr)
     return out
+
+
+def cheapest(board: tuple[str, ...], index: int, by: str) -> int | None:
+    """What the cheapest piece of `by` attacking the square is worth, or None when nothing of theirs attacks it."""
+    worth = []
+
+    def theirs(target: int | None, kinds: str) -> None:
+        if target is not None and board[target] and side(board[target]) == by and board[target].lower() in kinds:
+            worth.append(VALUE[board[target].lower()])
+
+    behind = -1 if by == "w" else 1  # a pawn attacks forward, so look back along its way
+    for df in (-1, 1):
+        theirs(step(index, df, behind), "p")
+    for df, dr in KNIGHT:
+        theirs(step(index, df, dr), "n")
+    for df, dr in KING:
+        theirs(step(index, df, dr), "k")
+    for directions, kinds in ((ORTHOGONAL, "rq"), (DIAGONAL, "bq")):
+        for df, dr in directions:
+            target = step(index, df, dr)
+            while target is not None and not board[target]:
+                target = step(target, df, dr)
+            theirs(target, kinds)
+    return min(worth) if worth else None
+
+
+def in_danger(board: tuple[str, ...], index: int) -> bool:
+    """Whether the piece on the square can be taken for profit: attacked and undefended, or attacked by something
+    worth less."""
+    piece = board[index]
+    if not piece or piece.lower() in "kp":
+        return False
+    cheap = cheapest(board, index, other(side(piece)))
+    return cheap is not None and (not attacked(board, index, side(piece)) or cheap < VALUE[piece.lower()])
+
+
+@functools.lru_cache(maxsize=256)
+def endangered(board: tuple[str, ...], turn: str) -> frozenset[int]:
+    """The squares of `turn`'s pieces in danger: the same for every move on a board, so worked out once."""
+    return frozenset(i for i, piece in enumerate(board) if piece and side(piece) == turn and in_danger(board, i))
+
+
+def pins(board: tuple[str, ...], index: int) -> tuple[str, ...]:
+    """The best pin the slider on the square makes: the enemy piece it holds and what that piece shields, its king
+    or its queen."""
+    piece = board[index]
+    lines = {"b": DIAGONAL, "r": ORTHOGONAL, "q": ORTHOGONAL + DIAGONAL}.get(piece.lower(), ())
+    best: tuple[str, ...] = ()
+    for df, dr in lines:
+        found = []
+        target = step(index, df, dr)
+        while target is not None and len(found) < 2:
+            if board[target]:
+                found.append(board[target])
+            target = step(target, df, dr)
+        if len(found) < 2 or any(side(f) == side(piece) for f in found):
+            continue
+        front, back = found[0].lower(), found[1].lower()
+        if front in "nbrq" and (back == "k" or (back == "q" and VALUE[front] < VALUE["q"])):
+            if not best or VALUE[front] > VALUE[best[0]]:
+                best = (front, back)
+    return best
 
 
 def read(position: Position, move: Move, after: Position | None = None, replies: list[Move] | None = None) -> Reading:
@@ -379,6 +470,9 @@ def read(position: Position, move: Move, after: Position | None = None, replies:
     passed = kind == "p" and not any(after.board[f + 8 * (r if turn == "w" else 7 - r)] == ("p" if turn == "w" else "P")
                                      for f in files for r in ahead)
     mate = check and not replies
+    danger = endangered(board, turn)
+    guarded = max((board[i].lower() for i in danger if i != move.start and after.board[i] == board[i]
+                   and not in_danger(after.board, i)), key=lambda k: VALUE[k], default="") if not taken else ""
     boxed = all(after.board[t] and side(after.board[t]) == enemy for t in reach(after.board, enemy_king)
                 if not (after.board[t] and side(after.board[t]) == turn))
     return Reading(
@@ -391,7 +485,11 @@ def read(position: Position, move: Move, after: Position | None = None, replies:
         first_blood=bool(taken) and sum(1 for piece in board if piece) == 32, passed=passed,
         smothered=mate and kind == "n" and boxed,
         back_rank=mate and kind in "rq" and rank_of(enemy_king, turn) == 7 and move.end // 8 == enemy_king // 8,
-        open_file=kind == "r" and not any(after.board[move.end % 8 + 8 * r].lower() == "p" for r in range(8)))
+        open_file=kind == "r" and not any(after.board[move.end % 8 + 8 * r].lower() == "p" for r in range(8)),
+        pin=pins(after.board, move.end) if not check else (),
+        threat=targets[0] if len(targets) == 1 and targets[0] != "k" else "",
+        escaped=not taken and move.start in danger and not in_danger(after.board, move.end),
+        guarded=guarded)
 
 
 def theme(r: Reading) -> str:
@@ -426,8 +524,16 @@ def theme(r: Reading) -> str:
         return "check"
     if r.fork:
         return "fork"
+    if r.pin:
+        return "pin"
+    if r.threat:
+        return "threat"
     if r.exposed:
         return "offering"
+    if r.escaped:
+        return "escape"
+    if r.guarded:
+        return "guard"
     if r.kind == "p":
         if rank_of(r.end, r.turn) == 6:
             return "doorstep"
@@ -465,7 +571,7 @@ def places(r: Reading) -> tuple[tuple[str, str], ...]:
         out += PLACES["center"]
     out += PLACES["throne" if rank == 7 else "deep" if rank >= 5 else "middle" if rank >= 3 else "home"]
     f = r.end % 8
-    if f in (0, 7):
+    if f in (0, 7) and r.kind in "nbp":  # the rim is a minor piece's or a pawn's to be stranded on, not a rook's
         out += PLACES["rim"]
     if f <= 2:
         out += PLACES["queenside"]
@@ -482,21 +588,25 @@ def title(r: Reading, rng: random.Random, used: set[str] = frozenset(), key: str
     # a pattern with fields to fill comes up twice as often as a fixed order, so the titles keep surprising
     patterns = [p for p in patterns + OWN.get((key, r.kind), ()) for _ in range(2 if "{" in p else 1)]
     fresh = [p for p in patterns if p not in used] or patterns
-    for _ in range(16):
+    sideways = r.advance == 0 and r.kind in SHIFT  # a rook, queen or king moving along its own rank
+    involved = r.threat or (r.pin[0] if r.pin else "") or r.guarded or "p"  # the other piece a title can name
+    for attempt in range(28):
         pattern = rng.choice(fresh)
         at, place = rng.choice(places(r))
         name = pattern.format(
             P=PIECES[r.crown or r.kind].capitalize(), T=PIECES.get(r.taken, "").capitalize(),
             troop=rng.choice(TROOP[r.kind]), one=rng.choice(ONE[r.kind]), call=rng.choice(CALL[r.kind]),
-            send=rng.choice(SEND[r.kind]), cry=rng.choice(CRY[r.kind]),
+            send=rng.choice(SHIFT[r.kind] if sideways else SEND[r.kind]), cry=rng.choice(CRY[r.kind]),
             go=f"{rng.choice(FORM)} {at} {place}" if (at, place) in PLACES["home"] else
             f"{rng.choice(TOWARD[r.kind])} {place}",
             strike=rng.choice(STRIKE[r.kind]), foe=rng.choice(TROOP.get(r.taken) or ("",)), fierce=rng.choice(FIERCE),
-            place=place, at=f"{at} {place}", pair=" and ".join(PIECES[k].capitalize() for k in r.fork[:2]))
+            place=place, at=f"{at} {place}", pair=" and ".join(PIECES[k].capitalize() for k in r.fork[:2]),
+            X=PIECES[involved].capitalize(), xone=rng.choice(ONE[involved]), xfoe=rng.choice(TROOP[involved]),
+            Y=PIECES[r.pin[1]].capitalize() if r.pin else "")
         name = re.sub(r"\bA (?=[AEIOU])", "An ", name)  # the article goes with the word filled in after it
-        if len(name) <= LONGEST:
+        if len(name) <= (SHORT if attempt < 12 else LONGEST):  # a short order reads best, so it gets the first tries
             break
-    else:  # sixteen orders too long to draw: the theme's shortest fixed one
+    else:  # no order short enough to draw: the theme's shortest fixed one
         pattern = name = min((p for p in patterns if "{" not in p), key=len)
     emoji = emoji or EMOJI[r.kind]
     return rng.choice([e for e in emoji if e not in used] or emoji), name, pattern

@@ -69,6 +69,19 @@ one from data measured on a schedule.
 
 ---
 
+## ♟️ Play Against Me
+
+I play White, and you play Black, with everyone else on GitHub. Pick a move
+under the board, and its link opens a ready-made issue in
+[`play`](https://github.com/tannergolden/play): submit it as it opens. The
+first move to reach the game is the one played. The Official Arbiter rules on
+it, answers on your issue, and redraws this board within a few minutes.
+
+<!-- markdown:element:chess:start -->
+<!-- markdown:element:chess:end -->
+
+---
+
 ## 💡 How It Fits Together
 
 Follow the arrows from the rules to this page.

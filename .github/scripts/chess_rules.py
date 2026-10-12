@@ -15,12 +15,15 @@ e8=Q+, Qh4#).
 
 A game ends when the rules end it, with nobody asking: checkmate, stalemate,
 a fivefold repetition, seventy-five moves each with no capture and no pawn
-moved, or too little material left for either side to mate. Those are the
-draws FIDE makes automatic; the threefold repetition and the fifty-move rule
-are only ever claimed, and nobody here claims. Stdlib only.
+moved, too little material left for either side to mate, or a position no
+series of moves could ever mate from, such as kings shut out behind locked
+pawns. Those are the draws FIDE makes automatic; the threefold repetition and
+the fifty-move rule are only ever claimed, and nobody here claims. A position
+read from FEN is held to what a game can reach. Stdlib only.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 FILES = "abcdefgh"
@@ -36,6 +39,10 @@ SLIDES = {"b": DIAGONAL, "r": ORTHOGONAL, "q": ORTHOGONAL + DIAGONAL}
 # Moving from or onto one of these squares loses the castling rights named:
 # the king's square both, a rook's corner its own side.
 RIGHTS_LOST = {4: "KQ", 0: "Q", 7: "K", 60: "kq", 56: "q", 63: "k"}
+# Where a right's king and rook stand while it holds.
+RIGHTS_HOME = {"K": (4, "K", 7, "R"), "Q": (4, "K", 0, "R"), "k": (60, "k", 63, "r"), "q": (60, "k", 56, "r")}
+UCI = re.compile(r"[a-h][1-8][a-h][1-8][qrbn]?")
+CLOCK = re.compile(r"[0-9]{1,6}")
 
 
 class FenError(ValueError):
@@ -44,6 +51,8 @@ class FenError(ValueError):
 
 def square(label: str) -> int:
     """`e4` as an index from 0 (a1) to 63 (h8)."""
+    if len(label) != 2 or label[0] not in FILES or label[1] not in "12345678":
+        raise ValueError(f"{label!r} is not a square")
     return FILES.index(label[0]) + 8 * (int(label[1]) - 1)
 
 
@@ -79,6 +88,8 @@ class Move:
 
     @classmethod
     def from_uci(cls, text: str) -> Move:
+        if not UCI.fullmatch(text):
+            raise ValueError(f"{text!r} is not a move in UCI")
         return cls(square(text[0:2]), square(text[2:4]), text[4:5])
 
 
@@ -103,8 +114,10 @@ class Position:
         board = [""] * 64
         for row, text in enumerate(ranks):
             rank, f = 7 - row, 0
-            for char in text:
-                if char.isdigit():
+            for i, char in enumerate(text):
+                if char in "12345678":
+                    if i and text[i - 1] in "12345678":
+                        raise FenError(f"rank {rank + 1} of {fen!r} counts its empty squares twice in a row")
                     f += int(char)
                 elif char in "PNBRQKpnbrqk":
                     if f > 7:
@@ -115,7 +128,7 @@ class Position:
                     raise FenError(f"{char!r} is not a piece")
             if f != 8:
                 raise FenError(f"rank {rank + 1} of {fen!r} has {f} squares, not 8")
-        if turn not in ("w", "b") or not halfmove.isdigit() or not fullmove.isdigit():
+        if turn not in ("w", "b") or not CLOCK.fullmatch(halfmove) or not CLOCK.fullmatch(fullmove) or fullmove == "0":
             raise FenError(f"{fen!r} has a malformed turn or clock")
         if castling != "-" and (not set(castling) <= set("KQkq") or len(set(castling)) != len(castling)):
             raise FenError(f"{castling!r} is not a set of castling rights")
@@ -123,8 +136,18 @@ class Position:
             raise FenError(f"{ep!r} is not an en passant square with {turn} to move")
         if board.count("K") != 1 or board.count("k") != 1:
             raise FenError(f"{fen!r} does not have one king a side")
-        return cls(tuple(board), turn, "" if castling == "-" else castling,
-                   None if ep == "-" else square(ep), int(halfmove), int(fullmove))
+        if ep != "-":
+            # the square a pawn just passed over: empty, with the square it left empty and the pawn beyond it
+            passed, back = square(ep), 8 if turn == "w" else -8
+            if board[passed] or board[passed + back] or board[passed - back] != ("p" if turn == "w" else "P"):
+                raise FenError(f"{ep!r} is not a square a pawn just passed over")
+        # a right holds only while its king and rook stand at home, and the rights are written in KQkq order
+        rights = "".join(right for right in "KQkq" if right in castling
+                         and board[RIGHTS_HOME[right][0]] == RIGHTS_HOME[right][1]
+                         and board[RIGHTS_HOME[right][2]] == RIGHTS_HOME[right][3])
+        if attacked(tuple(board), board.index("k" if turn == "w" else "K"), turn):
+            raise FenError(f"{fen!r} leaves the side not to move in check")
+        return cls(tuple(board), turn, rights, None if ep == "-" else square(ep), int(halfmove), int(fullmove))
 
     @property
     def fen(self) -> str:
@@ -339,9 +362,37 @@ def insufficient(position: Position) -> bool:
     return False
 
 
+def dead(position: Position, limit: int = 10_000) -> bool:
+    """A dead position past bare material (FIDE 5.2.2): only kings and pawns left, and no pawn move, capture or mate
+    ever possible, however the kings walk. It walks every position the kings can reach to prove it, so a position is
+    only ever called dead when it is; a walk too long to finish says it is not."""
+    if any(piece and piece.lower() not in "kp" for piece in position.board):
+        return False
+    if not any(piece and piece.lower() == "p" for piece in position.board):
+        return True  # kings alone
+    seen, todo = set(), [position]
+    while todo:
+        here = todo.pop()
+        key = (here.board, here.turn)
+        if key in seen:
+            continue
+        seen.add(key)
+        if len(seen) > limit:
+            return False
+        moves = legal_moves(here)
+        if not moves and in_check(here):
+            return False  # a mate can be reached
+        for move in moves:
+            if here.board[move.start].lower() == "p" or here.board[move.end]:
+                return False  # a pawn can move, or something can be taken
+            todo.append(make(here, move))
+    return True
+
+
 @dataclass(frozen=True)
 class Ending:
-    reason: str  # checkmate, stalemate, fivefold repetition, seventy-five-move rule, insufficient material
+    reason: str  # checkmate, stalemate, fivefold repetition, seventy-five-move rule, insufficient material, or a
+    # dead position
     winner: str | None  # w or b for a checkmate, None for a draw
 
     @property
@@ -356,6 +407,8 @@ def ending(history: list[Position]) -> Ending | None:
         return Ending("checkmate", other(position.turn)) if in_check(position) else Ending("stalemate", None)
     if insufficient(position):
         return Ending("insufficient material", None)
+    if dead(position):
+        return Ending("dead position", None)
     if position.halfmove >= 150:
         return Ending("seventy-five-move rule", None)
     key = repetition_key(position)

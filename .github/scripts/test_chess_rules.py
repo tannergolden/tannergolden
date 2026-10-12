@@ -87,6 +87,36 @@ class Fen(unittest.TestCase):
             with self.subTest(fen=fen), self.assertRaises(rules.FenError):
                 position(fen)
 
+    def test_refuses_a_position_no_game_can_reach(self):
+        for fen in ("4k2R/8/8/8/8/8/8/4K3 w - - 0 1",  # Black in check with White to move
+                    "8/8/8/8/8/8/8/Kk6 w - - 0 1",  # kings side by side
+                    "4k3/8/8/3PN3/8/8/8/4K3 w - e6 0 1",  # no pawn passed e6: a knight stands on e5
+                    "4k3/8/4N3/3P4/8/8/8/4K3 w - e6 0 1",  # nor with a knight on e6 itself
+                    "rnbqkbnr/pppp0ppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                    "rnbqkbnr/pppppppp/44/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                    "rnbqkbnr/pppppppp/\uff18/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - \u00b2 1",
+                    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0",
+                    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1234567 1"):
+            with self.subTest(fen=fen), self.assertRaises(rules.FenError):
+                position(fen)
+
+    def test_keeps_only_the_castling_rights_its_pieces_still_hold_in_order(self):
+        self.assertEqual(position("4k3/8/8/8/8/8/8/4K3 w KQkq - 0 1").castling, "")
+        self.assertEqual(position("r3k2r/8/8/8/8/8/8/R3K2R w kqKQ - 0 1").castling, "KQkq")
+        self.assertEqual(position("r3k3/8/8/8/8/8/8/4K2R w KQkq - 0 1").castling, "Kq")
+        shuffle = ["a1b3", "e8f8", "b3a1", "f8e8"] * 4  # a knight's walk: a rook was never there to castle with
+        positions = play(*shuffle, fen="4k3/8/8/8/3R4/8/8/N3K3 w Q - 0 1")
+        self.assertEqual([i for i in range(1, len(positions) + 1) if rules.ending(positions[:i])][:1], [17])
+
+    def test_a_move_or_a_square_out_of_shape_is_refused(self):
+        for text in ("", "e2", "i2e4", "E2E4", "0000", "e0e4", "h0h1", "e9e4", "e\u0662e\u0664", "e7e8Q", "e7e8k"):
+            with self.subTest(uci=text), self.assertRaises(ValueError):
+                rules.Move.from_uci(text)
+        for text in ("", "e", "e0", "i1", "e10", "E2"):
+            with self.subTest(square=text), self.assertRaises(ValueError):
+                rules.square(text)
+
 
 class SpecialMoves(unittest.TestCase):
     def ucis(self, fen: str) -> set[str]:
@@ -102,7 +132,7 @@ class SpecialMoves(unittest.TestCase):
     def test_never_castles_out_of_through_or_into_check(self):
         self.assertNotIn("e1g1", self.ucis("4r1k1/8/8/8/8/8/8/4K2R w K - 0 1"))  # out of check
         self.assertNotIn("e1g1", self.ucis("5rk1/8/8/8/8/8/8/4K2R w K - 0 1"))  # through f1
-        self.assertNotIn("e1g1", self.ucis("6rk/8/8/8/8/8/8/4K2R w K - 0 1"))  # into g1
+        self.assertNotIn("e1g1", self.ucis("k5r1/8/8/8/8/8/8/4K2R w K - 0 1"))  # into g1
         self.assertIn("e1c1", self.ucis("1r2k3/8/8/8/8/8/8/R3K3 w Q - 0 1"))  # b1 attacked is fine
 
     def test_castling_moves_the_rook_and_spends_the_rights(self):
@@ -168,6 +198,17 @@ class Endings(unittest.TestCase):
                     "8/8/8/4k3/8/8/4P3/4K3 w - - 0 1", "n7/8/8/4k3/8/8/8/4KB2 w - - 0 1"):
             with self.subTest(fen=fen):
                 self.assertIsNone(rules.ending([position(fen)]))
+
+    def test_kings_shut_out_behind_locked_pawns_are_a_dead_draw(self):
+        for fen in ("8/8/8/1k6/p1p1p1p1/P1P1P1P1/8/7K w - - 0 1", "8/8/8/1k6/p1p1p1p1/P1P1P1P1/8/7K b - - 0 1"):
+            with self.subTest(fen=fen):
+                self.assertEqual(rules.ending([position(fen)]).reason, "dead position")
+        for fen in ("8/8/8/1k6/p1p1p1p1/P1P1P3/8/7K w - - 0 1",  # a gap: g4 can push
+                    "8/8/8/4k3/8/8/4P3/4K3 w - - 0 1",  # a free pawn
+                    "8/8/8/1k6/p1p1p1p1/P1P1P1P1/7N/7K w - - 0 1"):  # a knight can break in
+            with self.subTest(fen=fen):
+                self.assertIsNone(rules.ending([position(fen)]))
+        self.assertTrue(rules.dead(position("8/8/8/4k3/8/8/8/4K3 w - - 0 1")), "kings alone are dead too")
 
     def test_seventy_five_quiet_moves_each_are_a_draw_but_not_seventy_four(self):
         self.assertIsNone(rules.ending([position("4k3/8/8/8/8/8/R7/4K3 w - - 149 90")]))

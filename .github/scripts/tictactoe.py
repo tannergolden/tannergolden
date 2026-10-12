@@ -16,9 +16,9 @@ Arbiter opened for GitHub. The board sets out the marks as three rows, top
 first (`O../XX./O.X`), the side the Arbiter opened for (`opens`), and once
 the game is won, the three cells it was won on (`line`). Nothing on the page
 helps a player choose: no cell a side could win on next, no word of what
-perfect play says, and no block called out, in the board, the banner or a
-reply. The rules are tictactoe_rules.py's and the names tictactoe_names.py's.
-Stdlib only.
+perfect play says, and no block called out, in the board or a reply. The
+rules are tictactoe_rules.py's and the names tictactoe_names.py's. Stdlib
+only.
 """
 from __future__ import annotations
 
@@ -94,11 +94,6 @@ def alarm(position: R.Position) -> str:
     return ""
 
 
-def calls(position: R.Position) -> list[str]:
-    """What the banner tells the side to move: nothing beyond whose turn it is."""
-    return []
-
-
 def fields(game: dict, positions: list[R.Position], over: bool) -> dict:
     """The board's own fields: the marks and the side the Arbiter opened for."""
     return {"board": positions[-1].board, "opens": game["opens"]}
@@ -112,16 +107,3 @@ def marked(before: R.Position, code: str) -> dict:
 def cry(end, loser: str) -> str:
     """The winning reply's call."""
     return "three in a row!"
-
-
-def summary(end, positions: list[R.Position]) -> str:
-    """How the game ended, as the final board's banner says it."""
-    if end.winner is None:
-        return "A full board, and no three in a row"
-    a, b, c = end.line
-    return f"{WORDS[end.winner]} struck {a}, {b} and {c}"
-
-
-def opening(code: str, side: str) -> list[str]:
-    """The Arbiter's opening for `side` as a fresh board's banner names it, longest first."""
-    return [f"{WORDS[side]} on {code}"]

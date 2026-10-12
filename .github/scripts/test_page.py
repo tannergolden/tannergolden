@@ -41,9 +41,7 @@ class Days(unittest.TestCase):
                          ("12 Oct", "12 Oct, 22:30 EST", "2026-10-13T03:30:00Z"))
         self.assertEqual(page.date(page.parse("2027-01-01T02:00:00Z")), "31 Dec 2026", "the year the page's day is in")
 
-    def test_a_banner_takes_the_first_wording_that_fits_and_a_note_its_sentences_that_fit(self):
-        self.assertEqual(page.fit(["x" * 92, "y" * 91, "z"]), "y" * 91)
-        self.assertEqual(page.fit(["x" * 92, "y" * 95]), "y" * 95, "the last, the shortest way to say it")
+    def test_a_note_takes_the_sentences_that_fit(self):
         said = page.sentences([("One.", True), ("x" * 392, False), ("Two.", True), ("Three.", False)])
         self.assertEqual(said, "One. Two. Three.", "a sentence that may be said is left out when it won't fit")
         said = page.sentences([("One.", True), ("x" * 390, False), ("Two.", True), ("Three.", False)])

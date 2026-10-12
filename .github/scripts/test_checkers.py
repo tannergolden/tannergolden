@@ -138,9 +138,8 @@ class Opening(unittest.TestCase):
         self.assertFalse(games.tick(mod, started.game, [], OWNER, T0 + HOUR).changed, "and only once")
         element = games.board(mod, started.game, [], OWNER, T0 + HOUR)
         due = page.day(T0 + page.WEEK)
-        self.assertEqual(element["prompt"], f"🟢 **GitHub's turn!** GitHub opens game 1 as Black. Pick a move below by"
-                                            f" {due}.")
-        self.assertEqual((element["fen"], element["kings"], element["due"]), (R.START.fen, {HOUSE: 0, GITHUB: 0}, due))
+        self.assertEqual((element["game"], element["fen"], element["kings"], element["due"]),
+                         (1, R.START.fen, {HOUSE: 0, GITHUB: 0}, due))
         self.assertNotIn("dark", element)
         self.assertEqual([entry[2] for entry in element["moves"]],
                          ["9-13", "9-14", "10-14", "10-15", "11-15", "11-16", "12-16"])
@@ -152,8 +151,8 @@ class Opening(unittest.TestCase):
 
     def test_a_board_drawn_before_any_run_reached_the_game_is_github_s_turn_too(self):
         element = games.board(games.rules("checkers"), None, [], OWNER, T0)
-        self.assertEqual((element["game"], element["due"]), (1, page.day(T0 + page.WEEK)))
-        self.assertTrue(element["prompt"].startswith("🟢 **GitHub's turn!** GitHub opens game 1 as Black."))
+        self.assertEqual((element["game"], element["fen"], element["due"]), (1, R.START.fen, page.day(T0 + page.WEEK)))
+        self.assertIn(games.who_plays(GITHUB, OWNER), element["note"])
 
     def test_the_owner_cannot_open_for_github_and_nobody_else_can_reply_for_the_house(self):
         table = Table()
@@ -191,7 +190,6 @@ class Jumps(unittest.TestCase):
         table.play(DARK_WINS[:before])
         element = table.board()
         self.assertEqual(element["alert"], "must jump")
-        self.assertRegex(element["prompt"], r"(A jump must be taken|Must jump)! ")
         self.assertTrue(all("x" in entry[2] for entry in element["moves"]), "only the jumps are listed")
         reply = table.outcomes[-1].comment
         self.assertIn(" A jump must be taken!**", reply)
@@ -267,8 +265,7 @@ class Endings(unittest.TestCase):
                 self.assertEqual((table.hall[-1]["winner"], table.hall[-1]["reason"], table.hall[-1]["result"]),
                                  (None, reason, "1/2-1/2"))
                 element = table.board()
-                self.assertEqual(element["result"], {"winner": None, "how": reason})
-                self.assertTrue(element["prompt"].startswith("🤝 **Game 1 is drawn!**"))
+                self.assertEqual((element["game"], element["result"]), (1, {"winner": None, "how": reason}))
                 self.assertIn(f"Drawn {said}.", outcome.record[1])
 
 
@@ -278,12 +275,10 @@ class TwoDays(unittest.TestCase):
         table.play(LIGHT_WINS)
         opens = page.parse(table.game["started"])
         element = table.board()
-        self.assertEqual((element["result"], element["next"]), ({"winner": HOUSE, "how": "no move left"},
-                                                                page.day(opens)))
+        self.assertEqual((element["game"], element["result"], element["next"]),
+                         (1, {"winner": HOUSE, "how": "no move left"}, page.day(opens)))
         for missing in ("moves", "due", "alert", "dark"):
             self.assertNotIn(missing, element)
-        self.assertEqual(element["prompt"],
-                         f"🏆 **@tannergolden wins game 1!** Black has no move left. Game 2 opens {page.day(opens)}.")
         refused = table.move("11-15", game=2, move=1)
         self.assertEqual(refused.comment, f"⏳ **Game 2 opens {page.day(opens)}**, so `11-15` wasn't played.\nGame 1's"
                                           f" final board stays up until then: pick a move from {BOARD} once game 2 is"
@@ -293,9 +288,8 @@ class TwoDays(unittest.TestCase):
         element = table.board()
         self.assertEqual((element["game"], element["due"], element["fen"]), (2, page.day(opens + page.WEEK),
                                                                               R.START.fen))
-        self.assertEqual(element["prompt"], f"🟢 **GitHub's turn!** @tannergolden won game 1. GitHub opens game 2 by"
-                                            f" {page.day(opens + page.WEEK)}.")
         self.assertTrue(element["note"].startswith("GitHub plays Black, which moves first in American checkers"))
+        self.assertIn(games.who_plays(GITHUB, OWNER), element["note"])
         late = table.wait(page.WEEK)
         self.assertTrue(late.changed, "a week after the fresh board came, the Arbiter opens for GitHub")
         self.assertEqual(late.issue, table.hall[-1]["deciding"]["issue"], "told on the issue of the game's last move")
@@ -341,12 +335,10 @@ class Board(unittest.TestCase):
             with self.subTest(game=element["game"], move=element["move"]):
                 self.assertRegex(element["fen"], KIT_FEN)
                 self.assertTrue(all(0 <= n <= 12 for n in element["kings"].values()))
-                for field in ("prompt", "note"):
-                    self.assertTrue(KIT_LINE.fullmatch(element[field]) and not KIT_BLOCK.match(element[field]),
-                                    element[field])
-                    for dash in DASHES:
-                        self.assertNotIn(dash, element[field])
-                self.assertLessEqual(len(element["prompt"]), page.BANNER, element["prompt"])
+                note = element["note"]
+                self.assertTrue(KIT_LINE.fullmatch(note) and not KIT_BLOCK.match(note), note)
+                for dash in DASHES:
+                    self.assertNotIn(dash, note)
                 for row in element["history"]:
                     self.assertTrue(all(cell == "" or KIT_MOVE.fullmatch(cell) for cell in row[1:3]), row)
                     self.assertTrue(row[3] == "" or KIT_WHO.fullmatch(row[3]), row)
@@ -361,18 +353,10 @@ class Board(unittest.TestCase):
                     self.assertRegex(notation, KIT_MOVE)
                     self.assertRegex(words, KIT_WORDS)
 
-    def test_a_long_jump_s_banner_still_fits_one_line(self):
-        for shown in ("99999. 1x10x19x28x19x10x1", "99999... 32x23x14x5x14x23x32"):
-            for side, movers in ((HOUSE, ("The Arbiter", "GitHub")), (GITHUB, ("The Arbiter", "@tannergolden"))):
-                for mover in movers:
-                    banner = games.turn_banner(side, OWNER, mover, shown, ["A jump must be taken! ", "Must jump! "],
-                                               "28 Sep")
-                    self.assertLessEqual(len(banner), page.BANNER, banner)
-
     def test_no_reply_or_commit_has_a_long_dash_or_an_old_side_word_and_no_refusal_pings(self):
         texts = []
         for element, table in self.boards():
-            texts += [*table.texts, element["prompt"], element["note"]]
+            texts += [*table.texts, element["note"]]
             texts += [outcome.record[1] for outcome in table.outcomes if outcome.record]
         for dash in DASHES:
             self.assertNotIn(dash, "".join(texts))

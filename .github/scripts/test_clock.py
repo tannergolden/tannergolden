@@ -64,10 +64,10 @@ class Run(unittest.TestCase):
         return " ".join(self.commit().split())
 
     def stale(self, key: str) -> None:
-        """Sets `key`'s board out as an older engine would have: its banner in other words, and no game moved."""
+        """Sets `key`'s board out as an older engine would have: its note in other words, and no game moved."""
         text = self.settings.read_text(encoding="utf-8")
         start, end = text.index(f"# {key}:start"), text.index(f"# {key}:end")
-        region = re.sub(r"(?m)^(    prompt: ).*$", r'\1"An older banner."', text[start:end], count=1)
+        region = re.sub(r"(?m)^(    note: ).*$", r'\1"An older note."', text[start:end], count=1)
         self.assertNotEqual(region, text[start:end])
         self.settings.write_text(text[:start] + region + text[end:], encoding="utf-8")
 

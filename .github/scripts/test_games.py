@@ -12,6 +12,9 @@ GitHub O and Black, and the Arbiter opens every game of both, for a side it
 draws at random, with a random move, so either can move first. A table
 starts at the first minute whose draw gives the side and the opening move
 the test asks for, so a game's line can be written down.
+
+One test goes past the two games: it sets out every kind of board in all
+four, to hold that none carries a banner over it.
 """
 from __future__ import annotations
 
@@ -28,6 +31,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import chess
 import games
 import page
 from page import GITHUB, HOUSE, other
@@ -74,6 +78,7 @@ C4_FIRST_ACROSS = list("4113317237274")  # the opener connects across row 2
 C4_DRAW = list("467516245217422716242761435431776133653535")  # forty-two discs and no four in a row
 LINES = {"tictactoe": (TTT_FIRST_WINS, TTT_SECOND_WINS, TTT_DRAW),
          "connectfour": (C4_FIRST_UP, C4_SECOND_UP, C4_FIRST_DIAGONAL, C4_FIRST_ACROSS, C4_DRAW)}
+FOOLS_MATE = ["f2f3", "e7e5", "g2g4", "d8h4"]  # chess: the house opens, and GitHub mates on its second move
 SIDE_WORDS = re.compile(r"\b(?:[Dd]ark|[Ll]ight)\b")  # the old side words, which nothing a reader sees says now
 WHY = re.compile(r"255,168|131,184|77,904|46,080|1988|Allis|Allen|far more often|force a win|wins more")
 # The two games live on the profile when each player's colour was fixed, as their state holds them after the move
@@ -164,7 +169,7 @@ def tables(line: list[str] | None = None):
 
 
 def unsaid(text: str) -> str:
-    """A reply, banner or note without the move titles it quotes, which are calls in each game's own words."""
+    """A reply or note without the move titles it quotes, which are calls in each game's own words."""
     return re.sub(r"\*[^*\n]+!\*", "", text)
 
 
@@ -224,16 +229,9 @@ class Opening(unittest.TestCase):
                          "the house's discs are the light ones, the board's L")
 
     def test_the_fresh_board_names_the_side_and_the_move_and_who_opens_but_never_why(self):
-        said = {
-            ("tictactoe", HOUSE): "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with X on b2, at"
-                                  " random.",
-            ("tictactoe", GITHUB): "🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on b2, at"
-                                   " random.",
-            ("connectfour", HOUSE): "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪4, at"
-                                    " random.",
-            ("connectfour", GITHUB): "🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with ⚫4, at"
-                                     " random.",
-        }
+        first = {("tictactoe", HOUSE): (".../.X./...", "Xb2"), ("tictactoe", GITHUB): (".../.O./...", "Ob2"),
+                 ("connectfour", HOUSE): ("......./......./......./......./......./...L...", "4"),
+                 ("connectfour", GITHUB): ("......./......./......./......./......./...D...", "4")}
         opened = {"tictactoe": "@tannergolden always plays X and GitHub O, and the Arbiter opens every game for a side"
                                " drawn at random, with a random first move.",
                   "connectfour": "@tannergolden always drops the white discs and GitHub the black, and the Arbiter"
@@ -241,7 +239,8 @@ class Opening(unittest.TestCase):
         for key, opens, table in tables():
             element = table.board()
             with self.subTest(key=key, opens=opens):
-                self.assertEqual(element["prompt"], said[key, opens])
+                self.assertEqual((element["game"], element["opens"], element["board"], element["last"]["move"]),
+                                 (1, opens, *first[key, opens]))
                 self.assertTrue(element["note"].startswith(opened[key]), element["note"])
                 self.assertNotRegex(element["note"], WHY, "who opens, never why")
                 self.assertIn(games.who_plays(other(opens), OWNER), element["note"])
@@ -374,8 +373,10 @@ class Turns(unittest.TestCase):
         element = table.board()
         for hint in ("alert", "threats", "outlook"):
             self.assertNotIn(hint, element)
-        self.assertEqual(element["prompt"], "🟢 **GitHub's turn!** @tannergolden played 2. Xa1. Pick a move below by"
-                                            f" {page.day(table.clock + page.WEEK)}.")
+        self.assertEqual((element["last"]["move"], element["last"]["by"], element["due"]),
+                         ("Xa1", "@tannergolden", page.day(table.clock + page.WEEK)))
+        self.assertTrue(element["note"].startswith(games.who_plays(GITHUB, OWNER)), element["note"])
+        self.assertNotRegex(element["note"], r"(?i)block|threat")
         self.assertEqual({entry[0] for entry in element["moves"]} - {"📐", "📏", "🔳"}, set(),
                          "every cell's emoji names the cell, never the block or a blunder")
         block = next(entry for entry in element["moves"] if entry[2] == "Oc3")
@@ -478,26 +479,23 @@ class Endings(unittest.TestCase):
                          ("GitHub", "0-1", 3))
 
     def test_every_way_connect_four_is_won_and_a_full_frame_drawn(self):
-        cases = {
-            "up": (C4_FIRST_UP, HOUSE, "4. ⚪4#", "1-0", [[4, 1], [4, 2], [4, 3], [4, 4]],
-                   "Four white discs up column 4"),
-            "second": (C4_SECOND_UP, HOUSE, "7... ⚫5#", "0-1", [[5, 1], [5, 2], [5, 3], [5, 4]],
-                       "Four black discs up column 5"),
-            "diagonal": (C4_FIRST_DIAGONAL, HOUSE, "8. ⚪3#", "1-0", [[1, 1], [2, 2], [3, 3], [4, 4]],
-                         "Four white discs on a diagonal"),
-            "across": (C4_FIRST_ACROSS, GITHUB, "7. ⚫4#", "0-1", [[1, 2], [2, 2], [3, 2], [4, 2]],
-                       "Four black discs across row 2"),
-            "second after github": (C4_SECOND_UP, GITHUB, "7... ⚪5#", "1-0", [[5, 1], [5, 2], [5, 3], [5, 4]],
-                                    "Four white discs up column 5"),
+        cases = {  # each line, the side the Arbiter opened for, the deciding move, the result, the four and the winner
+            "up": (C4_FIRST_UP, HOUSE, "4. ⚪4#", "1-0", [[4, 1], [4, 2], [4, 3], [4, 4]], HOUSE),
+            "second": (C4_SECOND_UP, HOUSE, "7... ⚫5#", "0-1", [[5, 1], [5, 2], [5, 3], [5, 4]], GITHUB),
+            "diagonal": (C4_FIRST_DIAGONAL, HOUSE, "8. ⚪3#", "1-0", [[1, 1], [2, 2], [3, 3], [4, 4]], HOUSE),
+            "across": (C4_FIRST_ACROSS, GITHUB, "7. ⚫4#", "0-1", [[1, 2], [2, 2], [3, 2], [4, 2]], GITHUB),
+            "second after github": (C4_SECOND_UP, GITHUB, "7... ⚪5#", "1-0", [[5, 1], [5, 2], [5, 3], [5, 4]], HOUSE),
         }
-        for name, (line, opens, deciding, result, cells, summary) in cases.items():
+        for name, (line, opens, deciding, result, cells, winner) in cases.items():
             table = Table("connectfour", opens)
             table.play(line)
             record = table.hall[-1]
             with self.subTest(name):
                 self.assertEqual((record["deciding"]["move"], record["result"], record["reason"], record["line"]),
                                  (deciding, result, "four in a row", cells))
-                self.assertIn(summary, table.board()["prompt"])
+                element = table.board()
+                self.assertEqual((element["result"], element["line"]),
+                                 ({"winner": winner, "how": "four in a row"}, cells), "the final board shows the four")
         table = Table("connectfour", HOUSE)
         outcome = table.play(C4_DRAW)
         self.assertTrue(outcome.comment.startswith("🤝 **21... ⚫5: game 1 is drawn on a full frame.**\n"))
@@ -558,8 +556,6 @@ class TwoDays(unittest.TestCase):
                                               [4, "Xa3#", "", ""]])
         for missing in ("moves", "due", "threats", "outlook", "alert"):
             self.assertNotIn(missing, element)
-        self.assertEqual(element["prompt"],
-                         f"🏆 **@tannergolden wins game 1!** X struck a3, b2 and c1. Game 2 opens {page.day(opens)}.")
         self.assertTrue(element["note"].startswith(f"Game 1 is over, and its final board stays up for two days:"
                                                    f" game 2 opens {page.until(opens)}, and nothing can be played until"
                                                    " then."))
@@ -568,7 +564,7 @@ class TwoDays(unittest.TestCase):
         element = table.board()
         self.assertEqual((element["result"], element["opens"]), ({"winner": None, "how": "a full frame"}, GITHUB))
         self.assertNotIn("light", element)
-        self.assertTrue(element["prompt"].startswith("🤝 **Game 1 is drawn!** A full frame, and no four in a row."))
+        self.assertEqual((element["game"], element["next"]), (1, page.day(page.parse(table.game["started"]))))
         self.assertNotIn("line", element)
 
     def test_a_move_meanwhile_is_told_the_day_the_next_game_opens(self):
@@ -599,8 +595,10 @@ class TwoDays(unittest.TestCase):
         element = table.board()
         self.assertNotIn("result", element)
         self.assertEqual((element["game"], element["due"]), (2, page.day(opens + page.WEEK)))
-        self.assertRegex(element["prompt"], r"The Arbiter opened game 2 for (GitHub with O|@tannergolden with X) on"
-                                            r" [a-c][1-3], at random\.$")
+        opening = table.game["moves"][0]
+        self.assertEqual((element["opens"], element["last"]["move"], element["last"]["by"]),
+                         (table.game["opens"], table.mod.WORDS[table.game["opens"]] + opening["move"], "the Arbiter"))
+        self.assertTrue(element["note"].startswith(table.mod.OPENS_NOTE.format(owner=OWNER)), element["note"])
         over = table.move("a1", player=OCTOCAT, game=1, move=8)
         self.assertEqual(over.comment, "⌛ **Game 1 is over**, so `a1` wasn't played.\nGame 2 is under way on"
                                        f" {BOARD}: pick a move there.\n", "once game 2 is on the board")
@@ -624,12 +622,9 @@ class Live(unittest.TestCase):
 
     def test_the_live_games_replay_and_set_out_the_right_boards(self):
         moment = page.parse("2026-10-12T17:00:00Z")
-        want = {
-            "tictactoe": (".../.../O..", ("🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on"
-                                          " a1, at random."), "X"),
-            "connectfour": ("......./......./......./......./......./.....L.",
-                            "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪6, at random.",
-                            "A black disc"),
+        want = {  # the board, the Arbiter's opening as the board writes it, and how each move listed begins
+            "tictactoe": (".../.../O..", "Oa1", "X"),
+            "connectfour": ("......./......./......./......./......./.....L.", "6", "A black disc"),
         }
         for key, game in LIVE.items():
             mod = games.rules(key)
@@ -638,9 +633,9 @@ class Live(unittest.TestCase):
                 for position, played in zip(positions, game["moves"]):
                     self.assertEqual(mod.shown(position, played["move"]), played["shown"])
                 element = games.board(mod, game, [], OWNER, moment)
-                board, prompt, mover = want[key]
-                self.assertEqual((element["board"], element["opens"], element["prompt"], element["due"]),
-                                 (board, game["opens"], prompt, "19 Oct"))
+                board, opening, mover = want[key]
+                self.assertEqual((element["board"], element["opens"], element["due"]), (board, game["opens"], "19 Oct"))
+                self.assertEqual((element["last"]["move"], element["last"]["by"]), (opening, "the Arbiter"))
                 self.assertEqual(element["history"], [[1, game["moves"][0]["shown"].lstrip("⚪⚫"), "",
                                                        "the Arbiter" if game["opens"] == GITHUB else ""]])
                 self.assertTrue(all((entry[2] if key == "tictactoe" else entry[3]).startswith(mover)
@@ -715,6 +710,37 @@ class Board(unittest.TestCase):
                     table.fresh()
                     yield table.board(), table
 
+    def every_kind(self):
+        """A board of every kind in all four games, each with its game and its kind: a fresh board, the Arbiter's
+        opening, a turn and a final board. The Arbiter plays this engine's three games alone, a move a week, from the
+        first run to the next game's fresh board; in chess the house opens and GitHub mates, and the Arbiter opens the
+        next game after a week without a move."""
+        for key in games.GAMES:
+            mod, moment = games.rules(key), T0
+            game, hall = games.tick(mod, None, [], OWNER, moment).game, []
+            while not hall:
+                moved = len(game["moves"])
+                kind = "a fresh board" if not moved else "the Arbiter's opening" if moved == 1 else "a turn"
+                yield key, kind, games.board(mod, game, hall, OWNER, moment)
+                moment += page.WEEK
+                outcome = games.tick(mod, game, hall, OWNER, moment)
+                game, hall = outcome.game, outcome.hall
+            yield key, "a final board", games.board(mod, game, hall, OWNER, moment)
+            yield key, "a fresh board", games.board(mod, game, hall, OWNER, moment + page.DISPLAY)
+        game, hall, moment = None, [], T0
+        yield "chess", "a fresh board", chess.board(game, hall, OWNER, moment)
+        for ply, uci in enumerate(FOOLS_MATE, 1):
+            player = (OWNER, OWNER_ID) if ply % 2 else (OCTOCAT, OCTOCAT_ID)
+            moment += HOUR
+            outcome = chess.play(game, hall, chess.Request(uci, 1, ply, 100 + ply, *player), OWNER, OWNER_ID, moment)
+            game, hall = outcome.game, outcome.hall
+            yield "chess", "a final board" if hall else "a turn", chess.board(game, hall, OWNER, moment)
+        moment = page.parse(game["started"])
+        yield "chess", "a fresh board", chess.board(game, hall, OWNER, moment)
+        moment += page.WEEK
+        outcome = chess.tick(game, hall, OWNER, moment)
+        yield "chess", "the Arbiter's opening", chess.board(outcome.game, outcome.hall, OWNER, moment)
+
     def test_every_legal_move_is_listed_once_behind_a_link_that_plays_it(self):
         for key in KEYS:
             table = Table(key, GITHUB)
@@ -753,13 +779,11 @@ class Board(unittest.TestCase):
                 if "last" in element and key == "tictactoe":  # the mark of the side that moved last
                     moved = HOUSE if counts[HOUSE] - counts[GITHUB] == (element["opens"] == HOUSE) else GITHUB
                     self.assertEqual(element["last"]["move"][0], letters[moved], element)
-                for field in ("prompt", "note"):
-                    self.assertTrue(KIT_LINE.fullmatch(element[field]) and not KIT_BLOCK.match(element[field]),
-                                    element[field])
-                    self.assertNotIn("![", element[field])
-                    for dash in DASHES:
-                        self.assertNotIn(dash, element[field])
-                self.assertLessEqual(len(element["prompt"]), page.BANNER, element["prompt"])
+                note = element["note"]
+                self.assertTrue(KIT_LINE.fullmatch(note) and not KIT_BLOCK.match(note), note)
+                self.assertNotIn("![", note)
+                for dash in DASHES:
+                    self.assertNotIn(dash, note)
                 for row in element["history"]:
                     self.assertTrue(len(row) == 4 and isinstance(row[0], int) and row[0] >= 1, row)
                     self.assertTrue(all(cell == "" or KIT_MOVE[key].fullmatch(cell) for cell in row[1:3]), row)
@@ -784,6 +808,18 @@ class Board(unittest.TestCase):
                     self.assertTrue(url.startswith(f"https://github.com/tannergolden/play/issues/new?template=move.yml"
                                                    f"&title={key}%3A%20"), url)
 
+    def test_no_board_in_any_game_carries_a_banner(self):
+        """A board's own picture says whose turn it is and by when, the last move, a check or a jump to take, and a
+        finished game's result and the day the next one opens, so the README carries no banner over it: no game's
+        element has a `prompt`, whatever kind of board it is."""
+        seen = set()
+        for key, kind, element in self.every_kind():
+            seen.add((key, kind))
+            with self.subTest(key=key, kind=kind, game=element["game"], move=element["move"]):
+                self.assertNotIn("prompt", element)
+        kinds = ("a fresh board", "the Arbiter's opening", "a turn", "a final board")
+        self.assertEqual(seen, {(key, kind) for key in (*games.GAMES, "chess") for kind in kinds})
+
     def test_the_score_sheet_names_who_chose_github_s_moves_whichever_side_opened(self):
         for opens, who in ((HOUSE, [[1, "Xb2", "Oa2", "@octocat"], [2, "Xa1", "", ""]]),
                            (GITHUB, [[1, "Ob2", "Xa2", "the Arbiter"], [2, "Oa1", "", "@octocat"]])):
@@ -802,7 +838,7 @@ class Board(unittest.TestCase):
                     with self.subTest(key=key, opens=opens, code=code):
                         for hint in ("alert", "threats", "outlook"):
                             self.assertNotIn(hint, element)
-                        self.assertNotRegex(element["prompt"], r"(?i)block|threat")
+                        self.assertNotRegex(element["note"], r"(?i)block|threat")
                         self.assertFalse([row for row in element["moves"] if row[2].endswith(("+", "#"))])
                         self.assertFalse([row for row in element.get("history", []) if "+" in row[1] + row[2]])
 
@@ -823,27 +859,10 @@ class Board(unittest.TestCase):
                 self.assertEqual([cell for row in element["history"] for cell in row[1:3] if "#" in cell], [won])
                 self.assertIn(won, outcome.comment)
 
-    def test_every_banner_fits_one_line_however_long_the_game(self):
-        for key in KEYS:
-            mod = games.rules(key)
-            for number in (1, 9_999, 999_999_999):
-                for opens in (HOUSE, GITHUB):
-                    game, _ = games.settle(mod, {"game": number, "started": page.stamp(T0), "moves": []}, T0)
-                    game["opens"] = opens
-                    banner = games.opening_banner(mod, game, OWNER)
-                    with self.subTest(key=key, number=number, opens=opens):
-                        self.assertLessEqual(len(banner), page.BANNER, banner)
-            for shown in ("99999. Xa1", "99999... Oa1#", "99999. ⚫4", "99999... ⚪4#", "99999. 22x15x8"):
-                for side in (HOUSE, GITHUB):
-                    for mover in ("The Arbiter", "@tannergolden", "GitHub"):
-                        for calls in (["A jump must be taken! ", "Must jump! "], []):
-                            banner = games.turn_banner(side, OWNER, mover, shown, calls, "28 Sep")
-                            self.assertLessEqual(len(banner), page.BANNER, banner)
-
     def test_no_reply_or_commit_has_a_long_dash_an_old_side_word_or_a_why(self):
         texts = []
         for element, table in self.boards():
-            texts += [*table.texts, element["prompt"], element["note"]]
+            texts += [*table.texts, element["note"]]
         for dash in DASHES:
             self.assertNotIn(dash, "".join(texts))
         for text in texts:

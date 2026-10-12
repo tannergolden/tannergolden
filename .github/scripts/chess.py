@@ -36,13 +36,13 @@ first move counts from then.
 After every run it sets the board out for the page: the position, the last
 move in words with who played it when, any check, whose turn it is and until
 when, how many have played for GitHub, what each side has taken, the score
-sheet's latest rows, the turn's banner, and every legal move named by
-chess_names.py, with a link that opens its ready-made issue; or, while a
-final board is up, the final position, who won and how, and the day the next
-game opens, with nothing to play. It goes between the `# chess:start` and
-`# chess:end` lines of .github/markdown.yaml, and the Hall of Fame of all
-four games (hall.py) between `# hall:start` and `# hall:end`, and nothing
-else in that file, for tannergolden/markdown to draw in the page's one theme.
+sheet's latest rows, and every legal move named by chess_names.py, with a
+link that opens its ready-made issue; or, while a final board is up, the
+final position, who won and how, and the day the next game opens, with
+nothing to play. It goes between the `# chess:start` and `# chess:end` lines
+of .github/markdown.yaml, and the Hall of Fame of all four games (hall.py)
+between `# hall:start` and `# hall:end`, and nothing else in that file, for
+tannergolden/markdown to draw in the page's one theme.
 
 It writes comment.md, the reply to post, and commit.txt into the run's
 temporary folder (--out), and sets `changed`, `issue` and `logbook` as step
@@ -87,13 +87,11 @@ from chess_rules import (
     square,
 )
 from page import (
-    BANNER,
     DISPLAY,
     EST,
     WEEK,
     day,
     dump,
-    fit,
     handle,
     load,
     now_utc,
@@ -105,7 +103,7 @@ from page import (
     until,
 )
 
-__all__ = ["BANNER", "EST", "WEEK", "dump", "load", "now_utc", "stamp", "until"]
+__all__ = ["EST", "WEEK", "dump", "load", "now_utc", "stamp", "until"]
 
 GROUPS = {"k": "king", "q": "queen", "r": "rook", "b": "bishop", "n": "knight", "p": "pawn"}
 ROWS = 3  # the score sheet's latest rows
@@ -121,13 +119,10 @@ REASONS = {
     "insufficient material": "insufficient material",
     "dead position": "a dead position",
 }
-# How a finished board says a game ended, as the page's plate takes it (`result.how`), and as its banner says it.
+# How a finished board says a game ended, as the page's plate takes it (`result.how`).
 HOW = {"checkmate": "checkmate", "stalemate": "stalemate", "fivefold repetition": "fivefold repetition",
        "seventy-five-move rule": "seventy-five moves", "insufficient material": "insufficient material",
        "dead position": "dead position"}
-SAID = {"stalemate": "Stalemate", "fivefold repetition": "A fivefold repetition",
-        "seventy-five-move rule": "The seventy-five-move rule", "insufficient material": "Insufficient material",
-        "dead position": "A dead position"}
 OPENS = ("⏳ **Game {number} opens {day}**, so `{uci}` wasn't played.\n"
          "Game {ended}'s final board stays up until then: pick a move from {board} once game {number} is on it.\n")
 
@@ -502,27 +497,6 @@ def score_sheet(game: dict, position: Position) -> list[list]:
     return rows[-ROWS:]
 
 
-def prompt(owner: str, white: bool, number: int, shown: str = "", arbiter: bool = False, check: bool = False,
-           due: str = "", result: str = "") -> str:
-    """The banner over the board, one line long (`BANNER`): whose turn it is, the move just played or how the last
-    game ended, and the day the turn is due. The exact time and the rules go in the note under the moves."""
-    by = f" by {due}" if due else ""
-    alarm = "Check! " if check else ""
-    if not white:
-        mover = "The Arbiter" if arbiter else f"@{owner}"
-        asks = ("Pick a move below", "Pick one below", "Pick below")  # the shortest only when a long move needs it
-        texts = [f"🟢 **GitHub's turn!** {mover} played {shown}. {alarm}{ask}{by}." for ask in asks]
-        return next((text for text in texts if len(text) <= BANNER), texts[-1])
-    head = f"🛑 **@{owner}'s turn!**"
-    if shown:
-        texts = [f"{head} {'The Arbiter' if arbiter else 'GitHub'} played {shown}. {alarm}{ask}{by}."
-                 for ask in ("Reply due", "Reply")]
-        return next((text for text in texts if len(text) <= BANNER), texts[-1])
-    if result:
-        return f"{head} {result}. Game {number} opens{by}."
-    return f"{head} @{owner} opens game {number} as White, and GitHub plays Black."
-
-
 def last_move(game: dict, positions: list[Position]) -> dict:
     """The last move as the board shows it: its notation, its squares and pieces, its words, who played it, the day."""
     played, before = game["moves"][-1], positions[-2]
@@ -555,27 +529,16 @@ def board(game: dict | None, hall: list, owner: str, moment: dt.datetime) -> dic
                "players": len(contributors(current))}
     if clock:
         element["due"] = day(clock)
-    shown, arbiter = "", False
     if current["moves"]:
-        played = current["moves"][-1]
-        arbiter = bool(played.get("arbiter"))
-        shown = numbered(positions[-2], played["san"])
         element["last"] = last_move(current, positions)
     if in_check(position):
         element["check"] = label(king(position, position.turn))
     element["taken"] = taken(current, positions)
     element["history"] = score_sheet(current, position)
-    due, checked = day(clock) if clock else "", in_check(position)
     if position.turn == "b":
-        element["prompt"] = prompt(owner, False, number, shown, arbiter, checked, due)
         element["note"] = f"Anyone but @{owner} can play on this turn, and the first pick in is played."
     else:
-        last = hall[-1] if hall and not shown else None  # the game that ended, when this one has yet to start
-        result = ""
-        if last:
-            result = (f"{'@' + owner if last['winner'] == owner else 'GitHub'} won game {last['game']}"
-                      if last["winner"] else f"Game {last['game']} was drawn")
-        element["prompt"] = prompt(owner, True, number, shown, arbiter, checked, due, result)
+        last = hall[-1] if hall and not current["moves"] else None  # the game that ended, this one yet to start
         element["note"] = (f"Only @{owner} can play on this turn: a pick from anyone else is turned away with a"
                            " comment on its issue.")
         if last and not last["winner"]:
@@ -607,12 +570,6 @@ def finished(game: dict, hall: list, owner: str) -> dict:
         element["result"] = {"winner": winner, "how": HOW[end.reason]}
     element["taken"] = taken(ended, positions)
     element["history"] = score_sheet(ended, position)
-    head = (f"🏆 **{'@' + owner if winner == 'house' else 'GitHub'} wins game {number}!**" if winner
-            else f"🤝 **Game {number} is drawn!**")
-    said = (f"{numbered(positions[-2], ended['moves'][-1]['san'])} is checkmate" if end and end.reason == "checkmate"
-            else SAID.get(end.reason, "") if end else "")
-    element["prompt"] = fit([f"{head} {said}. Game {number + 1} opens {day(opens)}.",
-                             f"{head} Game {number + 1} opens {day(opens)}."])
     deciding = record.get("deciding") or {}
     over = (f"Game {number} is over, and its final board stays up for two days: game {number + 1} opens"
             f" {until(opens)}, and nothing can be played until then.")

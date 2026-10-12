@@ -31,7 +31,7 @@ import re
 
 import checkers_names as N
 import checkers_rules as R
-from page import GITHUB, HOUSE, other, parse, profile
+from page import GITHUB, HOUSE, parse, profile
 
 KEY, TITLE = "checkers", "Checkers"
 EXT, RECORD = "pdn", "PDN"  # a finished game's file, and what the note's link calls it
@@ -125,11 +125,6 @@ def alarm(position: R.Position) -> str:
     return " A jump must be taken!" if jumps(position) else ""
 
 
-def calls(position: R.Position) -> list[str]:
-    """What the banner tells the side to move, longest first."""
-    return ["A jump must be taken! ", "Must jump! "] if jumps(position) else []
-
-
 def kings(game: dict, positions: list[R.Position]) -> dict[str, int]:
     """The kings each side has made: every man of theirs crowned, the house's White and GitHub's Black."""
     made = {HOUSE: 0, GITHUB: 0}
@@ -156,20 +151,6 @@ def marked(before: R.Position, code: str) -> dict:
 def cry(end, loser: str) -> str:
     """The winning reply's call."""
     return f"{loser} has no move left!"
-
-
-def summary(end, positions: list[R.Position]) -> str:
-    """How the game ended, as the final board's banner says it."""
-    if end.winner is not None:
-        return f"{WORDS[other(end.winner)]} has no move left"
-    if end.reason == "repetition":
-        return "The same position came round a third time"
-    return "Forty moves each without a jump or a man moved"
-
-
-def opening(code: str, side: str) -> list[str]:
-    """GitHub opens every game itself, so the Arbiter never names an opening here."""
-    return [code]
 
 
 def record(game: dict, positions: list[R.Position], kept: dict, owner: str) -> str:

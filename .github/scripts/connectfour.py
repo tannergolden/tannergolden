@@ -17,8 +17,8 @@ first: a game it opened for the house starts with a white disc. The board
 sets out the frame as six rows, top first, the side the Arbiter opened for
 (`opens`), and once the game is won, the four cells it was won on (`line`).
 Nothing on the page helps a player choose: no column a side could win down
-next and no block called out, in the board, the banner or a reply. The rules
-are connectfour_rules.py's and the names connectfour_names.py's. Stdlib only.
+next and no block called out, in the board or a reply. The rules are
+connectfour_rules.py's and the names connectfour_names.py's. Stdlib only.
 """
 from __future__ import annotations
 
@@ -96,11 +96,6 @@ def alarm(position: R.Position) -> str:
     return ""
 
 
-def calls(position: R.Position) -> list[str]:
-    """What the banner tells the side to move: nothing beyond whose turn it is."""
-    return []
-
-
 def fields(game: dict, positions: list[R.Position], over: bool) -> dict:
     """The board's own fields: the frame and the side the Arbiter opened for."""
     return {"board": positions[-1].board, "opens": game["opens"]}
@@ -114,18 +109,3 @@ def marked(before: R.Position, code: str) -> dict:
 def cry(end, loser: str) -> str:
     """The winning reply's call."""
     return "four in a row!"
-
-
-def summary(end, positions: list[R.Position]) -> str:
-    """How the game ended, as the final board's banner says it."""
-    if end.winner is None:
-        return "A full frame, and no four in a row"
-    (c0, r0), (c1, r1) = end.line[0], end.line[-1]
-    where = f"across row {r0}" if r0 == r1 else f"up column {c0}" if c0 == c1 else "on a diagonal"
-    return f"Four {WORDS[end.winner].lower()} discs {where}"
-
-
-def opening(code: str, side: str) -> list[str]:
-    """The Arbiter's opening for `side` as a fresh board's banner names it, longest first."""
-    word = WORDS[side]
-    return [f"a {word.lower()} disc in column {code}", f"{SIGN[word]} in column {code}", f"{SIGN[word]}{code}"]

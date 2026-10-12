@@ -83,7 +83,6 @@ from page import (
     date,
     day,
     dump,
-    fit,
     handle,
     load,
     now_utc,
@@ -102,7 +101,7 @@ COUNT = re.compile(r"[1-9][0-9]{0,8}")  # a game or a move: up to 999,999,999, a
 ID = re.compile(r"[1-9][0-9]{0,15}")  # an issue or an account: up to 16 digits, as the intake passes on
 LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})")
 ORDER = ("kind", "board", "fen", "opens", "game", "move", "players", "due", "next", "last", "result", "line",
-         "kings", "alert", "history", "prompt", "note", "moves")
+         "kings", "alert", "history", "note", "moves")
 
 # The refusals, word for word as the intake's (tannergolden/play), which turns the same moves away before they come.
 OVER = ("⌛ **Game {game} is over**, so `{code}` wasn't played.\n"
@@ -173,11 +172,6 @@ def side_of(mod: ModuleType, game: dict, ply: int) -> str:
 
 def named_side(side: str, owner: str) -> str:
     return f"@{owner}" if side == HOUSE else "GitHub"
-
-
-def turn_head(side: str, owner: str) -> str:
-    """A banner's head: whose turn it is."""
-    return "🟢 **GitHub's turn!**" if side == GITHUB else f"🛑 **@{owner}'s turn!**"
 
 
 def numbered(ply: int, shown: str) -> str:
@@ -550,41 +544,6 @@ def who_plays(side: str, owner: str) -> str:
     return f"Only @{owner} can play on this turn: a pick from anyone else is turned away with a comment on its issue."
 
 
-def turn_banner(side: str, owner: str, mover: str, shown: str, calls: list[str], due: str) -> str:
-    """The banner over the board on a turn: whose turn it is, the move just played, what the side to move must do,
-    and the day the turn is due, at the length that fits one line (`BANNER`)."""
-    by = f" by {due}" if due else ""
-    head = turn_head(side, owner)
-    asks = ("Pick a move below", "Pick one below", "Pick below") if side == GITHUB else ("Reply due", "Reply")
-    texts = [f"{head} {mover} played {shown}. {call}{ask}{by}." for call in [*calls, ""] for ask in asks]
-    return fit([*texts, f"{head} {mover} played {shown}."])  # the move alone, for a jump too long for the rest
-
-
-def opening_banner(mod: ModuleType, game: dict, owner: str) -> str:
-    """The banner over a fresh board the Arbiter opened: the side it opened for, and the move."""
-    first, number = opener(mod, game), game["game"]
-    head, named = turn_head(other(first), owner), named_side(first, owner)
-    phrases = mod.opening(game["moves"][0]["move"], first)
-    texts = [f"{head} The Arbiter opened game {number} for {named} with {phrase}, at random." for phrase in phrases]
-    texts += [f"{head} The Arbiter opened for {named} with {phrase}, at random." for phrase in phrases]
-    return fit([*texts, f"{head} The Arbiter opened with {phrases[-1]}."])
-
-
-def fresh_banner(mod: ModuleType, game: dict, record: dict | None, owner: str, due: str) -> str:
-    """The banner over a fresh board its opener moves first on: whose turn it is, how the last game ended, if one
-    did, and the day the first move is due."""
-    first, number = opener(mod, game), game["game"]
-    head, named, said = turn_head(first, owner), named_side(first, owner), mod.WORDS[first]
-    if record:
-        result = (f"{named_side(HOUSE if record['winner'] == owner else GITHUB, owner)} won game {record['game']}"
-                  if record["winner"] else f"Game {record['game']} was drawn")
-        return fit([f"{head} {result}. {named} opens game {number} by {due}.",
-                    f"{head} {result}. Game {number} opens by {due}.", f"{head} {result}."])
-    asks = ("Pick a move below", "Pick one below", "Pick below") if first == GITHUB else ("Move due", "Due")
-    return fit([*(f"{head} {named} opens game {number} as {said}. {ask} by {due}." for ask in asks),
-                f"{head} {named} opens game {number} as {said}."])
-
-
 def board(mod: ModuleType, game: dict | None, hall: list, owner: str, moment: dt.datetime) -> dict:
     """The game's element for the page: what its board draws, and what the README carries round it."""
     current, _ = settle(mod, game, moment)
@@ -598,23 +557,17 @@ def board(mod: ModuleType, game: dict | None, hall: list, owner: str, moment: dt
     element = {"kind": mod.KEY, **mod.fields(current, positions, over=False), "game": number, "move": (ply + 1) // 2,
                "players": len(contributors(mod, current))}
     clock = parse(current["moves"][-1]["at"] if current["moves"] else current["started"]) + WEEK
-    element["due"] = due = day(clock)
+    element["due"] = day(clock)
     if current["moves"]:
         element["last"] = last_move(mod, current, positions)
     element["history"] = score_sheet(mod, current, positions)
-    last = current["moves"][-1] if current["moves"] else None
     record = hall[-1] if hall and not current["moves"] else None  # the game that ended, when this one is yet to open
     opens = mod.OPENS_NOTE.format(owner=owner)
     if mod.ARBITER_OPENS and len(current["moves"]) == 1:
-        element["prompt"] = opening_banner(mod, current, owner)
         parts = [(opens, True), (who_plays(side, owner), True)]
-    elif last:
-        mover = "The Arbiter" if last.get("arbiter") else named_side(side_of(mod, current, ply - 1), owner)
-        element["prompt"] = turn_banner(side, owner, mover, numbered(ply - 1, last["shown"]), mod.calls(position),
-                                        due)
+    elif current["moves"]:
         parts = [(who_plays(side, owner), True)]
     else:  # a fresh board, its opener to make the first move
-        element["prompt"] = fresh_banner(mod, current, record, owner, due)
         parts = [(f"Game {record['game']} was drawn {mod.DRAWN[record['reason']]}." if record and not record["winner"]
                   else "", False), (opens, True), (who_plays(side, owner), True)]
     parts.append((f"The move is due by {until(clock)}, or the Arbiter plays a random legal move.", True))
@@ -644,10 +597,6 @@ def finished(mod: ModuleType, game: dict, hall: list, owner: str) -> dict:
         if end.line:
             element["line"] = end.line
     element["history"] = score_sheet(mod, ended, positions)
-    summary = mod.summary(end, positions) if end else ""
-    head = (f"🏆 **{named_side(won, owner)} wins game {number}!**" if won else f"🤝 **Game {number} is drawn!**")
-    element["prompt"] = fit([f"{head} {summary}. Game {number + 1} opens {day(opens)}.",
-                             f"{head} Game {number + 1} opens {day(opens)}."])
     deciding = record.get("deciding") or {}
     over = (f"Game {number} is over, and its final board stays up for two days: game {number + 1} opens"
             f" {until(opens)}, and nothing can be played until then.")

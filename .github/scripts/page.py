@@ -25,7 +25,6 @@ from pathlib import Path
 WEEK = dt.timedelta(days=7)  # how long a side has to move before the Arbiter moves for it
 DISPLAY = dt.timedelta(days=2)  # how long a finished game's final board stays up
 EST = dt.timezone(dt.timedelta(hours=-5), "EST")  # the page tells time in EST, as its settings say
-BANNER = 91  # the most a banner over a board may run to, its markdown included, and stay on one line of the README
 NOTE = 400  # the most a note under a board may run to, as the kit takes a line of the README
 REGIONS = ("tictactoe", "connectfour", "checkers", "chess", "hall")  # the settings' regions, in the page's order
 HOUSE, GITHUB = "house", "github"  # the two sides of every game: the owner of the profile, and everyone else
@@ -74,11 +73,6 @@ def handle(login: str) -> str:
     """A player named without a ping: the @handle as a link to their profile, which GitHub never turns into a
     mention. A turned-away move pings nobody, so nobody can ping anyone by opening issues."""
     return f"[@{login}]({profile(login)})"
-
-
-def fit(texts: list[str], most: int = BANNER) -> str:
-    """The first of the texts that fits in `most` characters, or the last, the shortest way to say it."""
-    return next((text for text in texts if len(text) <= most), texts[-1])
 
 
 def sentences(parts: list[tuple[str, bool]], most: int = NOTE) -> str:

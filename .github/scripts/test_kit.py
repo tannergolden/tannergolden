@@ -188,8 +188,8 @@ class Kit(unittest.TestCase):
                 (game.board_state if kind == "chess" else game.state)(element)
                 described = game.describe(element)
                 self.assertTrue(described["title"] and described["desc"])
-                above, below = readme.text(element)
-                self.assertTrue(above.startswith("> [!"), above)
+                below = readme.text(element)
+                self.assertNotIn("[!", below, "no banner: the board's own sheet says whose turn it is")
                 if "result" in element:
                     self.assertNotIn("<details>", below, "a finished board lists nothing to play")
             count += 1

@@ -674,6 +674,12 @@ class Board(unittest.TestCase):
         element = table.board()
         self.assertEqual((element["game"], element["due"]), (3, "23 Oct"))
         self.assertTrue(element["note"].startswith("Game 2 was drawn by stalemate. Only @tannergolden can play"))
+        table.play(SCHOLARS_MATE)
+        table.fresh()
+        element = table.board()
+        self.assertEqual(element["game"], 4)
+        self.assertTrue(element["note"].startswith("@tannergolden won game 3. Only @tannergolden can play"),
+                        element["note"])
 
     def test_the_note_after_the_longest_draw_fits_one_line_of_the_readme(self):
         """A fresh board's note says how the last game was drawn, and after the draw with the longest name, at game

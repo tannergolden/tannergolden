@@ -619,15 +619,28 @@ class Board(unittest.TestCase):
         self.assertEqual(chess.hall_element(table.hall, OWNER, owner_id=OWNER_ID)["leaders"][0],
                          [OWNER, 2, 0, 1, OWNER_ID], "each row ends with its account's ID, the owner's too")
 
-    def test_the_owner_s_own_mate_is_their_win_and_ten_of_github_follow(self):
+    def test_the_owner_s_own_mate_is_their_win_and_twenty_of_github_follow(self):
         table = Table()
         table.play(SCHOLARS_MATE)  # the owner mates with their fourth move; @octocat played Black's three
         self.assertEqual(chess.hall_element(table.hall, OWNER)["leaders"],
                          [[OWNER, 4, 1, 1], ["octocat", 3, 0, 1, OCTOCAT_ID]])
         crowd = dict(table.hall[0], players=[{"player": f"p{i:02}", "player_id": 1000 + i, "moves": i}
-                                             for i in range(1, 13)])
+                                             for i in range(1, 26)])
         leaders = chess.hall_element([crowd], OWNER)["leaders"]
-        self.assertEqual([row[0] for row in leaders], [OWNER, *(f"p{i:02}" for i in range(12, 2, -1))])
+        self.assertEqual([row[0] for row in leaders], [OWNER, *(f"p{i:02}" for i in range(25, 5, -1))],
+                         "twice the ten the page shows, so it can fill the place of a player whose account is gone")
+
+    def test_the_podium_hands_the_page_ten_winners_for_its_five_places(self):
+        table = Table()
+        table.play(FOOLS_MATE)  # @octocat mates
+        won, hall = table.hall[0], []
+        for i in range(1, 13):  # twelve games, each mated by someone new, a day apart
+            winner = {"player": f"w{i:02}", "player_id": 2000 + i}
+            hall.append(dict(won, game=i, ended=f"2026-10-{i:02}T20:00:00Z", deciding={**won["deciding"], **winner},
+                             players=[{**winner, "moves": 2}]))
+        people = chess.hall_element(hall, OWNER)["people"]
+        self.assertEqual(people, [[f"w{i:02}", 1, f"{i} Oct", 1, 2000 + i] for i in range(12, 2, -1)],
+                         "a win each, the latest first, twice the five the page shows")
 
     def test_a_move_or_a_mate_the_arbiter_played_counts_for_nobody_on_either_side(self):
         arbiter = {"player": None, "player_id": None, "issue": None, "arbiter": True}

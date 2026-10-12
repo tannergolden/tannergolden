@@ -35,10 +35,12 @@ taken, the score sheet's latest rows, the turn's banner, and every legal move
 named by chess_names.py, with a link that opens its ready-made issue. The Hall
 of Fame: the series between the owner and GitHub, and its leading winners, a
 point to whoever made a mating move; and the leaderboard, the owner's own moves,
-wins and games on top of GitHub's ten leading players', where nothing the
-Arbiter played counts for anyone. Each winner and player is named by the newest
-login they played as, with their account's ID, so the page can name them as
-they are now. They go between the `# chess:start` and
+wins and games on top of GitHub's leading players', where nothing the Arbiter
+played counts for anyone. Each winner and player is named by the newest login
+they played as, with their account's ID, so the page can name them as they are
+now and leave out anyone whose account is gone. Both lists run to twice the
+places the page shows, so the next player fills a place left that way. They go
+between the `# chess:start` and
 `# chess:end` lines of .github/markdown.yaml, and nothing else in that file,
 for tannergolden/markdown to draw in the page's one theme.
 
@@ -73,6 +75,7 @@ WEEK = dt.timedelta(days=7)
 EST = dt.timezone(dt.timedelta(hours=-5), "EST")  # the page tells time in EST, as its settings say
 GROUPS = {"k": "king", "q": "queen", "r": "rook", "b": "bishop", "n": "knight", "p": "pawn"}
 ROWS, PODIUM, LEADERS = 3, 5, 10  # the score sheet's latest rows, the Hall of Fame's winners, its leaderboard
+DEPTH = 2  # the Hall's lists run to twice the page's places, so a player whose account is gone leaves no gap
 UCI = re.compile(r"[a-h][1-8][a-h][1-8][qrbn]?")
 COUNT = re.compile(r"[1-9][0-9]{0,8}")  # a game or a move: up to 999,999,999, as the page's links carry
 ID = re.compile(r"[1-9][0-9]{0,15}")  # an issue or an account: up to 16 digits, as the intake passes on
@@ -577,11 +580,12 @@ def row(entry: dict, *cells) -> list:
 
 
 def leaders(hall: list, owner: str, game: dict | None = None, owner_id: int | None = None) -> list[list]:
-    """The leaderboard under the Hall of Fame: the owner's row on top, then GitHub's ten leading players, ranked by
-    their wins and then by the moves they have played for GitHub. A row counts its player's moves, wins and games
-    over every finished game and the one on the board, under the newest login they played as. A win is a mating
-    move of one's own, and a move or a mate the Arbiter played counts for nobody, on either side. The owner's row
-    stands from the start, at nought until they move. Each row ends with its account's ID, when it is known."""
+    """The leaderboard under the Hall of Fame: the owner's row on top, then GitHub's leading players, twice the ten
+    the page shows (`DEPTH`), ranked by their wins and then by the moves they have played for GitHub. A row counts
+    its player's moves, wins and games over every finished game and the one on the board, under the newest login
+    they played as. A win is a mating move of one's own, and a move or a mate the Arbiter played counts for nobody,
+    on either side. The owner's row stands from the start, at nought until they move. Each row ends with its
+    account's ID, when it is known."""
     house = {"login": owner, "moves": 0, "wins": 0, "games": 0, "id": owner_id}
     tally: dict[int, dict] = {}
 
@@ -603,14 +607,15 @@ def leaders(hall: list, owner: str, game: dict | None = None, owner_id: int | No
             winner = house if record["winner"] == owner else player(deciding["player_id"], deciding["player"])
             winner["wins"] += 1  # a draw is nobody's win, and nor is the Arbiter's mate
     ranked = sorted(tally.values(), key=lambda e: (-e["wins"], -e["moves"], e["login"].casefold()))
-    return [row(e, e["moves"], e["wins"], e["games"]) for e in (house, *ranked[:LEADERS])]
+    return [row(e, e["moves"], e["wins"], e["games"]) for e in (house, *ranked[:LEADERS * DEPTH])]
 
 
 def hall_element(hall: list, owner: str, game: dict | None = None, owner_id: int | None = None) -> dict:
-    """The page's Hall of Fame: the series between the owner and GitHub, its leading winners, and the leaderboard
-    under it. A win is a point for whoever made the mating move, the owner included; a draw
-    scores nobody, and nor does the Arbiter's mate. A winner is named by the newest login they played as, and each
-    row ends with the account's ID, so the page can name them as they are now."""
+    """The page's Hall of Fame: the series between the owner and GitHub, its leading winners, twice the five the page
+    shows (`DEPTH`), and the leaderboard under it. A win is a point for whoever made the mating move, the owner
+    included; a draw scores nobody, and nor does the Arbiter's mate. A winner is named by the newest login they
+    played as, and each row ends with the account's ID, so the page can name them as they are now, and leave out
+    anyone whose account is gone."""
     house = sum(1 for record in hall if record["winner"] == owner)
     newest = logins(hall, game)
     world = sum(1 for record in hall if record["winner"] == "GitHub")
@@ -632,7 +637,7 @@ def hall_element(hall: list, owner: str, game: dict | None = None, owner_id: int
     ranked = sorted(wins.values(), key=lambda e: (-e["wins"], -parse(e["last"]).timestamp(), e["login"].casefold()))
     return {"kind": "chess-hall", "games": len(hall), "house": house, "world": world,
             "draws": len(hall) - house - world,
-            "people": [row(e, e["wins"], day(parse(e["last"])), e["games"]) for e in ranked[:PODIUM]],
+            "people": [row(e, e["wins"], day(parse(e["last"])), e["games"]) for e in ranked[:PODIUM * DEPTH]],
             "leaders": leaders(hall, owner, game, owner_id), "measure": {}}
 
 

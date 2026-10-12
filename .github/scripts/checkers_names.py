@@ -317,6 +317,7 @@ class Reading:
     kinged: bool = False  # and when they are done, we have more kings than before the move
     breaks: bool = False  # their jumps open the way for a man of ours to be crowned on our next move
     their_most: int = 0  # the most they take in one jump in those
+    pending: bool = False  # they had a jump waiting before the move, and the move leaves them one
     worse: bool = False  # another move here nets more by force
     alone: bool = False  # it loses nothing, and every other move here loses something
     ahead: bool = False  # the side moving has more pieces than the other
@@ -366,6 +367,7 @@ class Board:
     danger: frozenset[int] = frozenset()  # our pieces their jumps that win material take first, were it their turn
     landings: dict = field(default_factory=dict)  # where those jumps land first, by the square of the piece taken
     squeezed: bool = False  # were it their turn now, every move they have would lose material by force
+    pending: bool = False  # were it their turn now, they would have a jump to make
 
 
 @functools.lru_cache(maxsize=64)
@@ -383,7 +385,7 @@ def survey(position: Position) -> Board:
     answers = legal_moves(theirs)
     squeezed = bool(answers) and all(line(make(theirs, answer)).value > 0 for answer in answers)
     return Board(position, moves, afters, lines, values, frozenset(danger),
-                 {square: frozenset(lands) for square, lands in landings.items()}, squeezed)
+                 {square: frozenset(lands) for square, lands in landings.items()}, squeezed, bool(jumps(theirs)))
 
 
 def read(position: Position, move: Move) -> Reading:
@@ -406,6 +408,7 @@ def read(position: Position, move: Move) -> Reading:
         "only": len(board.moves) == 1, "answered": bool(rest.moves), "value": value,
         "gained": tuple(pieces[square] for square in move.captures) + rest.lost, "lost": rest.taken,
         "crowns": move.crowns or rest.crowned_them, "their_most": rest.most,
+        "pending": board.pending and bool(rest.moves) and not move.captures,
         "worse": value < max(board.values.values()), "alone": value >= 0 and bool(others) and max(others) < 0,
         "ahead": mine > len(pieces) - mine, "advance": depth(end, turn) - depth(start, turn),
     }
@@ -610,9 +613,11 @@ def _opening(r: Reading) -> list[Call]:
 
 
 def _blunder(r: Reading) -> list[Call]:
+    if r.captures and r.their_most >= 2:
+        return _calls(r, _forms("Jump Into Their Shot!", at=""),
+                      _forms(f"Jump Into Their {JUMPS.get(r.their_most, 'Long')} Jump!", at=""))
     if r.captures:
-        return _calls(r, _forms("Jump Into Their Shot!", at=""), _forms("Take the Bait!", at=""),
-                      _forms("Jump Into a Losing Trade!", at=""))
+        return _calls(r, _forms("Jump Into a Losing Trade!", at=""), _forms("Take the Losing Jump!", at=""))
     net = len(r.lost) - len(r.gained)
     first = f"the {kind_word(r.lost[0])} on {r.lost_at}" if r.lost_at else ""
     if r.crowned and not r.kinged:
@@ -694,11 +699,13 @@ def _exchange(r: Reading) -> list[Call]:
         return _calls(r, _forms(f"Give {NUMBERS[gave].capitalize()}, Take {NUMBERS[took].capitalize()} and Crown!",
                                 at=""))
     if gave == took and any(p.isupper() for p in r.gained) and not any(p.isupper() for p in r.lost):
-        return _calls(r, _forms("Trade a Man for Their King!"))
+        return _calls(r, _forms("Trade a Man for Their King!", at=""))
     if gave != took:
         return _calls(r, _forms(f"Give {NUMBERS[gave].capitalize()}, Take {NUMBERS[took].capitalize()}!", at=""))
     forms = [_forms("Trade Down While Ahead!", at="")] if r.ahead else []
-    if gave == 1:
+    if gave == 1 and r.pending:  # their jump was waiting already: the move lets it come, and takes one back
+        forms += [_forms("Accept the Trade!", at=""), _forms("Let Them Trade One for One!", at="")]
+    elif gave == 1:
         forms += [_forms("Force a Trade!", at=""), _forms("Give One, Take One!", at=""),
                   _forms("Offer an Even Trade!", at="")]
     else:
@@ -848,7 +855,7 @@ def _edge(r: Reading) -> list[Call]:
 def _diagonal(r: Reading) -> list[Call]:
     if r.start in LONG_DIAGONAL:
         return _calls(r, _forms("Advance Along the Long Diagonal!", at=" to {e}"),
-                      _forms("Push Down the Long Diagonal!", at=" to {e}"))
+                      _forms("Push Along the Long Diagonal!", at=" to {e}"))
     return _calls(r, _forms("Step Onto the Long Diagonal!"), _forms("Take the Long Diagonal!"))
 
 
@@ -948,9 +955,8 @@ def _named(position: Position) -> tuple[tuple[Move, str, str, str], ...]:
     out = []
     for move in board.moves:
         title_ = titles[move]
-        if title_ in used:  # another theme's call came out the same: tell this one by where it goes
-            title_ = next(text for text in (f"{title_[:-1]}, {move.path[0]} to {move.path[-1]}!",
-                                            f"{move.path[0]} to {move.path[-1]}, {title_}")
+        if title_ in used or not fits(title_):  # taken already, or too long: say where it goes, or the move itself
+            title_ = next(text for text in (f"{title_[:-1]}, {move.path[0]} to {move.path[-1]}!", f"Play {move.code}!")
                           if text not in used and fits(text))
         used.add(title_)
         out.append((move, THEMES[keys[move]], title_, words(position, move, board.afters[move])))
@@ -992,5 +998,5 @@ def _distinct(key: str, members: list[Move], chosen: dict[Move, Call]) -> dict[M
             detail = f"From {move.path[0]} to {move.path[-1]}" if key in WAYS else f"With {move.code}"
         text = f"{chosen[move].base[:-1]}, {detail}!" if twins else f"{chosen[move].base[:-1]} {detail}!"
         short = f"Take {NUMBERS[len(move.captures)].capitalize()}" if move.captures else "Move"
-        out[move] = text if fits(text) else f"{short}, {detail}!"
+        out[move] = next((option for option in (text, f"{short}, {detail}!") if fits(option)), f"Play {move.code}!")
     return out

@@ -228,6 +228,22 @@ class Readings(unittest.TestCase):
         self.assertEqual((len(read(position, move).lost), len(read(position, move).gained)), (1, 1))
         self.assertEqual(name(*at("B:W22,26:B6,10,15", "15-18"))[:2], ("⚖️", "Trade Down While Ahead!"))
 
+    def test_a_trade_they_threatened_is_accepted_and_one_we_start_is_forced(self):
+        position = played("11-16", "24-20")[-1]  # 20x11 is waiting, and 7x16 takes back
+        for code in ("9-13", "9-14", "10-14", "10-15"):
+            emoji, title, _ = name(position, find(position, code))
+            self.assertEqual(emoji, "⚖️")
+            self.assertTrue(title.startswith(("Accept the Trade", "Let Them Trade")), title)
+        for position, listed in NAMED.items():
+            for move, _, title, _ in listed:
+                reading = read(position, move)
+                if title.startswith(("Force a Trade", "Offer an Even Trade", "Give One, Take One")):
+                    self.assertFalse(reading.pending, title)
+                if title.startswith(("Accept the Trade", "Let Them Trade")):
+                    self.assertTrue(reading.pending, title)
+                if "Their Shot" in title or "Their Double Jump" in title or "Their Triple Jump" in title:
+                    self.assertGreaterEqual(reading.their_most, 2, title)
+
     def test_a_shot_gives_one_so_the_forced_reply_opens_a_bigger_jump(self):
         position, move = at("B:W17,18,22,24,25,26,27,28,29,30,31,32:B1,2,3,4,5,7,8,9,10,11,12,13", "9-14")
         self.assertEqual(name(position, move)[:2], ("💣", "Spring the Two-for-One!"))  # 18x9, then 5x14x21

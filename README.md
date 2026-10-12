@@ -71,142 +71,30 @@ one from data measured on a schedule.
 
 ## 🎲 Play Against Me
 
-Four games, from the quickest to the deepest, each on its own board. In every
-one I play one side, and you play the other with everyone else on GitHub. Pick
-a move under a board, and its link opens a ready-made issue in
+Four games, each on its own board, and in every one I play one side while you
+play the other with everyone else on GitHub. I always play White in Chess,
+Checkers and Connect Four, and X in Tic-Tac-Toe. I open every game of Chess. In
+Checkers, Black moves first, so GitHub opens. In Connect Four and Tic-Tac-Toe,
+the Arbiter opens every game for a side drawn at random, with a random first
+move.
+
+Pick a move under a board, and its link opens a ready-made issue in
 [`play`](https://github.com/tannergolden/play): submit it as it opens. The
 first move to reach the game is the one played. The Official Arbiter rules on
-it, answers on your issue, and redraws the board within a few minutes.
+it, answers on your issue, and redraws the board within a few minutes. Chess is
+open below, and the other three open with a click.
 
 One clock keeps all four, on the hour. A side that goes a week without moving
 gets a random legal move from the Arbiter, and a finished game's winning board
-stays up for two days before a fresh board comes by itself.
+stays up for two days before a fresh board comes by itself. A win counts only
+for the player who makes the winning move: the checkmate in Chess, the move
+that leaves the other side no move in Checkers, the fourth disc in a row in
+Connect Four, or the third mark in a row in Tic-Tac-Toe. A move the Arbiter
+plays counts for nobody, and a draw is nobody's win. Every win earns its player
+a place in the Hall of Fame below.
 
-### ❌ Tic-Tac-Toe
-
-The Arbiter opens every game, for a side it draws at random, with a random
-first move: that side plays X, and the other plays O. Whoever moves first has
-the edge here. Of the 255,168 ways a game can go, X wins 131,184 and O only
-77,904, so neither of us gets the first move by right.
-
-<!-- markdown:element:tictactoe:start -->
-> [!CAUTION]
-> 🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with X on a1, at random.
-
-<picture>
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-still-dark.svg">
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/tictactoe-narrow-still-day.svg">
-  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-dark.svg">
-  <source media="(max-width: 585px)" srcset="assets/elements/tictactoe-narrow-day.svg">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-still-dark.svg">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictactoe-still-day.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-dark.svg">
-  <img alt="Tic-Tac-Toe: game 1, move 1. Game 1 of @tannergolden against GitHub, GitHub plays X and @tannergolden O, after 1. Xa1, the Arbiter&#x27;s move for GitHub: X takes the lower left corner. It is @tannergolden&#x27;s turn as O, due by 19 Oct. X: a1; O: no mark yet." src="assets/elements/tictactoe-day.svg">
-</picture>
-
-<details>
-<summary>⭕ <b>@tannergolden's Turn</b> · 8 open cells · only @tannergolden can play these</summary>
-
-|  | Move | What it does | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Back Them Into a Corner!** `Oa3` | O takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Feel Out Their Defence!** `Ob3` | O takes the head of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🗡️ | **Hold the Corner!** `Oc3` | O takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 👣 | **Measure the Distance!** `Oa2` | O takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🎯 | **Strike the Heart!** `Ob2` | O takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Probe the Line!** `Oc2` | O takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Dance Along the Edge, Fencer!** `Ob1` | O takes the foot of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🗡️ | **Take the High Ground!** `Oc1` | O takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-
-</details>
-
-The Arbiter opens every game for a side drawn at random, since X moves first and wins far more often when anyone slips: of the 255,168 possible games, X wins 131,184, O wins 77,904 and 46,080 are drawn. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
-<!-- markdown:element:tictactoe:end -->
-
-### ⚫ Connect Four
-
-The Arbiter opens here too, for a side it draws at random, with a random first
-disc: that side drops the dark discs, and the other the light. Connect Four is
-solved. Whoever drops the first disc can force a win by opening in the centre
-column, as James D. Allen and Victor Allis each showed in 1988, so neither of
-us gets that start by right.
-
-<!-- markdown:element:connectfour:start -->
-> [!TIP]
-> 🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚫6, at random.
-
-<picture>
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-still-dark.svg">
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/connectfour-narrow-still-day.svg">
-  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-dark.svg">
-  <source media="(max-width: 585px)" srcset="assets/elements/connectfour-narrow-day.svg">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-still-dark.svg">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/connectfour-still-day.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/connectfour-dark.svg">
-  <img alt="Connect Four: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden drops the dark discs and GitHub the light, after 1. 6, the Arbiter&#x27;s move for @tannergolden: a dark disc down column 6, to row 1. It is GitHub&#x27;s turn as Light, due by 19 Oct. Column 6, from the foot: dark." src="assets/elements/connectfour-day.svg">
-</picture>
-
-<details>
-<summary>⚪ <b>GitHub's Turn</b> · 7 open columns · open to choose one</summary>
-
-|  | Move | What it does | Play |
-| :-: | :--- | :--- | :-: |
-| 🏔️ | **Guard the Edge, Sky Troops!** `1` | A light disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Go Airborne, Paratroopers!** `2` | A light disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Stick the Landing!** `3` | A light disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Drop Into the Heart of It!** `4` | A light disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Hit the Silk!** `5` | A light disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Steady on the Drop!** `6` | A light disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🏔️ | **Hit the Far Ridge!** `7` | A light disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-
-</details>
-
-The Arbiter opens every game for a side drawn at random, since whoever drops the first disc can force a win by opening in the centre column (James D. Allen and Victor Allis, independently, in 1988). Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
-<!-- markdown:element:connectfour:end -->
-
-### 🏁 Checkers
-
-I play Dark and open every game, and you play Light. A jump is compulsory, and
-a man that reaches the far row is crowned. With perfect play Checkers is a
-draw, and the first move's edge is small, so I open.
-
-<!-- markdown:element:checkers:start -->
-> [!CAUTION]
-> 🛑 **@tannergolden's turn!** @tannergolden opens game 1 as Dark, and GitHub plays Light.
-
-<picture>
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-narrow-still-dark.svg">
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/checkers-narrow-still-day.svg">
-  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-narrow-dark.svg">
-  <source media="(max-width: 585px)" srcset="assets/elements/checkers-narrow-day.svg">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-still-dark.svg">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/checkers-still-day.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/checkers-dark.svg">
-  <img alt="Checkers: game 1, move 1. Game 1 of @tannergolden against GitHub, before its first move. It is @tannergolden&#x27;s turn as Dark. @tannergolden, dark: men on 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12; GitHub, light: men on 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32." src="assets/elements/checkers-day.svg">
-</picture>
-
-<details>
-<summary>⛂ <b>@tannergolden's Turn</b> · 7 legal moves · only @tannergolden can play these</summary>
-
-|  | Move | What it does | Play |
-| :-: | :--- | :--- | :-: |
-| ⚓ | **Hug the Shore!** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Stand for the Narrows!** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Hold the Narrows!** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Make for Midchannel!** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Seize the Strait!** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Full Sail Ahead!** `11-16` | Man from 11 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Come to Starboard!** `12-16` | Man from 12 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-
-</details>
-
-Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. A side that goes a week without moving gets a random legal move from the Arbiter. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
-<!-- markdown:element:checkers:end -->
-
-### ♟️ Chess
-
-I play White and open every game, and you play Black. White scores only a
-little more than Black, about 55% in master play, so I open.
+<details open>
+<summary><b>♟️ Chess</b></summary>
 
 <!-- markdown:element:chess:start -->
 > [!CAUTION]
@@ -267,10 +155,124 @@ little more than Black, about 55% in master play, so I open.
 Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. A side that goes a week without moving gets a random legal move from the Arbiter.
 <!-- markdown:element:chess:end -->
 
-### 🏆 Hall of Fame
+</details>
 
-Every game ends by the rules, and the move that wins it wins its player a place
-here, in any of the four games.
+<details>
+<summary><b>🏁 Checkers</b></summary>
+
+<!-- markdown:element:checkers:start -->
+> [!CAUTION]
+> 🛑 **@tannergolden's turn!** @tannergolden opens game 1 as Dark, and GitHub plays Light.
+
+<picture>
+  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-narrow-still-dark.svg">
+  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/checkers-narrow-still-day.svg">
+  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-narrow-dark.svg">
+  <source media="(max-width: 585px)" srcset="assets/elements/checkers-narrow-day.svg">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-still-dark.svg">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/checkers-still-day.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/checkers-dark.svg">
+  <img alt="Checkers: game 1, move 1. Game 1 of @tannergolden against GitHub, before its first move. It is @tannergolden&#x27;s turn as Dark. @tannergolden, dark: men on 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12; GitHub, light: men on 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32." src="assets/elements/checkers-day.svg">
+</picture>
+
+<details>
+<summary>⛂ <b>@tannergolden's Turn</b> · 7 legal moves · only @tannergolden can play these</summary>
+
+|  | Move | What it does | Play |
+| :-: | :--- | :--- | :-: |
+| ⚓ | **Hug the Shore!** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ⛵ | **Stand for the Narrows!** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ⛵ | **Hold the Narrows!** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ⛵ | **Make for Midchannel!** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ⛵ | **Seize the Strait!** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ⛵ | **Full Sail Ahead!** `11-16` | Man from 11 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ⛵ | **Come to Starboard!** `12-16` | Man from 12 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+
+</details>
+
+Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. A side that goes a week without moving gets a random legal move from the Arbiter. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
+<!-- markdown:element:checkers:end -->
+
+</details>
+
+<details>
+<summary><b>⚫ Connect Four</b></summary>
+
+<!-- markdown:element:connectfour:start -->
+> [!TIP]
+> 🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚫6, at random.
+
+<picture>
+  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-still-dark.svg">
+  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/connectfour-narrow-still-day.svg">
+  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-dark.svg">
+  <source media="(max-width: 585px)" srcset="assets/elements/connectfour-narrow-day.svg">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-still-dark.svg">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/connectfour-still-day.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/connectfour-dark.svg">
+  <img alt="Connect Four: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden drops the dark discs and GitHub the light, after 1. 6, the Arbiter&#x27;s move for @tannergolden: a dark disc down column 6, to row 1. It is GitHub&#x27;s turn as Light, due by 19 Oct. Column 6, from the foot: dark." src="assets/elements/connectfour-day.svg">
+</picture>
+
+<details>
+<summary>⚪ <b>GitHub's Turn</b> · 7 open columns · open to choose one</summary>
+
+|  | Move | What it does | Play |
+| :-: | :--- | :--- | :-: |
+| 🏔️ | **Guard the Edge, Sky Troops!** `1` | A light disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Go Airborne, Paratroopers!** `2` | A light disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Stick the Landing!** `3` | A light disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Drop Into the Heart of It!** `4` | A light disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Hit the Silk!** `5` | A light disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Steady on the Drop!** `6` | A light disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🏔️ | **Hit the Far Ridge!** `7` | A light disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+
+</details>
+
+The Arbiter opens every game for a side drawn at random, since whoever drops the first disc can force a win by opening in the centre column (James D. Allen and Victor Allis, independently, in 1988). Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
+<!-- markdown:element:connectfour:end -->
+
+</details>
+
+<details>
+<summary><b>❌ Tic-Tac-Toe</b></summary>
+
+<!-- markdown:element:tictactoe:start -->
+> [!CAUTION]
+> 🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with X on a1, at random.
+
+<picture>
+  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-still-dark.svg">
+  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/tictactoe-narrow-still-day.svg">
+  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-dark.svg">
+  <source media="(max-width: 585px)" srcset="assets/elements/tictactoe-narrow-day.svg">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-still-dark.svg">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictactoe-still-day.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-dark.svg">
+  <img alt="Tic-Tac-Toe: game 1, move 1. Game 1 of @tannergolden against GitHub, GitHub plays X and @tannergolden O, after 1. Xa1, the Arbiter&#x27;s move for GitHub: X takes the lower left corner. It is @tannergolden&#x27;s turn as O, due by 19 Oct. X: a1; O: no mark yet." src="assets/elements/tictactoe-day.svg">
+</picture>
+
+<details>
+<summary>⭕ <b>@tannergolden's Turn</b> · 8 open cells · only @tannergolden can play these</summary>
+
+|  | Move | What it does | Play |
+| :-: | :--- | :--- | :-: |
+| 📐 | **Back Them Into a Corner!** `Oa3` | O takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪶 | **Feel Out Their Defence!** `Ob3` | O takes the head of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🗡️ | **Hold the Corner!** `Oc3` | O takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Measure the Distance!** `Oa2` | O takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🎯 | **Strike the Heart!** `Ob2` | O takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪶 | **Probe the Line!** `Oc2` | O takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪶 | **Dance Along the Edge, Fencer!** `Ob1` | O takes the foot of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🗡️ | **Take the High Ground!** `Oc1` | O takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+
+</details>
+
+The Arbiter opens every game for a side drawn at random, since X moves first and wins far more often when anyone slips: of the 255,168 possible games, X wins 131,184, O wins 77,904 and 46,080 are drawn. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
+<!-- markdown:element:tictactoe:end -->
+
+</details>
+
+### 🏆 Hall of Fame
 
 <!-- markdown:element:hall-of-fame:start -->
 <picture>

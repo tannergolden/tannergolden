@@ -6,21 +6,25 @@
 
 A title says what the move is and never what it does to the game: the cell
 the mark takes (the centre, a corner or an edge) and where the marks around it
-stand, in a few plain words, a call to the side to move:
+stand, in plain words, a call to the side to move:
 
 - "by" names the marks touching the cell, by a side or at a corner: "Take the
   Corner by Their Edge!" (their marks touching it are one edge), "Mark the Edge
   by Your Corner and Their Centre!", "by Their Centre Alone" (and none of
-  yours), "by Two of Theirs", "by No Mark", and for a few cells the mark
-  beside the one that touches it, "by Their Edge Beside Your Corner";
+  yours), "by Two of Theirs", "by No Mark", and where nothing plainer is left,
+  how that mark sits by another: "by Their Edge Beside Your Corner", "by Their
+  Corner Across From Your Edge";
 - "Across From" the mark facing the cell over the centre: "Take the Corner
   Across From Theirs!";
 - "Along From" the corners on either side of a corner, a cell apart along the
   edge of the board: "Take a Corner Along From Yours!";
 - "Away From" the marks that do none of these: "Take an Edge Away From Their
-  Corner!";
-- the mover's own count: "Lay Your Third Mark in the Corner", "Take Your
-  Second Corner".
+  Corner!", "Away From Their Edge by Yours";
+- "Against" every mark the other side has: "Against Their Two Corners";
+- the mover's own count: "With Your Third Mark", "Lay Your Third Mark in the
+  Corner", "Take Your Second Corner";
+- and the game's first mark only starts it: "Start in the Centre!", "Start in
+  a Corner!", "Start on an Edge!".
 
 A title never names a row, a column or a diagonal and what it holds, never a
 threat, a block or a win, and nothing that needs a move ahead: a corner that
@@ -32,12 +36,14 @@ plainly: "X takes the upper left corner", with ", the last cell" on the ninth.
 A move is read from the mover's side, the mark that moved first written X, and
 taken up to the board's eight turns and mirrors: 2,096 moves, making the 764
 positions the game reaches once a mark goes down. tictactoe_names_table.py
-builds each move's title into tictactoe_names.json with the facts it claims.
-On every board the titles differ and tell the cells apart: a title says "the
-corner" when it is true of that cell alone, and two cells that are mirror
-images of each other share one title and add their place after a comma ("Take
-a Corner Along From Theirs, Upper Left!"). The game and the move number change
-nothing. Stdlib only, with tictactoe_rules.py beside it.
+builds each move's title into tictactoe_names.json with the facts it claims,
+and no two moves in the whole game share a title or claim the same facts. On
+every board the titles tell the cells apart: a title says "the corner" when it
+is true of that cell alone, and two cells that are mirror images of each other
+are one move, so they share its title and add their place after a comma ("Take
+a Corner Along From Theirs, Upper Left!"). A title runs to 100 characters at
+most, the place included. The game and the move number change nothing. Stdlib
+only, with tictactoe_rules.py beside it.
 """
 from __future__ import annotations
 

@@ -6,10 +6,11 @@ of every game listed as the engine shows it, whichever mark moved first, and not
   python3 -m unittest discover -s .github/scripts -p 'test_*.py'
 
 A title's truth is read here from tictactoe_rules.py alone, by code that shares nothing with the script that builds
-the table: every word of a title belongs to a phrase this file knows, every phrase is true of its move, and on
-every board the titles tell the cells apart. Neutrality is held to the owner's rule, that no name helps a player
-choose: no judgement, consequence or line word, no judging emoji, no `+` or `#`, and a move that wins on the spot
-reads like one that does nothing.
+the table: every word of a title belongs to a phrase this file knows, every phrase is true of its move, on every
+board the titles tell the cells apart, and no two moves in the whole game share a title or say the same thing in
+other words (mirror twins aside, which share one and add their place). Neutrality is held to the owner's rule, that
+no name helps a player choose: no judgement, consequence or line word, no judging emoji, no `+` or `#`, and a move
+that wins on the spot reads like one that does nothing.
 """
 from __future__ import annotations
 
@@ -32,7 +33,8 @@ from tictactoe_names import PLACES, TABLE, canonical, listing, made, names
 HERE = Path(__file__).resolve().parent
 # What tannergolden/markdown accepts for a move: an emoji, a title and its words (src/domain/elements/chess/game.py).
 KIT_EMOJI = re.compile("[←-⯿\U0001f000-\U0001faff‍️]{1,8}")
-KIT_TITLE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9 ,.'!-]{0,46}[A-Za-z0-9,.'!-])?")  # no space at either end
+KIT_TITLE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9 ,.'!-]{0,98}[A-Za-z0-9,.'!-])?")  # no space at either end
+LONGEST = 100  # the longest title the kit takes for Tic-Tac-Toe, a twin's place included
 KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
 DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
 SMALL = {"a", "an", "the", "and", "to", "of", "on", "at", "for", "in", "by"}  # the words Title Case leaves small
@@ -176,10 +178,21 @@ def said(kinds: list[str]) -> str:
     return ", ".join(parts[:-1]) + " and " + parts[-1]
 
 
-def nest(look: Look, side: str, k: str, other: str, other_kind: str | None) -> bool:
+def nest(look: Look, side: str, k: str, other: str, other_kind: str | None, how=beside) -> bool:
     """Whether a mark of `side` of kind `k` touches the cell and shares a side with one of `other`'s (of kind
-    `other_kind`, when it is named)."""
-    return any(touching(c, look.cell) and beside(c, d) and other_kind in (None, kind(d))
+    `other_kind`, when it is named), or faces it over the centre (`how`)."""
+    return any(touching(c, look.cell) and how(c, d) and other_kind in (None, kind(d))
+               for c in look.side[side] if kind(c) == k for d in look.side[other])
+
+
+def distant(look: Look, side: str, k: str, other: str, other_kind: str | None, also: bool) -> bool:
+    """Whether a mark of `side` of kind `k` neither touches the cell, nor faces it, nor sits a corner along from it,
+    and touches one of `other`'s (of kind `other_kind`, when it is named); and whether another of that side and kind
+    touches the cell (`also`: "Away From Their Other Edge") or none does."""
+    if any(touching(c, look.cell) for c in look.side[side] if kind(c) == k) != also:
+        return False
+    return any(not touching(c, look.cell) and not facing(c, look.cell) and not along(c, look.cell)
+               and touching(c, d) and other_kind in (None, kind(d))
                for c in look.side[side] if kind(c) == k for d in look.side[other])
 
 
@@ -196,6 +209,8 @@ PHRASES = [
      lambda v, m: len(v.near("Your")) == NUMBER[m[1]] and said(v.near("Their")) == m[2]),
     ("nest by", rf"by (Your|Their) ({ONE}) Beside (?:(Yours|Theirs)|(Your|Their) ({ONE}))",
      lambda v, m: nest(v, m[1], m[2], SIDE[m[3] or m[4]], m[5])),
+    ("nest across", rf"by (Your|Their) ({ONE}) Across From (Your|Their) ({ONE})",
+     lambda v, m: nest(v, m[1], m[2], m[3], m[4], facing)),
     ("by", rf"by (Your|Their) ({KINDS})( Alone)?",
      lambda v, m: said(v.near(m[1])) == m[2] and (not m[3] or not v.near(OTHER[m[1]]))),
     ("by counted", r"by (One|Two|Three|Four) of (Yours|Theirs)( Alone)?",
@@ -208,9 +223,15 @@ PHRASES = [
      and sum(along(v.cell, c) for c in v.side[m[1]]) == 2),
     ("along", r"Along From Your Corner and Theirs", lambda v, m: v.kind == "Corner"
      and sum(along(v.cell, c) for c in v.side["Your"]) == sum(along(v.cell, c) for c in v.side["Their"]) == 1),
+    ("nest away", rf"Away From (Your|Their) (Other )?({ONE}) by (?:(Yours|Theirs)|(Your|Their) ({ONE}))",
+     lambda v, m: distant(v, m[1], m[3], SIDE[m[4] or m[5]], m[6], bool(m[2]))),
     ("away both", rf"Away From Your ({KINDS}) and (?:Theirs|Their ({KINDS}))",
      lambda v, m: away(v, "Your", m[1]) and away(v, "Their", m[2] or m[1])),
     ("away", rf"Away From (Your|Their) ({KINDS})", lambda v, m: away(v, m[1], m[2])),
+    ("against", rf"Against Their ({KINDS})", lambda v, m: v.kind != "Centre"
+     and said(sorted(kind(c) for c in v.side["Their"])) == m[1]),
+    ("mark", r"With Your (First|Second|Third|Fourth|Fifth) Mark",
+     lambda v, m: len(v.side["Your"]) + 1 == ORDINAL[m[1]]),
 ]
 PHRASES = [(name, re.compile(pattern), truth) for name, pattern, truth in PHRASES]
 
@@ -223,11 +244,11 @@ def away(look: Look, side: str, text: str) -> bool:
 
 LEAD = re.compile(
     r"(?P<verb>Take|Mark) (?P<the>the|an?) (?P<kind>Centre|Corner|Edge)"
+    r"|(?P<start>Start) (?P<at0>in|on) (?P<the0>the|an?) (?P<kind0>Centre|Corner|Edge)"
     r"|Take Your (?P<nth>First|Second|Third|Fourth) (?P<kind2>Corner|Edge)"
-    r"|(?P<lay>Lay|Set|Plant|Put) Your (?P<ord>First|Second|Third|Fourth|Fifth) Mark (?P<at>in|on) "
-    r"(?P<the3>the|an?) (?P<kind3>Centre|Corner|Edge)"
-    r"|Send Your (?P<ord4>First|Second|Third|Fourth|Fifth) Mark to (?P<the4>the|an?) (?P<kind4>Centre|Corner|Edge)")
-DETAIL = re.compile(r", (?=(?:by|Across From|Along From|Away From) )")
+    r"|(?P<lay>Lay|Set) Your (?P<ord>First|Second|Third|Fourth|Fifth) Mark (?P<at>in|on) "
+    r"(?P<the3>the|an?) (?P<kind3>Centre|Corner|Edge)")
+DETAIL = re.compile(r", (?=(?:by|Across From|Along From|Away From|Against|With Your) )")
 
 
 class Reading:
@@ -239,12 +260,13 @@ class Reading:
         m = LEAD.match(text)
         if not m:
             raise ValueError(f"{title!r} opens with no lead this file knows")
-        self.kind = m["kind"] or m["kind2"] or m["kind3"] or m["kind4"]
-        self.article = m["the"] or m["the3"] or m["the4"]  # None for "Take Your Second Corner"
-        self.form = (m["verb"] or ("Take Your" if m["nth"] else m["lay"] or "Send")).lower()
+        self.kind = m["kind"] or m["kind0"] or m["kind2"] or m["kind3"]
+        self.article = m["the"] or m["the0"] or m["the3"]  # None for "Take Your Second Corner"
+        self.form = (m["verb"] or m["start"] or ("Take Your" if m["nth"] else m["lay"])).lower()
         self.count = ORDINAL.get(m["nth"] or "")
-        self.marks = ORDINAL.get(m["ord"] or m["ord4"] or "")
-        self.at = m["at"]
+        self.marks = ORDINAL.get(m["ord"] or "")
+        self.at = m["at"] or m["at0"]
+        self.start = bool(m["start"])
         rest = text[m.end():]
         if rest and not rest.startswith(" "):
             raise ValueError(f"{title!r} runs its lead into what follows")
@@ -261,8 +283,18 @@ class Reading:
         """Whether every claim the title makes holds of the move."""
         mine = self.marks is None or len(look.side["Your"]) + 1 == self.marks
         counted = self.count is None or sum(kind(c) == self.kind for c in look.side["Your"]) + 1 == self.count
-        return (look.kind == self.kind and mine and counted
+        started = self.start == (not look.side["Your"] and not look.side["Their"])  # the game's first mark alone
+        return (look.kind == self.kind and mine and counted and started
                 and all(truth(look, m) for _, m, truth in self.read))
+
+    def says(self) -> frozenset:
+        """What the title claims, in whatever words and order: its cell's kind, whether the game starts there, the
+        count its lead or a detail makes, and every other detail. `Lay Your Third Mark in a Corner, by Their Edge` and
+        `Take the Corner by Their Edge, With Your Third Mark` say one thing."""
+        marks = {self.marks} | {ORDINAL[m[1]] for name, m, _ in self.read if name == "mark"}
+        return frozenset({("cell", self.kind), ("start", self.start), ("count", self.count)}
+                         | {("mark", n) for n in marks if n}
+                         | {("detail", m[0]) for name, m, _ in self.read if name != "mark"})
 
     def shapes(self) -> list[str]:
         """The lead's form and each detail's phrase, for comparing moves that do different things."""
@@ -314,11 +346,12 @@ class Table(unittest.TestCase):
                          "run tictactoe_names_table.py to build tictactoe_names.json again")
 
     def test_the_script_makes_the_same_table_whatever_the_hash_seed(self):
-        for seed in ("0", "4242"):
-            env = {k: v for k, v in os.environ.items() if k not in ("GH_TOKEN", "GITHUB_TOKEN", "MARKDOWN_TOKEN")}
-            done = subprocess.run([sys.executable, str(HERE / "tictactoe_names_table.py"), "--check"],
-                                  env={**env, "PYTHONHASHSEED": seed}, capture_output=True, text=True, check=False)
-            self.assertEqual(done.returncode, 0, done.stderr)
+        """The table above was made under this run's hash seed; the script makes it again under another."""
+        seed = "4242" if os.environ.get("PYTHONHASHSEED") == "0" else "0"
+        env = {k: v for k, v in os.environ.items() if k not in ("GH_TOKEN", "GITHUB_TOKEN", "MARKDOWN_TOKEN")}
+        done = subprocess.run([sys.executable, str(HERE / "tictactoe_names_table.py"), "--check"],
+                              env={**env, "PYTHONHASHSEED": seed}, capture_output=True, text=True, check=False)
+        self.assertEqual(done.returncode, 0, done.stderr)
 
     def test_the_table_keeps_no_judgement(self):
         for key, entry in TITLES.items():
@@ -342,9 +375,12 @@ class Table(unittest.TestCase):
             with self.subTest(key=key, title=title):
                 self.assertTrue(KIT_TITLE.fullmatch(title))
                 self.assertTrue(title.endswith("!") and title.count("!") == 1)
-                self.assertLessEqual(len(title), 48)
+                self.assertLessEqual(len(title), LONGEST)
                 self.assertNotRegex(title, r"\b[a-c][1-3]\b|\b[XO]\b|\d", "a title names no cell, mark or digit")
                 self.assertLessEqual(title.count("Mark"), 1, "never Mark the Corner by No Mark")
+                self.assertEqual(title.startswith("Start "), key.count(".") == 8, "the first mark alone starts")
+                self.assertNotIn("Start", title.removeprefix("Start "))
+                self.assertNotRegex(title, r"Your First (?:Corner|Edge).*First Mark", "one count, said once")
                 for word in title.rstrip("!").split()[1:]:
                     self.assertTrue(word in SMALL or word[0].isupper(), word)
                 for dash in DASHES:
@@ -374,10 +410,18 @@ def stored(look: Look, fact: str) -> bool:
         return look.kind == "Corner" and sum(along(look.cell, c) for c in look.side[side]) == int(value)
     if name == "away":
         return look.far(side) == kinds and not set(kinds) & set(look.near(side))
-    if name == "nest-by":
+    if name == "start":
+        return not look.side["Your"] and not look.side["Their"]
+    if name == "against":
+        return look.kind != "Centre" and sorted(kind(c) for c in look.side["Their"]) == kinds
+    if name in ("nest-by", "nest-across", "nest-away", "nest-away-other"):
         other, _, other_kind = parts[1].partition("=")[2].partition("=")
         other = {"your": "Your", "their": "Their"}[other]
-        return nest(look, side, value.title(), other, other_kind.title() or None)
+        if name == "nest-by":
+            return nest(look, side, value.title(), other, other_kind.title() or None)
+        if name == "nest-across":
+            return nest(look, side, value.title(), other, other_kind.title(), facing)
+        return distant(look, side, value.title(), other, other_kind.title() or None, name == "nest-away-other")
     raise AssertionError(f"{fact!r} is no fact this file knows")
 
 
@@ -395,9 +439,9 @@ class Titles(unittest.TestCase):
                     if read.at:
                         self.assertEqual(read.at, "on" if read.kind == "Edge" else "in")
                     used.update(read.shapes())
-        families = {"by", "by counted", "none", "both", "both same", "both mixed", "nest by", "across", "along",
-                    "away", "away both"}
-        leads = {f"lead {form}" for form in ("take", "mark", "take your", "lay", "set", "plant", "put", "send")}
+        families = {"by", "by counted", "none", "both", "both same", "both mixed", "nest by", "nest across", "across",
+                    "along", "away", "away both", "nest away", "against", "mark"}
+        leads = {f"lead {form}" for form in ("start", "take", "mark", "take your", "lay", "set")}
         self.assertEqual(set(used), families | leads, "every phrase the generator has is used, and no other")
 
     def test_every_board_tells_its_cells_apart(self):
@@ -460,6 +504,32 @@ class Titles(unittest.TestCase):
                 self.assertLessEqual(len(forms), 1, [e["title"] for e in entries])
                 if centre and forms:
                     self.assertIn(centre[0], forms | ({"take"} if forms == {"take your"} else set()))
+
+
+class Unique(unittest.TestCase):
+    """The owner's rule for the whole game: no two moves share a title, on one board or on any two."""
+
+    def test_no_title_is_given_to_two_moves(self):
+        titles = collections.Counter(entry["title"] for entry in TITLES.values())
+        self.assertEqual([t for t, n in titles.items() if n > 1], [])
+        facts = collections.Counter(frozenset(entry["facts"]) for entry in TITLES.values())
+        self.assertEqual(len(facts), len(TITLES), "no two titles claim the same facts")
+
+    def test_no_two_titles_say_the_same_thing_in_other_words(self):
+        said = collections.defaultdict(list)
+        for entry in TITLES.values():
+            said[reading(entry["title"]).says()].append(entry["title"])
+        self.assertEqual([titles for titles in said.values() if len(titles) > 1], [])
+
+    def test_a_title_shown_anywhere_names_one_move(self):
+        """Every title the listings show, its twin's place aside, belongs to one move, whichever mark opened and
+        however the board is turned; a move's mirror twins are the only cells that share one."""
+        moves = collections.defaultdict(set)
+        for _, position, entries, double in boards():
+            for e in entries:
+                moves[bare(e, double[e["code"]])].add(made(position, e["code"]))
+        self.assertEqual(len(moves), len(TITLES))
+        self.assertEqual({t: keys for t, keys in moves.items() if len(keys) > 1}, {})
 
 
 class Neutral(unittest.TestCase):
@@ -538,7 +608,7 @@ class Boards(unittest.TestCase):
                     with self.subTest(first=first, board=position.board, cell=e["code"]):
                         self.assertEqual(set(e), {"code", "notation", "emoji", "title", "words"})
                         self.assertTrue(KIT_EMOJI.fullmatch(e["emoji"]))
-                        self.assertTrue(KIT_TITLE.fullmatch(e["title"]) and len(e["title"]) <= 48)
+                        self.assertTrue(KIT_TITLE.fullmatch(e["title"]) and len(e["title"]) <= LONGEST)
                         self.assertTrue(KIT_WORDS.fullmatch(e["words"]) and len(e["words"]) <= 80)
                         for dash in DASHES:
                             self.assertNotIn(dash, e["title"] + e["words"])
@@ -569,23 +639,25 @@ class Examples(unittest.TestCase):
         named = self.entries(".../.../O..", R.O)  # the Arbiter opened for GitHub with O on a1: X to move
         self.assertEqual({c: (e["emoji"], e["title"]) for c, e in named.items()}, {
             "a3": ("📐", "Take a Corner Along From Theirs, Upper Left!"),
-            "b3": ("📏", "Take an Edge Away From Their Corner, Top!"),
+            "b3": ("📏", "Take an Edge by No Mark, Top!"),
             "c3": ("📐", "Take the Corner Across From Theirs!"),
             "a2": ("📏", "Take an Edge by Their Corner, Left!"),
-            "b2": ("\U0001f533", "Take the Centre by Their Corner!"),
-            "c2": ("📏", "Take an Edge Away From Their Corner, Right!"),
+            "b2": ("\U0001f533", "Take the Centre!"),
+            "c2": ("📏", "Take an Edge by No Mark, Right!"),
             "b1": ("📏", "Take an Edge by Their Corner, Bottom!"),
             "c1": ("📐", "Take a Corner Along From Theirs, Lower Right!"),
         })
         self.assertEqual(named["b2"]["words"], "X takes the centre")
         self.assertEqual(named["c3"]["notation"], "Xc3")
 
-    def test_the_first_mark_names_its_cell_and_no_more(self):
+    def test_the_first_mark_starts_the_game_and_says_no_more(self):
         for first in (R.X, R.O):
             named = self.entries(".../.../...", first)
-            self.assertEqual(named["b2"]["title"], "Plant Your First Mark in the Centre!")
-            self.assertEqual(named["a3"]["title"], "Plant Your First Mark in a Corner, Upper Left!")
-            self.assertEqual(named["b1"]["title"], "Plant Your First Mark on an Edge, Bottom!")
+            self.assertEqual(named["b2"]["title"], "Start in the Centre!")
+            self.assertEqual(named["a3"]["title"], "Start in a Corner, Upper Left!")
+            self.assertEqual(named["c1"]["title"], "Start in a Corner, Lower Right!")
+            self.assertEqual(named["b1"]["title"], "Start on an Edge, Bottom!")
+            self.assertEqual(named["c2"]["title"], "Start on an Edge, Right!")
             self.assertEqual(named["b2"]["words"], f"{first} takes the centre")
 
     def test_the_last_cell_says_so_and_no_more(self):

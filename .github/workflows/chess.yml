@@ -114,7 +114,8 @@ jobs:
             if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard -- .github/chess)" ]; then
               break # nothing to save: a move turned away, or a week not yet up
             fi
-            git add -- .github/chess .github/markdown.yaml
+            git add -- .github/markdown.yaml
+            if [ -d .github/chess ]; then git add -- .github/chess; fi # the game's folder comes with its first move
             git -c user.name='github-actions[bot]' \
                 -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
                 commit --quiet -F "$RUNNER_TEMP/chess/commit.txt"

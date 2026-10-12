@@ -541,8 +541,10 @@ def board(game: dict | None, hall: list, owner: str, moment: dt.datetime) -> dic
         last = hall[-1] if hall and not current["moves"] else None  # the game that ended, this one yet to start
         element["note"] = (f"Only @{owner} can play on this turn: a pick from anyone else is turned away with a"
                            " comment on its issue.")
-        if last and not last["winner"]:
-            element["note"] = f"Game {last['game']} was drawn by {REASONS[last['reason']]}. {element['note']}"
+        if last:
+            ended = (f"{'@' + owner if last['winner'] == owner else 'GitHub'} won game {last['game']}."
+                     if last["winner"] else f"Game {last['game']} was drawn by {REASONS[last['reason']]}.")
+            element["note"] = f"{ended} {element['note']}"
     element["note"] += (f" The move is due by {until(clock)}, or the Arbiter plays a random legal move." if clock
                         else " A side that goes a week without moving gets a random legal move from the Arbiter.")
     if hall:

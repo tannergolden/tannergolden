@@ -288,7 +288,8 @@ class TwoDays(unittest.TestCase):
         element = table.board()
         self.assertEqual((element["game"], element["due"], element["fen"]), (2, page.day(opens + page.WEEK),
                                                                               R.START.fen))
-        self.assertTrue(element["note"].startswith("GitHub plays Black, which moves first in American checkers"))
+        self.assertTrue(element["note"].startswith("@tannergolden won game 1. GitHub plays Black, which moves first in"
+                                                   " American checkers"), element["note"])
         self.assertIn(games.who_plays(GITHUB, OWNER), element["note"])
         late = table.wait(page.WEEK)
         self.assertTrue(late.changed, "a week after the fresh board came, the Arbiter opens for GitHub")

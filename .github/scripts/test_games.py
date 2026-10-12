@@ -579,6 +579,23 @@ class TwoDays(unittest.TestCase):
                 self.assertEqual(outcome.comment, said)
                 self.assertFalse(outcome.changed)
 
+    def test_the_next_board_says_how_the_last_game_ended_until_a_player_moves(self):
+        # the note opens with who won the last game, or how it was drawn, while the fresh board has no move but the
+        # Arbiter's opening; the first player's move takes it away
+        for key, line, said in (("tictactoe", TTT_FIRST_WINS, f"@{OWNER} won game 1."),
+                                ("tictactoe", TTT_DRAW, "Game 1 was drawn on a full board."),
+                                ("connectfour", C4_DRAW, "Game 1 was drawn on a full frame.")):
+            with self.subTest(key=key, said=said):
+                table = Table(key, HOUSE, line[0])
+                table.play(line)
+                table.fresh()
+                element = table.board()
+                self.assertEqual(element["game"], 2)
+                self.assertTrue(element["note"].startswith(f"{said} "), element["note"])
+                position = games.replay(table.mod, table.game)[-1]
+                self.assertTrue(table.move(min(table.mod.legal(position))).changed)
+                self.assertNotIn(said, table.board()["note"])
+
     def test_the_fresh_board_comes_by_itself_with_the_arbiter_s_opening(self):
         table = Table("tictactoe", HOUSE)
         table.play(TTT_FIRST_WINS)
@@ -598,7 +615,8 @@ class TwoDays(unittest.TestCase):
         opening = table.game["moves"][0]
         self.assertEqual((element["opens"], element["last"]["move"], element["last"]["by"]),
                          (table.game["opens"], table.mod.WORDS[table.game["opens"]] + opening["move"], "the Arbiter"))
-        self.assertTrue(element["note"].startswith(table.mod.OPENS_NOTE.format(owner=OWNER)), element["note"])
+        self.assertTrue(element["note"].startswith(f"@{OWNER} won game 1. {table.mod.OPENS_NOTE.format(owner=OWNER)}"),
+                        element["note"])
         over = table.move("a1", player=OCTOCAT, game=1, move=8)
         self.assertEqual(over.comment, "⌛ **Game 1 is over**, so `a1` wasn't played.\nGame 2 is under way on"
                                        f" {BOARD}: pick a move there.\n", "once game 2 is on the board")

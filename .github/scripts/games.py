@@ -538,6 +538,16 @@ def kept(mod: ModuleType, owner: str) -> str:
             f"{mod.KEY}/games).")
 
 
+def how_it_ended(mod: ModuleType, record: dict | None, owner: str) -> str:
+    """How the last game ended, as the next game's note opens with it until a player moves in it: who won it, or how
+    it was drawn."""
+    if not record:
+        return ""
+    if record["winner"]:
+        return f"{named_side(HOUSE if record['winner'] == owner else GITHUB, owner)} won game {record['game']}."
+    return f"Game {record['game']} was drawn {mod.DRAWN[record['reason']]}."
+
+
 def who_plays(side: str, owner: str) -> str:
     if side == GITHUB:
         return f"Anyone but @{owner} can play on this turn, and the first pick in is played."
@@ -561,15 +571,13 @@ def board(mod: ModuleType, game: dict | None, hall: list, owner: str, moment: dt
     if current["moves"]:
         element["last"] = last_move(mod, current, positions)
     element["history"] = score_sheet(mod, current, positions)
-    record = hall[-1] if hall and not current["moves"] else None  # the game that ended, when this one is yet to open
+    fresh = len(current["moves"]) <= (1 if mod.ARBITER_OPENS else 0)  # no move yet but the Arbiter's opening
+    record = hall[-1] if hall and fresh else None  # the game that ended, when no player has moved in this one
     opens = mod.OPENS_NOTE.format(owner=owner)
-    if mod.ARBITER_OPENS and len(current["moves"]) == 1:
-        parts = [(opens, True), (who_plays(side, owner), True)]
-    elif current["moves"]:
+    if fresh:
+        parts = [(how_it_ended(mod, record, owner), False), (opens, True), (who_plays(side, owner), True)]
+    else:
         parts = [(who_plays(side, owner), True)]
-    else:  # a fresh board, its opener to make the first move
-        parts = [(f"Game {record['game']} was drawn {mod.DRAWN[record['reason']]}." if record and not record["winner"]
-                  else "", False), (opens, True), (who_plays(side, owner), True)]
     parts.append((f"The move is due by {until(clock)}, or the Arbiter plays a random legal move.", True))
     parts += [(mod.RULE, False), (kept(mod, owner) if hall else "", False)]
     element["note"] = sentences(parts)

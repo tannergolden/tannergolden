@@ -429,7 +429,8 @@ class TwoDays(unittest.TestCase):
         element = table.board()
         self.assertNotIn("result", element)
         self.assertEqual((element["game"], element["due"]), (2, "20 Oct"), "a week from the moment it came")
-        self.assertTrue(element["note"].startswith("Only @tannergolden can play on this turn"), element["note"])
+        self.assertTrue(element["note"].startswith("GitHub won game 1. Only @tannergolden can play on this turn"),
+                        element["note"])
         self.assertFalse(table.wait(chess.WEEK - dt.timedelta(minutes=1)).changed)
         self.assertTrue(table.wait(dt.timedelta(minutes=1)).changed, "a week after it came, the Arbiter opens it")
         self.assertTrue(table.game["moves"][0]["arbiter"])
@@ -660,14 +661,14 @@ class Board(unittest.TestCase):
         self.assertIn("[PGN](https://github.com/tannergolden/tannergolden/tree/HEAD/.github/chess/games)",
                       element["note"])
 
-    def test_a_new_game_s_note_says_how_the_last_one_was_drawn(self):
+    def test_a_new_game_s_note_says_how_the_last_one_ended(self):
         table = Table()
         table.play(FOOLS_MATE)
         table.fresh()
         element = table.board()
         self.assertEqual((element["game"], element["due"]), (2, "20 Oct"))
-        self.assertTrue(element["note"].startswith("Only @tannergolden can play on this turn"),
-                        "a won game's result is on its own final board")
+        self.assertTrue(element["note"].startswith("GitHub won game 1. Only @tannergolden can play on this turn"),
+                        element["note"])
         table.play(LOYDS_STALEMATE)
         table.fresh()
         element = table.board()

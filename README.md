@@ -94,9 +94,6 @@ plays counts for nobody, and a draw is nobody's win. Every win earns its player
 a place in the Hall of Fame below.
 
 <!-- markdown:element:chess:start -->
-> [!CAUTION]
-> 🛑 **@tannergolden's turn!** @tannergolden opens game 1 as White, and GitHub plays Black.
-
 <details open>
 <summary><b>♟️ Chess</b></summary>
 
@@ -158,9 +155,6 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 <!-- markdown:element:chess:end -->
 
 <!-- markdown:element:checkers:start -->
-> [!TIP]
-> 🟢 **GitHub's turn!** GitHub opens game 1 as Black. Pick a move below by 19 Oct.
-
 <details>
 <summary><b>🏁 Checkers</b></summary>
 
@@ -196,9 +190,6 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 <!-- markdown:element:checkers:end -->
 
 <!-- markdown:element:connectfour:start -->
-> [!TIP]
-> 🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪6, at random.
-
 <details>
 <summary><b>⚫ Connect Four</b></summary>
 
@@ -234,9 +225,6 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 <!-- markdown:element:connectfour:end -->
 
 <!-- markdown:element:tictactoe:start -->
-> [!CAUTION]
-> 🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on a1, at random.
-
 <details>
 <summary><b>❌ Tic-Tac-Toe</b></summary>
 

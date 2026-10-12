@@ -16,10 +16,10 @@ Moves count both sides', from 1 for White's first.
 A move is played only when it is for the game and the move on the board, by
 the side whose turn it is, and legal. Anything else is turned away with a
 reply saying why, and nothing changes. With no UCI the run is the clock, as
-.github/scripts/clock.py runs it for every game each hour: when the side to
-move has gone a week without moving, the Arbiter plays a legal move for it at
-random, and says so on the issue of the move it answers, once, and after that
-in the owner's logbook.
+.github/scripts/clock.py runs it for every game twice an hour: when the side
+to move has gone a week without moving, the Arbiter plays a legal move for it
+at random, and says so on the issue of the move it answers, once, and after
+that in the owner's logbook.
 
 A game ends when the rules end it, never by resigning or agreeing a draw.
 Its record goes into the Hall of Fame and its moves into a PGN, and its final

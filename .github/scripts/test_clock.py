@@ -96,7 +96,7 @@ class Run(unittest.TestCase):
         self.assertTrue(self.commit().endswith("\n\nRun: https://github.com/tannergolden/tannergolden/actions/runs/1\n"))
         self.assertEqual(self.notices(), [], "an opening answers no issue")
 
-    def test_an_hour_with_nothing_to_do_changes_nothing(self):
+    def test_a_tick_with_nothing_to_do_changes_nothing(self):
         self.run_clock(T0)
         before = self.settings.read_text(encoding="utf-8")
         code, said = self.run_clock(T0 + dt.timedelta(hours=1))
@@ -126,7 +126,7 @@ class Run(unittest.TestCase):
                                                  " and chess\n\n"))
         self.assertTrue(self.state("chess")[0]["moves"][-1]["arbiter"])
 
-    def test_a_finished_game_s_fresh_board_comes_on_the_first_hour_after_its_two_days(self):
+    def test_a_finished_game_s_fresh_board_comes_on_the_first_tick_after_its_two_days(self):
         game, hall = None, []
         for ply, uci in enumerate(FOOLS_MATE, 1):
             player = (OWNER, OWNER_ID) if ply % 2 else (OCTOCAT, OCTOCAT_ID)

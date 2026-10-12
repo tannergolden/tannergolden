@@ -1,17 +1,17 @@
 name: Clock
 
 # The one clock for the profile's four games: Tic-Tac-Toe, Connect Four,
-# Checkers and Chess. Every hour on the hour, .github/scripts/clock.py ticks
-# each game in turn: a first game of Checkers starts on its first run, GitHub
-# to open it as Black; once a finished game's final board has been up for two
-# days, the next game's fresh board comes, in Tic-Tac-Toe and Connect Four
-# with the Arbiter's random opening on it, for a side drawn at random; and
-# when the side to move has gone a week without moving, the Arbiter plays a
-# random legal move for it, so no game stalls. No game's own workflow keeps a
+# Checkers and Chess. Twice an hour, .github/scripts/clock.py ticks each game
+# in turn: a first game of Checkers starts on its first run, GitHub to open it
+# as Black; once a finished game's final board has been up for two days, the
+# next game's fresh board comes, in Tic-Tac-Toe and Connect Four with the
+# Arbiter's random opening on it, for a side drawn at random; and when the
+# side to move has gone a week without moving, the Arbiter plays a random
+# legal move for it, so no game stalls. No game's own workflow keeps a
 # schedule: they only play moves.
 #
 # One run saves every game that moved on in one commit, the bot's, with the
-# save loop the games' own workflows use: it plays the hour on the latest
+# save loop the games' own workflows use: it plays its tick on the latest
 # state and pushes, and a push that loses the race starts again from the state
 # that won. Then the Arbiter's notices go out, through the Official Arbiter's
 # App (.github/scripts/arbiter.sh), each once on the issue of the move it
@@ -20,12 +20,15 @@ name: Clock
 # when anything changed.
 on:
   schedule:
-    - cron: '0 * * * *' # every hour on the hour: the Arbiter's week, and a final board's two days
+    # Twice an hour, off the hour: GitHub delays scheduled runs at the top of
+    # the hour and drops some, and each tick catches up on whatever the one
+    # before it missed: the Arbiter's week, and a final board's two days.
+    - cron: '17,47 * * * *'
   workflow_dispatch:
 
-# One clock at a time: a run started by hand while the hour's run is ticking waits for it, and then finds
-# nothing left to do. GitHub keeps only the newest waiting run, and a clock that misses an hour catches up
-# on the next, since every check it makes counts from the state, never from the run.
+# One clock at a time: a run started by hand while a scheduled tick is running waits for it, and then
+# finds nothing left to do. GitHub keeps only the newest waiting run, and a clock that misses a tick
+# catches up on the next, since every check it makes counts from the state, never from the run.
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
@@ -59,7 +62,7 @@ jobs:
           branch="$(git symbolic-ref --quiet --short HEAD)"
           games=(.github/tictactoe .github/connectfour .github/checkers .github/chess)
           for attempt in 1 2 3 4 5; do
-            # Always from the latest state: a move may have come since, and the hour is ticked on top of it.
+            # Always from the latest state: a move may have come since, and the tick is played on top of it.
             git fetch --quiet origin "$branch"
             git reset --quiet --hard "origin/$branch"
             : > "$RUNNER_TEMP/clock-outputs"

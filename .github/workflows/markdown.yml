@@ -7,7 +7,7 @@ name: '📝 Markdown'
 # EST, so the page's day, and a holiday's set with it, changes over at the
 # page's own midnight. Picks starts it too, as soon as it has picked new
 # placards, and so do the games: every move that changes a board, and the
-# clock in any hour that changed one.
+# clock on any tick that changed one.
 #
 # `theme` is the page's one theme, and every part is drawn in it. Everything
 # else the page sets is in .github/markdown.yaml.

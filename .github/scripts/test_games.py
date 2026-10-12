@@ -626,7 +626,7 @@ class TwoDays(unittest.TestCase):
         table = Table("connectfour", HOUSE)
         table.play(C4_FIRST_UP)
         opens = page.parse(table.game["started"])
-        table.clock = opens  # the moment the board comes, before the clock's run on the hour
+        table.clock = opens  # the moment the board comes, before the clock's next tick
         outcome = table.move("3", player=OCTOCAT, game=2, move=1, after=dt.timedelta(minutes=5))
         self.assertTrue(outcome.changed, "the opening is played and saved")
         self.assertIn("got there first, played by the Arbiter.", outcome.comment)

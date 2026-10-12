@@ -84,10 +84,10 @@ first move to reach the game is the one played. The Official Arbiter rules on
 it, answers on your issue, and redraws the board within a few minutes. Chess is
 open below, and the other three open with a click.
 
-One clock keeps all four, on the hour. A side that goes a week without moving
-gets a random legal move from the Arbiter, and a finished game's winning board
-stays up for two days before a fresh board comes by itself. A win counts only
-for the player who makes the winning move: the checkmate in Chess, the move
+One clock keeps all four, ticking twice an hour. A side that goes a week without
+moving gets a random legal move from the Arbiter, and a finished game's winning
+board stays up for two days before a fresh board comes by itself. A win counts
+only for the player who makes the winning move: the checkmate in Chess, the move
 that leaves the other side no move in Checkers, the fourth disc in a row in
 Connect Four, or the third mark in a row in Tic-Tac-Toe. A move the Arbiter
 plays counts for nobody, and a draw is nobody's win. Every win earns its player

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The one clock for all four games on the profile: every hour on the hour, each game's Arbiter, in a single run.
+"""The one clock for all four games on the profile: twice an hour, each game's Arbiter, in a single run.
 
   python3 .github/scripts/clock.py .github [--now 2026-10-12T17:00:00Z]
 
-.github/workflows/clock.yml runs this at the top of every hour, and no
+.github/workflows/clock.yml runs this twice an hour, off the hour, and no
 game's own workflow keeps a schedule of its own. For each game, in tier
 order (Tic-Tac-Toe, Connect Four, Checkers, Chess), it does what that game's
 clock does: the first game of Checkers starts, GitHub to open it as Black,

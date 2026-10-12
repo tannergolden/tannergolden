@@ -312,7 +312,7 @@ class Endings(unittest.TestCase):
         outcome = table.play(FOOLS_MATE)
         self.assertIn("🏆 **2... Qh4#: checkmate!** GitHub wins game 1, and @octocat takes a place in the"
                       " [Hall of Fame](https://github.com/tannergolden) for the winning move.\n", outcome.comment)
-        self.assertRegex(outcome.comment, r"\n\S+ \*[^*]+!\* · Queen from d8 to h4, checkmate\n")
+        self.assertRegex(outcome.comment, r"\n\S+ \*[^*]+!\* · Queen from d8 to h4\n")
         self.assertIn("Its final board stays up for two days: game 2 opens 13 Oct, and @tannergolden opens it as"
                       " White.", outcome.comment)
         record = table.hall[-1]
@@ -339,7 +339,7 @@ class Endings(unittest.TestCase):
         table = Table()
         outcome = table.play(LOYDS_STALEMATE)
         self.assertIn("🤝 **10. Qe6: game 1 is drawn by stalemate.**\n", outcome.comment)
-        self.assertIn("· Queen from c8 to e6, stalemate\nIts final board stays up for two days: game 2 opens 14 Oct",
+        self.assertIn("· Queen from c8 to e6\nIts final board stays up for two days: game 2 opens 14 Oct",
                       outcome.comment)
         self.assertEqual((table.hall[-1]["result"], table.hall[-1]["winner"]), ("1/2-1/2", None))
         self.assertIn("⏳ **Game 2 opens 14 Oct**", table.move("e2e4", game=1, move=20).comment)

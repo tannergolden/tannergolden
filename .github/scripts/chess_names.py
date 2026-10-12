@@ -49,6 +49,7 @@ from __future__ import annotations
 import copy
 import functools
 import hashlib
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 
@@ -101,24 +102,24 @@ COMMANDS = frozenset("""
 # The openings the books name, each by the moves that reach it: a move that reaches the position, by any order of
 # moves, is named for it. The names are the ones every opening book uses, and only the well-known.
 BOOK_LINES = (
-    ("e2e4", ("Open with the King's Pawn!", "Seize the Centre with the King's Pawn!")),
-    ("d2d4", ("Open with the Queen's Pawn!", "Seize the Centre with the Queen's Pawn!")),
-    ("c2c4", ("Play the English!", "Open with the English!")),
+    ("e2e4", ("Open With the King's Pawn!", "Seize the Centre With the King's Pawn!")),
+    ("d2d4", ("Open With the Queen's Pawn!", "Seize the Centre With the Queen's Pawn!")),
+    ("c2c4", ("Play the English!", "Open With the English!")),
     ("f2f4", ("Play Bird's Opening!",)),
     ("b2b4", ("Play the Polish Opening!",)),
     ("g2g4", ("Launch Grob's Attack!", "Play Grob's Attack!")),
     ("b2b3", ("Play the Nimzo-Larsen Attack!",)),
     ("e2e4 e7e5", ("Play the Open Game!", "Meet the King's Pawn Head-On!")),
-    ("e2e4 c7c5", ("Play the Sicilian!", "Answer with the Sicilian!", "Fight Back with the Sicilian!")),
-    ("e2e4 e7e6", ("Play the French!", "Answer with the French Defence!")),
-    ("e2e4 c7c6", ("Play the Caro-Kann!", "Answer with the Caro-Kann!")),
-    ("e2e4 d7d5", ("Play the Scandinavian!", "Strike Back with the Scandinavian!")),
+    ("e2e4 c7c5", ("Play the Sicilian!", "Answer With the Sicilian!", "Fight Back With the Sicilian!")),
+    ("e2e4 e7e6", ("Play the French!", "Answer With the French Defence!")),
+    ("e2e4 c7c6", ("Play the Caro-Kann!", "Answer With the Caro-Kann!")),
+    ("e2e4 d7d5", ("Play the Scandinavian!", "Strike Back With the Scandinavian!")),
     ("e2e4 g8f6", ("Play Alekhine's Defence!",)),
-    ("e2e4 d7d6", ("Play the Pirc!", "Answer with the Pirc Defence!")),
+    ("e2e4 d7d6", ("Play the Pirc!", "Answer With the Pirc Defence!")),
     ("e2e4 g7g6", ("Play the Modern Defence!",)),
     ("d2d4 d7d5", ("Play the Closed Game!", "Meet the Queen's Pawn Head-On!")),
-    ("d2d4 g8f6", ("Play an Indian Defence!", "Answer with an Indian Defence!")),
-    ("d2d4 f7f5", ("Play the Dutch!", "Answer with the Dutch Defence!")),
+    ("d2d4 g8f6", ("Play an Indian Defence!", "Answer With an Indian Defence!")),
+    ("d2d4 f7f5", ("Play the Dutch!", "Answer With the Dutch Defence!")),
     ("d2d4 c7c5", ("Play the Old Benoni!",)),
     ("d2d4 e7e5", ("Offer the Englund Gambit!",)),
     ("f2f4 e7e5", ("Offer From's Gambit!",)),
@@ -1695,6 +1696,17 @@ def words(position: Position, move: Move, after: Position | None = None, replies
     return text
 
 
+# A preposition of four letters or more takes a capital in a title, as the other three games write theirs:
+# "Cover b4 With the a-Pawn!", as Checkers' "Open With Old Faithful!" and Tic-Tac-Toe's "Save the Draw From
+# the Centre!".
+LONG_PREPOSITION = re.compile(r"(?<= )(with|into|from|onto|over|upon)(?= )")
+
+
+def cased(title: str) -> str:
+    """The title with its long prepositions capitalised."""
+    return LONG_PREPOSITION.sub(lambda m: m.group(1).capitalize(), title)
+
+
 def listing(position: Position, game: int = 0, ply: int = 0) -> list[dict]:
     """Every legal move in the list's order, each with its SAN, its words and a title no other move here has. The
     names depend on the position alone: `game` and `ply` are taken for the callers that pass them, and unused."""
@@ -1717,6 +1729,6 @@ def _listing(key: str) -> list[dict]:
         after, replies = board_.after[move], board_.replies[move]
         emoji = WARNING if (theme(r) == "stalemate" and r.ahead >= 3) or r.dead == "thrown" else EMOJI[theme(r)]
         out.append({"uci": move.uci, "san": san(position, move, legal, replies),
-                    "piece": PIECES[position.board[move.start].lower()], "emoji": emoji, "title": title,
+                    "piece": PIECES[position.board[move.start].lower()], "emoji": emoji, "title": cased(title),
                     "words": words(position, move, after, replies)})
     return out

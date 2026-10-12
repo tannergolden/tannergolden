@@ -124,7 +124,7 @@ SAYS = {
     "only-stop": "Only Move That Stops Mate", "book": "Sicilian", "dead": "Draw", "crown": "Queen",
     "underpromote": "Knight", "castle": "Castle", "evade": "Check", "double": "Double Check",
     "discovery": "Discover", "royal-fork": "Fork", "sacrifice": "Give Up the Queen for a Pawn", "greek": "h7",
-    "queen": "Queens", "fork": "King and Rook", "skewer": "King and Queen", "strike": "with Check",
+    "queen": "Queens", "fork": "King and Rook", "skewer": "King and Queen", "strike": "With Check",
     "passing": "en Passant", "level": "Back", "free": "Knight", "win": "Exchange", "trade": "Knights",
     "capture": "Bishop", "stop": "Mate", "check": "King", "mate-threat": "Mate", "pin": "Knight to the King",
     "unmask": "Queen", "threat": "Queen", "escape": "Knight", "guard": "Knight", "offer": "b-Pawn",
@@ -273,7 +273,7 @@ class Truth(unittest.TestCase):
 
     def test_a_blunder_is_named_as_a_blunder(self):
         fool = entry(*THEMES["allows"])
-        self.assertEqual((fool["emoji"], fool["title"]), (WARNING, "Push the g-Pawn into Fool's Mate!"))
+        self.assertEqual((fool["emoji"], fool["title"]), (WARNING, "Push the g-Pawn Into Fool's Mate!"))
         self.assertEqual(entry(*THEMES["blunder"])["emoji"], WARNING)
         dropped = entry("rnbq1rk1/pppn1ppp/4p3/3pP3/1b1P4/2NB1N2/PPP2PPP/R2QK2R w KQ - 0 1", "b2b3")
         self.assertEqual((dropped["emoji"], dropped["title"]), (WARNING, "Push the b-Pawn, Drop the Knight!"))

@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,067. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,085. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -161,8 +161,8 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 <summary><b>🏁 Checkers</b></summary>
 
 <!-- markdown:element:checkers:start -->
-> [!CAUTION]
-> 🛑 **@tannergolden's turn!** @tannergolden opens game 1 as Dark, and GitHub plays Light.
+> [!TIP]
+> 🟢 **GitHub's turn!** GitHub opens game 1 as Black. Pick a move below by 19 Oct.
 
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-narrow-still-dark.svg">
@@ -172,11 +172,11 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/checkers-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/checkers-dark.svg">
-  <img alt="Checkers: game 1, move 1. Game 1 of @tannergolden against GitHub, before its first move. It is @tannergolden&#x27;s turn as Dark. @tannergolden, dark: men on 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12; GitHub, light: men on 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32." src="assets/elements/checkers-day.svg">
+  <img alt="Checkers: game 1, move 1. Game 1 of @tannergolden against GitHub, before its first move. It is GitHub&#x27;s turn as Black, due by 19 Oct. @tannergolden, White: men on 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32; GitHub, Black: men on 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12." src="assets/elements/checkers-day.svg">
 </picture>
 
 <details>
-<summary>⛂ <b>@tannergolden's Turn</b> · 7 legal moves · only @tannergolden can play these</summary>
+<summary>⛂ <b>GitHub's Turn</b> · 7 legal moves · open to choose one</summary>
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
@@ -190,7 +190,7 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 
 </details>
 
-Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. A side that goes a week without moving gets a random legal move from the Arbiter. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
+GitHub plays Black, which moves first in American checkers, so GitHub opens every game, and @tannergolden plays White. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 06:10 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
 <!-- markdown:element:checkers:end -->
 
 </details>
@@ -200,7 +200,7 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 
 <!-- markdown:element:connectfour:start -->
 > [!TIP]
-> 🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚫6, at random.
+> 🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪6, at random.
 
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-still-dark.svg">
@@ -210,25 +210,25 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/connectfour-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/connectfour-dark.svg">
-  <img alt="Connect Four: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden drops the dark discs and GitHub the light, after 1. 6, the Arbiter&#x27;s move for @tannergolden: a dark disc down column 6, to row 1. It is GitHub&#x27;s turn as Light, due by 19 Oct. Column 6, from the foot: dark." src="assets/elements/connectfour-day.svg">
+  <img alt="Connect Four: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden drops the White discs and GitHub the Black, after 1. 6, the Arbiter&#x27;s move for @tannergolden: a white disc down column 6, to row 1. It is GitHub&#x27;s turn as Black, due by 19 Oct. Column 6, from the foot: White." src="assets/elements/connectfour-day.svg">
 </picture>
 
 <details>
-<summary>⚪ <b>GitHub's Turn</b> · 7 open columns · open to choose one</summary>
+<summary>⚫ <b>GitHub's Turn</b> · 7 open columns · open to choose one</summary>
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
-| 🏔️ | **Guard the Edge, Sky Troops!** `1` | A light disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Go Airborne, Paratroopers!** `2` | A light disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Stick the Landing!** `3` | A light disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Drop Into the Heart of It!** `4` | A light disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Hit the Silk!** `5` | A light disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Steady on the Drop!** `6` | A light disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🏔️ | **Hit the Far Ridge!** `7` | A light disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🏔️ | **Guard the Edge, Pathfinders!** `1` | A black disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Jump, Jump, Jump!** `2` | A black disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Drop Behind Their Lines!** `3` | A black disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Hold the Drop Zone!** `4` | A black disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Stick the Landing!** `5` | A black disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪂 | **Boots on the Ground!** `6` | A black disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🏔️ | **Secure the Flank!** `7` | A black disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
-The Arbiter opens every game for a side drawn at random, since whoever drops the first disc can force a win by opening in the centre column (James D. Allen and Victor Allis, independently, in 1988). Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
+@tannergolden always drops the white discs and GitHub the black, and the Arbiter opens every game for a side drawn at random, with a random first disc. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
 <!-- markdown:element:connectfour:end -->
 
 </details>
@@ -238,7 +238,7 @@ The Arbiter opens every game for a side drawn at random, since whoever drops the
 
 <!-- markdown:element:tictactoe:start -->
 > [!CAUTION]
-> 🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with X on a1, at random.
+> 🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on a1, at random.
 
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-still-dark.svg">
@@ -248,26 +248,26 @@ The Arbiter opens every game for a side drawn at random, since whoever drops the
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictactoe-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-dark.svg">
-  <img alt="Tic-Tac-Toe: game 1, move 1. Game 1 of @tannergolden against GitHub, GitHub plays X and @tannergolden O, after 1. Xa1, the Arbiter&#x27;s move for GitHub: X takes the lower left corner. It is @tannergolden&#x27;s turn as O, due by 19 Oct. X: a1; O: no mark yet." src="assets/elements/tictactoe-day.svg">
+  <img alt="Tic-Tac-Toe: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, after 1. Oa1, the Arbiter&#x27;s move for GitHub: O takes the lower left corner. It is @tannergolden&#x27;s turn as X, due by 19 Oct. X: no mark yet; O: a1." src="assets/elements/tictactoe-day.svg">
 </picture>
 
 <details>
-<summary>⭕ <b>@tannergolden's Turn</b> · 8 open cells · only @tannergolden can play these</summary>
+<summary>❌ <b>@tannergolden's Turn</b> · 8 open cells · only @tannergolden can play these</summary>
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
-| 📐 | **Back Them Into a Corner!** `Oa3` | O takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Feel Out Their Defence!** `Ob3` | O takes the head of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🗡️ | **Hold the Corner!** `Oc3` | O takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 👣 | **Measure the Distance!** `Oa2` | O takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🎯 | **Strike the Heart!** `Ob2` | O takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Probe the Line!** `Oc2` | O takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Dance Along the Edge, Fencer!** `Ob1` | O takes the foot of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🗡️ | **Take the High Ground!** `Oc1` | O takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🗡️ | **Back Them Into a Corner!** `Xa3` | X takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪶 | **Measure the Distance!** `Xb3` | X takes the head of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📐 | **Take the Edge of the Ring!** `Xc3` | X takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Circle the Flank!** `Xa2` | X takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🎯 | **Take the Centre Ground!** `Xb2` | X takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪶 | **Side-Step!** `Xc2` | X takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪶 | **Test Their Guard!** `Xb1` | X takes the foot of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📐 | **Take the High Ground!** `Xc1` | X takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
-The Arbiter opens every game for a side drawn at random, since X moves first and wins far more often when anyone slips: of the 255,168 possible games, X wins 131,184, O wins 77,904 and 46,080 are drawn. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
+@tannergolden always plays X and GitHub O, and the Arbiter opens every game for a side drawn at random, with a random first move. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move. Three in a row wins, and a full board without one is a draw.
 <!-- markdown:element:tictactoe:end -->
 
 </details>
@@ -283,17 +283,17 @@ The Arbiter opens every game for a side drawn at random, since X moves first and
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/hall-of-fame-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/hall-of-fame-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/hall-of-fame-dark.svg">
-  <img alt="Hall of Fame: four games. No game of @tannergolden against GitHub has finished yet, in Tic-Tac-Toe, Connect Four, Checkers or Chess, so the podium waits for its first winner." src="assets/elements/hall-of-fame-day.svg">
+  <img alt="Hall of Fame: four games. No game of @tannergolden against GitHub has finished yet, in Chess, Checkers, Connect Four or Tic-Tac-Toe, so the podium waits for its first winner." src="assets/elements/hall-of-fame-day.svg">
 </picture>
 
 <details>
 <summary>🏆 <b>Leaderboard</b> · @tannergolden · GitHub's players join with their first move</summary>
 
-|  | Player | ❌⭕ | ⚫⚪ | ⛂⛀ | ♔♚ | Moves | Games |
+|  | Player | ♔♚ | ⛀⛂ | ⚪⚫ | ❌⭕ | Moves | Wins |
 | :-: | :--- | --: | --: | --: | --: | --: | --: |
 | 🏠 | **[@tannergolden](https://github.com/tannergolden)** | **0** | **0** | **0** | **0** | **0** | **0** |
 
-A win is a winning move of one's own, in any of the four games; a move the Arbiter plays, for either side, counts for nobody.
+A win counts only for the player who makes the winning move: the checkmate in Chess, the move that leaves the other side no move in Checkers, the fourth disc in a row in Connect Four and the third mark in a row in Tic-Tac-Toe. A move the Arbiter plays, for either side, counts for nobody, and a draw is nobody's win.
 
 </details>
 <!-- markdown:element:hall-of-fame:end -->
@@ -327,12 +327,12 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 25, 9,879 XP, case 38% complete, 3-day streak"></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, Longest Streak to Bronze 85%, By the Book II 83%"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 25, 9,883 XP, case 38% complete, 3-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, By the Book II 87%, Longest Streak to Bronze 85%"></picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 901, 26% to Gold, top 14%"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 918, 27% to Gold, top 14%"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-repos"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/repos.svg"><img src="assets/trophies/repos-day.svg" alt="Repositories trophy: Bronze, 7, 20% to Silver, top 39%"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Unranked, 6 days, 85% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 14, 56% to Bronze"></picture></a>
@@ -369,16 +369,16 @@ depends on a third-party service.
 
 <p align="center"><b>Craft</b></p>
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 83% to By the Book II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 87% to By the Book II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 48% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 52% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 24% to Signed II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 26% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-fixer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/fixer.svg"><img src="assets/trophies/achievements/fixer-day.svg" alt="Fixer: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-surgeon"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/surgeon.svg"><img src="assets/trophies/achievements/surgeon-day.svg" alt="Surgeon: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-sweeping-change"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/sweeping-change.svg"><img src="assets/trophies/achievements/sweeping-change-day.svg" alt="Sweeping Change: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-heavy-lifter"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/heavy-lifter.svg"><img src="assets/trophies/achievements/heavy-lifter-day.svg" alt="Heavy Lifter: earned, Common"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: 44% (11 of 25)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: 48% (12 of 25)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-well-maintained"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/well-maintained.svg"><img src="assets/trophies/achievements/well-maintained-day.svg" alt="Well Maintained: 20% (5 of 25)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-gitmoji"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/gitmoji.svg"><img src="assets/trophies/achievements/gitmoji-day.svg" alt="Gitmoji: 0% (0 of 100)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-toolsmith"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/toolsmith.svg"><img src="assets/trophies/achievements/toolsmith-day.svg" alt="Toolsmith: 0% (0 of 1)"></picture></a>

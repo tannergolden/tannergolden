@@ -93,12 +93,12 @@ Connect Four, or the third mark in a row in Tic-Tac-Toe. A move the Arbiter
 plays counts for nobody, and a draw is nobody's win. Every win earns its player
 a place in the Hall of Fame below.
 
-<details open>
-<summary><b>♟️ Chess</b></summary>
-
 <!-- markdown:element:chess:start -->
 > [!CAUTION]
 > 🛑 **@tannergolden's turn!** @tannergolden opens game 1 as White, and GitHub plays Black.
+
+<details open>
+<summary><b>♟️ Chess</b></summary>
 
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-narrow-still-dark.svg">
@@ -153,16 +153,16 @@ a place in the Hall of Fame below.
 </details>
 
 Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. A side that goes a week without moving gets a random legal move from the Arbiter.
-<!-- markdown:element:chess:end -->
 
 </details>
-
-<details>
-<summary><b>🏁 Checkers</b></summary>
+<!-- markdown:element:chess:end -->
 
 <!-- markdown:element:checkers:start -->
 > [!TIP]
 > 🟢 **GitHub's turn!** GitHub opens game 1 as Black. Pick a move below by 19 Oct.
+
+<details>
+<summary><b>🏁 Checkers</b></summary>
 
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-narrow-still-dark.svg">
@@ -191,16 +191,16 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 </details>
 
 GitHub plays Black, which moves first in American checkers, so GitHub opens every game, and @tannergolden plays White. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 06:10 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
-<!-- markdown:element:checkers:end -->
 
 </details>
-
-<details>
-<summary><b>⚫ Connect Four</b></summary>
+<!-- markdown:element:checkers:end -->
 
 <!-- markdown:element:connectfour:start -->
 > [!TIP]
 > 🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪6, at random.
+
+<details>
+<summary><b>⚫ Connect Four</b></summary>
 
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-still-dark.svg">
@@ -229,16 +229,16 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 </details>
 
 @tannergolden always drops the white discs and GitHub the black, and the Arbiter opens every game for a side drawn at random, with a random first disc. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
-<!-- markdown:element:connectfour:end -->
 
 </details>
-
-<details>
-<summary><b>❌ Tic-Tac-Toe</b></summary>
+<!-- markdown:element:connectfour:end -->
 
 <!-- markdown:element:tictactoe:start -->
 > [!CAUTION]
 > 🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on a1, at random.
+
+<details>
+<summary><b>❌ Tic-Tac-Toe</b></summary>
 
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-still-dark.svg">
@@ -268,9 +268,9 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 </details>
 
 @tannergolden always plays X and GitHub O, and the Arbiter opens every game for a side drawn at random, with a random first move. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move. Three in a row wins, and a full board without one is a draw.
-<!-- markdown:element:tictactoe:end -->
 
 </details>
+<!-- markdown:element:tictactoe:end -->
 
 ### 🏆 Hall of Fame
 

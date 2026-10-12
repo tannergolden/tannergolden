@@ -2,7 +2,8 @@ name: Clock
 
 # The one clock for the profile's four games: Tic-Tac-Toe, Connect Four,
 # Checkers and Chess. Every hour on the hour, .github/scripts/clock.py ticks
-# each game in turn: once a finished game's final board has been up for two
+# each game in turn: a first game of Checkers starts on its first run, GitHub
+# to open it as Black; once a finished game's final board has been up for two
 # days, the next game's fresh board comes, in Tic-Tac-Toe and Connect Four
 # with the Arbiter's random opening on it, for a side drawn at random; and
 # when the side to move has gone a week without moving, the Arbiter plays a

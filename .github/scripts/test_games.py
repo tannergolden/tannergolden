@@ -7,9 +7,11 @@
 Each game is played at a table: moves come in as the intake sends them, from
 the owner for the house and from made-up players for GitHub, at times the
 test sets, so the Arbiter's week and a final board's two days pass in a line.
-The Arbiter opens every game of both, for a side it draws at random, with a
-random move; a table starts at the first minute whose draw gives the side and
-the opening move the test asks for, so a game's line can be written down.
+Each player keeps one mark or colour in every game, the house X and White,
+GitHub O and Black, and the Arbiter opens every game of both, for a side it
+draws at random, with a random move, so either can move first. A table
+starts at the first minute whose draw gives the side and the opening move
+the test asks for, so a game's line can be written down.
 """
 from __future__ import annotations
 
@@ -60,17 +62,31 @@ INTAKE = {"tictactoe": re.compile(rf"tictactoe: (?P<move>[a-c][1-3]) · game (?P
           "connectfour": re.compile(rf"connectfour: (?P<move>[1-7]) · game (?P<game>{NUMBER})"
                                     rf" · move (?P<ply>{NUMBER})")}
 
-# Lines of play, the Arbiter's opening first.
-TTT_X_WINS = ["b2", "a2", "a1", "c3", "c1", "b1", "a3"]  # X forks a3 and b1, and wins on a3
-TTT_O_WINS = ["b2", "a3", "b3", "a2", "c3", "a1"]  # O blocks b1, then wins up the a-file
+# Lines of play, the Arbiter's opening first. Each is named for the side that moved first, the opener, or the side
+# that moved second, the reply: the opener's mark or colour is the house's or GitHub's as the Arbiter drew.
+TTT_FIRST_WINS = ["b2", "a2", "a1", "c3", "c1", "b1", "a3"]  # the opener forks a3 and b1, and wins on a3
+TTT_SECOND_WINS = ["b2", "a3", "b3", "a2", "c3", "a1"]  # the reply blocks b1, then wins up the a-file
 TTT_DRAW = ["b2", "a1", "c1", "a3", "a2", "c2", "b3", "b1", "c3"]
-C4_DARK_UP = list("4141424")  # Dark stacks column 4; Light lets the third disc through
-C4_LIGHT_UP = list("42157234251535")  # Light connects four up column 5
-C4_DARK_DIAGONAL = list("446314325141273")  # Dark connects from 1,1 to 4,4
-C4_DARK_ACROSS = list("4113317237274")  # Dark connects across row 2
+C4_FIRST_UP = list("4141424")  # the opener stacks column 4; the reply lets the third disc through
+C4_SECOND_UP = list("42157234251535")  # the reply connects four up column 5
+C4_FIRST_DIAGONAL = list("446314325141273")  # the opener connects from 1,1 to 4,4
+C4_FIRST_ACROSS = list("4113317237274")  # the opener connects across row 2
 C4_DRAW = list("467516245217422716242761435431776133653535")  # forty-two discs and no four in a row
-LINES = {"tictactoe": (TTT_X_WINS, TTT_O_WINS, TTT_DRAW),
-         "connectfour": (C4_DARK_UP, C4_LIGHT_UP, C4_DARK_DIAGONAL, C4_DARK_ACROSS, C4_DRAW)}
+LINES = {"tictactoe": (TTT_FIRST_WINS, TTT_SECOND_WINS, TTT_DRAW),
+         "connectfour": (C4_FIRST_UP, C4_SECOND_UP, C4_FIRST_DIAGONAL, C4_FIRST_ACROSS, C4_DRAW)}
+SIDE_WORDS = re.compile(r"\b(?:[Dd]ark|[Ll]ight)\b")  # the old side words, which nothing a reader sees says now
+WHY = re.compile(r"255,168|131,184|77,904|46,080|1988|Allis|Allen|far more often|force a win|wins more")
+# The two games live on the profile when each player's colour was fixed, as their state holds them after the move
+# the change rewrote: the Arbiter opened Tic-Tac-Toe for GitHub, whose mark is O, and Connect Four for the house,
+# whose discs are white.
+LIVE = {
+    "tictactoe": {"game": 1, "started": "2026-10-12T06:15:46Z", "opens": "github", "moves": [
+        {"move": "a1", "shown": "Oa1", "player": None, "player_id": None, "issue": None, "arbiter": True,
+         "at": "2026-10-12T06:15:46Z"}]},
+    "connectfour": {"game": 1, "started": "2026-10-12T06:15:46Z", "opens": "house", "moves": [
+        {"move": "6", "shown": "⚪6", "player": None, "player_id": None, "issue": None, "arbiter": True,
+         "at": "2026-10-12T06:15:46Z"}]},
+}
 KEYS = ("tictactoe", "connectfour")
 
 
@@ -81,7 +97,7 @@ def opening_at(key: str, side: str, code: str, number: int = 1, start: dt.dateti
     while True:
         stamped = page.stamp(moment)
         if (games.pick([HOUSE, GITHUB], f"{key}:{number}:opens:{stamped}") == side
-                and games.pick(sorted(mod.legal(mod.start())), f"{key}:{number}:1:{stamped}") == code):
+                and games.pick(sorted(mod.legal(mod.start(side))), f"{key}:{number}:1:{stamped}") == code):
             return moment
         moment += dt.timedelta(minutes=1)
 
@@ -97,7 +113,7 @@ class Table:
         self.keep(games.tick(self.mod, None, [], OWNER, self.clock))
 
     def side(self) -> str:
-        return games.side_of(self.game, len(self.game["moves"]) + 1)
+        return games.side_of(self.mod, self.game, len(self.game["moves"]) + 1)
 
     def move(self, code: str, player: str | None = None, player_id: int | None = None, move: int | None = None,
              game: int | None = None, after: dt.timedelta = HOUR) -> games.Outcome:
@@ -147,9 +163,15 @@ def tables(line: list[str] | None = None):
             yield key, opens, Table(key, opens)
 
 
+def unsaid(text: str) -> str:
+    """A reply, banner or note without the move titles it quotes, whose words are the airborne's and the duel's."""
+    return re.sub(r"\*[^*\n]+!\*", "", text)
+
+
 class Opening(unittest.TestCase):
     """The Arbiter opens every game of both, for a side drawn at random, with a random legal move that counts for
-    nobody and answers no issue; that side plays X, or the dark discs, and the other O, or the light ones."""
+    nobody and answers no issue. Each side keeps its mark or colour: the house X and White, GitHub O and Black, so
+    the side the Arbiter opens for is the one whose mark or disc goes first."""
 
     def test_the_first_game_is_opened_on_the_clock_for_the_side_drawn(self):
         for key, opens, table in tables():
@@ -162,8 +184,8 @@ class Opening(unittest.TestCase):
                 self.assertEqual(first, {"move": first["move"], "shown": first["shown"], "player": None,
                                          "player_id": None, "issue": None, "arbiter": True,
                                          "at": table.game["started"]})
-                self.assertEqual((games.contributors(table.game), games.house_moves(table.game)), ([], 0),
-                                 "the opening counts for nobody")
+                self.assertEqual((games.contributors(table.mod, table.game), games.house_moves(table.mod, table.game)),
+                                 ([], 0), "the opening counts for nobody")
                 self.assertEqual((opened.issue, opened.logbook, opened.comment), (None, False, ""),
                                  "and answers no issue")
                 side = "tannergolden" if opens == HOUSE else "GitHub"
@@ -182,46 +204,52 @@ class Opening(unittest.TestCase):
                 firsts.add(opening["move"])
             with self.subTest(key=key):
                 self.assertGreater(min(sides.values()), 150, sides)
-                self.assertEqual(firsts, set(mod.legal(mod.start())), "every opening move comes up")
+                self.assertEqual(firsts, set(mod.legal(mod.start(HOUSE))), "every opening move comes up")
 
-    def test_the_opener_plays_x_or_dark_and_the_other_side_o_or_light(self):
+    def test_each_side_keeps_its_mark_or_colour_and_the_one_opened_for_moves_first(self):
+        shown = {("tictactoe", HOUSE): "Xb2", ("tictactoe", GITHUB): "Ob2", ("connectfour", HOUSE): "⚪4",
+                 ("connectfour", GITHUB): "⚫4"}
         for key, opens, table in tables():
             element = table.board()
             with self.subTest(key=key, opens=opens):
-                if key == "tictactoe":
-                    self.assertEqual(element["x"], opens)
-                    self.assertEqual(table.game["moves"][0]["shown"], "Xb2")
-                else:
-                    self.assertEqual((element["opens"], element["light"]), (opens, other(opens)))
-                    self.assertEqual(table.game["moves"][0]["shown"], "⚫4")
-                self.assertEqual(games.word(table.mod, table.game, opens), table.mod.FIRST)
-                self.assertEqual(games.word(table.mod, table.game, other(opens)), table.mod.SECOND)
+                self.assertEqual(element["opens"], opens)
+                for gone in ("x", "light", "dark"):
+                    self.assertNotIn(gone, element)
+                self.assertEqual(table.game["moves"][0]["shown"], shown[key, opens])
+                self.assertEqual(table.mod.WORDS, {"tictactoe": {HOUSE: "X", GITHUB: "O"},
+                                                   "connectfour": {HOUSE: "White", GITHUB: "Black"}}[key])
+                self.assertEqual(games.side_of(table.mod, table.game, 1), opens)
+                self.assertEqual(games.side_of(table.mod, table.game, 2), other(opens))
+        self.assertEqual(Table("connectfour", HOUSE).board()["board"].split("/")[-1], "...L...",
+                         "the house's discs are the light ones, the board's L")
 
-    def test_the_fresh_board_names_the_side_and_the_move_and_says_why_the_arbiter_opens(self):
+    def test_the_fresh_board_names_the_side_and_the_move_and_who_opens_but_never_why(self):
         said = {
             ("tictactoe", HOUSE): "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with X on b2, at"
                                   " random.",
-            ("tictactoe", GITHUB): "🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with X on b2, at"
+            ("tictactoe", GITHUB): "🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on b2, at"
                                    " random.",
-            ("connectfour", HOUSE): "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚫4, at"
+            ("connectfour", HOUSE): "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪4, at"
                                     " random.",
             ("connectfour", GITHUB): "🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with ⚫4, at"
                                      " random.",
         }
+        opened = {"tictactoe": "@tannergolden always plays X and GitHub O, and the Arbiter opens every game for a side"
+                               " drawn at random, with a random first move.",
+                  "connectfour": "@tannergolden always drops the white discs and GitHub the black, and the Arbiter"
+                                 " opens every game for a side drawn at random, with a random first disc."}
         for key, opens, table in tables():
             element = table.board()
             with self.subTest(key=key, opens=opens):
                 self.assertEqual(element["prompt"], said[key, opens])
-                self.assertTrue(element["note"].startswith(table.mod.WHY))
+                self.assertTrue(element["note"].startswith(opened[key]), element["note"])
+                self.assertNotRegex(element["note"], WHY, "who opens, never why")
                 self.assertIn(games.who_plays(other(opens), OWNER), element["note"])
                 self.assertIn(f"The move is due by {page.until(table.clock + page.WEEK)}, or the Arbiter plays a random"
                               " legal move.", element["note"])
                 self.assertEqual(element["last"]["by"], "the Arbiter")
                 self.assertEqual(element["history"][0][3], "the Arbiter" if opens == GITHUB else "",
                                  "who chose GitHub's move, when the Arbiter chose it for GitHub")
-        self.assertIn("of the 255,168 possible games, X wins 131,184, O wins 77,904 and 46,080 are drawn",
-                      games.rules("tictactoe").WHY)
-        self.assertIn("James D. Allen and Victor Allis, independently, in 1988", games.rules("connectfour").WHY)
 
     def test_the_week_for_the_reply_counts_from_the_start(self):
         table = Table("tictactoe", GITHUB)
@@ -251,17 +279,31 @@ class Turns(unittest.TestCase):
         self.assertIsNone(PING.search(outcome.comment), "the owner's own move pings nobody")
 
     def test_connect_four_s_reply_names_the_disc(self):
-        table = Table("connectfour", GITHUB)  # GitHub drops the dark discs, so the house replies with a light one
+        table = Table("connectfour", GITHUB)  # GitHub's black disc first, then the house's white one
         outcome = table.move("3")
-        self.assertRegex(outcome.comment, r"^🪂 \*\*1\.\.\. ⚪3 is on the board\.\*\*\n\S+ \*[^*]+!\* · A light disc"
+        self.assertRegex(outcome.comment, r"^🪂 \*\*1\.\.\. ⚪3 is on the board\.\*\*\n\S+ \*[^*]+!\* · A white disc"
                                           r" down column 3, to row 1\nGitHub's turn: anyone but \[@tannergolden\]"
-                                          r"\([^)]+\) can pick Dark's reply on \[the board\]")
+                                          r"\([^)]+\) can pick Black's reply on \[the board\]")
         outcome = table.move("4", player=HUBOT)
         self.assertTrue(outcome.comment.startswith("🪂 **2. ⚫4 is on the board.** Well played, @hubot.\n"))
         self.assertTrue(outcome.comment.endswith("\n@tannergolden, it's your move.\n"))
+        table = Table("connectfour", HOUSE)  # the house's white disc first, then GitHub's black one
+        self.assertIn("1... ⚫3 is on the board.** Well played, @octocat.\n", table.move("3").comment)
+        self.assertIn(" · A black disc down column 3, to row 1\n", table.outcomes[-1].comment)
 
-    def test_the_house_s_turn_is_the_owner_s_alone_whichever_mark_it_plays(self):
-        cases = {("tictactoe", GITHUB): ("O", "X"), ("connectfour", GITHUB): ("Light", "Dark")}
+    def test_o_moves_first_when_the_arbiter_opened_for_github(self):
+        table = Table("tictactoe", GITHUB)  # GitHub's O on b2 first, then the house's X
+        outcome = table.move("a1")
+        self.assertRegex(outcome.comment, r"^❌ \*\*1\.\.\. Xa1 is on the board\.\*\*\n\S+ \*[^*]+!\* · X takes the"
+                                          r" lower left corner\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\)"
+                                          r" can pick O's reply on \[the board\]")
+        self.assertEqual(outcome.commit, "chore(tictactoe): ❌ play 1... Xa1 in game 1\n\nMove 2, by tannergolden.")
+        outcome = table.move("c3", player=HUBOT)
+        self.assertTrue(outcome.comment.startswith("⭕ **2. Oc3 is on the board.** Well played, @hubot.\n"))
+        self.assertEqual(table.board()["history"], [[1, "Ob2", "Xa1", "the Arbiter"], [2, "Oc3", "", "@hubot"]])
+
+    def test_the_house_s_turn_is_the_owner_s_alone_whichever_side_opened(self):
+        cases = {("tictactoe", GITHUB): ("X", "O"), ("connectfour", GITHUB): ("White", "Black")}
         for (key, opens), (house, github) in cases.items():
             table = Table(key, opens)
             code = table.mod.legal(games.replay(table.mod, table.game)[-1])[0]
@@ -274,9 +316,9 @@ class Turns(unittest.TestCase):
                                                   f" {BOARD}.\n")
                 self.assertIsNone(PING.search(outcome.comment), "a turn away never pings the owner")
 
-    def test_github_s_turn_is_for_everyone_but_the_owner_whichever_mark_it_plays(self):
-        cases = {("tictactoe", HOUSE): "O", ("tictactoe", GITHUB): "X", ("connectfour", HOUSE): "Light",
-                 ("connectfour", GITHUB): "Dark"}
+    def test_github_s_turn_is_for_everyone_but_the_owner_whichever_side_opened(self):
+        cases = {("tictactoe", HOUSE): "O", ("tictactoe", GITHUB): "O", ("connectfour", HOUSE): "Black",
+                 ("connectfour", GITHUB): "Black"}
         for (key, opens), github in cases.items():
             table = Table(key, opens)
             if opens == GITHUB:  # the house replies to the Arbiter's opening first
@@ -369,13 +411,13 @@ class Again(unittest.TestCase):
         table.move("4")
         again = games.play(table.mod, table.game, table.hall, games.Request("3", 1, 2, mine, OCTOCAT, OCTOCAT_ID),
                            OWNER, OWNER_ID, table.clock)
-        self.assertEqual(again.comment, "✅ **1... ⚪3 is already on the board**, played from this issue.\nThe game has"
+        self.assertEqual(again.comment, "✅ **1... ⚫3 is already on the board**, played from this issue.\nThe game has"
                                         f" moved on since: pick a move from {BOARD} as it stands now.\n")
         self.assertFalse(again.changed or again.redraw)
 
     def test_the_move_that_ended_a_game_run_again_says_so(self):
         table = Table("tictactoe", HOUSE)
-        table.play(TTT_X_WINS)
+        table.play(TTT_FIRST_WINS)
         again = games.play(table.mod, table.game, table.hall, games.Request("a3", 1, 7, table.issue, OWNER, OWNER_ID),
                            OWNER, OWNER_ID, table.clock)
         opens = page.day(page.parse(table.game["started"]))
@@ -392,15 +434,15 @@ class Again(unittest.TestCase):
 class Endings(unittest.TestCase):
     def test_the_house_wins_and_the_game_is_recorded(self):
         table = Table("tictactoe", HOUSE)
-        outcome = table.play(TTT_X_WINS)
+        outcome = table.play(TTT_FIRST_WINS)
         ended = table.clock
         opens = ended + page.DISPLAY
         self.assertRegex(outcome.comment, r"^🏆 \*\*4\. Xa3#: three in a row!\*\* @tannergolden wins game 1\."
                                           r"\n\S+ \*[^*]+!\* · X takes a3, three in a row from a3 to c1\nIts final"
                                           rf" board stays up for two days: game 2 opens {page.day(opens)}, and the"
                                           r" Arbiter opens it for a side drawn at random\.\n$")
-        self.assertTrue(outcome.commit.startswith("chore(tictactoe): 🏆 play 4. Xa3#, ending game 1 1-0\n\nMove 7, by"
-                                                  " tannergolden."))
+        self.assertTrue(outcome.commit.startswith("chore(tictactoe): 🏆 play 4. Xa3#, ending game 1: X wins\n\nMove 7,"
+                                                  " by tannergolden."))
         record = table.hall[-1]
         self.assertEqual(record, {
             "game": 1, "result": "1-0", "reason": "three in a row", "winner": OWNER, "plies": 7,
@@ -411,33 +453,41 @@ class Endings(unittest.TestCase):
             "final": "X.O/OX./XOX", "line": ["a3", "b2", "c1"]})
         self.assertEqual({key: value for key, value in table.game.items() if key != "ended"},
                          {"game": 2, "started": page.stamp(opens), "moves": []})
-        self.assertEqual([played["move"] for played in table.game["ended"]["moves"]], TTT_X_WINS)
+        self.assertEqual([played["move"] for played in table.game["ended"]["moves"]], TTT_FIRST_WINS)
 
     def test_github_wins_and_its_player_takes_a_place_in_the_hall_of_fame(self):
         table = Table("tictactoe", HOUSE)
-        outcome = table.play(TTT_O_WINS)
+        outcome = table.play(TTT_SECOND_WINS)
         self.assertTrue(outcome.comment.startswith(
             "🏆 **3... Oa1#: three in a row!** GitHub wins game 1, and @octocat takes a place in the [Hall of Fame]"
             "(https://github.com/tannergolden) for the winning move.\n"))
         self.assertEqual((table.hall[-1]["winner"], table.hall[-1]["result"], table.hall[-1]["line"]),
                          ("GitHub", "0-1", ["a1", "a2", "a3"]))
+        self.assertTrue(outcome.commit.startswith("chore(tictactoe): 🏆 play 3... Oa1#, ending game 1: O wins\n"))
         table = Table("connectfour", GITHUB)
-        outcome = table.play(C4_DARK_UP)
+        outcome = table.play(C4_FIRST_UP)
         self.assertTrue(outcome.comment.startswith("🏆 **4. ⚫4#: four in a row!** GitHub wins game 1, and @octocat"))
-        self.assertEqual((table.hall[-1]["winner"], table.hall[-1]["result"]), ("GitHub", "1-0"),
-                         "Dark, which GitHub played, moved first")
+        self.assertEqual((table.hall[-1]["winner"], table.hall[-1]["result"]), ("GitHub", "0-1"),
+                         "the house's White score first, as chess writes it, whoever moved first")
         self.assertEqual(table.hall[-1]["line"], [[4, 1], [4, 2], [4, 3], [4, 4]])
+        table = Table("tictactoe", GITHUB)
+        outcome = table.play(TTT_FIRST_WINS)  # GitHub's O moved first, and wins
+        self.assertTrue(outcome.comment.startswith("🏆 **4. Oa3#: three in a row!** GitHub wins game 1"))
+        self.assertEqual((table.hall[-1]["winner"], table.hall[-1]["result"], table.hall[-1]["house_moves"]),
+                         ("GitHub", "0-1", 3))
 
     def test_every_way_connect_four_is_won_and_a_full_frame_drawn(self):
         cases = {
-            "up": (C4_DARK_UP, HOUSE, "4. ⚫4#", "1-0", [[4, 1], [4, 2], [4, 3], [4, 4]],
-                   "Four dark discs up column 4"),
-            "light": (C4_LIGHT_UP, HOUSE, "7... ⚪5#", "0-1", [[5, 1], [5, 2], [5, 3], [5, 4]],
-                      "Four light discs up column 5"),
-            "diagonal": (C4_DARK_DIAGONAL, HOUSE, "8. ⚫3#", "1-0", [[1, 1], [2, 2], [3, 3], [4, 4]],
-                         "Four dark discs on a diagonal"),
-            "across": (C4_DARK_ACROSS, GITHUB, "7. ⚫4#", "1-0", [[1, 2], [2, 2], [3, 2], [4, 2]],
-                       "Four dark discs across row 2"),
+            "up": (C4_FIRST_UP, HOUSE, "4. ⚪4#", "1-0", [[4, 1], [4, 2], [4, 3], [4, 4]],
+                   "Four white discs up column 4"),
+            "second": (C4_SECOND_UP, HOUSE, "7... ⚫5#", "0-1", [[5, 1], [5, 2], [5, 3], [5, 4]],
+                       "Four black discs up column 5"),
+            "diagonal": (C4_FIRST_DIAGONAL, HOUSE, "8. ⚪3#", "1-0", [[1, 1], [2, 2], [3, 3], [4, 4]],
+                         "Four white discs on a diagonal"),
+            "across": (C4_FIRST_ACROSS, GITHUB, "7. ⚫4#", "0-1", [[1, 2], [2, 2], [3, 2], [4, 2]],
+                       "Four black discs across row 2"),
+            "second after github": (C4_SECOND_UP, GITHUB, "7... ⚪5#", "1-0", [[5, 1], [5, 2], [5, 3], [5, 4]],
+                                    "Four white discs up column 5"),
         }
         for name, (line, opens, deciding, result, cells, summary) in cases.items():
             table = Table("connectfour", opens)
@@ -449,7 +499,8 @@ class Endings(unittest.TestCase):
                 self.assertIn(summary, table.board()["prompt"])
         table = Table("connectfour", HOUSE)
         outcome = table.play(C4_DRAW)
-        self.assertTrue(outcome.comment.startswith("🤝 **21... ⚪5: game 1 is drawn on a full frame.**\n"))
+        self.assertTrue(outcome.comment.startswith("🤝 **21... ⚫5: game 1 is drawn on a full frame.**\n"))
+        self.assertTrue(outcome.commit.startswith("chore(connectfour): 🤝 play 21... ⚫5, ending game 1: drawn\n"))
         record = table.hall[-1]
         self.assertEqual((record["winner"], record["result"], record["reason"], record["plies"]),
                          (None, "1/2-1/2", "a full frame", 42))
@@ -459,28 +510,31 @@ class Endings(unittest.TestCase):
     def test_a_full_board_is_drawn(self):
         table = Table("tictactoe", GITHUB)
         outcome = table.play(TTT_DRAW)
-        self.assertTrue(outcome.comment.startswith("🤝 **5. Xc3: game 1 is drawn on a full board.**\n"))
+        self.assertTrue(outcome.comment.startswith("🤝 **5. Oc3: game 1 is drawn on a full board.**\n"))
         self.assertEqual((table.hall[-1]["winner"], table.hall[-1]["reason"], table.hall[-1]["final"]),
-                         (None, "a full board", "OXX/XXO/OOX"))
-        self.assertEqual(table.hall[-1]["house_moves"], 4, "the house played O, the four moves after X's")
+                         (None, "a full board", "XOO/OOX/XXO"))
+        self.assertEqual(table.hall[-1]["house_moves"], 4, "the house played X, the four moves after O's")
 
     def test_the_record_names_the_game_its_days_its_result_and_who_played_each_move(self):
         table = Table("tictactoe", HOUSE)
-        outcome = table.play(TTT_X_WINS)
+        outcome = table.play(TTT_FIRST_WINS)
         name, text = outcome.record
         self.assertEqual(name, "game-1.txt")
         self.assertEqual(text.splitlines()[:4], [
             "Tic-Tac-Toe, game 1: @tannergolden against GitHub",
             f"Played from {page.day(T0)} 2026 to {page.day(table.clock)} 2026, in EST.",
-            "The Arbiter opened for @tannergolden, who played X; GitHub played O.",
+            "@tannergolden played X and GitHub played O; the Arbiter opened for @tannergolden, so X moved first.",
             "@tannergolden won with 4. Xa3#, three in a row."])
         self.assertEqual([" ".join(line.split()) for line in text.splitlines()[5:12]],
                          ["1. Xb2 the Arbiter, opening the game", "1... Oa2 @octocat", "2. Xa1+ @tannergolden",
                           "2... Oc3 @octocat", "3. Xc1+ @tannergolden", "3... Ob1 @octocat", "4. Xa3# @tannergolden"])
-        self.assertTrue(text.endswith("\nResult: 1-0\n"))
-        table = Table("connectfour", HOUSE)
+        self.assertTrue(text.endswith("\nResult: 1-0, X's score first\n"))
+        table = Table("connectfour", GITHUB)
         text = table.play(C4_DRAW).record[1]
+        self.assertIn("@tannergolden played White and GitHub played Black; the Arbiter opened for GitHub, so Black"
+                      " moved first.", text)
         self.assertIn("Drawn with 21... ⚪5, on a full frame.", text)
+        self.assertTrue(text.endswith("\nResult: 1/2-1/2, White's score first\n"))
 
 
 class TwoDays(unittest.TestCase):
@@ -489,12 +543,12 @@ class TwoDays(unittest.TestCase):
 
     def test_the_final_board_shows_how_the_game_ended_and_lists_nothing_to_play(self):
         table = Table("tictactoe", HOUSE)
-        table.play(TTT_X_WINS)
+        table.play(TTT_FIRST_WINS)
         opens = page.parse(table.game["started"])
         element = table.board()
-        self.assertEqual({key: element[key] for key in ("kind", "board", "x", "game", "move", "players", "next")},
-                         {"kind": "tictactoe", "board": "X.O/OX./XOX", "x": HOUSE, "game": 1, "move": 4, "players": 1,
-                          "next": page.day(opens)})
+        self.assertEqual({key: element[key] for key in ("kind", "board", "opens", "game", "move", "players", "next")},
+                         {"kind": "tictactoe", "board": "X.O/OX./XOX", "opens": HOUSE, "game": 1, "move": 4,
+                          "players": 1, "next": page.day(opens)})
         self.assertEqual(element["result"], {"winner": HOUSE, "how": "three in a row"})
         self.assertEqual(element["line"], ["a3", "b2", "c1"])
         self.assertEqual(element["last"], {"move": "Xa3#", "words": "X takes a3, three in a row from a3 to c1",
@@ -511,14 +565,14 @@ class TwoDays(unittest.TestCase):
         table = Table("connectfour", GITHUB)
         table.play(C4_DRAW)
         element = table.board()
-        self.assertEqual((element["result"], element["opens"], element["light"]),
-                         ({"winner": None, "how": "a full frame"}, GITHUB, HOUSE))
+        self.assertEqual((element["result"], element["opens"]), ({"winner": None, "how": "a full frame"}, GITHUB))
+        self.assertNotIn("light", element)
         self.assertTrue(element["prompt"].startswith("🤝 **Game 1 is drawn!** A full frame, and no four in a row."))
         self.assertNotIn("line", element)
 
     def test_a_move_meanwhile_is_told_the_day_the_next_game_opens(self):
         table = Table("connectfour", HOUSE)
-        table.play(C4_DARK_UP)
+        table.play(C4_FIRST_UP)
         day = page.day(page.parse(table.game["started"]))
         said = (f"⏳ **Game 2 opens {day}**, so `3` wasn't played.\nGame 1's final board stays up until then: pick a"
                 f" move from {BOARD} once game 2 is on it.\n")
@@ -530,7 +584,7 @@ class TwoDays(unittest.TestCase):
 
     def test_the_fresh_board_comes_by_itself_with_the_arbiter_s_opening(self):
         table = Table("tictactoe", HOUSE)
-        table.play(TTT_X_WINS)
+        table.play(TTT_FIRST_WINS)
         opens = page.parse(table.game["started"])
         before = table.wait(opens - table.clock - dt.timedelta(minutes=1))
         self.assertFalse(before.changed)
@@ -544,7 +598,7 @@ class TwoDays(unittest.TestCase):
         element = table.board()
         self.assertNotIn("result", element)
         self.assertEqual((element["game"], element["due"]), (2, page.day(opens + page.WEEK)))
-        self.assertRegex(element["prompt"], r"The Arbiter opened game 2 for (GitHub|@tannergolden) with X on"
+        self.assertRegex(element["prompt"], r"The Arbiter opened game 2 for (GitHub with O|@tannergolden with X) on"
                                             r" [a-c][1-3], at random\.$")
         over = table.move("a1", player=OCTOCAT, game=1, move=8)
         self.assertEqual(over.comment, "⌛ **Game 1 is over**, so `a1` wasn't played.\nGame 2 is under way on"
@@ -553,7 +607,7 @@ class TwoDays(unittest.TestCase):
 
     def test_a_move_after_the_start_finds_the_opening_on_the_board_before_the_clock_comes(self):
         table = Table("connectfour", HOUSE)
-        table.play(C4_DARK_UP)
+        table.play(C4_FIRST_UP)
         opens = page.parse(table.game["started"])
         table.clock = opens  # the moment the board comes, before the clock's run on the hour
         outcome = table.move("3", player=OCTOCAT, game=2, move=1, after=dt.timedelta(minutes=5))
@@ -561,6 +615,36 @@ class TwoDays(unittest.TestCase):
         self.assertIn("got there first, played by the Arbiter.", outcome.comment)
         self.assertEqual(len(table.game["moves"]), 1)
         self.assertTrue(outcome.commit.startswith("chore(connectfour): 🎲 open game 2 for "))
+
+
+class Live(unittest.TestCase):
+    """The games live on the profile when the sides were fixed: their state replays under the new rules, every move's
+    shown text the engine's own, and their boards set out the side the Arbiter opened for and the other's turn."""
+
+    def test_the_live_games_replay_and_set_out_the_right_boards(self):
+        moment = page.parse("2026-10-12T17:00:00Z")
+        want = {
+            "tictactoe": (".../.../O..", ("🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on"
+                                          " a1, at random."), "X"),
+            "connectfour": ("......./......./......./......./......./.....L.",
+                            "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪6, at random.",
+                            "A black disc"),
+        }
+        for key, game in LIVE.items():
+            mod = games.rules(key)
+            positions = games.replay(mod, game)
+            with self.subTest(key=key):
+                for position, played in zip(positions, game["moves"]):
+                    self.assertEqual(mod.shown(position, played["move"]), played["shown"])
+                element = games.board(mod, game, [], OWNER, moment)
+                board, prompt, mover = want[key]
+                self.assertEqual((element["board"], element["opens"], element["prompt"], element["due"]),
+                                 (board, game["opens"], prompt, "19 Oct"))
+                self.assertEqual(element["history"], [[1, game["moves"][0]["shown"].lstrip("⚪⚫"), "",
+                                                       "the Arbiter" if game["opens"] == GITHUB else ""]])
+                self.assertTrue(all((entry[2] if key == "tictactoe" else entry[3]).startswith(mover)
+                                    for entry in element["moves"]), element["moves"])
+                self.assertEqual(games.tick(mod, game, [], OWNER, moment).changed, False, "nothing to do yet")
 
 
 class Clock(unittest.TestCase):
@@ -601,7 +685,7 @@ class Clock(unittest.TestCase):
 
     def test_a_win_the_arbiter_played_counts_for_nobody_and_the_final_board_says_so(self):
         table = Table("tictactoe", HOUSE)
-        table.play(TTT_X_WINS[:-1])
+        table.play(TTT_FIRST_WINS[:-1])
         before = table.game
         positions = games.replay(table.mod, before)
         arbiter = {"player": None, "player_id": None, "issue": None, "arbiter": True}
@@ -645,7 +729,7 @@ class Board(unittest.TestCase):
                 self.assertEqual({(link["game"], link["ply"]) for link in links}, {("1", str(ply))})
                 self.assertEqual(len({entry[1] for entry in element["moves"]}), len(element["moves"]),
                                  "no two moves on a board share a title")
-                side = games.side_of(table.game, ply)
+                side = games.side_of(table.mod, table.game, ply)
                 player, player_id = (OWNER, OWNER_ID) if side == HOUSE else (OCTOCAT, OCTOCAT_ID)
                 for link in links:
                     request = games.Request(link["move"], 1, ply, 7, player, player_id)
@@ -657,7 +741,17 @@ class Board(unittest.TestCase):
         for element, table in self.boards():
             key = table.key
             with self.subTest(key=key, game=element["game"], move=element["move"]):
-                self.assertRegex(element[{"tictactoe": "board", "connectfour": "board"}[key]], KIT_BOARD[key])
+                self.assertRegex(element["board"], KIT_BOARD[key])
+                self.assertIn(element["opens"], (HOUSE, GITHUB))
+                for gone in ("x", "light", "dark"):
+                    self.assertNotIn(gone, element)
+                # The opener's mark or colour has as many on the board as the other's, or one more.
+                letters = {"tictactoe": {HOUSE: "X", GITHUB: "O"}, "connectfour": {HOUSE: "L", GITHUB: "D"}}[key]
+                counts = {side: element["board"].count(letter) for side, letter in letters.items()}
+                self.assertIn(counts[element["opens"]] - counts[other(element["opens"])], (0, 1), element["board"])
+                if "last" in element and key == "tictactoe":  # the mark of the side that moved last
+                    moved = HOUSE if counts[HOUSE] - counts[GITHUB] == (element["opens"] == HOUSE) else GITHUB
+                    self.assertEqual(element["last"]["move"][0], letters[moved], element)
                 for field in ("prompt", "note"):
                     self.assertTrue(KIT_LINE.fullmatch(element[field]) and not KIT_BLOCK.match(element[field]),
                                     element[field])
@@ -691,16 +785,16 @@ class Board(unittest.TestCase):
 
     def test_the_score_sheet_names_who_chose_github_s_moves_whichever_side_opened(self):
         for opens, who in ((HOUSE, [[1, "Xb2", "Oa2", "@octocat"], [2, "Xa1+", "", ""]]),
-                           (GITHUB, [[1, "Xb2", "Oa2", "the Arbiter"], [2, "Xa1+", "", "@octocat"]])):
+                           (GITHUB, [[1, "Ob2", "Xa2", "the Arbiter"], [2, "Oa1+", "", "@octocat"]])):
             table = Table("tictactoe", opens)
             table.move("a2")
             table.move("a1")
             self.assertEqual(table.board()["history"], who)
 
     def test_the_outlook_says_who_wins_with_perfect_play(self):
-        table = Table("tictactoe", GITHUB)  # GitHub plays X
+        table = Table("tictactoe", GITHUB)  # GitHub's O opened in the centre
         self.assertEqual(table.board()["outlook"], "draw")
-        table.move("a2")  # the house's O on an edge loses to perfect play
+        table.move("a2")  # the house's X on an edge loses to perfect play
         self.assertEqual(table.board()["outlook"], GITHUB)
         table = Table("tictactoe", HOUSE)
         table.move("a2")
@@ -723,12 +817,15 @@ class Board(unittest.TestCase):
                             banner = games.turn_banner(side, OWNER, mover, shown, calls, "28 Sep")
                             self.assertLessEqual(len(banner), page.BANNER, banner)
 
-    def test_no_reply_or_commit_has_a_long_dash(self):
+    def test_no_reply_or_commit_has_a_long_dash_an_old_side_word_or_a_why(self):
         texts = []
-        for _, table in self.boards():
-            texts += table.texts
+        for element, table in self.boards():
+            texts += [*table.texts, element["prompt"], element["note"]]
         for dash in DASHES:
             self.assertNotIn(dash, "".join(texts))
+        for text in texts:
+            self.assertNotRegex(unsaid(text), SIDE_WORDS)
+            self.assertNotRegex(text, WHY)
 
 
 class Script(unittest.TestCase):
@@ -781,7 +878,7 @@ class Script(unittest.TestCase):
                                         MOVE_NUMBER="2", ISSUE="13", PLAYER=OCTOCAT, PLAYER_ID=str(OCTOCAT_ID))
             self.assertEqual(code, 0)
             self.assertEqual((folder / "game.json").read_text(encoding="utf-8"), before)
-            self.assertIn(f"It's {LINKED}'s turn as Light", (out / "comment.md").read_text(encoding="utf-8"))
+            self.assertIn(f"It's {LINKED}'s turn as White", (out / "comment.md").read_text(encoding="utf-8"))
             self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"),
                              "changed=false\nissue=13\nlogbook=false\n")
 

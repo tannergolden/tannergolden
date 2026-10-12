@@ -61,21 +61,25 @@ class Run(unittest.TestCase):
     def notices(self) -> list[str]:
         return (self.out / "notices.txt").read_text(encoding="utf-8").splitlines()
 
-    def test_the_first_run_opens_the_arbiter_s_games_and_sets_every_board_and_the_hall_out(self):
+    def test_the_first_run_opens_the_arbiter_s_games_starts_checkers_and_sets_every_board_and_the_hall_out(self):
         code, said = self.run_clock(T0)
         self.assertEqual((code, said), (0, {"changed": "true", "notices": "0"}))
         for key in ("tictactoe", "connectfour"):
             game, _ = self.state(key)
             self.assertEqual((game["game"], len(game["moves"]), game["moves"][0]["arbiter"]), (1, 1, True))
-        self.assertEqual((self.state("checkers"), self.state("chess")), ((None, []), (None, [])),
-                         "the house opens checkers and chess itself, with its first move")
+        self.assertEqual(self.state("checkers"), ({"game": 1, "started": page.stamp(T0), "moves": []}, []),
+                         "checkers starts at once, with GitHub to open as Black")
+        self.assertEqual(self.state("chess"), (None, []), "the house opens chess itself, with its first move")
         text = self.settings.read_text(encoding="utf-8")
         found = [text.index(f"  # {region}:start\n") for region in page.REGIONS]
         self.assertEqual(found, sorted(found), "every region, in the page's order")
         self.assertTrue(text.endswith("  # hall:end\n\ntrophies:\n  style: trophy\n"))
-        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictactoe and connectfour\n\n"
-                                                 "chore(tictactoe): 🎲 open game 1 for "))
+        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictactoe, connectfour and"
+                                                 " checkers\n\nchore(tictactoe): 🎲 open game 1 for "))
         self.assertIn("\n\nchore(connectfour): 🎲 open game 1 for ", self.commit())
+        self.assertIn("\n\nchore(checkers): 🏁 start game 1, GitHub to open as Black\n\n", self.commit())
+        self.assertIn('  checkers:\n    kind: "checkers"\n', text)
+        self.assertIn(f'    due: "{page.day(T0 + page.WEEK)}"\n', text.split("# checkers:start")[1])
         self.assertTrue(self.commit().endswith("\n\nRun: https://github.com/tannergolden/tannergolden/actions/runs/1\n"))
         self.assertEqual(self.notices(), [], "an opening answers no issue")
 
@@ -93,17 +97,20 @@ class Run(unittest.TestCase):
                                 T0 + dt.timedelta(minutes=30))
         chess.save(self.root / "chess", chess_game)
         code, said = self.run_clock(T0 + page.WEEK + dt.timedelta(hours=1))
-        self.assertEqual((code, said), (0, {"changed": "true", "notices": "3"}))
-        self.assertEqual(self.notices(), ["logbook tictactoe.md", "logbook connectfour.md", "41 chess.md"],
-                         "after its own opening the Arbiter writes in the logbook; after the owner's move, on its"
-                         " issue")
-        for key in ("tictactoe", "connectfour"):
+        self.assertEqual((code, said), (0, {"changed": "true", "notices": "4"}))
+        self.assertEqual(self.notices(), ["logbook tictactoe.md", "logbook connectfour.md", "logbook checkers.md",
+                                          "41 chess.md"],
+                         "after its own opening, or a start nobody moved from, the Arbiter writes in the logbook; after"
+                         " the owner's move, on its issue")
+        for key, arbiter in (("tictactoe", [True, True]), ("connectfour", [True, True]), ("checkers", [True])):
             game, _ = self.state(key)
-            self.assertEqual([played["arbiter"] for played in game["moves"]], [True, True])
+            self.assertEqual([played["arbiter"] for played in game["moves"]], arbiter)
             self.assertTrue((self.out / f"{key}.md").read_text(encoding="utf-8").startswith(
                 "⏰ **A week passed without a move from "))
-        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictactoe, connectfour and chess"
-                                                 "\n\n"))
+        self.assertIn("so the Arbiter played 1. ", (self.out / "checkers.md").read_text(encoding="utf-8"))
+        self.assertIn(" for Black, at random.", (self.out / "checkers.md").read_text(encoding="utf-8"))
+        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictactoe, connectfour, checkers"
+                                                 " and chess\n\n"))
         self.assertTrue(self.state("chess")[0]["moves"][-1]["arbiter"])
 
     def test_a_finished_game_s_fresh_board_comes_on_the_first_hour_after_its_two_days(self):
@@ -129,13 +136,16 @@ class Run(unittest.TestCase):
 
     def test_one_game_s_own_commit_stands_when_it_alone_moved_on(self):
         self.run_clock(T0)
-        tictactoe = games.rules("tictactoe")
-        game, hall = self.state("tictactoe")  # a reply three days in, so only Connect Four's week runs out
-        player = (OWNER, OWNER_ID) if games.side_of(game, 2) == "house" else (OCTOCAT, OCTOCAT_ID)
-        code = tictactoe.legal(games.replay(tictactoe, game)[-1])[0]
-        reply = games.play(tictactoe, game, hall, games.Request(code, 1, 2, 60, *player), OWNER, OWNER_ID,
-                           T0 + dt.timedelta(days=3))
-        games.save(self.root / "tictactoe", reply)
+        for key in ("tictactoe", "checkers"):  # a move three days in, so only Connect Four's week runs out
+            mod = games.rules(key)
+            game, hall = self.state(key)
+            ply = len(game["moves"]) + 1
+            player = (OWNER, OWNER_ID) if games.side_of(mod, game, ply) == "house" else (OCTOCAT, OCTOCAT_ID)
+            code = mod.legal(games.replay(mod, game)[-1])[0]
+            moved = games.play(mod, game, hall, games.Request(code, 1, ply, 60, *player), OWNER, OWNER_ID,
+                               T0 + dt.timedelta(days=3))
+            self.assertTrue(moved.changed, moved.comment)
+            games.save(self.root / key, moved)
         code, said = self.run_clock(T0 + page.WEEK + dt.timedelta(minutes=1))
         self.assertEqual((code, said["notices"]), (0, "1"))
         self.assertTrue(self.commit().startswith("chore(connectfour): ⏰ play 1... "), self.commit())

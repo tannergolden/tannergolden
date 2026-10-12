@@ -1,16 +1,16 @@
 name: Connect Four
 
 # Connect Four on the profile, the second tier of its four games: seven
-# columns of falling discs. The Arbiter opens every game, for a side drawn at
-# random, with a random disc: that side drops the dark discs and the other the
-# light, so neither is favoured. Every move reaches it from tannergolden/play's
-# Move Intake: a player picks a move on the board, its link opens an issue
-# there, and the intake starts this through the Official Arbiter with the
-# move, the game and move it was picked at, the issue and who opened it.
-# game.yml, which the three games beside chess share, plays it or turns it
-# away, replies on the issue with which and why, and redraws the page. This
-# only plays moves: clock.yml keeps every game's time. The state lives in
-# .github/connectfour.
+# columns of falling discs. The owner always drops the white discs and GitHub,
+# anyone else, the black. The Arbiter opens every game, for a side drawn at
+# random, with a random disc, so that side's colour drops first. Every move
+# reaches it from tannergolden/play's Move Intake: a player picks a move on
+# the board, its link opens an issue there, and the intake starts this through
+# the Official Arbiter with the move, the game and move it was picked at, the
+# issue and who opened it. game.yml, which the three games beside chess share,
+# plays it or turns it away, replies on the issue with which and why, and
+# redraws the page. This only plays moves: clock.yml keeps every game's time.
+# The state lives in .github/connectfour.
 on:
   workflow_dispatch:
     inputs:

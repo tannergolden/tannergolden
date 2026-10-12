@@ -144,12 +144,24 @@ class Leaders(unittest.TestCase):
     def test_the_arbiter_s_opening_and_week_moves_count_for_nobody_whichever_side_it_moved_for(self):
         opened_for_github = board((None, None, True), (OWNER, OWNER_ID, False), (OCTOCAT, OCTOCAT_ID, False),
                                   (None, None, True), opens="github")
-        self.assertEqual(hall.tally(opened_for_github),
+        self.assertEqual(hall.tally("tictactoe", opened_for_github),
                          (1, [{"player": OCTOCAT, "player_id": OCTOCAT_ID, "moves": 1}]))
         opened_for_the_house = board((None, None, True), (OCTOCAT, OCTOCAT_ID, False), (None, None, True))
-        self.assertEqual(hall.tally(opened_for_the_house),
+        self.assertEqual(hall.tally("connectfour", opened_for_the_house),
                          (0, [{"player": OCTOCAT, "player_id": OCTOCAT_ID, "moves": 1}]))
-        self.assertEqual(hall.tally(None), (0, []))
+        self.assertEqual(hall.tally("tictactoe", None), (0, []))
+
+    def test_github_opens_checkers_and_the_house_opens_chess(self):
+        moves = ((OCTOCAT, OCTOCAT_ID, False), (OWNER, OWNER_ID, False), (HUBOT, HUBOT_ID, False))
+        checkers = {key: value for key, value in board(*moves).items() if key != "opens"}  # no `opens` in its state
+        self.assertEqual(hall.tally("checkers", checkers),
+                         (1, [{"player": HUBOT, "player_id": HUBOT_ID, "moves": 1},
+                              {"player": OCTOCAT, "player_id": OCTOCAT_ID, "moves": 1}]))
+        chess = {key: value for key, value in board((OWNER, OWNER_ID, False), (HUBOT, HUBOT_ID, False),
+                                                    (OWNER, OWNER_ID, False)).items() if key != "opens"}
+        self.assertEqual(hall.tally("chess", chess), (2, [{"player": HUBOT, "player_id": HUBOT_ID, "moves": 1}]))
+        element = hall.element(states(checkers=(checkers, [])), OWNER, OWNER_ID)
+        self.assertEqual([row[:3] for row in element["leaders"]], [[OWNER, 1, 1], [HUBOT, 1, 1], [OCTOCAT, 1, 1]])
 
     def test_twenty_of_github_follow_the_house(self):
         crowd = record(1, OWNER, "2026-10-01T12:00:00Z", players=[(f"p{i:02}", 1000 + i, i) for i in range(1, 26)])

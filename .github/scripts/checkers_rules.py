@@ -4,18 +4,19 @@
 
   from checkers_rules import START, Position, legal_moves, make, find, ending
 
-The board is the thirty-two dark squares, numbered 1 to 32 in the standard
-way, four to a row, from the dark side's back row (1 to 4) to the light side's
-(29 to 32). Dark's twelve men start on 1 to 12 and light's on 21 to 32, and
-dark moves first. A man steps one square diagonally forward, a king one square
-diagonally either way. A capture is a jump over a piece of the other side to
-the empty square beyond it, and it is compulsory: a side that can jump must,
-though it may choose which jump, the longest or not. A jump goes on while the
-piece can take more, a man jumping only forward and a king either way, and no
-piece is taken twice; a man that reaches the far row is crowned a king, and
-its move ends there. Every legal move is generated, every jump to where it
-must stop, and the counts of every move sequence from the start match the
-published perft numbers, which the tests hold the generator to.
+The board is the thirty-two dark squares, numbered 1 to 32 in the standard way,
+four to a row, from the dark side's back row (1 to 4) to the light side's (29
+to 32). Dark's twelve men start on 1 to 12 and light's on 21 to 32, and dark
+moves first; every message calls the dark side Black and the light side White,
+as American checkers does. A man steps one square diagonally forward, a king
+one square diagonally either way. A capture is a jump over a piece of the other
+side to the empty square beyond it, and it is compulsory: a side that can jump
+must, though it may choose which jump, the longest or not. A jump goes on while
+the piece can take more, a man jumping only forward and a king either way, and
+no piece is taken twice; a man that reaches the far row is crowned a king, and
+its move ends there. Every legal move is generated, every jump to where it must
+stop, and the counts of every move sequence from the start match the published
+perft numbers, which the tests hold the generator to.
 
 A position is the pieces and whose turn it is, read from and written as a PDN
 FEN (B:W21,22,K30:B1,2,9), and a position read from one is held to what a game
@@ -37,8 +38,8 @@ from dataclasses import dataclass
 from itertools import pairwise
 from operator import attrgetter
 
-DARK, LIGHT = "d", "l"  # dark moves first; the house plays dark
-SIDES = {DARK: "Dark", LIGHT: "Light"}  # the words every message names the sides by
+DARK, LIGHT = "d", "l"  # dark moves first: Black's men, GitHub's on the profile, and light is White's, the house's
+SIDES = {DARK: "Black", LIGHT: "White"}  # the words every message names the sides by
 SQUARES = range(1, 33)
 MEN = 12  # each side's men at the start, and the most pieces a side ever has
 CROWN = {DARK: frozenset(range(29, 33)), LIGHT: frozenset(range(1, 5))}  # the far row, where a man is crowned

@@ -1,15 +1,16 @@
 name: Tic-Tac-Toe
 
-# Tic-Tac-Toe on the profile, the first tier of its four games: a duel on
-# nine cells. The Arbiter opens every game, for a side drawn at random, with
-# a random cell: that side plays X and the other O, so neither is favoured.
-# Every move reaches it from tannergolden/play's Move Intake: a player picks a
-# move on the board, its link opens an issue there, and the intake starts
-# this through the Official Arbiter with the move, the game and move it was
-# picked at, the issue and who opened it. game.yml, which the three games
-# beside chess share, plays it or turns it away, replies on the issue with
-# which and why, and redraws the page. This only plays moves: clock.yml keeps
-# every game's time. The state lives in .github/tictactoe.
+# Tic-Tac-Toe on the profile, the first tier of its four games: a duel on nine
+# cells. The owner always plays X and GitHub, anyone else, O. The Arbiter
+# opens every game, for a side drawn at random, with a random cell, so that
+# side's mark goes down first. Every move reaches it from tannergolden/play's
+# Move Intake: a player picks a move on the board, its link opens an issue
+# there, and the intake starts this through the Official Arbiter with the
+# move, the game and move it was picked at, the issue and who opened it.
+# game.yml, which the three games beside chess share, plays it or turns it
+# away, replies on the issue with which and why, and redraws the page. This
+# only plays moves: clock.yml keeps every game's time. The state lives in
+# .github/tictactoe.
 on:
   workflow_dispatch:
     inputs:

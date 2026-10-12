@@ -81,12 +81,12 @@ class FourInARow(unittest.TestCase):
             position = drop(*columns)
             end = R.ending(position)
             with self.subTest(way=way):
-                self.assertEqual((end.winner, end.reason, end.line, end.result), (R.DARK, "four in a row", line, "1-0"))
+                self.assertEqual((end.winner, end.reason, end.line, end.result), (R.DARK, "four in a row", line, "0-1"))
                 self.assertEqual(R.legal(position), [], "a won game has no move left")
 
-    def test_light_wins_too_and_scores_second(self):
+    def test_light_wins_too_and_scores_first_as_white(self):
         end = R.ending(drop(1, 4, 1, 4, 2, 4, 7, 4))
-        self.assertEqual((end.winner, end.line, end.result), (R.LIGHT, ((4, 1), (4, 2), (4, 3), (4, 4)), "0-1"))
+        self.assertEqual((end.winner, end.line, end.result), (R.LIGHT, ((4, 1), (4, 2), (4, 3), (4, 4)), "1-0"))
         end = R.ending(drop(4, 1, 4, 1, 4, 2, 4, start=R.opening(R.LIGHT)))
         self.assertEqual((end.winner, end.line), (R.LIGHT, ((4, 1), (4, 2), (4, 3), (4, 4))),
                          "and when it dropped first")

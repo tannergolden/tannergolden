@@ -75,7 +75,7 @@ def lines_of_play():
         mod, rng = games.rules(key), random.Random(key)
         for opens in (HOUSE, GITHUB):
             for _ in range(12):
-                table = test_games.Table(key, opens, rng.choice(mod.legal(mod.start())))
+                table = test_games.Table(key, opens, rng.choice(mod.legal(mod.start(opens))))
                 while "moves" in table.board():
                     table.move(rng.choice(mod.legal(games.replay(mod, table.game)[-1])))
                     yield table.board()
@@ -139,7 +139,7 @@ def random_games(key: str, rng: random.Random, count: int):
         else:
             current = game or {"game": 1, "started": page.stamp(clock), "moves": []}
             ply = len(current["moves"]) + 1
-            login, account = ((OWNER, OWNER_ID) if games.side_of(current, ply) == HOUSE else player(rng, moves))
+            login, account = ((OWNER, OWNER_ID) if games.side_of(mod, current, ply) == HOUSE else player(rng, moves))
             code = rng.choice(sorted(mod.legal(games.replay(mod, current)[-1])))
             clock, issue, moves = clock + HOUR, issue + 1, moves + 1
             keep(games.play(mod, game, records, games.Request(code, current["game"], ply, issue, login, account),

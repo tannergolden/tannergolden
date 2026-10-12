@@ -8,10 +8,12 @@ A frame of seven columns and six rows: columns 1 to 7 from the left, rows 1
 to 6 from the foot. The two colours take turns, a disc at a time, and a disc
 falls to the lowest open cell of the column it is dropped down. Four in a
 row wins, across, up or on a diagonal, and a full frame with no four is a
-draw. The dark discs (`D`) drop first unless a position says the light ones
-(`L`) do (`first`). A move is written as its column, `4`, with a `+` when it
-leaves its side a column to win down next (a threat) and a `#` when it
-connects four, as chess marks a check and a mate.
+draw. The dark discs (`D`, Black's) drop first unless a position says the
+light ones (`L`, White's) do (`first`): on the profile each player keeps one
+colour, and the side the Arbiter opens for drops first. A move is written as
+its column, `4`, with a `+` when it leaves its side a column to win down
+next (a threat) and a `#` when it connects four, as chess marks a check and
+a mate.
 
 A threat is a column a side could drop down and win at once: the cell its
 disc would land on completes four. Stdlib only.
@@ -20,9 +22,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-DARK, LIGHT = "D", "L"
+DARK, LIGHT = "D", "L"  # the board's letters: the dark discs are Black's, the light ones White's
 COLS, ROWS = 7, 6
-COLOUR = {DARK: "dark", LIGHT: "light"}
+COLOUR = {DARK: "black", LIGHT: "white"}  # what a move's words call each colour's discs
 DIRECTIONS = ((1, 0), (0, 1), (1, 1), (1, -1))  # across, up, and the two diagonals
 
 
@@ -92,8 +94,8 @@ class Ending:
 
     @property
     def result(self) -> str:
-        """The result as a score sheet writes it, the dark discs' score first."""
-        return {DARK: "1-0", LIGHT: "0-1"}.get(self.winner or "", "1/2-1/2")
+        """The result as a score sheet writes it, White's score first, as chess writes White's."""
+        return {LIGHT: "1-0", DARK: "0-1"}.get(self.winner or "", "1/2-1/2")
 
 
 def _at(cells: tuple[str, ...] | list[str], col: int, row: int) -> str:

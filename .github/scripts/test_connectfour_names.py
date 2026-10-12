@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
 """Every open column named as an order to the airborne: what a drop is read as, its title and words, and that a
-board keeps them, in every position of many games.
+board keeps them, in every position of many games, whichever colour drops first.
 
   python3 -m unittest discover -s .github/scripts -p 'test_*.py'
 """
@@ -25,18 +25,18 @@ KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
 DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
 
 
-def drop(columns: str) -> R.Position:
-    position = R.START
+def drop(columns: str, first: str = R.DARK) -> R.Position:
+    position = R.opening(first)
     for col in columns:
         position = R.make(position, int(col))
     return position
 
 
 def frames(n: int = 60, seed: int = 5) -> list[R.Position]:
-    """Every position of `n` games of seeded random play, with a drop left to make."""
+    """Every position of `n` games of seeded random play, with a drop left to make, every other game light first."""
     rng, out = random.Random(seed), []
-    for _ in range(n):
-        position = R.START
+    for game in range(n):
+        position = R.opening(R.LIGHT if game % 2 else R.DARK)
         while R.legal(position):
             out.append(position)
             position = R.make(position, rng.choice(R.legal(position)))
@@ -48,18 +48,18 @@ NAMED = {position: listing(position, 1, 1) for position in frames()}  # every bo
 
 # A line for each theme, the column whose drop has it, and the drop's words.
 CASES = {
-    "win": ("536376", 4, "A dark disc down column 4 connects four across row 1"),
-    "counter": ("16253", 4, "A light disc down column 4 blocks on row 1, threatening column 7"),
-    "block": ("53637", 4, "A light disc down column 4 blocks on row 1"),
-    "blunder": ("53637", 1, "A light disc down column 1, to row 1, leaving column 4 to Dark"),
-    "crossfire": ("77444676", 5, "A dark disc down column 5, to row 1, opening column 5 to Light"),
-    "fork": ("4436", 2, "A dark disc down column 2, to row 1, threatening columns 1 and 5"),
-    "threat": ("5363", 4, "A dark disc down column 4, to row 1, threatening column 7"),
-    "first": ("", 1, "A dark disc down column 1, to row 1"),
-    "centre": ("5", 4, "A light disc down column 4, to row 1"),
-    "edge": ("5", 1, "A light disc down column 1, to row 1"),
-    "stack": ("53", 5, "A dark disc down column 5, to row 2"),
-    "drop": ("5", 2, "A light disc down column 2, to row 1"),
+    "win": ("536376", 4, "A black disc down column 4 connects four across row 1"),
+    "counter": ("16253", 4, "A white disc down column 4 blocks on row 1, threatening column 7"),
+    "block": ("53637", 4, "A white disc down column 4 blocks on row 1"),
+    "blunder": ("53637", 1, "A white disc down column 1, to row 1, leaving column 4 to Black"),
+    "crossfire": ("77444676", 5, "A black disc down column 5, to row 1, opening column 5 to White"),
+    "fork": ("4436", 2, "A black disc down column 2, to row 1, threatening columns 1 and 5"),
+    "threat": ("5363", 4, "A black disc down column 4, to row 1, threatening column 7"),
+    "first": ("", 1, "A black disc down column 1, to row 1"),
+    "centre": ("5", 4, "A white disc down column 4, to row 1"),
+    "edge": ("5", 1, "A white disc down column 1, to row 1"),
+    "stack": ("53", 5, "A black disc down column 5, to row 2"),
+    "drop": ("5", 2, "A white disc down column 2, to row 1"),
 }
 
 
@@ -75,7 +75,14 @@ class Reading(unittest.TestCase):
         for want, (line, col, said) in CASES.items():
             with self.subTest(theme=want):
                 self.assertEqual(words(drop(line), col), said)
-        self.assertEqual(words(drop("4141"), 4), "A dark disc down column 4, to row 3, threatening column 4")
+        self.assertEqual(words(drop("4141"), 4), "A black disc down column 4, to row 3, threatening column 4")
+
+    def test_white_s_drops_read_the_same_when_white_drops_first(self):
+        self.assertEqual(words(drop("", R.LIGHT), 6), "A white disc down column 6, to row 1")
+        self.assertEqual(theme(read(drop("", R.LIGHT), 6)), "first")
+        self.assertEqual(words(drop("4141", R.LIGHT), 4), "A white disc down column 4, to row 3, threatening column 4")
+        self.assertEqual(words(drop("53637", R.LIGHT), 1), "A black disc down column 1, to row 1, leaving column 4"
+                                                           " to White")
 
     def test_words_too_long_for_the_kit_keep_the_warning(self):
         for position, named in NAMED.items():

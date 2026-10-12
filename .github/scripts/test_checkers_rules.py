@@ -394,13 +394,14 @@ class WhyIllegal(unittest.TestCase):
 
     def test_whose_piece_it_is(self):
         self.assertWhy("", "14-18", "there is no man of yours on 14")
-        self.assertWhy("", "22-18", "the man on 22 is Light's")
-        self.assertWhy("B:WK22:B1", "22-18", "the king on 22 is Light's")
+        self.assertWhy("", "22-18", "the man on 22 is White's")
+        self.assertWhy("B:WK22:B1", "22-18", "the king on 22 is White's")
 
     def test_a_capture_is_compulsory(self):
         self.assertWhy("W:W22,24:B18,1", "24-19", "a capture is compulsory, so the man on 22 must jump")
         self.assertWhy("W:W22,23:B18,1", "22-17", "a capture is compulsory, so a man on 22 or 23 must jump")
-        self.assertWhy("W:WK3,23:B7,18", "23-19", "a capture is compulsory, so the king on 3 or the man on 23 must jump")
+        self.assertWhy("W:WK3,23:B7,18", "23-19",
+                       "a capture is compulsory, so the king on 3 or the man on 23 must jump")
 
     def test_a_jump_written_as_a_step_and_a_step_as_a_jump(self):
         self.assertWhy("W:W22:B18,1", "22-15", "a jump is written with an x, as `22x15`")
@@ -416,7 +417,8 @@ class WhyIllegal(unittest.TestCase):
     def test_a_step_that_goes_nowhere_a_step_can(self):
         self.assertWhy("", "11-20", "a step goes to the next square along a diagonal, and 20 isn't next to 11")
         self.assertWhy("", "11-11", "a step goes to the next square along a diagonal, and 11 isn't next to 11")
-        self.assertWhy("B:W32:B15", "15-11", "a man only moves forward, toward the far row, and only a king can move back")
+        self.assertWhy("B:W32:B15", "15-11",
+                       "a man only moves forward, toward the far row, and only a king can move back")
         self.assertWhy("", "9-5", "a man only moves forward, toward the far row, and only a king can move back")
         self.assertWhy("", "5-9", "there's already a man on 9")
 
@@ -428,13 +430,14 @@ class WhyIllegal(unittest.TestCase):
         self.assertWhy("B:W15:B11", "11x19", "a jump goes over the next square on a diagonal to the one beyond it,"
                                              " and 19 isn't a jump from 11")
         self.assertWhy("B:W15:B11", "11x20", "there's nothing on 16 to jump")
-        self.assertWhy("B:W11:B15,1", "15x8", "a man only jumps forward, toward the far row, and only a king can jump back")
+        self.assertWhy("B:W11:B15,1", "15x8",
+                       "a man only jumps forward, toward the far row, and only a king can jump back")
         self.assertWhy(CIRCLE, "6x15x6", "the man on 10 is taken already, and no piece is taken twice")
         self.assertWhy("W:W10:B7,8", "10x3x12", "a man is crowned when it reaches the far row, and its move ends there,"
                                                 " on 3")
 
     def test_a_game_over_has_no_move_at_all(self):
-        self.assertWhy("W:W:B1", "21-17", "Light has no move left, so the game is over")
+        self.assertWhy("W:W:B1", "21-17", "White has no move left, so the game is over")
 
 
 class Record(unittest.TestCase):

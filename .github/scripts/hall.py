@@ -38,6 +38,7 @@ from page import GITHUB, HOUSE, day, other, parse
 from page import load as load_game
 
 GAMES = ("tictactoe", "connectfour", "checkers", "chess")  # tier order, for every list of the four games
+OPENERS = {"checkers": GITHUB, "chess": HOUSE}  # who always opens these; the Arbiter's games say whom it opened for
 PEOPLE, LEADERS = 5, 10  # the page's places: the podium's winners, and GitHub's players under the house's row
 DEPTH = 2  # the lists run to twice the page's places, so a player whose account is gone leaves no gap
 TALLY, MOST = 999_999, 999_999_999  # the most a count of games or wins, and of moves, may be on the page
@@ -48,13 +49,18 @@ def load(root: Path) -> dict[str, tuple[dict | None, list]]:
     return {key: load_game(root / key) for key in GAMES}
 
 
-def tally(game: dict | None) -> tuple[int, list[dict]]:
+def opener(key: str, game: dict) -> str:
+    """The side that moved first in a game: the side the game says the Arbiter opened for, or the side that always
+    opens it."""
+    return game.get("opens") or OPENERS.get(key, HOUSE)
+
+
+def tally(key: str, game: dict | None) -> tuple[int, list[dict]]:
     """The game on a board, counted: the house's moves in it, and everyone who has moved for GitHub, most moves
-    first. Whose move a ply is comes from the side that opened, the house unless the game says otherwise; the
-    Arbiter's moves count for nobody."""
+    first. Whose move a ply is comes from the side that opened (`opener`); the Arbiter's moves count for nobody."""
     if not game:
         return 0, []
-    first = game.get("opens", HOUSE)
+    first = opener(key, game)
     house, counts = 0, {}
     for ply, played in enumerate(game.get("moves", []), 1):
         if played.get("arbiter"):
@@ -80,11 +86,11 @@ def winner(record: dict, owner: str):
 def logins(states: dict) -> dict[int, str]:
     """Every player's newest login, by account: the last one they played as, in any of the four games."""
     seen = []
-    for game, hall in states.values():
+    for key, (game, hall) in states.items():
         for record in hall:
             seen += [(parse(record["ended"]), p["player_id"], p["player"]) for p in record.get("players", [])]
         if game:
-            first = game.get("opens", HOUSE)
+            first = opener(key, game)
             seen += [(parse(played["at"]), played["player_id"], played["player"])
                      for ply, played in enumerate(game.get("moves", []), 1)
                      if not played.get("arbiter") and (first if ply % 2 else other(first)) == GITHUB]
@@ -148,7 +154,7 @@ def leaders(states: dict, owner: str, owner_id: int | None, newest: dict[int, st
     for index, key in enumerate(GAMES):
         game, hall = states[key]
         played = [(record, record.get("house_moves", 0), record.get("players", [])) for record in hall]
-        played += [(None, *tally(game))] if game else []
+        played += [(None, *tally(key, game))] if game else []
         for record, own, players in played:
             house["moves"] += own
             house["games"] += 1 if own else 0

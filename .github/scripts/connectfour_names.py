@@ -131,8 +131,8 @@ def columns(found: tuple[int, ...]) -> str:
 
 
 def words(position: Position, col: int) -> str:
-    """The drop in plain words: `A dark disc down column 4, to row 1`, `A light disc down column 7 blocks on row 2`,
-    `A dark disc down column 2 connects four on a diagonal`."""
+    """The drop in plain words: `A black disc down column 4, to row 1`, `A white disc down column 7 blocks on row 2`,
+    `A black disc down column 2 connects four on a diagonal`."""
     r = read(position, col)
     disc = f"A {COLOUR[r.colour]} disc down column {col}"
     if r.wins:

@@ -1,13 +1,14 @@
 name: Checkers
 
-# Checkers on the profile, the third tier of its four games: American
-# checkers on the 32 dark squares. The owner opens every game, as Dark, and
-# GitHub, anyone else, plays Light. Every move reaches it from
+# Checkers on the profile, the third tier of its four games: American checkers
+# on the 32 dark squares, where Black moves first. GitHub, anyone else, plays
+# Black and so opens every game, and the owner plays White; the first game
+# starts on the first run that reaches it. Every move reaches it from
 # tannergolden/play's Move Intake: a player picks a move on the board, its
 # link opens an issue there, and the intake starts this through the Official
-# Arbiter with the move, the game and move it was picked at, the issue and
-# who opened it. game.yml, which the three games beside chess share, plays it
-# or turns it away, replies on the issue with which and why, and redraws the
+# Arbiter with the move, the game and move it was picked at, the issue and who
+# opened it. game.yml, which the three games beside chess share, plays it or
+# turns it away, replies on the issue with which and why, and redraws the
 # page. This only plays moves: clock.yml keeps every game's time. The state
 # lives in .github/checkers.
 on:

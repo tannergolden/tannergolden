@@ -234,11 +234,11 @@ jobs:
           esac
           move='this move'
           if [[ "$MOVE" =~ $shape ]]; then move="\`$MOVE\`"; fi
-          down="$(desk arbiter-outage "🧯 The Arbiter is down" "$(printf '%s\n' \
-            "🧯 **The Arbiter is down**, so moves aren't being ruled on. @$OWNER, [this run]($RUN_URL) failed" \
-            "before it could rule on one. Every move it stops links here, and nobody is pinged again; this" \
-            "closes itself when a move goes through.")")"
-          printf '%s\n' "⚠️ **The Arbiter couldn't rule on $move**, so nothing was played." \
+          down="$(desk arbiter-outage "🧯 The Arbiter is down" "$(printf '%s\n%s %s\n' \
+            "🧯 **The Arbiter is down**, so moves aren't being ruled on." \
+            "@$OWNER, [this run]($RUN_URL) failed before it could rule on one. Every move it stops links here," \
+            "and nobody is pinged again; this closes itself when a move goes through.")")"
+          printf '%s\n%s %s\n' "⚠️ **The Arbiter couldn't rule on $move**, so nothing was played." \
             "It's being looked into in [#$down](https://github.com/$PLAY/issues/$down): try the same move again from" \
             "[the board](https://github.com/$OWNER) once that's closed." \
             > "$RUNNER_TEMP/failed.md"

@@ -112,11 +112,11 @@ jobs:
           while read -r target file; do
             [[ "$file" =~ ^(tictactoe|connectfour|checkers|chess)\.md$ ]] || continue
             if [ "$target" = logbook ]; then
-              target="$(desk arbiter-logbook "♟️ The Arbiter's logbook" "$(printf '%s\n' \
-                "♟️ **The Arbiter's logbook.** When a side lets a week pass without moving, in any of the" \
-                "profile's four games, the Arbiter plays a random legal move for it. The first such move is" \
-                "told on the issue of the move it answers; any after it are noted here, and @$OWNER is told" \
-                "here when the next move is theirs.")")"
+              target="$(desk arbiter-logbook "⚖️ The Arbiter's logbook" "$(printf '%s\n%s %s %s\n' \
+                "⚖️ **The Arbiter's logbook.**" \
+                "When a side lets a week pass without moving, in any of the profile's four games, the Arbiter plays" \
+                "a random legal move for it. The first such move is told on the issue of the move it answers; any" \
+                "after it are noted here, and @$OWNER is told here when the next move is theirs.")")"
             fi
             [[ "$target" =~ ^[1-9][0-9]{0,15}$ ]] || continue
             say "$target" "$RUNNER_TEMP/clock/$file"

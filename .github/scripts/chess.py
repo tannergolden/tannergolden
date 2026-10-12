@@ -36,12 +36,18 @@ named by chess_names.py, with a link that opens its ready-made issue. The Hall
 of Fame: the series between the owner and GitHub, and its leading winners, a
 point to whoever made a mating move; and the leaderboard, the owner's own moves,
 wins and games on top of GitHub's ten leading players', where nothing the
-Arbiter played counts for anyone. They go between the `# chess:start` and
+Arbiter played counts for anyone. Each winner and player is named by the newest
+login they played as, with their account's ID, so the page can name them as
+they are now. They go between the `# chess:start` and
 `# chess:end` lines of .github/markdown.yaml, and nothing else in that file,
 for tannergolden/markdown to draw in the page's one theme.
 
 It writes comment.md, the reply to post, and commit.txt into the run's
-temporary folder (--out), and sets `changed` and `issue` as step outputs.
+temporary folder (--out), and sets `changed`, `issue` and `logbook` as step
+outputs: whether the page is to be drawn again, the issue the reply goes on,
+and whether it goes in the owner's logbook of the Arbiter's moves instead. A
+request that is not in the form the intake sends is turned away on its issue
+like any move that can't be played.
 Stdlib only, with chess_rules.py and chess_names.py beside it.
 """
 from __future__ import annotations
@@ -60,15 +66,16 @@ from pathlib import Path
 
 from chess_names import listing
 from chess_names import words as move_words
-from chess_rules import (START, Ending, Move, Position, ending, in_check, king, label, legal_moves, make, pseudo_moves,
-                         san, side, square)
+from chess_rules import (START, Ending, Move, Position, attacked, ending, in_check, king, label, legal_moves, make,
+                         other, pseudo_moves, san, side, square)
 
 WEEK = dt.timedelta(days=7)
 EST = dt.timezone(dt.timedelta(hours=-5), "EST")  # the page tells time in EST, as its settings say
 GROUPS = {"k": "king", "q": "queen", "r": "rook", "b": "bishop", "n": "knight", "p": "pawn"}
 ROWS, PODIUM, LEADERS = 3, 5, 10  # the score sheet's latest rows, the Hall of Fame's winners, its leaderboard
 UCI = re.compile(r"[a-h][1-8][a-h][1-8][qrbn]?")
-NUMBER = re.compile(r"[1-9][0-9]{0,8}")
+COUNT = re.compile(r"[1-9][0-9]{0,8}")  # a game or a move: up to 999,999,999, as the page's links carry
+ID = re.compile(r"[1-9][0-9]{0,15}")  # an issue or an account: up to 16 digits, as the intake passes on
 LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})")
 PIECES = {"p": "pawn", "n": "knight", "b": "bishop", "r": "rook", "q": "queen", "k": "king"}
 REASONS = {
@@ -76,6 +83,7 @@ REASONS = {
     "fivefold repetition": "fivefold repetition",
     "seventy-five-move rule": "the seventy-five-move rule",
     "insufficient material": "insufficient material",
+    "dead position": "a dead position",
 }
 
 
@@ -114,6 +122,8 @@ class Outcome:
     pgn: tuple[str, str] | None = None  # a finished game's file name and text
     log: str = ""
     finished: dict | None = None  # the finished game's Hall of Fame record
+    redraw: bool = False  # nothing to save, but the page is drawn again: a run of the last move over again
+    logbook: bool = False  # the comment goes in the owner's logbook of the Arbiter's moves, not on a player's issue
 
 
 def new_game(number: int, started: dt.datetime) -> dict:
@@ -174,9 +184,39 @@ def why_illegal(position: Position, uci: str) -> str:
         return f"a pawn reaching the last rank has to say what it becomes, such as `{uci}q` for a queen"
     if len(uci) == 5 and uci[:4] in legal:
         return f"only a pawn reaching the last rank names a piece to become, so the move is `{uci[:4]}`"
-    if any(move.uci == uci for move in pseudo_moves(position)):
+    start, end = square(uci[0:2]), square(uci[2:4])
+    if piece.lower() == "k" and start in (4, 60) and abs(end - start) == 2:
+        return why_not_castle(position, start, end)
+    if uci[:4] in {move.uci[:4] for move in pseudo_moves(position)}:
+        if piece.lower() == "k":
+            return f"the king can't step into check on {uci[2:4]}"
+        if in_check(position):
+            return "your king is in check, and this move doesn't get it out"
+        bare = list(position.board)
+        bare[start] = ""
+        if attacked(tuple(bare), king(position, position.turn), other(position.turn)):
+            return f"the {PIECES[piece.lower()]} on {uci[0:2]} is pinned to your king"
         return "it would leave your king in check"
     return f"the {PIECES[piece.lower()]} on {uci[0:2]} can't move to {uci[2:4]}"
+
+
+def why_not_castle(position: Position, start: int, end: int) -> str:
+    """Why the king can't castle where it was sent: the right gone, a piece in the way, or check on its path."""
+    kingside = end > start
+    wing = "kingside" if kingside else "queenside"
+    right = ("K" if kingside else "Q") if position.turn == "w" else ("k" if kingside else "q")
+    if right not in position.castling:
+        return f"the right to castle {wing} is gone: the king or that rook has moved, or the rook was taken"
+    rook = start + 3 if kingside else start - 4
+    if any(position.board[i] for i in range(min(start, rook) + 1, max(start, rook))):
+        return f"the squares between the king and the rook must be empty to castle {wing}"
+    enemy = other(position.turn)
+    if attacked(position.board, start, enemy):
+        return "the king can't castle out of check"
+    crossed = start + 1 if kingside else start - 1
+    if attacked(position.board, crossed, enemy):
+        return f"the king can't castle across {label(crossed)}, which is under attack"
+    return "the king can't castle into check"
 
 
 def profile(owner: str) -> str:
@@ -260,6 +300,23 @@ def ended_text(end: Ending, shown: str, number: int, mover: dict, owner: str, na
     return f"{head}\n{name}\nGame {number + 1} starts now, and @{owner} opens it as White.\n"
 
 
+def played_text(shown: str, white: bool, player: str, name: str, owner: str, board: str) -> str:
+    """The reply to a move that is played and leaves the game going: the move, its name, and whose turn it is."""
+    check = shown.endswith("+")
+    alarm = " Check!" if check else ""
+    if white:
+        return f"♟️ **{shown} is on the board.{alarm}**\n{name}\n{next_turn('b', owner, check, board)}\n"
+    return (f"♟️ **{shown} is on the board.{alarm}** Well played, @{player}.\n{name}\n"
+            f"{next_turn('w', owner, check, board)}\n")
+
+
+def same(played: dict, request: Request) -> bool:
+    """Whether a move on record came from this very request: the same issue, the same move and the same player. A
+    run made over again, such as a re-run of its job, finds its own move already played."""
+    return (request.issue is not None and played.get("issue") == request.issue and not played.get("arbiter")
+            and played.get("player_id") == request.player_id)
+
+
 def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: int,
          moment: dt.datetime) -> Outcome:
     """One move from the intake: played, or turned away with the reason."""
@@ -272,6 +329,11 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
         return outcome
 
     if request.game < number:
+        ended = next((record for record in hall if record["game"] == request.game), None)
+        if ended and ended["plies"] == request.move and same(ended["deciding"], request):
+            outcome.redraw = not current["moves"]  # its ending is still the last thing to happen
+            return refuse(f"✅ **{ended['deciding']['move']} already ended game {request.game}**, played from this"
+                          f" issue.\nGame {number} is under way on {board}.\n", "already played from this issue")
         return refuse(f"⌛ **Game {request.game} is over**, so `{request.uci}` wasn't played.\nGame {number} is under"
                       f" way on {board}: pick a move there.\n", "an earlier game")
     if request.game > number:
@@ -282,6 +344,15 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
     if request.move < ply:
         earlier = current["moves"][request.move - 1]
         shown = numbered(positions[request.move - 1], earlier["san"])
+        if earlier["uci"] == request.uci and same(earlier, request):
+            if request.move == ply - 1:  # the last move on the board: answer as when it was played, and draw again
+                before = positions[-2]
+                outcome.redraw = True
+                name = named(before, number, request.move, Move.from_uci(earlier["uci"]))
+                return refuse(played_text(shown, before.turn == "w", request.player, name, owner, board),
+                              "already played from this issue")
+            return refuse(f"✅ **{shown} is already on the board**, played from this issue.\nThe game has moved on"
+                          f" since: pick a move from {board} as it stands now.\n", "already played from this issue")
         by = ("you" if not earlier.get("arbiter") and earlier["player_id"] == request.player_id else
               "the Arbiter" if earlier.get("arbiter") else handle(earlier["player"]))
         return refuse(f"⌛ **Too late: move {request.move} is already on the board**, so `{request.uci}` wasn't"
@@ -306,17 +377,11 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
     name = named(position, number, ply, moves[request.uci])
     outcome, shown, end = apply(current, hall, positions, moves[request.uci], mover, owner, moment)
     outcome.issue = request.issue
-    check = shown.endswith("+")
     if end:
         outcome.comment = ended_text(end, shown, number, mover, owner, name)
         outcome.commit = f"chore(chess): 🏆 play {shown}, ending game {number} {end.result}"
-    elif position.turn == "w":
-        outcome.comment = (f"♟️ **{shown} is on the board.{' Check!' if check else ''}**\n{name}\n"
-                           f"{next_turn('b', owner, check, board)}\n")
-        outcome.commit = f"chore(chess): ♟️ play {shown} in game {number}"
     else:
-        outcome.comment = (f"♟️ **{shown} is on the board.{' Check!' if check else ''}** Well played,"
-                           f" @{request.player}.\n{name}\n{next_turn('w', owner, check, board)}\n")
+        outcome.comment = played_text(shown, position.turn == "w", request.player, name, owner, board)
         outcome.commit = f"chore(chess): ♟️ play {shown} in game {number}"
     outcome.commit += f"\n\nMove {ply}, by {request.player}."
     outcome.log = f"played {shown}" + (f", {end.reason}" if end else "")
@@ -342,12 +407,14 @@ def tick(game: dict | None, hall: list, owner: str, moment: dt.datetime) -> Outc
     number = game["game"]
     name = named(position, number, ply, move)
     outcome, shown, end = apply(game, hall, positions, move, mover, owner, moment)
-    # the reply goes on the issue of the game's last move, or, when the Arbiter opens a new game, of the move that
-    # ended the one before
-    issues = [earlier.get("issue") for earlier in game["moves"]]
-    if not game["moves"] and hall:
-        issues = [hall[-1].get("deciding", {}).get("issue")]
-    outcome.issue = next((issue for issue in reversed(issues) if issue), None)
+    # The notice goes on the issue of the move the Arbiter answers, once: its first move after a player's (the move
+    # that ended the last game, when it opens the next) is told there, and a move after another of its own goes in
+    # the owner's logbook, so no player's issue collects a notice a week and none is lost.
+    before = game["moves"][-1] if game["moves"] else (hall[-1]["deciding"] if hall else None)
+    if before and not before.get("arbiter") and before.get("issue"):
+        outcome.issue = before["issue"]
+    else:
+        outcome.logbook = True
     board = f"[the board]({profile(owner)})"
     late = "GitHub" if position.turn == "b" else handle(owner)
     head = (f"⏰ **A week passed without a move from {late}**, so the Arbiter played {shown} for"
@@ -421,10 +488,14 @@ def prompt(owner: str, white: bool, number: int, shown: str = "", arbiter: bool 
     alarm = "Check! " if check else ""
     if not white:
         mover = "The Arbiter" if arbiter else f"@{owner}"
-        return f"🟢 **GitHub's turn!** {mover} played {shown}. {alarm}Pick a move below{by}."
+        asks = ("Pick a move below", "Pick one below", "Pick below")  # the shortest only when a long move needs it
+        texts = [f"🟢 **GitHub's turn!** {mover} played {shown}. {alarm}{ask}{by}." for ask in asks]
+        return next((text for text in texts if len(text) <= BANNER), texts[-1])
     head = f"🛑 **@{owner}'s turn!**"
     if shown:
-        return f"{head} {'The Arbiter' if arbiter else 'GitHub'} played {shown}. {alarm}Reply due{by}."
+        texts = [f"{head} {'The Arbiter' if arbiter else 'GitHub'} played {shown}. {alarm}{ask}{by}."
+                 for ask in ("Reply due", "Reply")]
+        return next((text for text in texts if len(text) <= BANNER), texts[-1])
     if result:
         return f"{head} {result}. Game {number} opens{by}."
     return f"{head} @{owner} opens game {number} as White, and GitHub plays Black."
@@ -489,17 +560,33 @@ def house_moves(game: dict) -> int:
     return sum(1 for index, played in enumerate(game["moves"]) if index % 2 == 0 and not played.get("arbiter"))
 
 
-def leaders(hall: list, owner: str, game: dict | None = None) -> list[list]:
+def logins(hall: list, game: dict | None = None) -> dict[int, str]:
+    """Every player's newest login, by account: the last one they played as, over the games in the order played."""
+    newest: dict[int, str] = {}
+    for record in hall:
+        for played in record["players"]:
+            newest[played["player_id"]] = played["player"]
+    for played in contributors(game) if game else []:
+        newest[played["player_id"]] = played["player"]
+    return newest
+
+
+def row(entry: dict, *cells) -> list:
+    """A row for the page: its login, its counts, and the account's ID when it is known."""
+    return [entry["login"], *cells] + ([entry["id"]] if entry.get("id") else [])
+
+
+def leaders(hall: list, owner: str, game: dict | None = None, owner_id: int | None = None) -> list[list]:
     """The leaderboard under the Hall of Fame: the owner's row on top, then GitHub's ten leading players, ranked by
     their wins and then by the moves they have played for GitHub. A row counts its player's moves, wins and games
     over every finished game and the one on the board, under the newest login they played as. A win is a mating
     move of one's own, and a move or a mate the Arbiter played counts for nobody, on either side. The owner's row
-    stands from the start, at nought until they move."""
-    house = {"login": owner, "moves": 0, "wins": 0, "games": 0}
+    stands from the start, at nought until they move. Each row ends with its account's ID, when it is known."""
+    house = {"login": owner, "moves": 0, "wins": 0, "games": 0, "id": owner_id}
     tally: dict[int, dict] = {}
 
     def player(player_id: int, login: str) -> dict:
-        return tally.setdefault(player_id, {"login": login, "moves": 0, "wins": 0, "games": 0})
+        return tally.setdefault(player_id, {"login": login, "moves": 0, "wins": 0, "games": 0, "id": player_id})
 
     games = [(record, record["house_moves"], record["players"]) for record in hall]
     games += [(None, house_moves(game), contributors(game))] if game else []
@@ -516,14 +603,16 @@ def leaders(hall: list, owner: str, game: dict | None = None) -> list[list]:
             winner = house if record["winner"] == owner else player(deciding["player_id"], deciding["player"])
             winner["wins"] += 1  # a draw is nobody's win, and nor is the Arbiter's mate
     ranked = sorted(tally.values(), key=lambda e: (-e["wins"], -e["moves"], e["login"].casefold()))
-    return [[e["login"], e["moves"], e["wins"], e["games"]] for e in (house, *ranked[:LEADERS])]
+    return [row(e, e["moves"], e["wins"], e["games"]) for e in (house, *ranked[:LEADERS])]
 
 
-def hall_element(hall: list, owner: str, game: dict | None = None) -> dict:
+def hall_element(hall: list, owner: str, game: dict | None = None, owner_id: int | None = None) -> dict:
     """The page's Hall of Fame: the series between the owner and GitHub, its leading winners, and the leaderboard
     under it. A win is a point for whoever made the mating move, the owner included; a draw
-    scores nobody, and nor does the Arbiter's mate."""
+    scores nobody, and nor does the Arbiter's mate. A winner is named by the newest login they played as, and each
+    row ends with the account's ID, so the page can name them as they are now."""
     house = sum(1 for record in hall if record["winner"] == owner)
+    newest = logins(hall, game)
     world = sum(1 for record in hall if record["winner"] == "GitHub")
     wins: dict = {}
     for record in hall:
@@ -531,9 +620,10 @@ def hall_element(hall: list, owner: str, game: dict | None = None) -> dict:
         if record["reason"] != "checkmate" or deciding.get("arbiter"):
             continue
         key = owner if record["winner"] == owner else deciding["player_id"]
-        entry = wins.setdefault(key, {"login": owner if key == owner else deciding["player"], "wins": 0})
+        entry = wins.setdefault(key, {"login": owner if key == owner else deciding["player"], "wins": 0,
+                                      "id": owner_id if key == owner else key})
         if key != owner:
-            entry["login"] = deciding["player"]  # the newest login, should it have changed
+            entry["login"] = newest.get(key, deciding["player"])  # the newest login, should it have changed
         entry["wins"] += 1
         entry["last"] = record["ended"]
     for key, entry in wins.items():
@@ -542,8 +632,8 @@ def hall_element(hall: list, owner: str, game: dict | None = None) -> dict:
     ranked = sorted(wins.values(), key=lambda e: (-e["wins"], -parse(e["last"]).timestamp(), e["login"].casefold()))
     return {"kind": "chess-hall", "games": len(hall), "house": house, "world": world,
             "draws": len(hall) - house - world,
-            "people": [[e["login"], e["wins"], day(parse(e["last"])), e["games"]] for e in ranked[:PODIUM]],
-            "leaders": leaders(hall, owner, game), "measure": {}}
+            "people": [row(e, e["wins"], day(parse(e["last"])), e["games"]) for e in ranked[:PODIUM]],
+            "leaders": leaders(hall, owner, game, owner_id), "measure": {}}
 
 
 def flow(value) -> str:
@@ -608,12 +698,12 @@ def request_from(env: dict) -> Request | None:
     """The move the intake sent, checked again: None when there is none, an error when any part is malformed."""
     if not env.get("UCI"):
         return None
-    checks = (("UCI", UCI), ("GAME", NUMBER), ("MOVE_NUMBER", NUMBER), ("PLAYER", LOGIN), ("PLAYER_ID", NUMBER))
+    checks = (("UCI", UCI), ("GAME", COUNT), ("MOVE_NUMBER", COUNT), ("PLAYER", LOGIN), ("PLAYER_ID", ID))
     for name, shape in checks:
         if not shape.fullmatch(env.get(name, "")):
             raise ValueError(f"{name} is missing or malformed")
     issue = env.get("ISSUE", "")
-    if issue and not NUMBER.fullmatch(issue):
+    if issue and not ID.fullmatch(issue):
         raise ValueError("ISSUE is malformed")
     return Request(env["UCI"], int(env["GAME"]), int(env["MOVE_NUMBER"]), int(issue) if issue else None,
                    env["PLAYER"], int(env["PLAYER_ID"]))
@@ -629,17 +719,25 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
     args = parser.parse_args(argv)
     env = dict(os.environ) if env is None else env
     owner, owner_id = env.get("OWNER", ""), env.get("OWNER_ID", "")
-    if not LOGIN.fullmatch(owner) or not NUMBER.fullmatch(owner_id):
+    if not LOGIN.fullmatch(owner) or not ID.fullmatch(owner_id):
         print("::error::OWNER and OWNER_ID name the player of White, and one is missing or malformed.")
         return 1
+    malformed = ""
     try:
         request = request_from(env)
     except ValueError as exc:
-        print(f"::error::The move was not played: {exc}.")
-        return 1
+        if not ID.fullmatch(env.get("ISSUE", "")):  # nowhere to say so
+            print(f"::error::The move was not played: {exc}.")
+            return 1
+        request, malformed = None, str(exc)
     moment = parse(args.now) if args.now else now_utc()
     game, hall = load(args.folder)
-    if request:
+    if malformed:
+        outcome = Outcome(game=game, hall=hall, issue=int(env["ISSUE"]), log=f"turned away, {malformed}",
+                          comment=f"🚫 **This move can't be played as sent**, so nothing was played.\nEvery move listed"
+                                  f" under [the board]({profile(owner)}) opens its issue ready-made: pick one there"
+                                  " and send it unchanged.\n")
+    elif request:
         outcome = play(game, hall, request, owner, int(owner_id), moment)
     else:
         outcome = tick(game, hall, owner, moment)
@@ -648,7 +746,7 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
     after = (outcome.game, outcome.hall) if outcome.changed else (game, hall)
     try:
         drawn = set_out(args.settings, [("chess", board(*after, owner)),
-                                        ("chess-hall", hall_element(after[1], owner, after[0]))])
+                                        ("chess-hall", hall_element(after[1], owner, after[0], int(owner_id)))])
     except ValueError as exc:
         print(f"::error::{exc}")
         return 1
@@ -662,10 +760,11 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
                                     encoding="utf-8")
     if "GITHUB_OUTPUT" in env:
         with open(env["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-            handle.write(f"changed={'true' if outcome.changed or drawn else 'false'}\n")
+            handle.write(f"changed={'true' if outcome.changed or drawn or outcome.redraw else 'false'}\n")
             handle.write(f"issue={outcome.issue or ''}\n")
+            handle.write(f"logbook={'true' if outcome.logbook else 'false'}\n")
     target = f" (game {request.game}, move {request.move}, @{request.player})" if request else ""
-    print(f"{'Move ' + request.uci if request else 'Clock'}{target}: {outcome.log}.")
+    print(f"{'Move ' + request.uci if request else 'Move' if malformed else 'Clock'}{target}: {outcome.log}.")
     return 0
 
 

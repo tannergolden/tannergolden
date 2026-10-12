@@ -178,6 +178,56 @@ class Turns(unittest.TestCase):
         self.assertEqual(len(table.game["moves"]), 1)
 
 
+class Again(unittest.TestCase):
+    """A run made over again, such as a re-run of its job, finds its own move already played: it is told so on its
+    issue, as it was the first time, and never that it wasn't played."""
+
+    def test_the_last_move_run_again_is_answered_as_it_was_and_the_page_drawn_again(self):
+        table = Table()
+        table.move("e2e4")
+        first = table.move("e7e5")
+        again = chess.play(table.game, table.hall, request("e7e5", 2, issue=table.issue), OWNER, OWNER_ID,
+                           table.clock + dt.timedelta(minutes=5))
+        self.assertFalse(again.changed, "nothing new to save")
+        self.assertTrue(again.redraw, "but the page is drawn again, in case the first run's drawing never happened")
+        self.assertEqual((again.comment, again.issue), (first.comment, first.issue))
+        self.assertNotIn("wasn't played", again.comment)
+
+    def test_an_older_move_run_again_says_it_is_on_the_board_and_pings_nobody(self):
+        table = Table()
+        table.move("e2e4")
+        table.move("e7e5")
+        mine = table.issue
+        table.move("g1f3")
+        again = chess.play(table.game, table.hall, request("e7e5", 2, issue=mine), OWNER, OWNER_ID, table.clock)
+        self.assertEqual(again.comment, "✅ **1... e5 is already on the board**, played from this issue.\nThe game has"
+                                        " moved on since: pick a move from [the board](https://github.com/tannergolden)"
+                                        " as it stands now.\n")
+        self.assertFalse(again.changed or again.redraw)
+        self.assertIsNone(PING.search(again.comment))
+
+    def test_someone_else_s_move_is_still_too_late(self):
+        table = Table()
+        table.move("e2e4")
+        table.move("e7e5")
+        late = chess.play(table.game, table.hall, request("e7e5", 2, issue=999, player=HUBOT, player_id=HUBOT_ID),
+                          OWNER, OWNER_ID, table.clock)
+        self.assertIn("⌛ **Too late: move 2 is already on the board**", late.comment)
+        self.assertFalse(late.redraw)
+
+    def test_the_move_that_ended_a_game_run_again_says_so(self):
+        table = Table()
+        table.play(FOOLS_MATE)
+        again = chess.play(table.game, table.hall, request("d8h4", 4, issue=table.issue), OWNER, OWNER_ID, table.clock)
+        self.assertEqual(again.comment, "✅ **2... Qh4# already ended game 1**, played from this issue.\n"
+                                        "Game 2 is under way on [the board](https://github.com/tannergolden).\n")
+        self.assertTrue(again.redraw, "game 2 has no move yet, so the ending is still the last thing to happen")
+        table.move("e2e4")
+        again = chess.play(table.game, table.hall, request("d8h4", 4, issue=table.issue - 1), OWNER, OWNER_ID,
+                           table.clock)
+        self.assertFalse(again.redraw)
+
+
 class Legality(unittest.TestCase):
     def reason(self, fen: str, uci: str) -> str:
         return chess.why_illegal(rules.Position.from_fen(fen), uci)
@@ -191,8 +241,46 @@ class Legality(unittest.TestCase):
         self.assertEqual(self.reason("7k/P7/8/8/8/8/8/K7 w - - 0 1", "a7a8"),
                          "a pawn reaching the last rank has to say what it becomes, such as `a7a8q` for a queen")
         # The bishop on e2 is pinned to its king by the rook on e7.
-        self.assertEqual(self.reason("4k3/4r3/8/8/8/8/4B3/4K3 w - - 0 1", "e2d3"), "it would leave your king in check")
+        self.assertEqual(self.reason("4k3/4r3/8/8/8/8/4B3/4K3 w - - 0 1", "e2d3"),
+                         "the bishop on e2 is pinned to your king")
         self.assertEqual(self.reason("4k3/8/8/8/8/8/8/R3K3 w Q - 0 1", "e1c2"), "the king on e1 can't move to c2")
+
+    def test_says_what_check_does_to_a_move(self):
+        cases = {
+            # the rook on a1 checks along the first rank, and a pawn step doesn't block it
+            ("4k3/8/8/8/8/8/3P4/r3K3 w - - 0 1", "d2d3"): "your king is in check, and this move doesn't get it out",
+            ("7k/4P3/8/8/8/8/8/2r1K3 w - - 0 1", "e7e8"): "your king is in check, and this move doesn't get it out",
+            # the rook on f2 guards e2; the queen on c3 guards d2, checking or not
+            ("4k3/8/8/8/8/8/5r2/4K3 w - - 0 1", "e1e2"): "the king can't step into check on e2",
+            ("6k1/8/8/8/8/2q5/8/4K3 w - - 0 1", "e1d2"): "the king can't step into check on d2",
+            # pinned to the king: a pawn by the queen on c3, and one on its way to the last rank by the rook on a7
+            ("6k1/8/8/8/8/2q5/3P4/4K3 w - - 0 1", "d2d4"): "the pawn on d2 is pinned to your king",
+            ("8/r2P3K/8/8/8/8/8/1k6 w - - 0 1", "d7d8"): "the pawn on d7 is pinned to your king",
+            ("8/r2P3K/8/8/8/8/8/1k6 w - - 0 1", "d7d8q"): "the pawn on d7 is pinned to your king",
+            # a free pawn on the last rank is only asked what it becomes; a blocked one can't go
+            ("6k1/3P4/8/8/b7/8/8/K7 w - - 0 1", "d7d8"):
+                "a pawn reaching the last rank has to say what it becomes, such as `d7d8q` for a queen",
+            ("1r6/1P6/8/8/8/8/8/1K5k w - - 0 1", "b7b8"): "the pawn on b7 can't move to b8",
+            ("4k3/q7/8/8/8/8/8/7K b - - 0 1", "a7b5"): "the queen on a7 can't move to b5",
+        }
+        for (fen, uci), said in cases.items():
+            with self.subTest(fen=fen, uci=uci):
+                self.assertEqual(self.reason(fen, uci), said)
+
+    def test_says_why_the_king_can_t_castle(self):
+        cases = {
+            ("4k3/8/8/8/8/8/8/4K2R w Q - 0 1", "e1g1"):
+                "the right to castle kingside is gone: the king or that rook has moved, or the rook was taken",
+            ("4k3/8/8/8/8/8/8/R2QK3 w Q - 0 1", "e1c1"):
+                "the squares between the king and the rook must be empty to castle queenside",
+            ("4r1k1/8/8/8/8/8/8/4K2R w K - 0 1", "e1g1"): "the king can't castle out of check",
+            ("5rk1/8/8/8/8/8/8/4K2R w K - 0 1", "e1g1"): "the king can't castle across f1, which is under attack",
+            ("k5r1/8/8/8/8/8/8/4K2R w K - 0 1", "e1g1"): "the king can't castle into check",
+            ("r3k3/8/8/8/8/8/8/3RK3 b q - 0 1", "e8c8"): "the king can't castle across d8, which is under attack",
+        }
+        for (fen, uci), said in cases.items():
+            with self.subTest(fen=fen, uci=uci):
+                self.assertEqual(self.reason(fen, uci), said)
 
     def test_an_illegal_move_changes_nothing_and_says_why(self):
         table = Table()
@@ -343,6 +431,42 @@ class Clock(unittest.TestCase):
             self.assertIsNone(PING.search(outcome.comment), outcome.comment)
 
 
+class Notices(unittest.TestCase):
+    """The Arbiter tells a player once, on the issue of the move it answers; a move after another of its own goes in
+    the owner's logbook, so no player's issue collects a notice a week, and none is lost."""
+
+    def test_a_player_is_told_once_and_the_owner_s_logbook_takes_the_rest(self):
+        table = Table()
+        table.move("e2e4")
+        table.move("e7e5")
+        mine = table.issue
+        first = table.wait(chess.WEEK)  # the owner's lapse, answered on GitHub's player's issue
+        self.assertEqual((first.issue, first.logbook), (mine, False))
+        second = table.wait(chess.WEEK)  # GitHub's lapse: the Arbiter answers itself, so into the logbook
+        self.assertEqual((second.issue, second.logbook), (None, True))
+        self.assertTrue(second.comment.endswith("\n@tannergolden, it's your move.\n"), "the owner is pinged there")
+        third = table.wait(chess.WEEK)
+        self.assertEqual((third.issue, third.logbook), (None, True))
+        self.assertIsNone(PING.search(third.comment), "GitHub's turn pings nobody, even in the logbook")
+
+    def test_a_game_the_arbiter_ended_opens_the_next_in_the_logbook(self):
+        table = Table()
+        table.play(FOOLS_MATE[:-1])
+        arbiter = {"player": None, "player_id": None, "issue": None, "arbiter": True}
+        positions = chess.replay(table.game)
+        mate = next(move for move in rules.legal_moves(positions[-1]) if move.uci == FOOLS_MATE[-1])
+        outcome, _, _ = chess.apply(table.game, table.hall, positions, mate, arbiter, OWNER, table.clock)
+        table.game, table.hall = outcome.game, outcome.hall
+        opening = table.wait(chess.WEEK)
+        self.assertEqual((opening.issue, opening.logbook), (None, True), "the move before it was the Arbiter's own")
+
+    def test_a_game_a_player_ended_opens_the_next_on_their_issue(self):
+        table = Table()
+        table.play(FOOLS_MATE)
+        opening = table.wait(chess.WEEK)
+        self.assertEqual((opening.issue, opening.logbook), (table.hall[-1]["deciding"]["issue"], False))
+
+
 class Board(unittest.TestCase):
     """What the page's chess elements are given, after each turn of a game."""
 
@@ -430,8 +554,10 @@ class Board(unittest.TestCase):
         hall = chess.hall_element(table.hall, OWNER)
         self.assertEqual({k: hall[k] for k in ("games", "house", "world", "draws")},
                          {"games": 3, "house": 1, "world": 1, "draws": 1})
-        self.assertEqual(hall["people"], [["tannergolden", 1, "12 Oct", 3], ["octocat", 1, "11 Oct", 3]],
+        self.assertEqual(hall["people"], [["tannergolden", 1, "12 Oct", 3], ["octocat", 1, "11 Oct", 3, OCTOCAT_ID]],
                          "the newest win first; @octocat played Black in all three games")
+        self.assertEqual(chess.hall_element(table.hall, OWNER, owner_id=OWNER_ID)["people"][0],
+                         ["tannergolden", 1, "12 Oct", 3, OWNER_ID], "each row ends with the account's ID")
         self.assertEqual(hall["measure"], {}, "the kit reads each winner's name from their profile")
         element = chess.board(table.game, table.hall, OWNER)
         self.assertEqual(element["prompt"],
@@ -482,14 +608,19 @@ class Board(unittest.TestCase):
         table.move("d2d4")
         table.move("d7d6", player=HUBOT, player_id=HUBOT_ID)
         hall = chess.hall_element(table.hall, OWNER, table.game)
-        self.assertEqual(hall["leaders"], [[OWNER, 4, 0, 2], ["octocat", 2, 1, 1], ["hubot", 2, 0, 1]],
+        self.assertEqual(hall["leaders"],
+                         [[OWNER, 4, 0, 2], ["octocat", 2, 1, 1, OCTOCAT_ID], ["hubot", 2, 0, 1, HUBOT_ID]],
                          "the owner on top, then wins first and moves next, with the game on the board as it goes")
-        self.assertEqual(chess.hall_element(table.hall, OWNER)["leaders"], [[OWNER, 2, 0, 1], ["octocat", 2, 1, 1]])
+        self.assertEqual(chess.hall_element(table.hall, OWNER)["leaders"],
+                         [[OWNER, 2, 0, 1], ["octocat", 2, 1, 1, OCTOCAT_ID]])
+        self.assertEqual(chess.hall_element(table.hall, OWNER, owner_id=OWNER_ID)["leaders"][0],
+                         [OWNER, 2, 0, 1, OWNER_ID], "each row ends with its account's ID, the owner's too")
 
     def test_the_owner_s_own_mate_is_their_win_and_ten_of_github_follow(self):
         table = Table()
         table.play(SCHOLARS_MATE)  # the owner mates with their fourth move; @octocat played Black's three
-        self.assertEqual(chess.hall_element(table.hall, OWNER)["leaders"], [[OWNER, 4, 1, 1], ["octocat", 3, 0, 1]])
+        self.assertEqual(chess.hall_element(table.hall, OWNER)["leaders"],
+                         [[OWNER, 4, 1, 1], ["octocat", 3, 0, 1, OCTOCAT_ID]])
         crowd = dict(table.hall[0], players=[{"player": f"p{i:02}", "player_id": 1000 + i, "moves": i}
                                              for i in range(1, 13)])
         leaders = chess.hall_element([crowd], OWNER)["leaders"]
@@ -510,16 +641,18 @@ class Board(unittest.TestCase):
         table.wait(chess.WEEK)  # and for the owner
         self.assertEqual(sum(1 for played in table.game["moves"] if played["arbiter"]), 2)
         hall = chess.hall_element(table.hall, OWNER, table.game)
-        self.assertEqual(hall["leaders"], [[OWNER, 2 + 3 + 1, 0, 3], ["octocat", 1 + 3, 0, 2]])
+        self.assertEqual(hall["leaders"], [[OWNER, 2 + 3 + 1, 0, 3], ["octocat", 1 + 3, 0, 2, OCTOCAT_ID]])
         self.assertEqual(hall["people"], [], "and nobody is on the podium")
 
-    def test_the_leaderboard_names_a_player_by_the_newest_login_they_played_as(self):
+    def test_the_hall_names_a_player_by_the_newest_login_they_played_as(self):
         table = Table()
         table.play(FOOLS_MATE)  # @octocat mates
         table.move("e2e4")
         table.move("e7e5", player="octocat-renamed")
-        self.assertEqual(chess.hall_element(table.hall, OWNER, table.game)["leaders"],
-                         [[OWNER, 3, 0, 2], ["octocat-renamed", 3, 1, 2]])
+        hall = chess.hall_element(table.hall, OWNER, table.game)
+        self.assertEqual(hall["leaders"], [[OWNER, 3, 0, 2], ["octocat-renamed", 3, 1, 2, OCTOCAT_ID]])
+        self.assertEqual(hall["people"], [["octocat-renamed", 1, "11 Oct", 1, OCTOCAT_ID]],
+                         "the podium names a winner by the newest login they played as, too")
 
     def test_a_mate_the_arbiter_played_scores_nobody(self):
         table = Table()
@@ -528,6 +661,29 @@ class Board(unittest.TestCase):
         by_the_clock = {**record, "deciding": {**record["deciding"], "player": None, "player_id": None, "arbiter": True}}
         hall = chess.hall_element([by_the_clock], OWNER)
         self.assertEqual((hall["world"], hall["people"]), (1, []), "GitHub wins the game, and nobody the point")
+
+    def test_the_banner_stays_one_line_however_long_the_move_number(self):
+        for digits in range(1, 6):  # up to move 99,999, the furthest the page draws
+            n = int("9" * digits)
+            for white in (False, True):
+                for arbiter in (False, True):
+                    for check in (False, True):
+                        shown = f"{n}... exd8=Q+" if white else f"{n}. exd8=Q+"
+                        banner = chess.prompt(OWNER, white, 123, shown, arbiter, check, "28 Sep")
+                        with self.subTest(digits=digits, white=white, arbiter=arbiter, check=check):
+                            self.assertLessEqual(len(banner), chess.BANNER, banner)
+        self.assertTrue(chess.prompt(OWNER, False, 1, "1. e4", due="18 Oct").endswith("Pick a move below by 18 Oct."),
+                        "the full wording whenever it fits")
+
+    def test_a_dead_position_is_named_wherever_a_draw_is(self):
+        end = rules.Ending("dead position", None)
+        mover = {"player": OCTOCAT, "player_id": OCTOCAT_ID, "issue": 7, "arbiter": False}
+        self.assertIn("game 3 is drawn by a dead position.", chess.ended_text(end, "40. g4", 3, mover, OWNER, "name"))
+        table = Table()
+        table.play(FOOLS_MATE)
+        table.hall[-1].update(reason="dead position", winner=None, result="1/2-1/2")
+        self.assertTrue(chess.board(table.game, table.hall, OWNER)["note"].startswith(
+            "Game 1 was drawn by a dead position."))
 
     def test_what_the_readme_carries_is_text_the_kit_accepts(self):
         for moves in ([], ["e2e4"], ["e2e4", "c7c5"], FOOLS_MATE):
@@ -650,7 +806,8 @@ class Script(unittest.TestCase):
             self.assertIn("1. e4 is on the board", (out / "comment.md").read_text(encoding="utf-8"))
             self.assertTrue((out / "commit.txt").read_text(encoding="utf-8").endswith(
                 "Run: https://github.com/tannergolden/tannergolden/actions/runs/1\n"))
-            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"), "changed=true\nissue=12\n")
+            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"),
+                             "changed=true\nissue=12\nlogbook=false\n")
 
     def test_a_turned_away_move_saves_nothing_and_still_replies(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -662,7 +819,8 @@ class Script(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertFalse(folder.exists())
             self.assertIn(f"It's {LINKED}'s turn", (out / "comment.md").read_text(encoding="utf-8"))
-            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"), "changed=false\nissue=13\n")
+            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"),
+                             "changed=false\nissue=13\nlogbook=false\n")
 
     def test_every_run_sets_the_board_out_between_its_markers_and_nowhere_else(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -711,17 +869,40 @@ class Script(unittest.TestCase):
             self.assertTrue(saved["moves"][-1]["arbiter"])
             self.assertIn("issue=5\n", (Path(temp) / "output.txt").read_text(encoding="utf-8"))
 
-    def test_anything_malformed_stops_the_run(self):
+    def test_a_notice_for_the_owner_s_logbook_says_so_in_the_step_outputs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp) / "chess"
+            self.run_script(folder, "2026-10-01T09:00:00Z", UCI="d2d4", GAME="1", MOVE_NUMBER="1", ISSUE="5",
+                            PLAYER=OWNER, PLAYER_ID=str(OWNER_ID))
+            self.run_script(folder, "2026-10-08T09:00:00Z")  # told on the owner's issue 5
+            self.run_script(folder, "2026-10-15T09:00:00Z")  # the Arbiter after itself: the logbook
+            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8").splitlines()[-6:],
+                             ["changed=true", "issue=5", "logbook=false", "changed=true", "issue=", "logbook=true"])
+
+    def test_anything_malformed_is_turned_away_on_its_issue_and_changes_nothing(self):
         with tempfile.TemporaryDirectory() as temp:
             folder = Path(temp) / "chess"
             good = {"UCI": "e2e4", "GAME": "1", "MOVE_NUMBER": "1", "ISSUE": "1", "PLAYER": OWNER,
                     "PLAYER_ID": str(OWNER_ID)}
             for name, bad in (("UCI", "e2e9"), ("UCI", "e2e4; rm -rf"), ("GAME", "0"), ("MOVE_NUMBER", "x"),
-                              ("ISSUE", "-1"), ("PLAYER", "bad name"), ("PLAYER_ID", "12a")):
+                              ("GAME", "1234567890"), ("PLAYER", "bad name"), ("PLAYER", "x[bot]"),
+                              ("PLAYER_ID", "12a"), ("PLAYER_ID", "12345678901234567")):
                 with self.subTest(name=name, bad=bad):
-                    code, _ = self.run_script(folder, "2026-10-11T16:00:00Z", **{**good, name: bad})
-                    self.assertEqual(code, 1)
+                    code, out = self.run_script(folder, "2026-10-11T16:00:00Z", **{**good, name: bad})
+                    self.assertEqual(code, 0)
+                    reply = (out / "comment.md").read_text(encoding="utf-8")
+                    self.assertTrue(reply.startswith(
+                        "🚫 **This move can't be played as sent**, so nothing was played."))
+                    self.assertIsNone(PING.search(reply), "a turned-away request pings nobody")
+                    self.assertIn("issue=1\n", (Path(temp) / "output.txt").read_text(encoding="utf-8"))
             self.assertFalse(folder.exists())
+            for bad in ("-1", "0", "12345678901234567", "x"):  # nowhere to say so: the run stops
+                with self.subTest(issue=bad):
+                    code, _ = self.run_script(folder, "2026-10-11T16:00:00Z", **{**good, "UCI": "e2e9", "ISSUE": bad})
+                    self.assertEqual(code, 1)
+            code, _ = self.run_script(folder, "2026-10-11T16:00:00Z", **{**good, "ISSUE": "1234567890123456",
+                                                                          "PLAYER_ID": "1234567890123456"})
+            self.assertEqual(code, 0, "issues and accounts run to 16 digits, as the intake passes them on")
             with contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(chess.main([str(folder), "--now", "2026-10-11T16:00:00Z"], {"OWNER": OWNER}), 1)
 

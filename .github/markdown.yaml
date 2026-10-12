@@ -209,6 +209,8 @@ elements:
     world: 0
     draws: 0
     people: []
+    leaders:
+      - ["tannergolden", 0, 0, 0]
     measure: {}
   # chess:end
 

@@ -1,26 +1,25 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""Every open column named for what its drop does in Connect Four: each reading checked against brute force on the
-rules, both ways round (Black dropping first and White dropping first), and every board's titles and words held to
-what the kit takes.
+"""Every open column named for what its drop plainly is in Connect Four, and for nothing it does to the game: every
+board of many random games, both ways round (Black dropping first and White dropping first), held to the owner's rule
+that no name may help a player choose, and to what the kit takes.
 
   python3 -m unittest discover -s .github/scripts -p 'test_*.py'
 """
 from __future__ import annotations
 
-import functools
 import random
 import re
 import sys
 import unittest
-from dataclasses import replace
+from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import connectfour_names as N
 import connectfour_rules as R
-from connectfour_names import LONGEST, TITLES, WORDS, calls, kind, listing, opener, read, words
+from connectfour_names import EMOJI, LONGEST, TITLES, WORDS, columns, listing, words
 
 # What tannergolden/markdown accepts for a move: an emoji, a title and its words (src/domain/elements/chess/game.py).
 KIT_EMOJI = re.compile("[←-⯿\U0001f000-\U0001faff‍️]{1,8}")
@@ -30,13 +29,37 @@ DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
 FIRSTS = (R.DARK, R.LIGHT)  # Black drops first, then White drops first
 SIDE = {R.DARK: "Black", R.LIGHT: "White"}
 SWAP = str.maketrans("DL", "LD")  # a frame with the colours the other way round
-COLOURS = re.compile(r"\b(black|white|Black|White)\b")
+COLOURS = re.compile(r"\b(?:Black|White|black|white)\b")
+PLACES = {1: "the Left Edge", 2: "Column 2", 3: "Column 3", 4: "the Centre Column", 5: "Column 5", 6: "Column 6",
+          7: "the Right Edge"}  # each column as a title names it
+VERBS = {"Drop", "Send", "Slide", "Lay", "Stack", "Set", "Put", "Land", "Top", "Fill"}  # a commander's short verbs
+SMALL = {"a", "an", "and", "at", "by", "in", "of", "on", "or", "the", "to"}  # the words Title Case keeps small
+
+# The owner's rule, as the brief all four games' names share sets it out: nothing a player reads may judge a drop,
+# say what it does to the game or what it meets there, carry a verdict of strategy, or name an opening, and no emoji
+# may flag one. Connect Four's own words for those are here too: four in a row, the threat and the block, odd and even.
+JUDGEMENTS = (
+    "good", "bad", "safe", "sound", "strong", "weak", r"win(?:s|ning|ner)?", "won", r"loses?", "losing", "lost",
+    r"draw(?:s|n)?", r"saves?", "saving", r"hold(?:s|ing)?", "slip", "only", "best", r"forces?", "forced", "forcing",
+    "blunder", "mistake", "must", "key", "dead",
+    "check", "mate", "stalemate", r"threat(?:s|en|ens|ening)?", r"block(?:s|ed|ing)?", "fork", "pin", "skewer",
+    r"discover(?:s|ed)?", "double", "triple", r"trap(?:s|ped)?", "shot", "sacrifice", "gambit", "exchange", "trade",
+    r"attack(?:s|ing)?", r"defen(?:d|ds|ding|ce)", "guard", "escape", r"hang(?:s|ing)?", "next", r"leaves?", "leaving",
+    r"lets?", r"connect(?:s|ed|ing)?", "four", "three", "in a row", "zugzwang", "squeeze", "strike", "deny", "stop",
+    "cut", "seal", "lock", r"miss(?:es|ed)?", r"pass(?:es|ing)? up", "ignore", "abandon", r"doom(?:ed)?", "aim",
+    "press", "answer", "counter", "spend", "cap", "smother", "bury", r"lines?", "across", "diagonal", "up column",
+    "rim", "outpost", "battery", "seize", "command", "control", "claim", "bridge", "odd", "even", "parity", "tower",
+    "climb", "anchor", "reinforce", "reserve", "bank", "stake", r"open(?:s|ed|ing)?",
+)
+JUDGED = re.compile(rf"\b(?:{'|'.join(JUDGEMENTS)})\b", re.IGNORECASE)
+FLAGS = ("⚠️", "🏆", "🔑", "🛡️", "⚡", "🎯", "💥", "💸", "📌", "🍴", "🎁", "💰", "🔄", "☠️", "🤝", "📖", "⚔️", "📍",
+         "❗", "✅", "❌", "👍", "👎", "🔥", "💯", "🚨", "⛔", "🚫", "🥇", "🏅", "💀")
 
 
-def drop(columns: str, first: str = R.DARK) -> R.Position:
+def drop(line: str, first: str = R.DARK) -> R.Position:
     """The position after the drops, `first` the colour that dropped first."""
     position = R.opening(first)
-    for col in columns:
+    for col in line:
         position = R.make(position, int(col))
     return position
 
@@ -46,365 +69,225 @@ def frame(text: str, first: str = R.DARK) -> R.Position:
     return R.Position.from_board(text, first)
 
 
-def games(n: int, seed: int) -> list[R.Position]:
-    """Every position of `n` games of seeded random play with a drop left to make, every other game White first."""
+def games(n: int, seed: int, long: bool = False) -> list[R.Position]:
+    """Every position of `n` games of seeded random play with a drop left to make, every other game White first, each
+    read back from its frame as the page's sheet writes it. In a `long` game neither side connects four while it has
+    another drop to make, so the frame fills to the top."""
     rng, out = random.Random(seed), []
     for game in range(n):
-        position = R.opening(FIRSTS[game % 2])
+        first = FIRSTS[game % 2]
+        position = R.opening(first)
         while R.legal(position):
-            out.append(position)
-            after = R.make(position, rng.choice(R.legal(position)))
-            position = after if type(after) is type(position) else type(position)(after.cells, after.last)
+            out.append(frame(position.board, first))
+            options = R.legal(position)
+            if long:
+                options = [col for col in options if not R.ending(R.make(position, col))] or options
+            position = R.make(position, rng.choice(options))
     return out
 
 
-NAMED = {position: listing(position, 1, 1) for position in games(60, 5)}  # every board's names, once for every test
-SAMPLE = [position for i, (position, named) in enumerate(NAMED.items())  # a third of them, and every one with a key
-          if i % 3 == 0 or any(m["emoji"] == "🔑" for m in named)]  # checked by brute force
+BOARDS = games(200, 5) + games(60, 7, long=True)  # many boards, both ways round, and frames filled to the top
+NAMED = {position: listing(position, 1, 1) for position in BOARDS}  # every board's names, once for every test
 
 
-# --- brute force on the rules, cell by cell, with nothing of the names module's ------------------------------------
-def height(cells: tuple[str, ...], col: int) -> int:
-    return sum(1 for row in range(1, R.ROWS + 1) if cells[(row - 1) * R.COLS + col - 1])
+# --- what a drop plainly is, and what it does, read off the frame with nothing of the names module's ----------------
+def plain(position: R.Position, col: int) -> tuple[str, int, int, str]:
+    """What a drop plainly is, cell by cell: the disc's colour, its column, the row it lands on and what it lands on."""
+    row = next(row for row in range(1, R.ROWS + 1) if not position.at(col, row))
+    under = position.at(col, row - 1)
+    return position.turn, col, row, "floor" if not under else "own" if under == position.turn else "theirs"
 
 
-def put(cells: tuple[str, ...], col: int, colour: str) -> tuple[tuple[str, ...], int]:
-    """The frame with a disc of `colour` dropped down the column, and the row it lands on."""
-    row, out = height(cells, col) + 1, list(cells)
-    out[(row - 1) * R.COLS + col - 1] = colour
-    return tuple(out), row
+def sign(colour: str, col: int, row: int, below: str) -> str:
+    """The emoji for a drop's kind: the disc that fills its column, else what it lands on, else the column it starts."""
+    if row == R.ROWS:
+        return "🔝"
+    return "🧱" if below != "floor" else {1: "⬅️", 7: "➡️"}.get(col, "⬇️")
 
 
-def completes(cells: tuple[str, ...], col: int, row: int, colour: str) -> bool:
-    """Whether a disc of `colour` on the cell, wherever it stood, would connect four."""
-    out = list(cells)
-    out[(row - 1) * R.COLS + col - 1] = colour
-    return bool(R.four(out, col, row))
+def does(position: R.Position, col: int) -> str:
+    """What a drop does to the game, found by making it, which nothing in its name may tell: it connects four, takes
+    the cell the other side would connect four on, lets them connect four next, or does none of those."""
+    mover, after = position.turn, R.make(position, col)
+    end = R.ending(after)
+    if end and end.winner == mover:
+        return "wins"
+    if col in R.threats(position, R.other(mover)):
+        return "takes"
+    return "hands" if not end and R.threats(after, R.other(mover)) else "nothing"
 
 
-def wins(cells: tuple[str, ...], colour: str) -> set[tuple[int, int]]:
-    """The cells `colour` could drop on now and connect four."""
-    return {(col, height(cells, col) + 1) for col in R.threats(R.Position(cells), colour)}
+def title_case(text: str) -> bool:
+    """Whether a title is in Title Case: every word capitalised but the small ones after the first, so every word of
+    four letters or more."""
+    found = re.findall(r"[A-Za-z]+", text)
+    return all(word == (word.lower() if i and word.lower() in SMALL else word[:1].upper() + word[1:])
+               for i, word in enumerate(found))
 
 
-def forced(cells: tuple[str, ...], mover: str) -> bool:
-    """Whether `mover`, having just dropped, wins on its next drop whatever the other side drops now."""
-    foe, open_ = R.other(mover), [col for col in range(1, R.COLS + 1) if height(cells, col) < R.ROWS]
-    return bool(open_) and not wins(cells, foe) and all(wins(put(cells, col, foe)[0], mover) for col in open_)
+def faults(m: dict, colour: str, col: int, row: int, below: str) -> list[str]:
+    """What is wrong with a listed drop by the owner's rule and the kit's: nothing, for a name that says only what the
+    drop plainly is, in what the kit takes."""
+    name, said = m["title"], m["words"]
+    under = {"own": SIDE[colour], "theirs": SIDE[R.other(colour)]}.get(below)
+    named = [[], [SIDE[colour]]] + ([[SIDE[colour], under]] if under and row < R.ROWS else [])
+    goes = f"A {SIDE[colour].lower()} disc down column {col}, to row {row}"
+    checks = {
+        "the column as its code": m["code"] == str(col),
+        "the column alone as its notation": m["notation"] == str(col),
+        "the emoji of its kind": m["emoji"] == sign(colour, col, row, below),
+        "an emoji the kit takes": bool(KIT_EMOJI.fullmatch(m["emoji"])),
+        "a title the kit takes": bool(KIT_TITLE.fullmatch(name)) and len(name) <= LONGEST,
+        "words the kit takes": bool(KIT_WORDS.fullmatch(said)) and len(said) <= WORDS,
+        "where the disc goes, and nothing more": said == goes,
+        "a call of its kind": name in {call.format(**N.facts(N.Drop(colour, col, row, below)))
+                                       for call in TITLES["top" if row == R.ROWS else below]},
+        "a commander's call": name.endswith("!") and name.split()[0] in VERBS,
+        "Title Case": title_case(name),
+        "its column and no other": PLACES[col] in name and not any(PLACES[c] in name for c in PLACES if c != col),
+        "the disc's colour, then the colour it lands on": COLOURS.findall(name) in named,
+        "the row it lands on": all(int(n) == row for n in re.findall(r"\bRow (\d)", name)),
+        "the top for the last row alone": (row == R.ROWS) == bool(re.search(r"\b(?:Top|Sixth|Row 6)\b", name)),
+        "the floor for the first row alone": row == 1 or not re.search(r"\b(?:First|Floor|Row 1)\b", name),
+        "no judgement": not (JUDGED.search(name) or JUDGED.search(said)),
+        "no emoji that flags": not any(flag in text for flag in FLAGS for text in (m["emoji"], name, said)),
+        "no mark that judges": not {"+", "#"} & set(m["notation"] + name + said),
+        "no dash": not any(dash in name + said for dash in DASHES),
+        "White and Black": not re.search(r"\b(?:dark|light)\b", f"{name} {said}".lower()),
+    }
+    return [what for what, ok in checks.items() if not ok]
 
 
-@functools.cache
-def truth(position: R.Position, col: int) -> dict:
-    """What the drop does, found by brute force: the facts each reading claims."""
-    mover = position.turn
-    foe, cells = R.other(mover), position.cells
-    after, row = put(cells, col, mover)
-    if R.four(after, col, row):
-        return {"win": True}
-    full = all(after)
-    theirs, theirs_after = wins(cells, foe), (set() if full else wins(after, foe))
-    out = {"win": False, "fills": full, "missed": tuple(sorted(c for c, _ in wins(cells, mover) if c != col)),
-           "blocks": (col, row) in theirs, "leaves": tuple(sorted(c for c, _ in theirs_after & theirs)),
-           "opens": tuple(sorted(c for c, _ in theirs_after - theirs)),
-           "makes": tuple(sorted(c for c, _ in wins(after, mover))) if not full else (),
-           "spends": row < R.ROWS and completes(cells, col, row + 1, mover)}
-    out["forces"] = not full and not theirs_after and forced(after, mover)
-    out["doomed"] = tuple(reply for reply in range(1, R.COLS + 1) if not (full or theirs_after or out["forces"])
-                          and height(after, reply) < R.ROWS and forced(put(after, reply, foe)[0], foe))
-    out["plants"] = tuple(sorted(((c, r) for c in range(1, R.COLS + 1) for r in range(height(after, c) + 2, R.ROWS + 1)
-                                  if completes(after, c, r, mover) and not completes(cells, c, r, mover)),
-                                 key=lambda cell: (cell[1], cell[0])))
-    lowest = [all(not completes(after, c, k, side) for side in FIRSTS for k in range(height(after, c) + 1, r))
-              for c, r in out["plants"]]
-    first = opener(position) == mover
-    out["strong"] = tuple(cell for cell, low in zip(out["plants"], lowest) if low and (cell[1] % 2 == 1) == first)
-    return out
-
-
-def losing(fact: dict) -> bool:
-    """Whether the drop passes up a win, or lets the other side win on its next drop or by a double threat after."""
-    return not fact["win"] and bool(fact["missed"] or fact["leaves"] or fact["opens"] or fact["doomed"])
-
-
-# --- one position for every call: its drops, the column, and the words, `{m}` the mover's discs ----------------------
-CASES = {
-    "win across": ("164425", 3, "A {m} disc down column 3 connects four across row 1"),
-    "win up": ("727474", 7, "A {m} disc down column 7 connects four up column 7"),
-    "win diagonal": ("6534344653", 3, "A {m} disc down column 3 connects four on a diagonal"),
-    "win twice": ("24234623665431", 2, "A {m} disc down column 2 connects four up column 2 and on a diagonal"),
-    "missed": ("727474", 1, "A {m} disc down column 1, to row 1, passing up the win in column 7"),
-    "block across": ("73536", 4, "A {m} disc down column 4 blocks on row 1"),
-    "block up": ("72747", 7, "A {m} disc down column 7 blocks on row 4"),
-    "block diagonal": ("4544375566", 4, "A {m} disc down column 4 blocks on row 4"),
-    "block twice": ("2423462366543", 2, "A {m} disc down column 2 blocks on row 4"),
-    "strike": ("27153", 4, "A {m} disc down column 4 blocks on row 1, threatening column 6"),
-    "block double": ("6152233351", 4, "A {m} disc down column 4 blocks on row 1, threatening columns 4 and 7"),
-    "block stacked": ("62553663555", 4, ("A {m} disc down column 4 blocks on row 1, threatening column 4 on rows"
-                                         " 2 and 3")),
-    "block triple": ("2543641354224", 3, "A {m} disc down column 3 blocks on row 3, threatening columns 2, 3 and 5"),
-    "block squeeze": ("336772351766652312626171252353717515", 4, ("A {m} disc down column 4 blocks on row 1,"
-                                                                  " leaving {F} no safe drop")),
-    "block plant": ("2644252", 2, "A {m} disc down column 2 blocks on row 4, threatening row 3 of column 3"),
-    "block plant odd": ("6674767", 7, "A {m} disc down column 7 blocks on row 4, threatening row 2 of column 5"),
-    "block lost two": ("31435", 2, "A {m} disc down column 2 blocks on row 1, leaving column 6 to {F}"),
-    "block lost trap": ("21263756321", 4, "A {m} disc down column 4 blocks on row 1, opening column 4 to {F}"),
-    "block doomed": ("3326272", 2, "A {m} disc down column 2 blocks on row 4, giving {F} a double threat"),
-    "block draw": ("46322514114254632744122155365167537663737", 7, ("A {m} disc down column 7 blocks on row 6,"
-                                                                     " filling the frame for a draw")),
-    "draw": ("16324626147173444562435616551155333722277", 7, ("A {m} disc down column 7, to row 6, filling the"
-                                                              " frame for a draw")),
-    "double": ("4633", 2, "A {m} disc down column 2, to row 1, threatening columns 1 and 5"),
-    "triple": ("7665525634", 4, "A {m} disc down column 4, to row 2, threatening columns 3, 6 and 7"),
-    "stacked": ("4361416434", 7, "A {m} disc down column 7, to row 1, threatening column 5 on rows 1 and 2"),
-    "squeeze": ("55127611317553721167337722336552266", 6, ("A {m} disc down column 6, to row 6, leaving {F} no"
-                                                           " safe drop")),
-    "ignore": ("73536", 1, "A {m} disc down column 1, to row 1, leaving column 4 to {F}"),
-    "under": ("3231221", 4, "A {m} disc down column 4, to row 1, opening column 4 to {F}"),
-    "spend": ("32312212", 4, "A {m} disc down column 4, to row 1, spending {M}'s threat on row 2"),
-    "only": ("4612433114331", 4, "A {m} disc down column 4, to row 4, where every other drop loses"),
-    "doomed": ("274", 2, "A {m} disc down column 2, to row 2, giving {F} a double threat in column 3"),
-    "threat": ("5527", 3, "A {m} disc down column 3, to row 1, threatening column 4"),
-    "plant": ("436556", 6, "A {m} disc down column 6, to row 3, threatening row 4 of column 7"),
-    "plant odd": ("477557", 7, "A {m} disc down column 7, to row 4, threatening row 3 of column 6"),
-    "plant two": ("565442", 6, "A {m} disc down column 6, to row 2, setting two threats"),
-    "plant two odd": ("3455541", 3, "A {m} disc down column 3, to row 2, setting two threats"),
-    "top": ("44444", 4, "A {m} disc down column 4, to row 6, filling the column"),
-    "stack": ("25", 2, "A {m} disc down column 2, to row 2"),
-    "cap": ("2", 2, "A {m} disc down column 2, to row 2"),
-    "cap two": ("232", 2, "A {m} disc down column 2, to row 3"),
-    "opening centre": ("", 4, "A {m} disc down column 4, to row 1"),
-    "opening edge": ("", 1, "A {m} disc down column 1, to row 1"),
-    "opening": ("", 2, "A {m} disc down column 2, to row 1"),
-    "centre": ("2", 4, "A {m} disc down column 4, to row 1"),
-    "edge": ("2", 1, "A {m} disc down column 1, to row 1"),
-    "open": ("2", 6, "A {m} disc down column 6, to row 1"),
-    "open near": ("2", 3, "A {m} disc down column 3, to row 1"),
+# Drops to the same kind of place that do different things to the game, each group down one column to one row: the
+# column, then the frames, or the drops that make them with Black first, each with what its drop does. Each group lands
+# on one colour, but for the disc that fills a column, whose calls never say what it lands on.
+ALIKE = {
+    "a column's first disc, in the centre": (4, (("112233", "wins"), ("", "nothing"), ("171727", "hands"),
+                                                 ("151627", "takes"))),
+    "a disc onto its own colour": (3, (("313132", "wins"), ("3331", "nothing"), ("33371717", "hands"))),
+    "a disc onto the other side's": (4, (("......./......./......./..DL.../.DLD.../DLDL..L", "wins"),
+                                         ("......./......./....LLL/...LDDD/...DLDD/D..LDLL", "takes"),
+                                         ("1444", "nothing"))),
+    "the disc that fills a column": (2, (("......./.D...../.D...../.D...../.L...../.L....L", "wins"),
+                                         ("......./.D...../.D...../.L...../.D...../.L....L", "nothing"),
+                                         ("......./.L...../.D...../.D...../.D...../.L....L", "nothing"))),
 }
-THRICE = "....D../..L.DL./..D.LLL/.LLLDDD/.LDLDDL/LDDLDDD"  # Black first, and White's 4 connects four three ways
-BLOCKS = "....D.D/....DLL/..L.LLL/..LLDDD/DLDLDLD/LDLLDDD"  # Black first, and Black's 4 blocks White's three fours
+LIVE = "......./......./......./......./......./.....L."  # the profile's game 1: the Arbiter's ⚪6, Black to drop
 
 
-def spoken(text: str, position: R.Position) -> str:
-    mover = position.turn
-    return text.format(m=SIDE[mover].lower(), M=SIDE[mover], F=SIDE[R.other(mover)])
-
-
-class Readings(unittest.TestCase):
-    def test_every_call_has_a_drop_that_takes_it_and_says_so_both_ways_round(self):
-        self.assertEqual(set(CASES) | {"win thrice", "block thrice"}, set(TITLES))
-        for want, (line, col, text) in CASES.items():
-            for first in FIRSTS:
-                with self.subTest(call=want, first=SIDE[first]):
-                    position = drop(line, first)
-                    self.assertIn(col, R.legal(position))
-                    self.assertEqual(calls(read(position, col)), want)
-                    self.assertEqual(words(position, col), spoken(text, position))
-
-    def test_a_drop_that_connects_or_blocks_four_three_ways_names_them_all(self):
-        for first, text in ((R.DARK, THRICE), (R.LIGHT, THRICE.translate(SWAP))):
-            position = frame(text, first)
-            self.assertEqual(calls(read(position, 4)), "win thrice")
-            self.assertEqual(words(position, 4), spoken("A {m} disc down column 4 connects four up, across row 4 and"
-                                                        " on a diagonal", position))
-        for first, text in ((R.DARK, BLOCKS), (R.LIGHT, BLOCKS.translate(SWAP))):
-            position = frame(text, first)
-            self.assertEqual((calls(read(position, 4)), read(position, 4).blocks), ("block thrice",
-                                                                                   ("across", "up", "rising")))
-            named = {m["code"]: m for m in listing(position, 1, 1)}
-            self.assertEqual((named["4"]["emoji"], named["4"]["words"]),
-                             ("🛡️", spoken("A {m} disc down column 4 blocks on row 4", position)))
-            self.assertIn("Three", named["4"]["title"])
-
-    def test_every_reading_has_calls_that_fit_whatever_it_holds(self):
-        ways = [tuple(name for i, name in enumerate(N.LINES) if bits >> i & 1) for bits in range(1, 16)]
-        base = N.Reading(R.LIGHT, 4, 2, opener=True)
-        plants = [{"plants": ((6, 3),), "marked": (6, 3)},
-                  {"plants": ((6, 3),), "strong": ((6, 3),), "parity": "odd", "marked": (6, 3)},
-                  {"plants": ((6, 3), (5, 5)), "marked": (6, 3)},
-                  {"plants": ((6, 3), (5, 5)), "strong": ((6, 3), (5, 5)), "parity": "odd", "marked": (6, 3)}]
-        forced = [{"forces": "double", "makes": (2, 6), "aims": ((2, 1), (6, 2))},
-                  {"forces": "double", "makes": (1, 2, 6), "aims": ((1, 1), (2, 1), (6, 2))},
-                  {"forces": "stacked", "makes": (5,), "aims": ((5, 2),)}, {"forces": "squeeze"}]
-        tails = [{}, {"fills": True}, {"leaves": (3,)}, {"opens": (4,)}, {"leaves": (3, 6), "opens": (4,)},
-                 {"doomed": (3,)}, {"doomed": (1, 3, 6)}, {"only": True}, {"spends": True, "makes": (4,),
-                                                                           "aims": ((4, 3),)},
-                 {"makes": (5,), "aims": ((5, 1),), "aimed": ("across",)}, *forced, *plants]
-        readings = [N.Reading(R.DARK, col, 1, first=True) for col in range(1, 8)]
-        readings += [replace(base, wins=lines) for lines in ways]
-        readings += [replace(base, missed=missed, **tail) for missed in ((3,), (3, 5)) for tail in tails]
-        readings += [replace(base, blocks=lines, **tail) for lines in ways for tail in tails]
-        readings += [replace(base, **tail) for tail in tails]
-        readings += [replace(base, col=col, row=row, below=below, run=run) for col in range(1, 8) for row in (1, 3, 6)
-                     for below, run in (("", 0), ("own", 1), ("theirs", 1), ("theirs", 2)) if (row == 1) == (not below)]
-        for r in readings:
-            with self.subTest(reading=r):
-                self.assertIn(calls(r), TITLES)
-                emoji, name, call = N.title(R.START, r, set())
-                self.assertIn(call, TITLES[calls(r)])
-                self.assertTrue(KIT_EMOJI.fullmatch(emoji) and KIT_TITLE.fullmatch(name), (emoji, name))
-                self.assertTrue(KIT_WORDS.fullmatch(N.said(r)), N.said(r))
-
-    def test_every_reading_is_true_by_brute_force_both_ways_round(self):
-        checked = 0
-        for position in SAMPLE:
-            for col in R.legal(position):
-                facts, r = truth(position, col), read(position, col)
-                with self.subTest(board=position.board, first=SIDE[opener(position)], col=col):
-                    self.assertEqual(r.colour, position.turn)
-                    self.assertEqual(bool(r.wins), facts["win"])
-                    if facts["win"]:
-                        self.assertEqual(R.ending(R.make(position, col)).winner, position.turn)
-                        continue
-                    for name in ("fills", "missed", "leaves", "opens", "makes", "spends", "doomed", "plants",
-                                 "strong"):
-                        self.assertEqual(getattr(r, name), facts[name], name)
-                    self.assertEqual(bool(r.blocks), facts["blocks"])
-                    self.assertEqual(bool(r.forces), facts["forces"])
-                    self.assertEqual(r.parity, ("odd" if r.opener else "even") if facts["strong"] else "")
-                    checked += 1
-        self.assertGreater(checked, 2000)
-
-    def test_a_threat_is_called_odd_or_even_only_when_its_row_is_the_mover_s_kind(self):
-        cases = {  # the drops, the column, the call, and the row of the threat it plants
-            "477557": (7, "plant odd", "Odd", 3),  # the side that dropped first, on an odd row
-            "24223": (3, "plant odd", "Even", 4),  # the other side, on an even row
-            "233111": (2, "plant", "", 2),  # the side that dropped first, on an even row: the other side's kind
-            "2442413": (4, "plant", "", 3),  # the other side, on an odd row: the first side's kind
-            "431355143": (5, "plant", "", 4),  # the mover's kind, but over its own threat in that column
-        }
-        for line, (col, want, parity, row) in cases.items():
-            for first in FIRSTS:
-                with self.subTest(line=line, first=SIDE[first]):
-                    position = drop(line, first)
-                    r = read(position, col)
-                    self.assertEqual((calls(r), r.parity.capitalize(), r.marked[1]), (want, parity, row))
-                    name = next(m["title"] for m in listing(position, 1, 1) if m["code"] == str(col))
-                    self.assertEqual(bool(re.search(r"\b(Odd|Even)\b", name)), bool(parity), name)
-                    if parity:
-                        self.assertIn(parity, name)
-
-    def test_who_dropped_first_is_read_from_the_position(self):
-        for first in FIRSTS:
-            for line in ("", "4", "45", "453"):
-                with self.subTest(first=SIDE[first], line=line):
-                    position = drop(line, first)
-                    self.assertEqual(opener(position), first)
-                    self.assertEqual(read(position, 1).opener, position.turn == first)
-
-    def test_a_drop_that_loses_is_warned_of_before_anything_else_it_does(self):
-        position = drop("4612433114331")  # down 5 spends White's threat on row 2, and Black's block of it on row 2
-        # sets a double threat
-        r = read(position, 5)
-        self.assertTrue(r.spends and r.doomed)
-        self.assertEqual((kind(r), next(m["emoji"] for m in listing(position, 1, 1) if m["code"] == "5")),
-                         ("doomed", "⚠️"))
-
-    def test_a_block_that_cannot_save_the_game_says_so(self):
-        position = drop("31435")  # Black's three across row 1 is open at both ends
-        named = {int(m["code"]): m for m in listing(position, 1, 1)}
-        for col in (2, 6):
-            self.assertEqual((kind(read(position, col)), named[col]["emoji"]), ("block lost", "⚠️"))
-            self.assertTrue(named[col]["words"].startswith(f"A white disc down column {col} blocks on row 1, leaving"))
-
-
-class Titles(unittest.TestCase):
-    def test_every_board_names_every_open_column_once_in_what_the_kit_accepts(self):
+class Neutral(unittest.TestCase):
+    def test_every_board_names_every_open_column_once_for_what_its_drop_plainly_is(self):
+        held = set()  # each drop and its name, held to the rule once: `faults` reads nothing else
         for position, named in NAMED.items():
             self.assertEqual([m["code"] for m in named], [str(c) for c in R.legal(position)])
             self.assertEqual(len({m["title"] for m in named}), len(named), position.board)
             for m in named:
-                self.assertTrue(KIT_EMOJI.fullmatch(m["emoji"]), m)
-                self.assertTrue(KIT_TITLE.fullmatch(m["title"]), m)
-                self.assertTrue(KIT_WORDS.fullmatch(m["words"]), m)
-                self.assertLessEqual((len(m["title"]), len(m["words"])), (LONGEST, WORDS), m)
-                self.assertEqual(m["notation"], R.notation(position, int(m["code"])))
-                self.assertFalse(m["title"].startswith("Drop Down Column"), "a call stands in for every taken one")
+                key = plain(position, int(m["code"]))
+                if (key, tuple(m.items())) not in held:
+                    self.assertEqual(faults(m, *key), [], (position.board, m))
+                    held.add((key, tuple(m.items())))
+        self.assertEqual({position.first for position in NAMED}, set(FIRSTS), "both ways round")
+        self.assertEqual({m["emoji"] for named in NAMED.values() for m in named}, set(EMOJI.values()))
 
-    def test_a_title_is_a_call_and_the_words_say_white_and_black(self):
-        for position, named in NAMED.items():
-            mover = SIDE[position.turn].lower()
+    def test_a_drop_is_named_for_what_it_is_and_never_for_what_it_does(self):
+        names, done = {}, defaultdict(set)
+        for i, (position, named) in enumerate(NAMED.items()):
             for m in named:
-                self.assertTrue(m["title"].endswith("!"), m["title"])
-                self.assertRegex(m["words"], rf"^A {mover} disc down column {m['code']}( |,)")
-                for text in (m["title"], m["words"]):
-                    self.assertNotRegex(text.lower(), r"\b(dark|light)\b")
-                    for dash in DASHES:
-                        self.assertNotIn(dash, text)
+                key = plain(position, int(m["code"]))
+                self.assertEqual(m, names.setdefault(key, m), (position.board, key))
+                if i % 5 == 0:  # what it does, for a fifth of the boards
+                    done[key].add(does(position, int(m["code"])))
+        self.assertEqual(len(names), 2 * (7 + 7 * 5 * 2), "every drop there can be, by both colours")
+        for what in ("wins", "takes", "hands"):  # and each named alike when it does that and when it does nothing
+            self.assertGreater(sum(what in found and "nothing" in found for found in done.values()), 90, what)
+
+    def test_a_winning_drop_and_a_quiet_one_to_the_same_kind_of_place_read_alike(self):
+        for name, (col, cases) in ALIKE.items():
+            for first in FIRSTS:
+                with self.subTest(name, first=SIDE[first]):
+                    positions = [frame(case if first == R.DARK else case.translate(SWAP), first) if "/" in case
+                                 else drop(case, first) for case, _ in cases]
+                    self.assertEqual([does(position, col) for position in positions], [what for _, what in cases])
+                    named = [next(m for m in listing(position, 1, 1) if m["code"] == str(col))
+                             for position in positions]
+                    self.assertEqual(named, [named[0]] * len(named))
+                    self.assertEqual(faults(named[0], *plain(positions[0], col)), [])
+                    self.assertEqual((R.notation(positions[0], col), named[0]["notation"]), (f"{col}#", str(col)),
+                                     "the rules' sheet marks the win, and the list never does")
+
+    def test_the_listed_notation_is_the_column_alone_where_the_rules_mark_a_threat_or_a_win(self):
+        marked = 0
+        for position in list(NAMED)[::10]:
+            for m in NAMED[position]:
+                written = R.notation(position, int(m["code"]))
+                self.assertEqual(m["notation"], written.rstrip("+#"))
+                marked += written != m["notation"]
+        self.assertGreater(marked, 300)
+
+
+class Calls(unittest.TestCase):
+    def test_every_call_is_true_and_fits_for_every_drop_there_can_be(self):
+        self.assertEqual(set(TITLES), {"floor", "own", "theirs", "top"})
+        checked = 0
+        for colour in FIRSTS:
+            for col in range(1, R.COLS + 1):
+                for row in range(1, R.ROWS + 1):
+                    for below in ("floor",) if row == 1 else ("own", "theirs"):
+                        d = N.Drop(colour, col, row, below)
+                        for call in TITLES[N.calls(d)]:
+                            m = {"code": str(col), "notation": str(col), "emoji": EMOJI[N.kind(d)],
+                                 "title": call.format(**N.facts(d)), "words": N.said(d)}
+                            self.assertEqual(faults(m, colour, col, row, below), [], m)
+                            checked += 1
+        self.assertEqual(checked, 2 * 7 * (1 + 5 * 2) * 6)
+        for key, options in TITLES.items():
+            self.assertEqual(len(set(options)), len(options), key)
+
+    def test_no_two_columns_can_share_a_title(self):
+        for colour in FIRSTS:
+            said = defaultdict(set)
+            for col in range(1, R.COLS + 1):
+                for row in range(1, R.ROWS + 1):
+                    for below in ("floor",) if row == 1 else ("own", "theirs"):
+                        d = N.Drop(colour, col, row, below)
+                        said[col] |= {call.format(**N.facts(d)) for call in TITLES[N.calls(d)]}
+            for a in range(1, R.COLS + 1):
+                for b in range(a + 1, R.COLS + 1):
+                    self.assertFalse(said[a] & said[b], (SIDE[colour], a, b))
+
+    def test_each_kind_of_drop_has_an_emoji_of_its_own_and_none_flags_a_drop(self):
+        self.assertEqual(set(EMOJI), {"top", "onto", "left", "right", "floor"})
+        self.assertEqual(len(set(EMOJI.values())), len(EMOJI))
+        for emoji in EMOJI.values():
+            self.assertTrue(KIT_EMOJI.fullmatch(emoji), emoji)
+            self.assertEqual(len(emoji.replace("\N{VARIATION SELECTOR-16}", "")), 1, "one emoji")
+            self.assertNotIn(emoji, FLAGS)
 
     def test_the_same_position_and_drop_always_get_the_same_name(self):
         for position in list(NAMED)[::40]:
             once = listing(position, 1, 1)
             self.assertEqual(listing(position, 7, 30), once, "the game and the move number name nothing")
-            N._listing.cache_clear()
-            self.assertEqual(listing(position, 1, 1), once)
-        pinned = {("", R.DARK): "Open Dead Centre!", ("", R.LIGHT): "Open Dead Centre!",
-                  ("4633", R.DARK): "Strike Twice, Columns 1 and 5!",
-                  ("274", R.LIGHT): "Open the Door to a Double Threat!"}
-        for (line, first), title in pinned.items():
-            position = drop(line, first)
-            col = {"": 4, "4633": 2, "274": 2}[line]
-            self.assertEqual(listing(position, 1, 1)[R.legal(position).index(col)]["title"], title)
+            self.assertEqual(listing(frame(position.board, position.first), 2, 9), once)
+            self.assertEqual([m["words"] for m in once], [words(position, int(m["code"])) for m in once])
+        self.assertEqual([(m["emoji"], m["title"]) for m in listing(frame(LIVE, R.LIGHT), 1, 2)], [
+            ("⬅️", "Lay the First Disc on the Left Edge!"), ("⬇️", "Send Black to the Floor in Column 2!"),
+            ("⬇️", "Drop Black Down Column 3!"), ("⬇️", "Send Black to the Floor in the Centre Column!"),
+            ("⬇️", "Slide Black Down Column 5 to Row 1!"), ("🧱", "Land Black on White in Column 6!"),
+            ("➡️", "Drop Black to Row 1 on the Right Edge!")])
+        self.assertEqual([m["words"] for m in listing(frame(LIVE, R.LIGHT), 1, 2)][5],
+                         "A black disc down column 6, to row 2")
 
-    def test_the_same_drop_on_the_same_frame_is_called_the_same_whichever_colour_drops_it(self):
-        for line in ("", "4", "4633", "274", "73536", "6152233351", "477557"):
-            black, white = (listing(drop(line, first), 1, 1) for first in FIRSTS)
-            for b, w in zip(black, white):
-                self.assertEqual(b["emoji"], w["emoji"])
+    def test_the_same_drop_on_the_same_frame_is_named_the_same_whichever_colour_drops_it(self):
+        for position in list(NAMED)[::25]:
+            swapped = frame(position.board.translate(SWAP), R.other(position.first))
+            for mine, theirs in zip(listing(position, 1, 1), listing(swapped, 1, 1), strict=True):
+                self.assertEqual(mine["emoji"], theirs["emoji"])
                 for field in ("title", "words"):  # the same, but for the colours they name
-                    self.assertEqual(COLOURS.sub("_", b[field]), COLOURS.sub("_", w[field]))
+                    self.assertEqual(COLOURS.sub("_", mine[field]), COLOURS.sub("_", theirs[field]))
 
-    def test_every_call_has_room_and_enough_others_to_stand_in_for_it(self):
-        longest = {"row": 6, "col": 7, "column": "the Centre Column", "in_place": "on the Right Edge", "foe": "White",
-                   "edge": "Right", "diagonal": "Falling Diagonal", "along": "Across Row 6 and on the Diagonal",
-                   "won": "Columns 1, 2 and 3", "threat": "Columns 1, 2 and 3", "doom": "Columns 1, 2 and 3",
-                   "aim": 7, "arow": 5, "atop": 6, "above": 6, "under": 5, "aims": "Columns 1, 2 and 3",
-                   "aimed": "Across Row 6 and on the Diagonal", "ways": "Three", "parity": "Even", "prow": 6, "pcol": 7}
-        for key, options in TITLES.items():
-            fits = [option for option in options if len(option.format(**longest)) <= LONGEST]
-            with self.subTest(call=key):
-                self.assertGreaterEqual(len(fits), 1 if "draw" in key else 7, fits)
-                self.assertEqual(len(set(options)), len(options))
-                for option in fits:
-                    self.assertTrue(KIT_TITLE.fullmatch(option.format(**longest)), option)
-                    self.assertTrue(option.endswith("!"), option)
-
-    def test_a_warning_marks_the_drops_that_lose_or_pass_up_the_win_and_a_key_the_only_one_that_does_not(self):
-        warned = keys = 0
-        for position in SAMPLE:
-            facts = {int(m["code"]): truth(position, int(m["code"])) for m in NAMED[position]}
-            holding = [col for col, fact in facts.items() if not losing(fact)]
-            calm = not any(fact["win"] or fact["blocks"] for fact in facts.values())
-            for m in NAMED[position]:
-                col, fact = int(m["code"]), facts[int(m["code"])]
-                bad = losing(fact)
-                key = len(facts) > 1 and calm and holding == [col] and not (fact["forces"] or fact["fills"])
-                with self.subTest(board=position.board, col=col):
-                    self.assertEqual(m["emoji"] == "⚠️", bad, m)
-                    self.assertEqual(m["emoji"] == "🔑", key, m)
-                    if key:
-                        self.assertTrue(m["words"].endswith(", where every other drop loses"), m)
-                warned, keys = warned + bad, keys + key
-        self.assertGreater(warned, 300)
-        self.assertGreater(keys, 1)
-
-    def test_a_win_is_named_for_its_line_and_marked_as_the_win(self):
-        for position, named in NAMED.items():
-            for m in named:
-                r = read(position, int(m["code"]))
-                self.assertEqual(bool(r.wins), m["notation"].endswith("#"), m)
-                self.assertEqual(m["emoji"] == "🏆", bool(r.wins), m)
-                if 0 < len(r.wins) < 3:  # three ways at once say how many, and the words name them
-                    for line in r.wins:
-                        self.assertIn({"across": f"Row {r.row}", "up": f"Column {r.col}", "rising": "Diagonal",
-                                       "falling": "Diagonal"}[line], m["title"])
-
-    def test_only_a_threat_planted_on_the_mover_s_kind_of_row_is_called_odd_or_even(self):
-        for position, named in NAMED.items():
-            for m in named:
-                r = read(position, int(m["code"]))
-                if re.search(r"\b(Odd|Even)\b", m["title"]):
-                    self.assertTrue(r.strong, m)
-                    self.assertIn("Odd" if r.opener else "Even", m["title"])
+    def test_columns_are_said_as_a_sentence_says_them(self):
+        self.assertEqual([columns((3,)), columns((3, 6)), columns((1, 3, 6))],
+                         ["column 3", "columns 3 and 6", "columns 1, 3 and 6"])
 
 
 if __name__ == "__main__":

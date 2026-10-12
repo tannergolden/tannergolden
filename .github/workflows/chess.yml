@@ -20,6 +20,9 @@ name: Chess
 # Every input is written by a stranger, by way of an issue title. Each one
 # reaches the script through an environment variable, never as an expression
 # inside a script, and the script checks each again before it reads the board.
+# Before that, the move is read back from its issue: it must be that issue's
+# title, opened by that player, so a run started any other way plays nothing.
+# A move with no issue is only ever the owner's own, run by hand.
 #
 # One move at a time, without a queue: GitHub keeps one run waiting in a
 # concurrency group and cancels the rest, which would lose their replies. So
@@ -30,9 +33,16 @@ name: Chess
 # The commits are the bot's, so a move never counts as your contribution, and
 # their messages never name an issue. Replying on tannergolden/play needs the
 # Official Arbiter's PLAY_APP_CLIENT_ID variable and PLAY_APP_PRIVATE_KEY
-# secret here; without them a move is still played, and its reply fails. A
-# run that fails before the game rules on a move still answers its issue,
-# and pings the owner.
+# secret here; without them a move is still played, and its reply fails. The
+# reply comes before the redraw, so a redraw that fails never swallows it, and
+# each move's issue is locked once answered (.github/scripts/arbiter.sh): only
+# the owner and the Arbiter write there after. What the Arbiter plays for a
+# side that let a week pass is told once on the issue of the move it answers,
+# and after that in the owner's logbook, an issue of its own in play. A run
+# that fails before the game rules on a move still answers its issue, and the
+# owner hears of it once, in a notice that closes itself when moves go through
+# again. The game's tests run when its code changes (chess-tests.yml), not on
+# every move.
 on:
   workflow_dispatch:
     inputs:
@@ -85,10 +95,38 @@ jobs:
         with:
           persist-credentials: true # zizmor: ignore[artipacked] - the job pushes the game's state, and nothing that runs after it reads the checkout.
 
-      # No setup-python on purpose: the scripts are stdlib only.
-      - name: '🧪 Check the rules'
-        run: python3 -m unittest discover -s .github/scripts -p 'test_chess*.py'
+      # The move must be its issue's own: that title, opened by that player. Read with this run's token, which
+      # reads the public play repository and writes nothing there.
+      - name: '🔎 Read the move back from its issue'
+        id: issue
+        if: ${{ inputs.uci != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UCI: ${{ inputs.uci }}
+          GAME: ${{ inputs.game }}
+          MOVE_NUMBER: ${{ inputs.move_number }}
+          ISSUE: ${{ inputs.issue }}
+          PLAYER_ID: ${{ inputs.player_id }}
+          ACTOR: ${{ github.actor }}
+          OWNER: ${{ github.repository_owner }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$ISSUE" ]; then
+            # A move with no issue is the owner's own, run by hand.
+            [ "$ACTOR" = "$OWNER" ] && exit 0
+            echo "::error::A move with no issue is the owner's alone to run, so nothing was played."
+            exit 1
+          fi
+          [[ "$ISSUE" =~ ^[1-9][0-9]{0,15}$ ]] || exit 0 # malformed: the game turns it away itself
+          # The author's ID on one line and the title on the next, trimmed as the intake reads it.
+          { read -r author; read -r title; } < <(gh api "repos/$OWNER/play/issues/$ISSUE" --jq '.user.id, .title')
+          if [ "$author" != "$PLAYER_ID" ] || [ "$title" != "chess: $UCI · game $GAME · move $MOVE_NUMBER" ]; then
+            echo "::error::Issue #$ISSUE does not hold this move from this player, so nothing was played."
+            exit 1
+          fi
 
+      # No setup-python on purpose: the scripts are stdlib only.
       - name: '♟️ Play the move, or run the clock'
         id: play
         env:
@@ -130,15 +168,9 @@ jobs:
           done
           cat "$RUNNER_TEMP/chess-outputs" >> "$GITHUB_OUTPUT"
 
-      - name: '🖌️ Redraw the board'
-        if: ${{ steps.play.outputs.changed == 'true' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run markdown.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
-
       - name: '🔑 Mint the reply token'
         id: app
-        if: ${{ steps.play.outputs.issue != '' }}
+        if: ${{ steps.play.outcome == 'success' && (steps.play.outputs.issue != '' || steps.play.outputs.logbook == 'true') }}
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           client-id: ${{ vars.PLAY_APP_CLIENT_ID }}
@@ -147,19 +179,40 @@ jobs:
           repositories: play
           permission-issues: write
 
+      # Before the redraw, so a redraw that fails never keeps a player from hearing how their move went.
       - name: '💬 Reply on the move'
-        if: ${{ steps.play.outputs.issue != '' }}
+        if: ${{ steps.app.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           ISSUE: ${{ steps.play.outputs.issue }}
+          OWNER: ${{ github.repository_owner }}
           PLAY: ${{ github.repository_owner }}/play
-        run: gh issue comment "$ISSUE" --repo "$PLAY" --body-file "$RUNNER_TEMP/chess/comment.md"
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source .github/scripts/arbiter.sh
+          if [ -z "$ISSUE" ]; then
+            ISSUE="$(desk arbiter-logbook "♟️ The Arbiter's logbook" "$(printf '%s\n' \
+              "♟️ **The Arbiter's logbook.** When a side lets a week pass without moving, the Arbiter plays a" \
+              "random legal move for it. The first such move is told on the issue of the move it answers; any" \
+              "after it are noted here, and @$OWNER is told here when the next move is theirs.")")"
+          fi
+          say "$ISSUE" "$RUNNER_TEMP/chess/comment.md"
+          settle
 
-      # A run that fails before the game rules on a move (its checks, the game, or its save) still answers the
-      # move's issue, and pings the owner. A run that played the move and failed afterwards says nothing more.
+      - name: '🖌️ Redraw the board'
+        if: ${{ !cancelled() && steps.play.outcome == 'success' && steps.play.outputs.changed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run markdown.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
+
+      # A run that fails before the game rules on a move (the game, or its save) still answers the move's issue. The
+      # owner hears of it once, in a notice the next move that goes through closes, however many moves it stops. A
+      # move its issue doesn't hold was never a player's, so nothing is said for it.
       - name: '🔑 Mint the token for the failure notice'
         id: app-failed
-        if: ${{ failure() && inputs.issue != '' && steps.play.outcome != 'success' }}
+        if: ${{ failure() && inputs.issue != '' && steps.issue.outcome != 'failure' && steps.play.outcome != 'success' }}
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           client-id: ${{ vars.PLAY_APP_CLIENT_ID }}
@@ -169,20 +222,27 @@ jobs:
           permission-issues: write
 
       - name: '🧯 Say the move was not ruled on'
-        if: ${{ failure() && inputs.issue != '' && steps.play.outcome != 'success' && steps.app-failed.outcome == 'success' }}
+        if: ${{ failure() && steps.app-failed.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ steps.app-failed.outputs.token }}
           ISSUE: ${{ inputs.issue }}
           UCI: ${{ inputs.uci }}
           OWNER: ${{ github.repository_owner }}
           PLAY: ${{ github.repository_owner }}/play
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
         run: |
           set -euo pipefail
-          [[ "$ISSUE" =~ ^[1-9][0-9]*$ ]] || exit 0
+          source .github/scripts/arbiter.sh
+          [[ "$ISSUE" =~ ^[1-9][0-9]{0,15}$ ]] || exit 0
           move='this move'
           if [[ "$UCI" =~ ^[a-h][1-8][a-h][1-8][qrbn]?$ ]]; then move="\`$UCI\`"; fi
+          down="$(desk arbiter-outage "🧯 The Arbiter is down" "$(printf '%s\n' \
+            "🧯 **The Arbiter is down**, so moves aren't being ruled on. @$OWNER, [this run]($RUN_URL) failed" \
+            "before it could rule on one. Every move it stops links here, and nobody is pinged again; this" \
+            "closes itself when a move goes through.")")"
           printf '%s\n' "⚠️ **The Arbiter couldn't rule on $move**, so nothing was played." \
-            "@$OWNER has been told. Try the same move again from [the board](https://github.com/$OWNER) in a few minutes." \
+            "It's being looked into in [#$down](https://github.com/$PLAY/issues/$down): try the same move again from" \
+            "[the board](https://github.com/$OWNER) once that's closed." \
             > "$RUNNER_TEMP/failed.md"
-          gh issue comment "$ISSUE" --repo "$PLAY" --body-file "$RUNNER_TEMP/failed.md"
+          say "$ISSUE" "$RUNNER_TEMP/failed.md"

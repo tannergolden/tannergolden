@@ -1,0 +1,37 @@
+name: Chess Tests
+
+# The game's tests: the rules held to their perft counts, every legal move
+# named, and the game played through every way a move can go. They run when
+# the game's code or its workflows change, and not on every move, so a move
+# costs one short job and nobody can make the tests run by opening issues.
+# The moves' own commits touch only the game's state and the page's settings,
+# so they never start this.
+on:
+  push:
+    paths:
+      - '.github/scripts/chess*.py'
+      - '.github/scripts/test_chess*.py'
+      - '.github/scripts/arbiter.sh'
+      - '.github/workflows/chess*.yml'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  test:
+    name: '🧪 Chess Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # the code under test
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # No setup-python on purpose: the scripts are stdlib only.
+      - name: '🧪 Check the rules, the names and the game'
+        env:
+          CHESS_PERFT_DEEP: '1'
+        run: python3 -m unittest discover -s .github/scripts -p 'test_chess*.py'

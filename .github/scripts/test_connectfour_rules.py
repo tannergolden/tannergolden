@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The rules of Connect Four: discs fall, the two sides take turns, four in a row wins every way, a full frame draws.
+"""The rules of Connect Four: discs fall, the two sides take turns, whichever colour drops first, four in a row wins
+every way, and a full frame draws.
 
   python3 -m unittest discover -s .github/scripts -p 'test_*.py'
 """
@@ -34,6 +35,15 @@ class Frame(unittest.TestCase):
         self.assertEqual((position.at(4, 2), position.height(4), position.turn), (R.LIGHT, 2, R.DARK))
         self.assertEqual(position.board, "......./......./......./......./...L.../...D...")
 
+    def test_light_drops_first_when_the_game_says_so(self):
+        position = drop(4, start=R.opening(R.LIGHT))
+        self.assertEqual((position.at(4, 1), position.turn, position.first), (R.LIGHT, R.DARK, R.LIGHT))
+        position = drop(4, 3, start=R.opening(R.LIGHT))
+        self.assertEqual((position.at(3, 1), position.turn), (R.DARK, R.LIGHT))
+        self.assertEqual(position.board, "......./......./......./......./......./..DL...")
+        self.assertEqual(R.Position.from_board(position.board, R.LIGHT), position)
+        self.assertNotEqual(R.Position(position.cells), position, "the same discs with dark first is another position")
+
     def test_a_frame_is_read_and_written_top_row_first(self):
         text = "......./..D..../..LD.../..DD.../D.DLLL./L.DLDLL"
         self.assertEqual(R.Position.from_board(text).board, text)
@@ -46,6 +56,11 @@ class Frame(unittest.TestCase):
         for bad in (short, floating, doubled, light_first):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 R.Position.from_board(bad)
+        one_light, one_dark = "/".join(["......."] * 5 + ["L......"]), "/".join(["......."] * 5 + ["D......"])
+        self.assertEqual(R.Position.from_board(one_light, R.LIGHT).turn, R.DARK)
+        for bad, first in ((one_dark, R.LIGHT), (one_light, R.DARK), (one_light, "X")):
+            with self.subTest(bad=bad, first=first), self.assertRaises(ValueError):
+                R.Position.from_board(bad, first)
 
     def test_a_full_column_takes_no_more(self):
         position = drop(4, 4, 4, 4, 4, 4)
@@ -72,6 +87,9 @@ class FourInARow(unittest.TestCase):
     def test_light_wins_too_and_scores_second(self):
         end = R.ending(drop(1, 4, 1, 4, 2, 4, 7, 4))
         self.assertEqual((end.winner, end.line, end.result), (R.LIGHT, ((4, 1), (4, 2), (4, 3), (4, 4)), "0-1"))
+        end = R.ending(drop(4, 1, 4, 1, 4, 2, 4, start=R.opening(R.LIGHT)))
+        self.assertEqual((end.winner, end.line), (R.LIGHT, ((4, 1), (4, 2), (4, 3), (4, 4))),
+                         "and when it dropped first")
 
     def test_five_in_a_row_names_four_with_the_last_disc(self):
         position = drop(1, 1, 2, 2, 4, 4, 5, 5, 3)  # the third disc joins two on each side: five across
@@ -90,8 +108,8 @@ class FourInARow(unittest.TestCase):
 
     def test_every_random_game_ends_at_its_first_four_or_its_full_frame(self):
         rng = random.Random(4)
-        for _ in range(200):
-            position = R.START
+        for n in range(200):
+            position = R.opening(R.LIGHT if n % 2 else R.DARK)
             while not R.ending(position):
                 position = R.make(position, rng.choice(R.legal(position)))
             end = R.ending(position)
@@ -121,6 +139,8 @@ class Threats(unittest.TestCase):
         self.assertEqual(R.notation(drop(4, 1, 4, 1), 4), "4+", "three up column 4, the fourth to come")
         self.assertEqual(R.notation(drop(4, 1, 4, 1, 4, 2), 4), "4#")
         self.assertEqual(R.notation(drop(4, 1, 4, 1, 4), 4), "4", "Light's block threatens nothing")
+        self.assertEqual(R.notation(drop(4, 1, 4, 1, start=R.opening(R.LIGHT)), 4), "4+", "light first, the same")
+        self.assertEqual(R.notation(drop(4, 1, 4, 1, 4, 2, start=R.opening(R.LIGHT)), 4), "4#")
 
 
 if __name__ == "__main__":

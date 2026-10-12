@@ -5,17 +5,16 @@
   from connectfour_rules import START, Position, legal, make, ending, threats
 
 A frame of seven columns and six rows: columns 1 to 7 from the left, rows 1
-to 6 from the foot. Dark drops first, then Light, a disc at a time, and a
-disc falls to the lowest open cell of the column it is dropped down. Four in
-a row wins, across, up or on a diagonal, and a full frame with no four is a
-draw. A move is written as its column, `4`, with a `+` when it leaves its
-side a column to win down next (a threat) and a `#` when it connects four,
-as chess marks a check and a mate.
+to 6 from the foot. The two colours take turns, a disc at a time, and a disc
+falls to the lowest open cell of the column it is dropped down. Four in a
+row wins, across, up or on a diagonal, and a full frame with no four is a
+draw. The dark discs (`D`) drop first unless a position says the light ones
+(`L`) do (`first`). A move is written as its column, `4`, with a `+` when it
+leaves its side a column to win down next (a threat) and a `#` when it
+connects four, as chess marks a check and a mate.
 
 A threat is a column a side could drop down and win at once: the cell its
-disc would land on completes four. Whoever drops first can force a win with
-perfect play (James D. Allen and Victor Allis, independently, in 1988), which
-is why the Arbiter opens every game on the profile. Stdlib only.
+disc would land on completes four. Stdlib only.
 """
 from __future__ import annotations
 
@@ -35,6 +34,7 @@ def other(colour: str) -> str:
 class Position:
     cells: tuple[str, ...] = ("",) * (COLS * ROWS)  # by (row - 1) * 7 + (column - 1): D, L, or "" when open
     last: tuple[int, int] | None = field(default=None, compare=False)  # where the last disc landed, column and row
+    first: str = DARK  # the colour that dropped first in this game
 
     def at(self, col: int, row: int) -> str:
         return self.cells[(row - 1) * COLS + col - 1] if 1 <= col <= COLS and 1 <= row <= ROWS else ""
@@ -45,8 +45,8 @@ class Position:
 
     @property
     def turn(self) -> str:
-        """Whose disc drops next: Dark opens, and the two take turns."""
-        return DARK if self.cells.count(DARK) == self.cells.count(LIGHT) else LIGHT
+        """Whose disc drops next: the first colour opens, and the two take turns."""
+        return self.first if self.cells.count(DARK) == self.cells.count(LIGHT) else other(self.first)
 
     @property
     def board(self) -> str:
@@ -54,25 +54,34 @@ class Position:
         return "/".join("".join(self.at(col, row) or "." for col in range(1, COLS + 1)) for row in range(ROWS, 0, -1))
 
     @classmethod
-    def from_board(cls, text: str) -> Position:
+    def from_board(cls, text: str, first: str = DARK) -> Position:
+        """The position a frame describes, `first` the colour that dropped first."""
         rows = text.split("/")
         if len(rows) != ROWS or any(len(row) != COLS or set(row) - set("DL.") for row in rows):
             raise ValueError(f"{text!r} is not six rows of seven D, L or dots")
+        if first not in (DARK, LIGHT):
+            raise ValueError(f"{first!r} is not a colour: D or L")
         cells = [""] * (COLS * ROWS)
         for i, row in enumerate(rows):
             for j, ch in enumerate(row):
                 if ch != ".":
                     cells[(ROWS - 1 - i) * COLS + j] = ch
-        position = cls(tuple(cells))
+        position = cls(tuple(cells), first=first)
         if any(position.at(col, row) and not position.at(col, row - 1)
                for col in range(1, COLS + 1) for row in range(2, ROWS + 1)):
             raise ValueError(f"{text!r} has a disc over an open cell, and discs fall")
-        if cells.count(DARK) - cells.count(LIGHT) not in (0, 1):
-            raise ValueError(f"{text!r} is not a frame the two sides could fill by taking turns, Dark first")
+        if cells.count(first) - cells.count(other(first)) not in (0, 1):
+            raise ValueError(f"{text!r} is not a frame the two sides could fill by taking turns,"
+                             f" {COLOUR[first]} first")
         return position
 
 
-START = Position()
+START = Position()  # the dark discs to drop first
+
+
+def opening(first: str) -> Position:
+    """The empty frame, with `first` the colour that drops first."""
+    return Position(first=first)
 
 
 @dataclass(frozen=True)
@@ -83,7 +92,7 @@ class Ending:
 
     @property
     def result(self) -> str:
-        """The result as a score sheet writes it, the first player's score first."""
+        """The result as a score sheet writes it, the dark discs' score first."""
         return {DARK: "1-0", LIGHT: "0-1"}.get(self.winner or "", "1/2-1/2")
 
 
@@ -144,7 +153,7 @@ def make(position: Position, col: int) -> Position:
     row = position.height(col) + 1
     cells = list(position.cells)
     cells[(row - 1) * COLS + col - 1] = position.turn
-    return Position(tuple(cells), (col, row))
+    return Position(tuple(cells), (col, row), position.first)
 
 
 def threats(position: Position, colour: str) -> list[int]:

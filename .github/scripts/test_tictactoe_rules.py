@@ -1,13 +1,16 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The rules of Tic-Tac-Toe, held to the game's known numbers and to a plain search of every line of play.
+"""The rules of Tic-Tac-Toe, held to the game's known numbers and to a plain search of every line of play, whichever
+mark moves first.
 
   python3 -m unittest discover -s .github/scripts -p 'test_*.py'
 
 The game is small enough to count whole: 5,478 positions, 765 once the
-board's turns and mirrors are set aside, and 255,168 games, of which X wins
-131,184, O wins 77,904 and 46,080 are drawn. Perfect play is checked against a
-search that shares nothing with the rules but the board.
+board's turns and mirrors are set aside, and 255,168 games, of which the
+mark that moves first wins 131,184, the other 77,904, and 46,080 are drawn.
+On the profile either mark can move first, so every count is made both ways
+round. Perfect play is checked against a search that shares nothing with the
+rules but the board.
 """
 from __future__ import annotations
 
@@ -33,7 +36,10 @@ def walk(position: R.Position, seen: dict, games: dict) -> None:
 
 SEEN: dict = {}
 GAMES = {"X": 0, "O": 0, None: 0}
-walk(R.START, SEEN, GAMES)  # the whole game, once for every test here
+walk(R.START, SEEN, GAMES)  # the whole game, X first, once for every test here
+O_SEEN: dict = {}
+O_GAMES = {"X": 0, "O": 0, None: 0}
+walk(R.opening(R.O), O_SEEN, O_GAMES)  # and O first
 
 
 def plain(board: list[str], mover: str) -> int:
@@ -53,8 +59,8 @@ def plain(board: list[str], mover: str) -> int:
     return max(values) if mover == "X" else min(values)
 
 
-def boards() -> list[R.Position]:
-    return [R.Position(marks) for marks in sorted(SEEN)]
+def boards(first: str = R.X) -> list[R.Position]:
+    return [R.Position(marks, first) for marks in sorted(SEEN if first == R.X else O_SEEN)]
 
 
 class Counts(unittest.TestCase):
@@ -62,6 +68,12 @@ class Counts(unittest.TestCase):
         self.assertEqual(len(SEEN), 5478)
         self.assertEqual(GAMES, {"X": 131184, "O": 77904, None: 46080})
         self.assertEqual(sum(GAMES.values()), 255168)
+
+    def test_o_first_is_the_same_game_with_the_marks_swapped(self):
+        swapped = {"X": "O", "O": "X", "": ""}
+        self.assertEqual(len(O_SEEN), 5478)
+        self.assertEqual(O_GAMES, {"O": 131184, "X": 77904, None: 46080})
+        self.assertEqual(set(O_SEEN), {tuple(swapped[mark] for mark in marks) for marks in SEEN})
 
     def test_765_positions_once_turns_and_mirrors_are_set_aside(self):
         def turned(marks: tuple) -> tuple:  # a quarter turn of the board
@@ -110,6 +122,16 @@ class Moves(unittest.TestCase):
         self.assertEqual((position.turn, position.board), (R.O, ".../.X./..."))
         self.assertNotIn("b2", R.legal(position))
 
+    def test_o_opens_when_the_game_says_so_and_the_marks_still_take_turns(self):
+        position = R.opening(R.O)
+        self.assertEqual((position.turn, position.first, R.legal(position)), (R.O, R.O, list(R.READING)))
+        position = R.make(position, "a1")
+        self.assertEqual((position.turn, position.board, position.first), (R.X, ".../.../O..", R.O))
+        position = R.make(position, "b2")
+        self.assertEqual((position.turn, position.board), (R.O, ".../.X./O.."))
+        self.assertNotEqual(R.Position(position.marks), position, "the same marks with X first is another position")
+        self.assertEqual(R.Position.from_board(".../.X./O..", R.O), position)
+
     def test_a_board_is_read_and_written_top_row_first(self):
         position = R.Position.from_board("O../XX./O.X")
         self.assertEqual((position.at("a3"), position.at("a1"), position.at("c1"), position.at("b2")),
@@ -118,6 +140,10 @@ class Moves(unittest.TestCase):
         for bad in ("O../XX./O.", "OOO/.../...", "XXX/X../...", "X../.../..?"):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 R.Position.from_board(bad)
+        self.assertEqual(R.Position.from_board("O../.../...", R.O).turn, R.X)
+        for bad, first in (("X../.../...", R.O), ("XX./O../...", R.O), ("O../.../...", R.X), (".../.../...", "Y")):
+            with self.subTest(bad=bad, first=first), self.assertRaises(ValueError):
+                R.Position.from_board(bad, first)
 
     def test_threats_are_the_cells_a_mark_would_win_on(self):
         position = R.Position.from_board("O../XX./O.X")
@@ -137,6 +163,9 @@ class Moves(unittest.TestCase):
         self.assertEqual(R.notation(R.Position.from_board("O../.XX/O.X"), "a2"), "Oa2#")
         self.assertEqual(R.notation(R.Position.from_board("X../.X./O.."), "c1"), "Oc1+",
                          "O blocks c1 and could win on b1 next")
+        self.assertEqual(R.notation(R.opening(R.O), "b2"), "Ob2", "O's mark goes down first when O opens")
+        self.assertEqual(R.notation(R.Position.from_board(".../.O./X..", R.O), "c1"), "Oc1+")
+        self.assertEqual(R.notation(R.Position.from_board("O../.O./XX.", R.O), "c1"), "Oc1#")
 
     def test_why_a_cell_cannot_be_marked(self):
         position = R.Position.from_board("O../XX./O.X")
@@ -145,16 +174,17 @@ class Moves(unittest.TestCase):
 
 
 class Outlook(unittest.TestCase):
-    def test_perfect_play_agrees_with_a_plain_search_of_every_line(self):
-        checked = 0
-        for position in boards():
-            if R.ending(position) or sum(1 for mark in position.marks if mark) < 3:
-                continue
-            board = [position.at(cell) for cell in ("a3", "b3", "c3", "a2", "b2", "c2", "a1", "b1", "c1")]
-            want = {1: R.X, -1: R.O, 0: "draw"}[plain(board, position.turn)]
-            self.assertEqual(R.outlook(position), want, position.board)
-            checked += 1
-        self.assertGreater(checked, 4000)
+    def test_perfect_play_agrees_with_a_plain_search_of_every_line_either_mark_first(self):
+        for first in (R.X, R.O):
+            checked = 0
+            for position in boards(first):
+                if R.ending(position) or sum(1 for mark in position.marks if mark) < 3:
+                    continue
+                board = [position.at(cell) for cell in ("a3", "b3", "c3", "a2", "b2", "c2", "a1", "b1", "c1")]
+                want = {1: R.X, -1: R.O, 0: "draw"}[plain(board, position.turn)]
+                self.assertEqual(R.outlook(position), want, (first, position.board))
+                checked += 1
+            self.assertGreater(checked, 4000)
 
     def test_the_game_is_a_draw_from_the_start_and_lost_by_a_slip(self):
         self.assertEqual(R.outlook(R.START), "draw")
@@ -162,6 +192,9 @@ class Outlook(unittest.TestCase):
             self.assertEqual(R.outlook(R.make(R.START, cell)), "draw", f"X on {cell} still draws")
         self.assertEqual(R.outlook(R.Position.from_board(".../OX./...")), R.X, "O on an edge beside X's centre loses")
         self.assertEqual(R.outlook(R.Position.from_board("X../.O./...")), "draw")
+        self.assertEqual(R.outlook(R.opening(R.O)), "draw", "and from the start with O first")
+        self.assertEqual(R.outlook(R.Position.from_board(".../XO./...", R.O)), R.O,
+                         "X on an edge beside O's centre loses, when O moved first")
 
 
 if __name__ == "__main__":

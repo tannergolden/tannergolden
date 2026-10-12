@@ -6,17 +6,18 @@
 
 Nine cells, named as chess names squares: files a to c from the left and
 ranks 1 to 3 from the foot, so a1 is the lower left and c3 the upper right.
-X moves first, then O, a mark to a cell; three in a row wins, and a full
-board with no line is a draw. A move is written as its mark and cell, `Xb2`,
-with a `+` when it leaves its side a cell to win on next (a threat) and a `#`
-when it wins, as chess marks a check and a mate.
+The two marks take turns, a mark to a cell; three in a row wins, and a full
+board with no line is a draw. X moves first unless a position says O does
+(`first`): on the profile each player keeps one mark, and the side the
+Arbiter opens for moves first. A move is written as its mark and cell,
+`Xb2`, with a `+` when it leaves its side a cell to win on next (a threat)
+and a `#` when it wins, as chess marks a check and a mate.
 
 The game is small enough to solve whole: `outlook` plays every line out to
-say who wins with perfect play from a position, which is a draw from the
-start. The tests hold it to a plain search of every game, and the rules to
-the game's known numbers: 5,478 positions, 765 once the board's turns and
-mirrors are set aside, and 255,168 games, of which X wins 131,184, O wins
-77,904 and 46,080 are drawn. Stdlib only.
+say who wins with perfect play from a position, whichever mark moved first,
+and it is a draw from the start. The tests hold it to a plain search of
+every game, and the rules to the game's known counts of positions and games,
+either mark first. Stdlib only.
 """
 from __future__ import annotations
 
@@ -42,14 +43,15 @@ def other(mark: str) -> str:
 @dataclass(frozen=True)
 class Position:
     marks: tuple[str, ...] = ("",) * 9  # each cell's mark in CELLS order: X, O, or "" for an open cell
+    first: str = X  # the mark that moved first in this game
 
     def at(self, cell: str) -> str:
         return self.marks[INDEX[cell]]
 
     @property
     def turn(self) -> str:
-        """Whose mark goes down next: X opens, and the two take turns."""
-        return X if self.marks.count(X) == self.marks.count(O) else O
+        """Whose mark goes down next: the first mark opens, and the two take turns."""
+        return self.first if self.marks.count(X) == self.marks.count(O) else other(self.first)
 
     @property
     def board(self) -> str:
@@ -57,18 +59,26 @@ class Position:
         return "/".join("".join(self.at(f"{f}{r}") or "." for f in FILES) for r in (3, 2, 1))
 
     @classmethod
-    def from_board(cls, text: str) -> Position:
+    def from_board(cls, text: str, first: str = X) -> Position:
+        """The position a board describes, `first` the mark that moved first."""
         rows = text.split("/")
         if len(rows) != 3 or any(len(row) != 3 or set(row) - set("XO.") for row in rows):
             raise ValueError(f"{text!r} is not three rows of X, O or a dot")
+        if first not in (X, O):
+            raise ValueError(f"{first!r} is not a mark: X or O")
         marks = {f"{FILES[f]}{3 - r}": ch for r, row in enumerate(rows) for f, ch in enumerate(row) if ch != "."}
-        position = cls(tuple(marks.get(cell, "") for cell in CELLS))
-        if position.marks.count(X) - position.marks.count(O) not in (0, 1):
-            raise ValueError(f"{text!r} is not a board the two sides could reach by taking turns, X first")
+        position = cls(tuple(marks.get(cell, "") for cell in CELLS), first)
+        if position.marks.count(first) - position.marks.count(other(first)) not in (0, 1):
+            raise ValueError(f"{text!r} is not a board the two sides could reach by taking turns, {first} first")
         return position
 
 
-START = Position()
+START = Position()  # X to move first
+
+
+def opening(first: str) -> Position:
+    """The empty board, with `first` the mark that moves first."""
+    return Position(first=first)
 
 
 @dataclass(frozen=True)
@@ -79,7 +89,7 @@ class Ending:
 
     @property
     def result(self) -> str:
-        """The result as a score sheet writes it, the first player's score first."""
+        """The result as a score sheet writes it, X's score first, as chess writes White's."""
         return {X: "1-0", O: "0-1"}.get(self.winner or "", "1/2-1/2")
 
 
@@ -113,7 +123,7 @@ def make(position: Position, cell: str) -> Position:
     """The position after the side to move marks the cell, which is taken to be open."""
     marks = list(position.marks)
     marks[INDEX[cell]] = position.turn
-    return Position(tuple(marks))
+    return Position(tuple(marks), position.first)
 
 
 def threats(position: Position, mark: str) -> list[str]:
@@ -126,19 +136,19 @@ def threats(position: Position, mark: str) -> list[str]:
 
 
 @functools.cache
-def _value(marks: tuple[str, ...]) -> int:
-    """The position's worth with perfect play: 1 when X wins, -1 when O does, 0 for a draw."""
-    position = Position(marks)
-    end = ending(position)
+def _value(marks: tuple[str, ...], turn: str) -> int:
+    """The worth of the marks with `turn` to move, with perfect play: 1 when X wins, -1 when O does, 0 for a draw.
+    Whose turn it is, not which mark moved first, is all perfect play asks."""
+    end = ending(Position(marks))
     if end:
         return {X: 1, O: -1}.get(end.winner or "", 0)
-    values = [_value(make(position, cell).marks) for cell in legal(position)]
-    return max(values) if position.turn == X else min(values)
+    values = [_value(marks[:i] + (turn,) + marks[i + 1:], other(turn)) for i, mark in enumerate(marks) if not mark]
+    return max(values) if turn == X else min(values)
 
 
 def outlook(position: Position) -> str:
     """Who wins from here with perfect play on both sides: X, O, or "draw"."""
-    return {1: X, -1: O, 0: "draw"}[_value(position.marks)]
+    return {1: X, -1: O, 0: "draw"}[_value(position.marks, position.turn)]
 
 
 def notation(position: Position, cell: str) -> str:

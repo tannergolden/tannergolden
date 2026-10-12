@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
 """Every open cell named as a call across a duel: what a move is read as, its title and words, and that a board
-keeps them, in every position the game can reach.
+keeps them, in every position the game can reach, whichever mark moves first.
 
   python3 -m unittest discover -s .github/scripts -p 'test_*.py'
 """
@@ -24,19 +24,19 @@ KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
 DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
 
 
-def positions() -> list[R.Position]:
-    """Every position the game can reach with a move left to make."""
-    seen, todo = set(), [R.START]
+def positions(first: str) -> list[R.Position]:
+    """Every position the game can reach with a move left to make, `first` the mark that moved first."""
+    seen, todo = set(), [R.opening(first)]
     while todo:
         position = todo.pop()
         if position.marks in seen:
             continue
         seen.add(position.marks)
         todo += [R.make(position, cell) for cell in R.legal(position)]
-    return [R.Position(marks) for marks in sorted(seen) if R.legal(R.Position(marks))]
+    return [R.Position(marks, first) for marks in sorted(seen) if R.legal(R.Position(marks, first))]
 
 
-EVERY = positions()
+EVERY = positions(R.X) + positions(R.O)
 NAMED = {position: listing(position, 1, 1) for position in EVERY}  # every board's names, once for every test here
 
 
@@ -69,6 +69,14 @@ class Reading(unittest.TestCase):
         self.assertEqual(words(R.Position.from_board("X.X/.O./X.O"), "b1"),
                          "O takes the foot of the board, threatening b3, leaving b3 and a2 to X",
                          "a fork it can't stop, and a threat of its own on one of the two")
+
+    def test_o_s_moves_read_the_same_when_o_moved_first(self):
+        self.assertEqual(words(R.opening(R.O), "b2"), "O takes the centre")
+        self.assertEqual(theme(read(R.opening(R.O), "b2")), "centre")
+        position = R.Position.from_board("OO./.X./...", R.O)  # O moved first, and X is to move against a3 and b3
+        self.assertEqual(words(position, "c3"), "X blocks on c3, threatening a1")
+        self.assertEqual(theme(read(position, "c3")), "riposte")
+        self.assertEqual(words(position, "a1"), "X takes the lower left corner, threatening c3, leaving c3 to O")
 
 
 class Titles(unittest.TestCase):

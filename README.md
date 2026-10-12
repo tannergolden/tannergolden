@@ -117,36 +117,36 @@ a place in the Hall of Fame below.
 <details open>
 <summary>♘ Knights · 4 moves</summary>
 
-|  | Move | What it does | Play |
+|  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 🌑 | **Develop the Queen's Knight to the Rim!** `Na3` | Knight from b1 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🌅 | **Develop the Queen's Knight!** `Nc3` | Knight from b1 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🌅 | **Develop the King's Knight!** `Nf3` | Knight from g1 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🌑 | **Put the King's Knight on the Rim!** `Nh3` | Knight from g1 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🐴 | **Bring Out the Queen's Knight to a3!** `Na3` | Knight from b1 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🐴 | **Bring Out the Queen's Knight to c3!** `Nc3` | Knight from b1 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🐴 | **Bring Out the King's Knight to f3!** `Nf3` | Knight from g1 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🐴 | **Bring Out the King's Knight to h3!** `Nh3` | Knight from g1 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
 
 </details>
 
 <details open>
 <summary>♙ Pawns · 16 moves</summary>
 
-|  | Move | What it does | Play |
+|  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
 | ♟️ | **March the a-Pawn Two Squares!** `a4` | Pawn from a2 to a4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ♟️ | **Cover b4 With the a-Pawn!** `a3` | Pawn from a2 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Play the Polish Opening!** `b4` | Pawn from b2 to b4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Play the Nimzo-Larsen Attack!** `b3` | Pawn from b2 to b3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Play the English!** `c4` | Pawn from c2 to c4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ♟️ | **Cover d4 With the c-Pawn!** `c3` | Pawn from c2 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Seize the Centre With the Queen's Pawn!** `d4` | Pawn from d2 to d4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🔓 | **Open a Diagonal for the Queen's Bishop!** `d3` | Pawn from d2 to d3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Seize the Centre With the King's Pawn!** `e4` | Pawn from e2 to e4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🔓 | **Free the King's Bishop!** `e3` | Pawn from e2 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Play Bird's Opening!** `f4` | Pawn from f2 to f4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ♟️ | **Guard e4 With the f-Pawn!** `f3` | Pawn from f2 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Play Grob's Attack!** `g4` | Pawn from g2 to g4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🔭 | **Make Room to Fianchetto the King's Bishop!** `g3` | Pawn from g2 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ♟️ | **Push the h-Pawn Two Squares!** `h4` | Pawn from h2 to h4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ♟️ | **Guard g4 With the h-Pawn!** `h3` | Pawn from h2 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the a-Pawn to a3!** `a3` | Pawn from a2 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the b-Pawn Two Squares!** `b4` | Pawn from b2 to b4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the b-Pawn to b3!** `b3` | Pawn from b2 to b3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the c-Pawn Two Squares!** `c4` | Pawn from c2 to c4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the c-Pawn to c3!** `c3` | Pawn from c2 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the d-Pawn Two Squares!** `d4` | Pawn from d2 to d4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the d-Pawn to d3!** `d3` | Pawn from d2 to d3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the e-Pawn Two Squares!** `e4` | Pawn from e2 to e4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the e-Pawn to e3!** `e3` | Pawn from e2 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the f-Pawn Two Squares!** `f4` | Pawn from f2 to f4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the f-Pawn to f3!** `f3` | Pawn from f2 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the g-Pawn Two Squares!** `g4` | Pawn from g2 to g4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the g-Pawn to g3!** `g3` | Pawn from g2 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the h-Pawn Two Squares!** `h4` | Pawn from h2 to h4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the h-Pawn to h3!** `h3` | Pawn from h2 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
 
 </details>
 
@@ -178,15 +178,15 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 <details>
 <summary>⛂ <b>GitHub's Turn</b> · 7 legal moves · open to choose one</summary>
 
-|  | Move | What it does | Play |
+|  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 📖 | **Open the Edinburgh!** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Open the Double Corner!** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Open the Denny!** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Open the Kelso!** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Open With Old Faithful!** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Open the Bristol!** `11-16` | Man from 11 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 📖 | **Open the Dundee!** `12-16` | Man from 12 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Push the Man From 9 to 13!** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Push the Man From 9 to 14!** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Push the Man From 10 to 14!** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Push the Man From 10 to 15!** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Push the Man From 11 to 15!** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Push the Man From 11 to 16!** `11-16` | Man from 11 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Push the Man From 12 to 16!** `12-16` | Man from 12 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
 
 </details>
 
@@ -216,15 +216,15 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 <details>
 <summary>⚫ <b>GitHub's Turn</b> · 7 open columns · open to choose one</summary>
 
-|  | Move | What it does | Play |
+|  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ⬅️ | **Take the Left Edge!** `1` | A black disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⬇️ | **Lay the First Disc in Column 2!** `2` | A black disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⬇️ | **Stake Out Column 3!** `3` | A black disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⭐ | **Command the Centre!** `4` | A black disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⬇️ | **Take the Foot of Column 5!** `5` | A black disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪖 | **Bury Their Disc in Column 6!** `6` | A black disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ➡️ | **Drop Down the Right Edge!** `7` | A black disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬅️ | **Lay the First Disc on the Left Edge!** `1` | A black disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬇️ | **Send Black to the Floor in Column 2!** `2` | A black disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬇️ | **Drop Black Down Column 3!** `3` | A black disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬇️ | **Send Black to the Floor in the Centre Column!** `4` | A black disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬇️ | **Slide Black Down Column 5 to Row 1!** `5` | A black disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🧱 | **Land Black on White in Column 6!** `6` | A black disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ➡️ | **Drop Black to Row 1 on the Right Edge!** `7` | A black disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
@@ -254,16 +254,16 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 <details>
 <summary>❌ <b>@tannergolden's Turn</b> · 8 open cells · only @tannergolden can play these</summary>
 
-|  | Move | What it does | Play |
+|  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ⚠️ | **Take an Adjacent Corner and Lose, Upper Left!** `Xa3` | X takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⚠️ | **Take a Far Edge and Lose, Top!** `Xb3` | X takes the head of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⚠️ | **Take the Opposite Corner and Lose!** `Xc3` | X takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⚠️ | **Take an Adjacent Edge and Lose, Left!** `Xa2` | X takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⭐ | **Save the Draw From the Centre!** `Xb2` | X takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⚠️ | **Take a Far Edge and Lose, Right!** `Xc2` | X takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⚠️ | **Take an Adjacent Edge and Lose, Bottom!** `Xb1` | X takes the foot of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⚠️ | **Take an Adjacent Corner and Lose, Lower Right!** `Xc1` | X takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📐 | **Take a Corner Along From Theirs, Upper Left!** `Xa3` | X takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📏 | **Take an Edge by No Mark, Top!** `Xb3` | X takes the top edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📐 | **Take the Corner Across From Theirs!** `Xc3` | X takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📏 | **Take an Edge by Their Corner, Left!** `Xa2` | X takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🔳 | **Take the Centre!** `Xb2` | X takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📏 | **Take an Edge by No Mark, Right!** `Xc2` | X takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📏 | **Take an Edge by Their Corner, Bottom!** `Xb1` | X takes the bottom edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 📐 | **Take a Corner Along From Theirs, Lower Right!** `Xc1` | X takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 

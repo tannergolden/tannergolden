@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,085. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,095. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -119,10 +119,10 @@ a place in the Hall of Fame below.
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
-| 🚪 | **Leave the Barracks!** `Na3` | Knight from b1 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🌅 | **Deploy the Outriders!** `Nc3` | Knight from b1 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🌅 | **Muster the Knights!** `Nf3` | Knight from g1 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🚪 | **Join the Fray, Cavalry!** `Nh3` | Knight from g1 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🌑 | **Develop the Queen's Knight to the Rim!** `Na3` | Knight from b1 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🌅 | **Develop the Queen's Knight!** `Nc3` | Knight from b1 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🌅 | **Develop the King's Knight!** `Nf3` | Knight from g1 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🌑 | **Put the King's Knight on the Rim!** `Nh3` | Knight from g1 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
 
 </details>
 
@@ -131,22 +131,22 @@ a place in the Hall of Fame below.
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
-| 🥾 | **Pick Up the Pace!** `a4` | Pawn from a2 to a4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Forward March!** `a3` | Pawn from a2 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Double Time, Footmen!** `b4` | Pawn from b2 to b4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🛡️ | **Step Up, Infantry!** `b3` | Pawn from b2 to b3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Take Two Steps, Footmen!** `c4` | Pawn from c2 to c4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🪖 | **Muster the Skirmishers!** `c3` | Pawn from c2 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🧭 | **Hold the High Ground!** `d4` | Pawn from d2 to d4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🚩 | **Shore Up the Line!** `d3` | Pawn from d2 to d3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🏛️ | **Hold the Center, Footmen!** `e4` | Pawn from e2 to e4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🌱 | **Hold the Line!** `e3` | Pawn from e2 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Stride Forward, Pikemen!** `f4` | Pawn from f2 to f4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🪖 | **Dig In!** `f3` | Pawn from f2 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Double the Pace!** `g4` | Pawn from g2 to g4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 🌱 | **Keep Formation!** `g3` | Pawn from g2 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Quick March!** `h4` | Pawn from h2 to h4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Brace for the Charge!** `h3` | Pawn from h2 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **March the a-Pawn Two Squares!** `a4` | Pawn from a2 to a4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Cover b4 With the a-Pawn!** `a3` | Pawn from a2 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Play the Polish Opening!** `b4` | Pawn from b2 to b4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Play the Nimzo-Larsen Attack!** `b3` | Pawn from b2 to b3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Play the English!** `c4` | Pawn from c2 to c4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Cover d4 With the c-Pawn!** `c3` | Pawn from c2 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Seize the Centre With the Queen's Pawn!** `d4` | Pawn from d2 to d4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🔓 | **Open a Diagonal for the Queen's Bishop!** `d3` | Pawn from d2 to d3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d2d3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Seize the Centre With the King's Pawn!** `e4` | Pawn from e2 to e4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🔓 | **Free the King's Bishop!** `e3` | Pawn from e2 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Play Bird's Opening!** `f4` | Pawn from f2 to f4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Guard e4 With the f-Pawn!** `f3` | Pawn from f2 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Play Grob's Attack!** `g4` | Pawn from g2 to g4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 🔭 | **Make Room to Fianchetto the King's Bishop!** `g3` | Pawn from g2 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Push the h-Pawn Two Squares!** `h4` | Pawn from h2 to h4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| ♟️ | **Guard g4 With the h-Pawn!** `h3` | Pawn from h2 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
 
 </details>
 
@@ -180,13 +180,13 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
-| ⚓ | **Hug the Shore!** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Stand for the Narrows!** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Hold the Narrows!** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Make for Midchannel!** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Seize the Strait!** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Full Sail Ahead!** `11-16` | Man from 11 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| ⛵ | **Come to Starboard!** `12-16` | Man from 12 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Open the Edinburgh!** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Open the Double Corner!** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Open the Denny!** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Open the Kelso!** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Open With Old Faithful!** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Open the Bristol!** `11-16` | Man from 11 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 📖 | **Open the Dundee!** `12-16` | Man from 12 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
 
 </details>
 
@@ -218,13 +218,13 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
-| 🏔️ | **Guard the Edge, Pathfinders!** `1` | A black disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Jump, Jump, Jump!** `2` | A black disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Drop Behind Their Lines!** `3` | A black disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Hold the Drop Zone!** `4` | A black disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Stick the Landing!** `5` | A black disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪂 | **Boots on the Ground!** `6` | A black disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🏔️ | **Secure the Flank!** `7` | A black disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬅️ | **Take the Left Edge!** `1` | A black disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬇️ | **Lay the First Disc in Column 2!** `2` | A black disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬇️ | **Stake Out Column 3!** `3` | A black disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⭐ | **Command the Centre!** `4` | A black disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⬇️ | **Take the Foot of Column 5!** `5` | A black disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 🪖 | **Bury Their Disc in Column 6!** `6` | A black disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ➡️ | **Drop Down the Right Edge!** `7` | A black disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
@@ -256,14 +256,14 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 |  | Move | What it does | Play |
 | :-: | :--- | :--- | :-: |
-| 🗡️ | **Back Them Into a Corner!** `Xa3` | X takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Measure the Distance!** `Xb3` | X takes the head of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📐 | **Take the Edge of the Ring!** `Xc3` | X takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 👣 | **Circle the Flank!** `Xa2` | X takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🎯 | **Take the Centre Ground!** `Xb2` | X takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Side-Step!** `Xc2` | X takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🪶 | **Test Their Guard!** `Xb1` | X takes the foot of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📐 | **Take the High Ground!** `Xc1` | X takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⚠️ | **Take an Adjacent Corner and Lose, Upper Left!** `Xa3` | X takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⚠️ | **Take a Far Edge and Lose, Top!** `Xb3` | X takes the head of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⚠️ | **Take the Opposite Corner and Lose!** `Xc3` | X takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⚠️ | **Take an Adjacent Edge and Lose, Left!** `Xa2` | X takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⭐ | **Save the Draw From the Centre!** `Xb2` | X takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⚠️ | **Take a Far Edge and Lose, Right!** `Xc2` | X takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⚠️ | **Take an Adjacent Edge and Lose, Bottom!** `Xb1` | X takes the foot of the board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| ⚠️ | **Take an Adjacent Corner and Lose, Lower Right!** `Xc1` | X takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
@@ -327,12 +327,12 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 25, 9,883 XP, case 38% complete, 3-day streak"></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, By the Book II 87%, Longest Streak to Bronze 85%"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 25, 9,886 XP, case 38% complete, 3-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, By the Book II 89%, Longest Streak to Bronze 85%"></picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 918, 27% to Gold, top 14%"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 927, 28% to Gold, top 14%, up 8 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-repos"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/repos.svg"><img src="assets/trophies/repos-day.svg" alt="Repositories trophy: Bronze, 7, 20% to Silver, top 39%"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Unranked, 6 days, 85% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 14, 56% to Bronze"></picture></a>
@@ -369,11 +369,11 @@ depends on a third-party service.
 
 <p align="center"><b>Craft</b></p>
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 87% to By the Book II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book I: earned, Rare, 89% to By the Book II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 52% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 26% to Signed II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 27% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-fixer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/fixer.svg"><img src="assets/trophies/achievements/fixer-day.svg" alt="Fixer: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-surgeon"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/surgeon.svg"><img src="assets/trophies/achievements/surgeon-day.svg" alt="Surgeon: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-sweeping-change"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/sweeping-change.svg"><img src="assets/trophies/achievements/sweeping-change-day.svg" alt="Sweeping Change: earned, Uncommon"></picture></a>
@@ -393,7 +393,7 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-night-owl"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/night-owl.svg"><img src="assets/trophies/achievements/night-owl-day.svg" alt="Night Owl I: earned, Uncommon, 30% to Night Owl II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-comeback"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/comeback.svg"><img src="assets/trophies/achievements/comeback-day.svg" alt="Comeback: earned, Common"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-long-game"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/long-game.svg"><img src="assets/trophies/achievements/long-game-day.svg" alt="Long Game: 66% (2 of 3)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 32% (16 of 50)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 36% (18 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-weekender"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekender.svg"><img src="assets/trophies/achievements/weekender-day.svg" alt="Weekender: 15% (4 of 26)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-early-bird"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/early-bird.svg"><img src="assets/trophies/achievements/early-bird-day.svg" alt="Early Bird: 12% (6 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-year-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/year-of-code.svg"><img src="assets/trophies/achievements/year-of-code-day.svg" alt="Year of Code: 6% (18 of 300)"></picture></a>

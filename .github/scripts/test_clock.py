@@ -10,6 +10,7 @@ from __future__ import annotations
 import contextlib
 import datetime as dt
 import io
+import re
 import sys
 import tempfile
 import unittest
@@ -57,6 +58,18 @@ class Run(unittest.TestCase):
 
     def commit(self) -> str:
         return (self.out / "commit.txt").read_text(encoding="utf-8")
+
+    def said(self) -> str:
+        """The commit's message on one line, however its body wraps."""
+        return " ".join(self.commit().split())
+
+    def stale(self, key: str) -> None:
+        """Sets `key`'s board out as an older engine would have: its banner in other words, and no game moved."""
+        text = self.settings.read_text(encoding="utf-8")
+        start, end = text.index(f"# {key}:start"), text.index(f"# {key}:end")
+        region = re.sub(r"(?m)^(    prompt: ).*$", r'\1"An older banner."', text[start:end], count=1)
+        self.assertNotEqual(region, text[start:end])
+        self.settings.write_text(text[:start] + region + text[end:], encoding="utf-8")
 
     def notices(self) -> list[str]:
         return (self.out / "notices.txt").read_text(encoding="utf-8").splitlines()
@@ -132,7 +145,38 @@ class Run(unittest.TestCase):
                          "the fresh board needs no new state, only the page drawn again")
         self.assertNotIn("result:", self.settings.read_text(encoding="utf-8").split("# chess:start")[1])
         self.assertEqual(self.commit().splitlines()[0], "chore(games): 🖌️ set the boards out for the page")
-        self.assertIn("The clock set out chess again", self.commit())
+        self.assertIn("The clock set out chess again: a final board's two days are up, and the fresh board has"
+                      " come.", self.said())
+        self.assertNotIn("as the engine sets", self.said())
+
+    def test_a_board_set_out_anew_with_no_move_says_the_engine_sets_it_out_differently(self):
+        self.run_clock(T0)
+        self.stale("tictactoe")
+        code, said = self.run_clock(T0 + dt.timedelta(minutes=1))
+        self.assertEqual((code, said["changed"], said["notices"]), (0, "true", "0"))
+        self.assertEqual(self.commit().splitlines()[0], "chore(games): 🖌️ set the boards out for the page")
+        self.assertIn("The clock set out tictactoe again, as the engine sets it out now: no game moved.", self.said())
+        self.assertNotIn("two days", self.said(), "no final board came down")
+        self.stale("connectfour")
+        self.stale("checkers")
+        self.run_clock(T0 + dt.timedelta(minutes=2))
+        self.assertIn("The clock set out connectfour and checkers again, as the engine sets them out now", self.said())
+
+    def test_a_fresh_board_and_a_board_set_out_anew_are_each_told_for_what_they_are(self):
+        game, hall = None, []
+        for ply, uci in enumerate(FOOLS_MATE, 1):
+            player = (OWNER, OWNER_ID) if ply % 2 else (OCTOCAT, OCTOCAT_ID)
+            outcome = chess.play(game, hall, chess.Request(uci, 1, ply, 50 + ply, *player), OWNER, OWNER_ID,
+                                 T0 + dt.timedelta(minutes=ply))
+            chess.save(self.root / "chess", outcome)
+            game, hall = outcome.game, outcome.hall
+        opens = page.parse(game["started"])
+        self.run_clock(opens - dt.timedelta(minutes=1))
+        self.stale("tictactoe")
+        code, said = self.run_clock(opens + dt.timedelta(minutes=59))
+        self.assertEqual((code, said["changed"]), (0, "true"))
+        self.assertIn("The clock set out chess again: a final board's two days are up, and the fresh board has come."
+                      " It also set out tictactoe again, as the engine sets it out now: no game moved.", self.said())
 
     def test_one_game_s_own_commit_stands_when_it_alone_moved_on(self):
         self.run_clock(T0)

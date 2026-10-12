@@ -36,7 +36,7 @@ from pathlib import Path
 import chess
 import games
 import hall as halls
-from page import load, now_utc, parse, set_out
+from page import load, marks, now_utc, parse, set_out
 
 LOGIN, ID = games.LOGIN, games.ID
 
@@ -50,19 +50,47 @@ def boards(root: Path, owner: str, owner_id: int, moment) -> dict:
     return {key: out[key] for key in (*halls.GAMES, "hall")}
 
 
-def message(commits: list[tuple[str, str]], drawn: list[str]) -> str:
-    """The run's one commit: a game's own when it alone moved on, else one that names every game and keeps theirs."""
+NAMES = {"hall": "the Hall of Fame"}  # a region by the name a reader knows it by, where its key is not that name
+
+
+def series(items: list[str]) -> str:
+    """`a`, `a and b`, `a, b and c`."""
+    return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
+
+
+def showing(settings: Path) -> set[str]:
+    """The games whose region in the settings sets out a finished game's final board, its result on show."""
+    lines = settings.read_text(encoding="utf-8").splitlines() if settings.exists() else []
+    out = set()
+    for key in halls.GAMES:
+        found = marks(lines, key)
+        if found and any(line.startswith("    result: ") for line in lines[found[0] + 1:found[1]]):
+            out.add(key)
+    return out
+
+
+def message(commits: list[tuple[str, str]], drawn: list[str], fresh: frozenset[str] | set[str] = frozenset()) -> str:
+    """The run's one commit: a game's own when it alone moved on, else one that names every game and keeps theirs.
+    When no game moved and boards were set out again, it says why: for each game in `fresh`, a final board's two days
+    are up and the fresh board has come; for the rest, the engine now sets them out differently."""
     if len(commits) == 1:
         return commits[0][1]
     if commits:
-        keys = [key for key, _ in commits]
-        names = " and ".join(keys) if len(keys) < 3 else ", ".join(keys[:-1]) + " and " + keys[-1]
-        return f"chore(games): ⏰ run the clock for {names}\n\n" + "\n\n".join(text for _, text in commits)
-    if drawn:
-        body = (f"The clock set out {', '.join(drawn)} again: a final board's two days are up, and the fresh board"
-                " has come.")
-        return f"chore(games): 🖌️ set the boards out for the page\n\n{textwrap.fill(body, 72)}"
-    return ""
+        return (f"chore(games): ⏰ run the clock for {series([key for key, _ in commits])}\n\n"
+                + "\n\n".join(text for _, text in commits))
+    if not drawn:
+        return ""
+    came = [key for key in drawn if key in fresh]
+    rest = [NAMES.get(key, key) for key in drawn if key not in fresh]
+    said = []
+    if came:
+        said.append(f"The clock set out {series(came)} again: " + (
+            "a final board's two days are up, and the fresh board has come." if len(came) == 1
+            else "their final boards' two days are up, and their fresh boards have come."))
+    if rest:
+        said.append(f"{'It also set out' if came else 'The clock set out'} {series(rest)} again, as the engine sets"
+                    f" {'it' if len(rest) == 1 else 'them'} out now: no game moved.")
+    return f"chore(games): 🖌️ set the boards out for the page\n\n{textwrap.fill(' '.join(said), 72)}"
 
 
 def main(argv: list[str] | None = None, env: dict | None = None) -> int:
@@ -102,12 +130,15 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
             notices.append(f"{'logbook' if outcome.logbook else outcome.issue} {key}.md")
         print(f"{key}: {outcome.log}.")
     try:
-        drawn = set_out(args.settings, boards(args.root, owner, int(owner_id), moment))
+        regions = boards(args.root, owner, int(owner_id), moment)
+        finals = showing(args.settings)  # before the boards are set out over them
+        drawn = set_out(args.settings, regions)
     except ValueError as exc:
         print(f"::error::{exc}")
         return 1
+    fresh = {key for key in drawn if key in finals and "result" not in regions[key][0][1]}
     run = env.get("RUN_URL", "")
-    commit = message(commits, drawn)
+    commit = message(commits, drawn, fresh)
     (out / "notices.txt").write_text("".join(f"{line}\n" for line in notices), encoding="utf-8")
     (out / "commit.txt").write_text(commit + (f"\n\nRun: {run}" if run and commit else "") + "\n", encoding="utf-8")
     if "GITHUB_OUTPUT" in env:

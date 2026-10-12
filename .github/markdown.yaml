@@ -170,67 +170,66 @@ elements:
   # tictactoe:start
   tictactoe:
     kind: "tictactoe"
-    board: ".../.../X.."
-    x: "github"
+    board: ".../.../O.."
+    opens: "github"
     game: 1
     move: 1
     players: 0
     due: "19 Oct"
-    last: {"move": "Xa1", "words": "X takes the lower left corner", "by": "the Arbiter", "when": "12 Oct"}
+    last: {"move": "Oa1", "words": "O takes the lower left corner", "by": "the Arbiter", "when": "12 Oct"}
     threats: {"house": [], "github": []}
     outlook: "draw"
     history:
-      - [1, "Xa1", "", "the Arbiter"]
-    prompt: "🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with X on a1, at random."
-    note: "The Arbiter opens every game for a side drawn at random, since X moves first and wins far more often when anyone slips: of the 255,168 possible games, X wins 131,184, O wins 77,904 and 46,080 are drawn. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move."
+      - [1, "Oa1", "", "the Arbiter"]
+    prompt: "🛑 **@tannergolden's turn!** The Arbiter opened game 1 for GitHub with O on a1, at random."
+    note: "@tannergolden always plays X and GitHub O, and the Arbiter opens every game for a side drawn at random, with a random first move. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move. Three in a row wins, and a full board without one is a draw."
     moves:
-      - ["📐", "Back Them Into a Corner!", "Oa3", "O takes the upper left corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪶", "Feel Out Their Defence!", "Ob3", "O takes the head of the board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🗡️", "Hold the Corner!", "Oc3", "O takes the upper right corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["👣", "Measure the Distance!", "Oa2", "O takes the left edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🎯", "Strike the Heart!", "Ob2", "O takes the centre", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪶", "Probe the Line!", "Oc2", "O takes the right edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪶", "Dance Along the Edge, Fencer!", "Ob1", "O takes the foot of the board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🗡️", "Take the High Ground!", "Oc1", "O takes the lower right corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🗡️", "Back Them Into a Corner!", "Xa3", "X takes the upper left corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪶", "Measure the Distance!", "Xb3", "X takes the head of the board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["📐", "Take the Edge of the Ring!", "Xc3", "X takes the upper right corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["👣", "Circle the Flank!", "Xa2", "X takes the left edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🎯", "Take the Centre Ground!", "Xb2", "X takes the centre", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪶", "Side-Step!", "Xc2", "X takes the right edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪶", "Test Their Guard!", "Xb1", "X takes the foot of the board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["📐", "Take the High Ground!", "Xc1", "X takes the lower right corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202"]
   # tictactoe:end
   # connectfour:start
   connectfour:
     kind: "connectfour"
-    board: "......./......./......./......./......./.....D."
+    board: "......./......./......./......./......./.....L."
     opens: "house"
-    light: "github"
     game: 1
     move: 1
     players: 0
     due: "19 Oct"
-    last: {"move": "6", "words": "A dark disc down column 6, to row 1", "by": "the Arbiter", "when": "12 Oct"}
+    last: {"move": "6", "words": "A white disc down column 6, to row 1", "by": "the Arbiter", "when": "12 Oct"}
     threats: {"house": [], "github": []}
     history:
       - [1, "6", "", ""]
-    prompt: "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚫6, at random."
-    note: "The Arbiter opens every game for a side drawn at random, since whoever drops the first disc can force a win by opening in the centre column (James D. Allen and Victor Allis, independently, in 1988). Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move."
+    prompt: "🟢 **GitHub's turn!** The Arbiter opened game 1 for @tannergolden with ⚪6, at random."
+    note: "@tannergolden always drops the white discs and GitHub the black, and the Arbiter opens every game for a side drawn at random, with a random first disc. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move."
     moves:
-      - ["🏔️", "Guard the Edge, Sky Troops!", "1", "A light disc down column 1, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪂", "Go Airborne, Paratroopers!", "2", "A light disc down column 2, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪂", "Stick the Landing!", "3", "A light disc down column 3, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪂", "Drop Into the Heart of It!", "4", "A light disc down column 4, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪂", "Hit the Silk!", "5", "A light disc down column 5, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🪂", "Steady on the Drop!", "6", "A light disc down column 6, to row 2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🏔️", "Hit the Far Ridge!", "7", "A light disc down column 7, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🏔️", "Guard the Edge, Pathfinders!", "1", "A black disc down column 1, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪂", "Jump, Jump, Jump!", "2", "A black disc down column 2, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪂", "Drop Behind Their Lines!", "3", "A black disc down column 3, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪂", "Hold the Drop Zone!", "4", "A black disc down column 4, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪂", "Stick the Landing!", "5", "A black disc down column 5, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🪂", "Boots on the Ground!", "6", "A black disc down column 6, to row 2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["🏔️", "Secure the Flank!", "7", "A black disc down column 7, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202"]
   # connectfour:end
   # checkers:start
   checkers:
     kind: "checkers"
     fen: "B:W21,22,23,24,25,26,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,9,10,11,12"
-    dark: "house"
     game: 1
     move: 1
     players: 0
+    due: "19 Oct"
     kings: {"house": 0, "github": 0}
     history:
       - [1, "", "", ""]
-    prompt: "🛑 **@tannergolden's turn!** @tannergolden opens game 1 as Dark, and GitHub plays Light."
-    note: "Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. A side that goes a week without moving gets a random legal move from the Arbiter. A jump must be taken whenever there is one, and a man that reaches the far row is crowned."
+    prompt: "🟢 **GitHub's turn!** GitHub opens game 1 as Black. Pick a move below by 19 Oct."
+    note: "GitHub plays Black, which moves first in American checkers, so GitHub opens every game, and @tannergolden plays White. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 06:10 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned."
     moves:
       - ["⚓", "Hug the Shore!", "9-13", "Man from 9 to 13", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201"]
       - ["⛵", "Stand for the Narrows!", "9-14", "Man from 9 to 14", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201"]

@@ -87,7 +87,8 @@ class Placard(unittest.TestCase):
         card = releases.placard(releases.choose(fake, "me")[0])
         self.assertEqual({k: card[k] for k in ("kind", "owner", "name", "icon", "link")},
                          {"kind": "placard", "owner": "me", "name": "kit", "icon": "package",
-                          "link": "https://github.com/me/kit/releases/tag/v1.9.1"})
+                          "link": "https://github.com/me/kit/releases/latest"},
+                         "the latest release, which a newer one never prunes away")
         self.assertEqual(card["desc"], "The kit kit, drawn as committed SVGs.")
         self.assertEqual(card["cells"], [["Release", "V1.9.1"], ["Published", "26 SEP"], ["Pinned as", "@V1"]])
 

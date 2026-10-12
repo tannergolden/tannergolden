@@ -12,8 +12,9 @@ between its `# releases:start` and `# releases:end` lines, and
 tannergolden/markdown draws them in the page's one theme into the README's
 release-1 and release-2 blocks on its next run. Each
 shows the version, the day it shipped and the major tag a stub pins, and
-links to its release notes. The account prunes superseded releases, so the
-latest release is the only one a repository keeps.
+links to the repository's latest release. The account prunes superseded
+releases, so the latest release is the only one a repository keeps, and a link
+to the one picked would break with the next release; the latest's never does.
 
 If GitHub cannot be reached, last week's placards stay; a first run with no
 release to show writes nothing. Stdlib only, with placards.py beside it;
@@ -109,7 +110,8 @@ def choose(fetch: Fetch, owner: str, token: str = "", want: int = len(SLOTS)) ->
         if rel:
             found.append((rel, repo))
     found.sort(key=lambda pair: pair[0]["published_at"], reverse=True)
-    return [Release(owner=owner, name=repo["name"], tag=rel["tag_name"], url=rel["html_url"],
+    return [Release(owner=owner, name=repo["name"], tag=rel["tag_name"],
+                    url=f"https://github.com/{owner}/{repo['name']}/releases/latest",
                     published=eastern(rel["published_at"]),
                     about=about(repo.get("description") or ""),
                     language="".join(ch for ch in (repo.get("language") or "")[:24] if ch in LETTERS).strip(),

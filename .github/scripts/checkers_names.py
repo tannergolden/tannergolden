@@ -51,10 +51,10 @@ The readings, in the order they win:
      holding it does. Breaking the bridge, the men on 1 and 3 for Black and
      on 30 and 32 for White that guard the king row (🌉).
  14. A king's move: into a double corner, or shuttling within one (🏰); to
-     the center, forward or back (⚜️).
+     the centre, forward or back (⚜️).
  15. A man brought out of the back row or the single corner, perhaps with
      the bridge kept. 🚪
- 16. Where a man goes: the center, 14, 15, 18 and 19 (🎯); beside a piece of
+ 16. Where a man goes: the centre, 14, 15, 18 and 19 (🎯); beside a piece of
      theirs it leaves with no step at all (🚧); the edge (🧱); the long
      diagonal from 4 to 29 (🛤️); or up its single-corner or double-corner
      side, the halves of the board on its single corner's hand and its
@@ -143,7 +143,7 @@ ORDINALS = ("First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "
             "Eleventh", "Twelfth")
 
 # --- the board's places ------------------------------------------------------------------------------------------
-CENTER = frozenset((14, 15, 18, 19))  # the four squares in the middle
+CENTRE = frozenset((14, 15, 18, 19))  # the four squares in the middle
 EDGE = frozenset(square for square in SQUARES if row_col(square)[1] in (0, 7))  # 4, 5, 12, 13, 20, 21, 28, 29
 LONG_DIAGONAL = frozenset((4, 8, 11, 15, 18, 22, 25, 29))  # the single-corner diagonal, from corner to corner
 DOUBLE_CORNERS = (frozenset((1, 5)), frozenset((28, 32)))  # Black's and White's: two squares, side by side
@@ -522,7 +522,7 @@ THEMES = {
     "win": "🏆", "opening": "📖", "blunder": "⚠️", "sacrifice": "🎁", "losing": "🩸", "shot": "💣",
     "key": "🔑", "crown": "👑", "exchange": "⚖️", "jump": "⚔️", "double": "💥", "multi": "🔥",
     "drive": "🧹", "trap": "🕸️", "block": "🚧", "runaway": "🏃", "threat": "🏹", "escape": "💨", "guard": "🛡️",
-    "only": "☝️", "hole": "🕳️", "bridge": "🌉", "back": "🚪", "refuge": "🏰", "king": "⚜️", "center": "🎯",
+    "only": "☝️", "hole": "🕳️", "bridge": "🌉", "back": "🚪", "refuge": "🏰", "king": "⚜️", "centre": "🎯",
     "edge": "🧱", "diagonal": "🛤️", "side": "👣",
 }
 
@@ -559,8 +559,8 @@ def theme(r: Reading) -> str:
         return "refuge" if r.refuge else "king"
     if r.corner or r.back:
         return "back"
-    if r.end in CENTER:
-        return "center"
+    if r.end in CENTRE:
+        return "centre"
     if r.blocked:
         return "block"
     if r.end in EDGE:
@@ -579,8 +579,8 @@ class Call:
 
 
 def _forms(base: str, by: str = " From {s}", at: str = " at {e}") -> tuple[str, str, str]:
-    """A call and its two details, each a pattern for the start {s} and end {e}: `Take the Center!`, `Take the Center
-    From {s}!`, `Take the Center at {e}!`."""
+    """A call and its two details, each a pattern for the start {s} and end {e}: `Take the Centre!`, `Take the Centre
+    From {s}!`, `Take the Centre at {e}!`."""
     stem = base[:-1]
     return base, (stem + by + "!") if by else "", (stem + at + "!") if at else ""
 
@@ -829,10 +829,10 @@ def _refuge(r: Reading) -> list[Call]:
 
 
 def _king(r: Reading) -> list[Call]:
-    if r.end in CENTER:
-        return _calls(r, _forms("Center the King!", at=" on {e}"),
-                      ("Plant the King in the Center!", "Plant the King on {s} in the Center!",
-                       "Plant the King in the Center at {e}!"))
+    if r.end in CENTRE:
+        return _calls(r, _forms("Centre the King!", at=" on {e}"),
+                      ("Plant the King in the Centre!", "Plant the King on {s} in the Centre!",
+                       "Plant the King in the Centre at {e}!"))
     if r.advance > 0:
         return _calls(r, *((f"{verb} the King {way}!", f"{verb} the King on {{s}} {way}!",
                             f"{verb} the King {way} to {{e}}!")
@@ -842,9 +842,9 @@ def _king(r: Reading) -> list[Call]:
                   ("Fall Back With the King!", "Fall Back With the King on {s}!", "Fall Back to {e} With the King!"))
 
 
-def _center(r: Reading) -> list[Call]:
-    return _calls(r, *(_forms(f"{verb}!") for verb in ("Take the Center", "Seize the Center", "Claim the Center",
-                                                       "Plant a Man in the Center")))
+def _centre(r: Reading) -> list[Call]:
+    return _calls(r, *(_forms(f"{verb}!") for verb in ("Take the Centre", "Seize the Centre", "Claim the Centre",
+                                                       "Plant a Man in the Centre")))
 
 
 def _edge(r: Reading) -> list[Call]:
@@ -870,7 +870,7 @@ CALLERS = {
     "shot": _shot, "key": _key, "crown": _crown, "exchange": _exchange, "jump": _jump, "double": _jump,
     "multi": _jump, "drive": _drive, "trap": _trap, "block": _block, "runaway": _runaway, "threat": _threat,
     "escape": _escape, "guard": _guard, "only": _only, "hole": _hole, "bridge": _bridge, "back": _back,
-    "refuge": _refuge, "king": _king, "center": _center, "edge": _edge, "diagonal": _diagonal, "side": _side,
+    "refuge": _refuge, "king": _king, "centre": _centre, "edge": _edge, "diagonal": _diagonal, "side": _side,
 }
 
 
@@ -964,7 +964,7 @@ def _named(position: Position) -> tuple[tuple[Move, str, str, str], ...]:
 
 
 # The detail a theme's moves are told apart by first: where the piece lands, or else where it moves from.
-LANDING = frozenset(("center", "edge", "diagonal", "crown", "refuge", "king", "escape", "runaway", "hole"))
+LANDING = frozenset(("centre", "edge", "diagonal", "crown", "refuge", "king", "escape", "runaway", "hole"))
 # Themes about a piece's own way across the board, told apart at the last by where it goes from and to; the rest,
 # about what the move does to others, by the move itself.
 WAYS = LANDING | {"side", "back", "bridge"}

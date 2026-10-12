@@ -53,7 +53,7 @@ EXAMPLES = {
     "back": ("W:W14,25:BK12", "25-21", "Clear the Single Corner to 21!"),
     "refuge": ("B:WK16:BK28", "28-32", "Shuttle in the Double Corner!"),
     "king": ("B:WK16:BK28", "28-24", "Fall Back With the King!"),
-    "center": ("B:WK10:B16", "16-19", "Seize the Center!"),
+    "centre": ("B:WK10:B16", "16-19", "Seize the Centre!"),
     "edge": ("B:WK10:B16", "16-20", "Hug the Edge!"),
     "diagonal": ("W:W15,20:B22", "15-11", "Advance Along the Long Diagonal!"),
     "side": ("B:W14:B20,K28", "20-24", "Push Up the Single-Corner Side!"),

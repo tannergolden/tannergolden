@@ -273,7 +273,7 @@ class Turns(unittest.TestCase):
         self.assertEqual(outcome.commit, "chore(tictactoe): ⭕ play 1... Oa2 in game 1\n\nMove 2, by octocat.")
         outcome = table.move("a1")
         self.assertRegex(outcome.comment, r"^❌ \*\*2\. Xa1\+ is on the board\. Block it!\*\*\n\S+ \*[^*]+!\* · X takes"
-                                          r" the lower left corner, threatening c3\nGitHub's turn, with X threatening"
+                                          r" the lower left corner\nGitHub's turn, with X threatening"
                                           r" c3: anyone but \[@tannergolden\]\([^)]+\) can pick O's reply on"
                                           r" \[the board\]\([^)]+\)\.\n$")
         self.assertIsNone(PING.search(outcome.comment), "the owner's own move pings nobody")
@@ -375,11 +375,9 @@ class Turns(unittest.TestCase):
         self.assertEqual((element["alert"], element["threats"]), ("must block", {HOUSE: ["c3"], GITHUB: []}))
         self.assertEqual(element["prompt"], "🟢 **GitHub's turn!** @tannergolden played 2. Xa1+. Block c3! Pick a move"
                                             f" below by {page.day(table.clock + page.WEEK)}.")
-        blunders = [entry for entry in element["moves"] if entry[0] == "⚠️"]
-        self.assertEqual(len(blunders), len(element["moves"]) - 1, "every cell but the block is a blunder")
         block = next(entry for entry in element["moves"] if entry[2].startswith("Oc3"))
-        self.assertEqual((block[0], block[3]), ("🛡️", "O blocks on c3"))
-        self.assertTrue(all(entry[3].endswith("leaving c3 to X") for entry in blunders))
+        self.assertEqual((block[0], block[3]), ("📐", "O takes the upper right corner"))
+        self.assertFalse([entry for entry in element["moves"] if entry[0] in ("⚠️", "🛡️")], "no cell is judged")
 
     def test_a_turned_away_move_pings_nobody(self):
         table = Table("connectfour", GITHUB)
@@ -438,7 +436,7 @@ class Endings(unittest.TestCase):
         ended = table.clock
         opens = ended + page.DISPLAY
         self.assertRegex(outcome.comment, r"^🏆 \*\*4\. Xa3#: three in a row!\*\* @tannergolden wins game 1\."
-                                          r"\n\S+ \*[^*]+!\* · X takes a3, three in a row from a3 to c1\nIts final"
+                                          r"\n\S+ \*[^*]+!\* · X takes the upper left corner\nIts final"
                                           rf" board stays up for two days: game 2 opens {page.day(opens)}, and the"
                                           r" Arbiter opens it for a side drawn at random\.\n$")
         self.assertTrue(outcome.commit.startswith("chore(tictactoe): 🏆 play 4. Xa3#, ending game 1: X wins\n\nMove 7,"
@@ -551,7 +549,7 @@ class TwoDays(unittest.TestCase):
                           "players": 1, "next": page.day(opens)})
         self.assertEqual(element["result"], {"winner": HOUSE, "how": "three in a row"})
         self.assertEqual(element["line"], ["a3", "b2", "c1"])
-        self.assertEqual(element["last"], {"move": "Xa3#", "words": "X takes a3, three in a row from a3 to c1",
+        self.assertEqual(element["last"], {"move": "Xa3", "words": "X takes the upper left corner",
                                            "by": "@tannergolden", "when": page.day(table.clock)})
         self.assertEqual(element["history"], [[2, "Xa1+", "Oc3", "@octocat"], [3, "Xc1+", "Ob1", "@octocat"],
                                               [4, "Xa3#", "", ""]])

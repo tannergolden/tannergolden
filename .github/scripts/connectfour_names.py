@@ -110,13 +110,6 @@ def title(d: Drop) -> tuple[str, str]:
 
 
 # --- the words -------------------------------------------------------------------------------------------------------
-def columns(found: tuple[int, ...]) -> str:
-    """Columns as a sentence says them: `column 3`, `columns 3 and 6`, `columns 1, 3 and 6`."""
-    names = [str(c) for c in found]
-    said = names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
-    return f"column{'s' if len(names) > 1 else ''} {said}"
-
-
 def said(d: Drop) -> str:
     """The words for a drop: where the disc goes, and nothing more."""
     return f"A {DISC[d.colour]} disc down column {d.col}, to row {d.row}"

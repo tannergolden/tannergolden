@@ -11,9 +11,9 @@ row wins, across, up or on a diagonal, and a full frame with no four is a
 draw. The dark discs (`D`, Black's) drop first unless a position says the
 light ones (`L`, White's) do (`first`): on the profile each player keeps one
 colour, and the side the Arbiter opens for drops first. A move is written as
-its column, `4`, with a `+` when it leaves its side a column to win down
-next (a threat) and a `#` when it connects four, as chess marks a check and
-a mate.
+its column, `4`, and with a `#` when it connects four, as chess marks a
+mate. Nothing marks a threat, so the sheet never tells a player where four
+could be connected next.
 
 A threat is a column a side could drop down and win at once: the cell its
 disc would land on completes four. Stdlib only.
@@ -173,12 +173,9 @@ def threats(position: Position, colour: str) -> list[int]:
 
 
 def notation(position: Position, col: int) -> str:
-    """The move as a score sheet writes it: its column, then `#` when it connects four and `+` when it threatens."""
-    colour = position.turn
-    after = make(position, col)
-    end = ending(after)
-    suffix = "#" if end and end.winner == colour else "+" if not end and threats(after, colour) else ""
-    return f"{col}{suffix}"
+    """The move as a score sheet writes it: its column, then `#` when it connects four, and nothing for a threat."""
+    end = ending(make(position, col))
+    return f"{col}{'#' if end and end.winner == position.turn else ''}"
 
 
 def why_illegal(position: Position, col: int) -> str:

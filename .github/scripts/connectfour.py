@@ -5,27 +5,27 @@
   python3 .github/scripts/games.py connectfour .github/connectfour
 
 What the shared engine asks of the game: how a move is written in an issue's
-title and on the sheet (its column, `4`, `4+` for a threat, `4#` for the
-win) and in a reply (the disc's sign before it, `⚪4`, `⚫4+`), how a game
-ends, what its board sets out for the page beside the fields every game
-shares, and what it calls things.
+title and on the sheet (its column, `4`, and `4#` for the drop that wins)
+and in a reply (the disc's sign before it, `⚪4`, `⚫4#`), how a game ends,
+what its board sets out for the page beside the fields every game shares,
+and what it calls things.
 
 Each player keeps one colour in every game: the house drops the white discs
 (the board's `L`) and GitHub the black (`D`). The Arbiter opens every game,
 for a side drawn at random, with a random disc, so that side's colour drops
 first: a game it opened for the house starts with a white disc. The board
 sets out the frame as six rows, top first, the side the Arbiter opened for
-(`opens`), the columns each side could win down next (`threats`), a block
-the side to move must make (`alert`), and once the game is won, the four
-cells it was won on (`line`). The rules are connectfour_rules.py's and the
-names connectfour_names.py's. Stdlib only.
+(`opens`), and once the game is won, the four cells it was won on (`line`).
+Nothing on the page helps a player choose: no column a side could win down
+next and no block called out, in the board, the banner or a reply. The rules
+are connectfour_rules.py's and the names connectfour_names.py's. Stdlib only.
 """
 from __future__ import annotations
 
 import re
 
 import connectfour_rules as R
-from connectfour_names import columns, listing
+from connectfour_names import listing
 from page import GITHUB, HOUSE
 
 KEY, TITLE = "connectfour", "Connect Four"
@@ -61,12 +61,13 @@ def make(position: R.Position, code: str) -> R.Position:
 
 
 def notation(position: R.Position, code: str) -> str:
+    """The move as the score sheet writes it: `4`, and `4#` for the win."""
     return R.notation(position, int(code))
 
 
 def shown(position: R.Position, code: str) -> str:
-    """The move as a reply writes it: the disc's sign, then the column, `⚪4+`."""
-    return SIGN[WORD[position.turn]] + R.notation(position, int(code))
+    """The move as a reply writes it: the disc's sign, then the column, `⚪4`."""
+    return SIGN[WORD[position.turn]] + notation(position, code)
 
 
 def why_illegal(position: R.Position, code: str) -> str:
@@ -85,43 +86,24 @@ def ending(positions: list[R.Position], codes: list[str]) -> tuple[str | None, s
     return (SIDE[end.winner] if end.winner else None), end.reason, [list(cell) for cell in end.line] or None
 
 
-def menace(position: R.Position) -> tuple[str, list[int]]:
-    """The colour that just moved, by its side's word, and the columns it could win down next: what the side to
-    move faces."""
-    colour = R.other(position.turn)
-    return WORD[colour], ([] if R.ending(position) else R.threats(position, colour))
-
-
 def pressure(position: R.Position) -> tuple[str, str]:
-    """What the side to move faces, as a reply's last line says it to the house, and of GitHub."""
-    name, found = menace(position)
-    said = columns(tuple(found)) if found else ""
-    return (f"and {name} threatens {said}", f"with {name} threatening {said}") if found else ("", "")
+    """What a reply's last line says the side to move faces: nothing, since no threat is called out."""
+    return "", ""
 
 
 def alarm(position: R.Position) -> str:
-    """What a reply's first line calls out after the move, as chess's calls a check."""
-    _, found = menace(position)
-    return "" if not found else " Block it!" if len(found) == 1 else " Two threats!"
+    """What a reply's first line calls out after the move: nothing, since no block is called for."""
+    return ""
 
 
 def calls(position: R.Position) -> list[str]:
-    """What the banner tells the side to move, longest first."""
-    _, found = menace(position)
-    return [] if not found else [f"Block column {found[0]}! ", "Block it! "] if len(found) == 1 else ["Two threats! "]
+    """What the banner tells the side to move: nothing beyond whose turn it is."""
+    return []
 
 
 def fields(game: dict, positions: list[R.Position], over: bool) -> dict:
-    """The board's own fields: the frame and the side the Arbiter opened for, and while the game goes on, each
-    side's threats and a block the side to move must make."""
-    position = positions[-1]
-    out: dict = {"board": position.board, "opens": game["opens"]}
-    if over:
-        return out
-    out["threats"] = {side: R.threats(position, colour) for side, colour in COLOURS.items()}
-    if out["threats"][SIDE[R.other(position.turn)]]:
-        out["alert"] = "must block"
-    return out
+    """The board's own fields: the frame and the side the Arbiter opened for."""
+    return {"board": positions[-1].board, "opens": game["opens"]}
 
 
 def marked(before: R.Position, code: str) -> dict:

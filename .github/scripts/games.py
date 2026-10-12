@@ -102,7 +102,7 @@ COUNT = re.compile(r"[1-9][0-9]{0,8}")  # a game or a move: up to 999,999,999, a
 ID = re.compile(r"[1-9][0-9]{0,15}")  # an issue or an account: up to 16 digits, as the intake passes on
 LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})")
 ORDER = ("kind", "board", "fen", "opens", "game", "move", "players", "due", "next", "last", "result", "line",
-         "threats", "outlook", "kings", "alert", "history", "prompt", "note", "moves")
+         "kings", "alert", "history", "prompt", "note", "moves")
 
 # The refusals, word for word as the intake's (tannergolden/play), which turns the same moves away before they come.
 OVER = ("⌛ **Game {game} is over**, so `{code}` wasn't played.\n"
@@ -181,7 +181,7 @@ def turn_head(side: str, owner: str) -> str:
 
 
 def numbered(ply: int, shown: str) -> str:
-    """A move with its number, as a score sheet writes it: `3. Xa2+` for the opener's, `3... Oc2` for the reply."""
+    """A move with its number, as a score sheet writes it: `3. Xa2` for the opener's, `3... Oc2` for the reply."""
     return f"{(ply + 1) // 2}. {shown}" if ply % 2 else f"{ply // 2}... {shown}"
 
 
@@ -527,10 +527,11 @@ def score_sheet(mod: ModuleType, game: dict, positions: list) -> list[list]:
 
 
 def last_move(mod: ModuleType, game: dict, positions: list) -> dict:
-    """The last move as the board shows it: its notation and words, who played it, and the day."""
+    """The last move as the board shows it: its notation as the score sheet writes it, a won game's last move with
+    its `#`, its words, who played it, and the day."""
     played, before, ply = game["moves"][-1], positions[-2], len(game["moves"])
     entry = entry_of(mod, before, game["game"], ply, played["move"])
-    return {"move": entry["notation"], "words": entry["words"], "by": who(played),
+    return {"move": mod.notation(before, played["move"]), "words": entry["words"], "by": who(played),
             "when": day(parse(played["at"])), **mod.marked(before, played["move"])}
 
 

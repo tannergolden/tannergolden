@@ -154,18 +154,28 @@ class Moves(unittest.TestCase):
         self.assertEqual(R.threats(R.Position.from_board("X.X/.O./X.O"), R.X), ["b3", "a2"],
                          "every cell a mark would win on, as the board is read")
 
-    def test_a_move_is_written_with_a_threat_or_a_win(self):
+    def test_a_move_is_written_with_its_win_and_never_a_threat(self):
         self.assertEqual(R.notation(R.START, "b2"), "Xb2")
         self.assertEqual(R.notation(R.Position.from_board(".../.X./..."), "a1"), "Oa1")
-        self.assertEqual(R.notation(R.Position.from_board(".../.X./O.."), "c1"), "Xc1+",
-                         "X on c1 could win on a3 next")
-        self.assertEqual(R.notation(R.Position.from_board("O../XX./O.X"), "c2"), "Oc2", "a block, and no threat")
+        self.assertEqual(R.notation(R.Position.from_board(".../.X./O.."), "c1"), "Xc1",
+                         "X on c1 could win on a3 next, and the sheet doesn't say so")
+        self.assertEqual(R.notation(R.Position.from_board("O../XX./O.X"), "c2"), "Oc2")
         self.assertEqual(R.notation(R.Position.from_board("O../.XX/O.X"), "a2"), "Oa2#")
-        self.assertEqual(R.notation(R.Position.from_board("X../.X./O.."), "c1"), "Oc1+",
-                         "O blocks c1 and could win on b1 next")
+        self.assertEqual(R.notation(R.Position.from_board("X../.X./O.."), "c1"), "Oc1")
         self.assertEqual(R.notation(R.opening(R.O), "b2"), "Ob2", "O's mark goes down first when O opens")
-        self.assertEqual(R.notation(R.Position.from_board(".../.O./X..", R.O), "c1"), "Oc1+")
+        self.assertEqual(R.notation(R.Position.from_board(".../.O./X..", R.O), "c1"), "Oc1")
         self.assertEqual(R.notation(R.Position.from_board("O../.O./XX.", R.O), "c1"), "Oc1#")
+
+    def test_every_move_of_every_game_is_its_mark_and_cell_and_a_win_its_hash_alone(self):
+        for first, seen in ((R.X, SEEN), (R.O, O_SEEN)):
+            for marks, end in seen.items():
+                if end:
+                    continue
+                position = R.Position(marks, first)
+                for cell in R.legal(position):
+                    won = R.ending(R.make(position, cell))
+                    want = position.turn + cell + ("#" if won and won.winner == position.turn else "")
+                    self.assertEqual(R.notation(position, cell), want, (first, position.board, cell))
 
     def test_why_a_cell_cannot_be_marked(self):
         position = R.Position.from_board("O../XX./O.X")

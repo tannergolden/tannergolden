@@ -272,10 +272,10 @@ class Turns(unittest.TestCase):
         self.assertEqual(outcome.issue, 101)
         self.assertEqual(outcome.commit, "chore(tictactoe): ⭕ play 1... Oa2 in game 1\n\nMove 2, by octocat.")
         outcome = table.move("a1")
-        self.assertRegex(outcome.comment, r"^❌ \*\*2\. Xa1\+ is on the board\. Block it!\*\*\n\S+ \*[^*]+!\* · X takes"
-                                          r" the lower left corner\nGitHub's turn, with X threatening"
-                                          r" c3: anyone but \[@tannergolden\]\([^)]+\) can pick O's reply on"
-                                          r" \[the board\]\([^)]+\)\.\n$")
+        self.assertRegex(outcome.comment, r"^❌ \*\*2\. Xa1 is on the board\.\*\*\n\S+ \*[^*]+!\* · X takes the lower"
+                                          r" left corner\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\) can pick"
+                                          r" O's reply on \[the board\]\([^)]+\)\.\n$",
+                         "X now has two marks in a line with c3 open, and the reply says nothing of it")
         self.assertIsNone(PING.search(outcome.comment), "the owner's own move pings nobody")
 
     def test_connect_four_s_reply_names_the_disc(self):
@@ -367,17 +367,20 @@ class Turns(unittest.TestCase):
             table.move(code)
         self.assertIn("**`4` isn't a legal move here**: column 4 is full.\n", table.move("4").comment)
 
-    def test_a_threat_is_called_out_and_the_board_asks_for_the_block(self):
+    def test_a_threat_is_never_called_out_and_no_move_is_marked_as_the_block(self):
         table = Table("tictactoe", HOUSE)
         table.move("a2")
-        table.move("a1")  # X has b2 and a1: c3 wins next
+        table.move("a1")  # X has b2 and a1, with c3 open: the board says nothing of it
         element = table.board()
-        self.assertEqual((element["alert"], element["threats"]), ("must block", {HOUSE: ["c3"], GITHUB: []}))
-        self.assertEqual(element["prompt"], "🟢 **GitHub's turn!** @tannergolden played 2. Xa1+. Block c3! Pick a move"
-                                            f" below by {page.day(table.clock + page.WEEK)}.")
-        block = next(entry for entry in element["moves"] if entry[2].startswith("Oc3"))
-        self.assertEqual((block[0], block[3]), ("📐", "O takes the upper right corner"))
-        self.assertFalse([entry for entry in element["moves"] if entry[0] in ("⚠️", "🛡️")], "no cell is judged")
+        for hint in ("alert", "threats", "outlook"):
+            self.assertNotIn(hint, element)
+        self.assertEqual(element["prompt"], "🟢 **GitHub's turn!** @tannergolden played 2. Xa1. Pick a move below by"
+                                            f" {page.day(table.clock + page.WEEK)}.")
+        self.assertEqual({entry[0] for entry in element["moves"]} - {"📐", "📏", "🔳"}, set(),
+                         "every cell's emoji names the cell, never the block or a blunder")
+        block = next(entry for entry in element["moves"] if entry[2] == "Oc3")
+        self.assertEqual(block[3], "O takes the upper right corner")
+        self.assertFalse([entry for entry in element["moves"] if "+" in entry[2] or "#" in entry[2]])
 
     def test_a_turned_away_move_pings_nobody(self):
         table = Table("connectfour", GITHUB)
@@ -524,8 +527,8 @@ class Endings(unittest.TestCase):
             "@tannergolden played X and GitHub played O; the Arbiter opened for @tannergolden, so X moved first.",
             "@tannergolden won with 4. Xa3#, three in a row."])
         self.assertEqual([" ".join(line.split()) for line in text.splitlines()[5:12]],
-                         ["1. Xb2 the Arbiter, opening the game", "1... Oa2 @octocat", "2. Xa1+ @tannergolden",
-                          "2... Oc3 @octocat", "3. Xc1+ @tannergolden", "3... Ob1 @octocat", "4. Xa3# @tannergolden"])
+                         ["1. Xb2 the Arbiter, opening the game", "1... Oa2 @octocat", "2. Xa1 @tannergolden",
+                          "2... Oc3 @octocat", "3. Xc1 @tannergolden", "3... Ob1 @octocat", "4. Xa3# @tannergolden"])
         self.assertTrue(text.endswith("\nResult: 1-0, X's score first\n"))
         table = Table("connectfour", GITHUB)
         text = table.play(C4_DRAW).record[1]
@@ -549,9 +552,9 @@ class TwoDays(unittest.TestCase):
                           "players": 1, "next": page.day(opens)})
         self.assertEqual(element["result"], {"winner": HOUSE, "how": "three in a row"})
         self.assertEqual(element["line"], ["a3", "b2", "c1"])
-        self.assertEqual(element["last"], {"move": "Xa3", "words": "X takes the upper left corner",
+        self.assertEqual(element["last"], {"move": "Xa3#", "words": "X takes the upper left corner",
                                            "by": "@tannergolden", "when": page.day(table.clock)})
-        self.assertEqual(element["history"], [[2, "Xa1+", "Oc3", "@octocat"], [3, "Xc1+", "Ob1", "@octocat"],
+        self.assertEqual(element["history"], [[2, "Xa1", "Oc3", "@octocat"], [3, "Xc1", "Ob1", "@octocat"],
                                               [4, "Xa3#", "", ""]])
         for missing in ("moves", "due", "threats", "outlook", "alert"):
             self.assertNotIn(missing, element)
@@ -782,21 +785,43 @@ class Board(unittest.TestCase):
                                                    f"&title={key}%3A%20"), url)
 
     def test_the_score_sheet_names_who_chose_github_s_moves_whichever_side_opened(self):
-        for opens, who in ((HOUSE, [[1, "Xb2", "Oa2", "@octocat"], [2, "Xa1+", "", ""]]),
-                           (GITHUB, [[1, "Ob2", "Xa2", "the Arbiter"], [2, "Oa1+", "", "@octocat"]])):
+        for opens, who in ((HOUSE, [[1, "Xb2", "Oa2", "@octocat"], [2, "Xa1", "", ""]]),
+                           (GITHUB, [[1, "Ob2", "Xa2", "the Arbiter"], [2, "Oa1", "", "@octocat"]])):
             table = Table("tictactoe", opens)
             table.move("a2")
             table.move("a1")
             self.assertEqual(table.board()["history"], who)
 
-    def test_the_outlook_says_who_wins_with_perfect_play(self):
-        table = Table("tictactoe", GITHUB)  # GitHub's O opened in the centre
-        self.assertEqual(table.board()["outlook"], "draw")
-        table.move("a2")  # the house's X on an edge loses to perfect play
-        self.assertEqual(table.board()["outlook"], GITHUB)
-        table = Table("tictactoe", HOUSE)
-        table.move("a2")
-        self.assertEqual(table.board()["outlook"], HOUSE)
+    def test_no_board_says_who_wins_or_where_a_side_could_win_next(self):
+        for key, moves in (("tictactoe", "a2 a1 c1"), ("connectfour", "1 2 1 2 1")):
+            for opens in (HOUSE, GITHUB):
+                table = Table(key, opens)
+                for code in moves.split():
+                    table.move(code)
+                    element = table.board()
+                    with self.subTest(key=key, opens=opens, code=code):
+                        for hint in ("alert", "threats", "outlook"):
+                            self.assertNotIn(hint, element)
+                        self.assertNotRegex(element["prompt"], r"(?i)block|threat")
+                        self.assertFalse([row for row in element["moves"] if row[2].endswith(("+", "#"))])
+                        self.assertFalse([row for row in element.get("history", []) if "+" in row[1] + row[2]])
+
+    def test_the_move_that_won_keeps_its_hash_but_reads_as_any_other_while_it_is_still_to_play(self):
+        # offered, the move that would win is written as any other move is; played, the sheet, the last move and the
+        # reply write it with its `#`, as a score sheet writes a mate
+        for key, codes, won in (("tictactoe", "a2 a3 b3 c1", "Xc1#"), ("connectfour", "1 4 1 4 1 4", "4#")):
+            table = Table(key, HOUSE)
+            for code in codes.split()[:-1]:
+                table.move(code)
+            offered = [row[2] for row in table.board()["moves"]]
+            outcome = table.move(codes.split()[-1])
+            element = table.board()
+            with self.subTest(key=key):
+                self.assertIn(won.removesuffix("#"), offered)
+                self.assertFalse([code for code in offered if code.endswith(("+", "#"))])
+                self.assertEqual(element["last"]["move"], won)
+                self.assertEqual([cell for row in element["history"] for cell in row[1:3] if "#" in cell], [won])
+                self.assertIn(won, outcome.comment)
 
     def test_every_banner_fits_one_line_however_long_the_game(self):
         for key in KEYS:
@@ -808,10 +833,10 @@ class Board(unittest.TestCase):
                     banner = games.opening_banner(mod, game, OWNER)
                     with self.subTest(key=key, number=number, opens=opens):
                         self.assertLessEqual(len(banner), page.BANNER, banner)
-            for shown in ("99999. Xa1+", "99999... Oa1#", "99999. ⚫4+", "99999... ⚪4+"):
+            for shown in ("99999. Xa1", "99999... Oa1#", "99999. ⚫4", "99999... ⚪4#", "99999. 22x15x8"):
                 for side in (HOUSE, GITHUB):
                     for mover in ("The Arbiter", "@tannergolden", "GitHub"):
-                        for calls in (["Block column 7! ", "Block it! "], ["Two threats! "], []):
+                        for calls in (["A jump must be taken! ", "Must jump! "], []):
                             banner = games.turn_banner(side, OWNER, mover, shown, calls, "28 Sep")
                             self.assertLessEqual(len(banner), page.BANNER, banner)
 

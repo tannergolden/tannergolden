@@ -10,8 +10,9 @@ The two marks take turns, a mark to a cell; three in a row wins, and a full
 board with no line is a draw. X moves first unless a position says O does
 (`first`): on the profile each player keeps one mark, and the side the
 Arbiter opens for moves first. A move is written as its mark and cell,
-`Xb2`, with a `+` when it leaves its side a cell to win on next (a threat)
-and a `#` when it wins, as chess marks a check and a mate.
+`Xb2`, and with a `#` when it wins, as chess marks a mate. Nothing marks a
+threat, so the sheet never tells a player where a line could be finished
+next.
 
 The game is small enough to solve whole: `outlook` plays every line out to
 say who wins with perfect play from a position, whichever mark moved first,
@@ -152,12 +153,10 @@ def outlook(position: Position) -> str:
 
 
 def notation(position: Position, cell: str) -> str:
-    """The move as a score sheet writes it: its mark and cell, then `#` when it wins and `+` when it threatens."""
+    """The move as a score sheet writes it: its mark and cell, then `#` when it wins, and nothing for a threat."""
     mark = position.turn
-    after = make(position, cell)
-    end = ending(after)
-    suffix = "#" if end and end.winner == mark else "+" if not end and threats(after, mark) else ""
-    return f"{mark}{cell}{suffix}"
+    end = ending(make(position, cell))
+    return f"{mark}{cell}{'#' if end and end.winner == mark else ''}"
 
 
 def why_illegal(position: Position, cell: str) -> str:

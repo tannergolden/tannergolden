@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import connectfour_names as N
 import connectfour_rules as R
-from connectfour_names import EMOJI, LONGEST, TITLES, WORDS, columns, listing, words
+from connectfour_names import EMOJI, LONGEST, TITLES, WORDS, listing, words
 
 # What tannergolden/markdown accepts for a move: an emoji, a title and its words (src/domain/elements/chess/game.py).
 KIT_EMOJI = re.compile("[←-⯿\U0001f000-\U0001faff‍️]{1,8}")
@@ -215,14 +215,14 @@ class Neutral(unittest.TestCase):
                     self.assertEqual((R.notation(positions[0], col), named[0]["notation"]), (f"{col}#", str(col)),
                                      "the rules' sheet marks the win, and the list never does")
 
-    def test_the_listed_notation_is_the_column_alone_where_the_rules_mark_a_threat_or_a_win(self):
+    def test_the_listed_notation_is_the_column_alone_where_the_score_sheet_marks_a_win(self):
         marked = 0
-        for position in list(NAMED)[::10]:
+        for position in NAMED:
             for m in NAMED[position]:
                 written = R.notation(position, int(m["code"]))
-                self.assertEqual(m["notation"], written.rstrip("+#"))
+                self.assertEqual(m["notation"], written.removesuffix("#"))
                 marked += written != m["notation"]
-        self.assertGreater(marked, 300)
+        self.assertGreater(marked, 2000, "the sweep holds a drop that wins on most boards")
 
 
 class Calls(unittest.TestCase):
@@ -284,10 +284,6 @@ class Calls(unittest.TestCase):
                 self.assertEqual(mine["emoji"], theirs["emoji"])
                 for field in ("title", "words"):  # the same, but for the colours they name
                     self.assertEqual(COLOURS.sub("_", mine[field]), COLOURS.sub("_", theirs[field]))
-
-    def test_columns_are_said_as_a_sentence_says_them(self):
-        self.assertEqual([columns((3,)), columns((3, 6)), columns((1, 3, 6))],
-                         ["column 3", "columns 3 and 6", "columns 1, 3 and 6"])
 
 
 if __name__ == "__main__":

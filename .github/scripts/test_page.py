@@ -102,14 +102,14 @@ class Regions(unittest.TestCase):
                 page.set_out(self.settings, {"chess": [("chess", {"kind": "chess"})]})
 
     def test_an_element_is_written_a_field_a_line_and_a_list_an_item_a_line(self):
-        element = {"kind": "tictactoe", "board": "X../.O./...", "threats": {"house": ["c2"], "github": []},
-                   "history": [[1, "Xa3", "Ob2", "@octocat"]], "moves": [["🎯", "Lunge!", "Xc2+", "X takes", "u"]],
+        element = {"kind": "tictactoe", "board": "XXX/.O./O..", "result": {"winner": "house", "how": "three in a row"},
+                   "history": [[1, "Xa3", "Ob2", "@octocat"]], "moves": [["📐", "Mark the Corner!", "Xc3", "X", "u"]],
                    "people": [], "leaders": [["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]]}
         self.assertEqual(page.element_yaml("tictactoe", element).splitlines(), [
-            "  tictactoe:", '    kind: "tictactoe"', '    board: "X../.O./..."',
-            '    threats: {"house": ["c2"], "github": []}', "    history:", '      - [1, "Xa3", "Ob2", "@octocat"]',
-            "    moves:", '      - ["🎯", "Lunge!", "Xc2+", "X takes", "u"]', "    people: []", "    leaders:",
-            '      - ["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]'])
+            "  tictactoe:", '    kind: "tictactoe"', '    board: "XXX/.O./O.."',
+            '    result: {"winner": "house", "how": "three in a row"}', "    history:",
+            '      - [1, "Xa3", "Ob2", "@octocat"]', "    moves:", '      - ["📐", "Mark the Corner!", "Xc3", "X", "u"]',
+            "    people: []", "    leaders:", '      - ["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]'])
         chess = {"kind": "chess", "moves": [{"piece": "pawn", "list": [["🥾", "March!", "e4", "Pawn", "u"]]}]}
         self.assertEqual(page.element_yaml("chess", chess).splitlines(), [
             "  chess:", '    kind: "chess"', "    moves:", '      - piece: "pawn"', "        list:",

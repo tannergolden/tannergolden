@@ -5,19 +5,20 @@
   python3 .github/scripts/games.py tictactoe .github/tictactoe
 
 What the shared engine asks of the game: how a move is written in an issue's
-title (its cell, `b2`), on the sheet and in a reply (`Xb2`, `Xb2+` for a
-threat, `Xb2#` for the win), how a game ends, what its board sets out for
-the page beside the fields every game shares, and what it calls things.
+title (its cell, `b2`), on the sheet and in a reply (`Xb2`, and `Xb2#` for
+the move that wins), how a game ends, what its board sets out for the page
+beside the fields every game shares, and what it calls things.
 
 Each player keeps one mark in every game: the house plays X and GitHub O.
 The Arbiter opens every game, for a side drawn at random, with a random
 cell, so that side's mark goes down first: O moves first in a game the
 Arbiter opened for GitHub. The board sets out the marks as three rows, top
-first (`O../XX./O.X`), the side the Arbiter opened for (`opens`), the cells
-each side could win on next (`threats`), who wins from here with perfect
-play (`outlook`), a block the side to move must make (`alert`), and once the
-game is won, the three cells it was won on (`line`). The rules are
-tictactoe_rules.py's and the names tictactoe_names.py's. Stdlib only.
+first (`O../XX./O.X`), the side the Arbiter opened for (`opens`), and once
+the game is won, the three cells it was won on (`line`). Nothing on the page
+helps a player choose: no cell a side could win on next, no word of what
+perfect play says, and no block called out, in the board, the banner or a
+reply. The rules are tictactoe_rules.py's and the names tictactoe_names.py's.
+Stdlib only.
 """
 from __future__ import annotations
 
@@ -58,12 +59,13 @@ def make(position: R.Position, code: str) -> R.Position:
 
 
 def notation(position: R.Position, code: str) -> str:
+    """The move as the score sheet writes it: `Xb2`, and `Xb2#` for the win."""
     return R.notation(position, code)
 
 
 def shown(position: R.Position, code: str) -> str:
-    """The move as a reply writes it: the same as the sheet, `Xb2+`."""
-    return R.notation(position, code)
+    """The move as a reply writes it: the same as the sheet, `Xb2`."""
+    return notation(position, code)
 
 
 def why_illegal(position: R.Position, code: str) -> str:
@@ -82,44 +84,24 @@ def ending(positions: list[R.Position], codes: list[str]) -> tuple[str | None, s
     return (SIDE[end.winner] if end.winner else None), end.reason, list(end.line) or None
 
 
-def menace(position: R.Position) -> tuple[str, list[str]]:
-    """The mark that just moved, and the cells it could win on next: what the side to move faces."""
-    mark = R.other(position.turn)
-    return mark, ([] if R.ending(position) else R.threats(position, mark))
-
-
 def pressure(position: R.Position) -> tuple[str, str]:
-    """What the side to move faces, as a reply's last line says it to the house, and of GitHub."""
-    mark, cells = menace(position)
-    said = " and ".join(cells)
-    return (f"and {mark} threatens {said}", f"with {mark} threatening {said}") if cells else ("", "")
+    """What a reply's last line says the side to move faces: nothing, since no threat is called out."""
+    return "", ""
 
 
 def alarm(position: R.Position) -> str:
-    """What a reply's first line calls out after the move, as chess's calls a check."""
-    _, cells = menace(position)
-    return "" if not cells else " Block it!" if len(cells) == 1 else " Two threats!"
+    """What a reply's first line calls out after the move: nothing, since no block is called for."""
+    return ""
 
 
 def calls(position: R.Position) -> list[str]:
-    """What the banner tells the side to move, longest first."""
-    _, cells = menace(position)
-    return [] if not cells else [f"Block {cells[0]}! ", "Block it! "] if len(cells) == 1 else ["Two threats! "]
+    """What the banner tells the side to move: nothing beyond whose turn it is."""
+    return []
 
 
 def fields(game: dict, positions: list[R.Position], over: bool) -> dict:
-    """The board's own fields: the marks and the side the Arbiter opened for, and while the game goes on, each
-    side's threats, who wins with perfect play from here, and a block the side to move must make."""
-    position = positions[-1]
-    out: dict = {"board": position.board, "opens": game["opens"]}
-    if over:
-        return out
-    out["threats"] = {side: R.threats(position, mark) for side, mark in WORDS.items()}
-    best = R.outlook(position)
-    out["outlook"] = SIDE.get(best, "draw")
-    if out["threats"][SIDE[R.other(position.turn)]]:
-        out["alert"] = "must block"
-    return out
+    """The board's own fields: the marks and the side the Arbiter opened for."""
+    return {"board": positions[-1].board, "opens": game["opens"]}
 
 
 def marked(before: R.Position, code: str) -> dict:

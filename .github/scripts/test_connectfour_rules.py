@@ -134,13 +134,24 @@ class Threats(unittest.TestCase):
         self.assertEqual(position.height(4), 0)
         self.assertNotIn(4, R.threats(position, R.DARK))
 
-    def test_a_move_is_written_with_a_threat_or_a_win(self):
+    def test_a_move_is_written_with_its_win_and_never_a_threat(self):
         self.assertEqual(R.notation(R.START, 4), "4")
-        self.assertEqual(R.notation(drop(4, 1, 4, 1), 4), "4+", "three up column 4, the fourth to come")
+        self.assertEqual(R.notation(drop(4, 1, 4, 1), 4), "4", "three up column 4, and the sheet doesn't say so")
         self.assertEqual(R.notation(drop(4, 1, 4, 1, 4, 2), 4), "4#")
-        self.assertEqual(R.notation(drop(4, 1, 4, 1, 4), 4), "4", "Light's block threatens nothing")
-        self.assertEqual(R.notation(drop(4, 1, 4, 1, start=R.opening(R.LIGHT)), 4), "4+", "light first, the same")
+        self.assertEqual(R.notation(drop(4, 1, 4, 1, 4), 4), "4")
+        self.assertEqual(R.notation(drop(4, 1, 4, 1, start=R.opening(R.LIGHT)), 4), "4", "light first, the same")
         self.assertEqual(R.notation(drop(4, 1, 4, 1, 4, 2, start=R.opening(R.LIGHT)), 4), "4#")
+
+    def test_every_drop_of_random_games_is_its_column_and_a_win_its_hash_alone(self):
+        rng = random.Random(7)
+        for game in range(300):
+            position = R.opening(R.LIGHT) if game % 2 else R.START
+            while not R.ending(position):
+                for col in R.legal(position):
+                    won = R.ending(R.make(position, col))
+                    want = f"{col}{'#' if won and won.winner == position.turn else ''}"
+                    self.assertEqual(R.notation(position, col), want, (position.board, col))
+                position = R.make(position, rng.choice(R.legal(position)))
 
 
 if __name__ == "__main__":

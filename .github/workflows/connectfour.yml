@@ -46,7 +46,7 @@ permissions: {}
 
 jobs:
   connectfour:
-    name: '🪂 Connect Four'
+    name: '⚫ Connect Four'
     permissions:
       actions: write # start the Markdown run that redraws the board
       contents: write # the game's state under .github/connectfour, and the board's lines in the settings

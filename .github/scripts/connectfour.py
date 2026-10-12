@@ -37,7 +37,7 @@ COLOURS = {HOUSE: R.LIGHT, GITHUB: R.DARK}  # the discs each side drops: the hou
 SIDE = {colour: side for side, colour in COLOURS.items()}
 WORD = {colour: WORDS[side] for side, colour in COLOURS.items()}
 SIGN = {"White": "⚪", "Black": "⚫"}
-LEAD = {"White": "🪂", "Black": "🪂"}  # what a reply and a commit lead with: the airborne's chute
+LEAD = SIGN  # what a reply and a commit lead with: the mover's disc
 RESULTS = {HOUSE: "1-0", GITHUB: "0-1", None: "1/2-1/2"}  # White's score first, as chess writes it
 OPENS_NOTE = ("@{owner} always drops the white discs and GitHub the black, and the Arbiter opens every game for a"
               " side drawn at random, with a random first disc.")

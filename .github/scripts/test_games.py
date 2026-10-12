@@ -164,7 +164,7 @@ def tables(line: list[str] | None = None):
 
 
 def unsaid(text: str) -> str:
-    """A reply, banner or note without the move titles it quotes, whose words are the airborne's and the duel's."""
+    """A reply, banner or note without the move titles it quotes, which are calls in each game's own words."""
     return re.sub(r"\*[^*\n]+!\*", "", text)
 
 
@@ -281,11 +281,11 @@ class Turns(unittest.TestCase):
     def test_connect_four_s_reply_names_the_disc(self):
         table = Table("connectfour", GITHUB)  # GitHub's black disc first, then the house's white one
         outcome = table.move("3")
-        self.assertRegex(outcome.comment, r"^🪂 \*\*1\.\.\. ⚪3 is on the board\.\*\*\n\S+ \*[^*]+!\* · A white disc"
+        self.assertRegex(outcome.comment, r"^⚪ \*\*1\.\.\. ⚪3 is on the board\.\*\*\n\S+ \*[^*]+!\* · A white disc"
                                           r" down column 3, to row 1\nGitHub's turn: anyone but \[@tannergolden\]"
                                           r"\([^)]+\) can pick Black's reply on \[the board\]")
         outcome = table.move("4", player=HUBOT)
-        self.assertTrue(outcome.comment.startswith("🪂 **2. ⚫4 is on the board.** Well played, @hubot.\n"))
+        self.assertTrue(outcome.comment.startswith("⚫ **2. ⚫4 is on the board.** Well played, @hubot.\n"))
         self.assertTrue(outcome.comment.endswith("\n@tannergolden, it's your move.\n"))
         table = Table("connectfour", HOUSE)  # the house's white disc first, then GitHub's black one
         self.assertIn("1... ⚫3 is on the board.** Well played, @octocat.\n", table.move("3").comment)

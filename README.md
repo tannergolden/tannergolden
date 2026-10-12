@@ -69,13 +69,53 @@ one from data measured on a schedule.
 
 ---
 
-## ♟️ Play Against Me
+## 🎲 Play Against Me
 
-I play White, and you play Black, with everyone else on GitHub. Pick a move
-under the board, and its link opens a ready-made issue in
+Four games, from the quickest to the deepest, each on its own board. In every
+one I play one side, and you play the other with everyone else on GitHub. Pick
+a move under a board, and its link opens a ready-made issue in
 [`play`](https://github.com/tannergolden/play): submit it as it opens. The
 first move to reach the game is the one played. The Official Arbiter rules on
-it, answers on your issue, and redraws this board within a few minutes.
+it, answers on your issue, and redraws the board within a few minutes.
+
+One clock keeps all four, on the hour. A side that goes a week without moving
+gets a random legal move from the Arbiter, and a finished game's winning board
+stays up for two days before a fresh board comes by itself.
+
+### ❌ Tic-Tac-Toe
+
+The Arbiter opens every game, for a side it draws at random, with a random
+first move: that side plays X, and the other plays O. Whoever moves first has
+the edge here. Of the 255,168 ways a game can go, X wins 131,184 and O only
+77,904, so neither of us gets the first move by right.
+
+<!-- markdown:element:tictactoe:start -->
+<!-- markdown:element:tictactoe:end -->
+
+### ⚫ Connect Four
+
+The Arbiter opens here too, for a side it draws at random, with a random first
+disc: that side drops the dark discs, and the other the light. Connect Four is
+solved. Whoever drops the first disc can force a win by opening in the centre
+column, as James D. Allen and Victor Allis each showed in 1988, so neither of
+us gets that start by right.
+
+<!-- markdown:element:connectfour:start -->
+<!-- markdown:element:connectfour:end -->
+
+### 🏁 Checkers
+
+I play Dark and open every game, and you play Light. A jump is compulsory, and
+a man that reaches the far row is crowned. With perfect play Checkers is a
+draw, and the first move's edge is small, so I open.
+
+<!-- markdown:element:checkers:start -->
+<!-- markdown:element:checkers:end -->
+
+### ♟️ Chess
+
+I play White and open every game, and you play Black. White scores only a
+little more than Black, about 55% in master play, so I open.
 
 <!-- markdown:element:chess:start -->
 > [!CAUTION]
@@ -138,32 +178,11 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
 
 ### 🏆 Hall of Fame
 
-Every game ends by the rules, and the move that mates wins its player a place
-here.
+Every game ends by the rules, and the move that wins it wins its player a place
+here, in any of the four games.
 
-<!-- markdown:element:chess-hall:start -->
-<picture>
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-hall-narrow-still-dark.svg">
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/chess-hall-narrow-still-day.svg">
-  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-hall-narrow-dark.svg">
-  <source media="(max-width: 585px)" srcset="assets/elements/chess-hall-narrow-day.svg">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-hall-still-dark.svg">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/chess-hall-still-day.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/chess-hall-dark.svg">
-  <img alt="Chess: Hall of Fame. No game of @tannergolden against GitHub has finished yet, so the podium waits for its first winner." src="assets/elements/chess-hall-day.svg">
-</picture>
-
-<details>
-<summary>🏆 <b>Leaderboard</b> · @tannergolden · GitHub's players join with their first move</summary>
-
-|  | Player | Moves | Wins | Games |
-| :-: | :--- | --: | --: | --: |
-| ♔ | **[@tannergolden](https://github.com/tannergolden)** | **0** | **0** | **0** |
-
-A win is a mating move of one's own; a move or a mate the Arbiter plays, for either side, counts for nobody.
-
-</details>
-<!-- markdown:element:chess-hall:end -->
+<!-- markdown:element:hall-of-fame:start -->
+<!-- markdown:element:hall-of-fame:end -->
 
 ---
 

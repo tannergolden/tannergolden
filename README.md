@@ -504,21 +504,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **Professional · HTTP.** TLS 1.3 early data lets a returning client send its first request without waiting for the handshake, but an attacker can replay that data, so servers should accept only idempotent requests in it and can answer others with `425 Too Early`.
+> **GitHub changelog · 9 Oct.** [GitHub Copilot weekly releases - October 5](https://github.blog/changelog/2026-10-09-github-copilot-weekly-releases-october-5)
 
 > [!TIP]
-> **Beginner · Shell.** Insert a command's output into another command with `$(...)`, as in `echo "Backup from $(date +%F)"` or `cd "$(git rev-parse --show-toplevel)"` to reach the repository root.
+> **tldr-pages · [az-webapp](https://github.com/tldr-pages/tldr/blob/main/pages/common/az-webapp.md).** List all web applications: `az webapp list`
 
 > [!IMPORTANT]
-> **End of life · [Ruby 3.3](https://endoflife.date/ruby).** Ruby 3.3 stops getting security fixes on 31 March 2027. Move to 4.0, the newest release.
+> **Advanced · Documentation.** Document each service's limits and failure behavior: maximum payload, rate limits, timeouts and what it returns when a dependency is down. Callers otherwise discover them in production and build workarounds that break when the limits change.
 
 > [!WARNING]
-> **Advanced · Algorithms.** A Bloom filter's false-positive rate climbs steeply once it holds more items than it was sized for, and entries cannot be removed. Size it for the maximum item count and target rate, and rebuild it when you outgrow that.
+> **Professional · Debugging.** Capturing with `tcpdump` on a busy host can drop packets and fill the disk. Use a capture filter, cap the size with `-c` or rotate files with `-C` and `-W`, and write to a volume with room to spare.
 
 > [!CAUTION]
-> **Professional · Incidents.** Rehearse failing over to your disaster recovery region, and failing back, on a schedule. A first attempt made during a real disaster often stalls on a dependency nobody remembered.
+> **Beginner · CI.** Re-running an old deploy job in CI deploys that job's original commit, which can overwrite newer code in production. Start a fresh deploy from the current branch instead.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 41 of 2026. Open data this week: endoflife.date.</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 42 of 2026. Open data this week: GitHub changelog, tldr-pages (CC BY 4.0).</sub>
 
 <!-- notes:end -->
 

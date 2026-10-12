@@ -20,7 +20,7 @@ from chess_rules import START, Move, Position, legal_moves, make  # noqa: E402
 
 # What tannergolden/markdown accepts for a move: an emoji, a title and its words (src/domain/elements/chess/game.py).
 KIT_EMOJI = re.compile("[←-⯿\U0001f000-\U0001faff‍️]{1,8}")
-KIT_TITLE = re.compile(r"[A-Za-z0-9][A-Za-z0-9 ,.'!-]{0,47}")
+KIT_TITLE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9 ,.'!-]{0,46}[A-Za-z0-9,.'!-])?")  # no space at either end
 KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
 # A position for each theme a move can have, with the move that has it.
 THEMES = {

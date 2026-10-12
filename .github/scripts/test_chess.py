@@ -43,11 +43,13 @@ KIT_SAN = re.compile(r"(?:O-O(?:-O)?|[KQRBN][a-h]?[1-8]?x?[a-h][1-8]|[a-h](?:x[a
 KIT_LINK = re.compile(r"https://github\.com/tannergolden/play/issues/new\?template=move\.yml&title=chess%3A%20"
                       r"[a-h][1-8][a-h][1-8][qrbn]?%20%C2%B7%20game%20[1-9][0-9]{0,8}%20%C2%B7%20move%20[1-9][0-9]{0,8}")
 KIT_LINE = re.compile(r"[^<>|\n\r]{1,400}")
-KIT_TITLE = re.compile(r"[A-Za-z0-9][A-Za-z0-9 ,.'!-]{0,47}")
+KIT_TITLE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9 ,.'!-]{0,46}[A-Za-z0-9,.'!-])?")  # no space at either end
 KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
 KIT_EMOJI = re.compile("[\u2190-\u2bff\U0001f000-\U0001faff\u200d\ufe0f]{1,8}")
 KIT_WHO = re.compile(r"@[A-Za-z0-9][A-Za-z0-9-]{0,38}|the Arbiter")
-KIT_DAY = re.compile(r"[1-9][0-9]? [A-Za-z]{3}")
+KIT_DAY = re.compile(r"(?:[1-9]|[12][0-9]|3[01]) (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)")
+# Nothing that would open a block of its own in the README where a prompt or note is set.
+KIT_BLOCK = re.compile(r"\s|```|~~~|#{1,6}(?:\s|$)|>|[-*+](?:\s|$)|[0-9]+[.)](?:\s|$)|\[[^\]]*\]:|[-=*_\s]+$")
 # A mention GitHub notifies: an @handle outside the text of a link.
 # What tannergolden/play's intake takes as a move link's title (its intake/routes.json): any move, game and move
 # number up to nine digits each, the same as the game's own.
@@ -595,7 +597,8 @@ class Board(unittest.TestCase):
         self.assertGreater(len(wrapped), chess.BANNER, "the banner that wrapped would not pass")
         ended = {"game": 123, "result": "1/2-1/2", "reason": "seventy-five-move rule", "winner": None}
         element = chess.board(chess.new_game(124, T0), [ended], OWNER)
-        self.assertTrue(KIT_LINE.fullmatch(element["note"]), len(element["note"]))
+        self.assertTrue(KIT_LINE.fullmatch(element["note"]) and not KIT_BLOCK.match(element["note"]),
+                        element["note"])
         self.assertLessEqual(len(element["prompt"]), chess.BANNER)
 
     def test_the_leaderboard_puts_the_owner_on_top_and_counts_the_game_on_the_board(self):
@@ -691,7 +694,8 @@ class Board(unittest.TestCase):
             table.play(moves) if moves else None
             element = chess.board(table.game, table.hall, OWNER)
             for key in ("prompt", "note"):
-                self.assertTrue(KIT_LINE.fullmatch(element[key]), element[key])
+                self.assertTrue(KIT_LINE.fullmatch(element[key]) and not KIT_BLOCK.match(element[key]), element[key])
+                self.assertNotIn("![", element[key])
                 for dash in DASHES:
                     self.assertNotIn(dash, element[key])
             for row in element["history"]:

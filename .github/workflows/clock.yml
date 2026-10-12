@@ -1,0 +1,130 @@
+name: Clock
+
+# The one clock for the profile's four games: Tic-Tac-Toe, Connect Four,
+# Checkers and Chess. Every hour on the hour, .github/scripts/clock.py ticks
+# each game in turn: once a finished game's final board has been up for two
+# days, the next game's fresh board comes, in Tic-Tac-Toe and Connect Four
+# with the Arbiter's random opening on it, for a side drawn at random; and
+# when the side to move has gone a week without moving, the Arbiter plays a
+# random legal move for it, so no game stalls. No game's own workflow keeps a
+# schedule: they only play moves.
+#
+# One run saves every game that moved on in one commit, the bot's, with the
+# save loop the games' own workflows use: it plays the hour on the latest
+# state and pushes, and a push that loses the race starts again from the state
+# that won. Then the Arbiter's notices go out, through the Official Arbiter's
+# App (.github/scripts/arbiter.sh), each once on the issue of the move it
+# answers, or in the owner's logbook, an issue of its own in play, when the
+# move it answers was the Arbiter's own; and one Markdown run redraws the page
+# when anything changed.
+on:
+  schedule:
+    - cron: '0 * * * *' # every hour on the hour: the Arbiter's week, and a final board's two days
+  workflow_dispatch:
+
+# One clock at a time: a run started by hand while the hour's run is ticking waits for it, and then finds
+# nothing left to do. GitHub keeps only the newest waiting run, and a clock that misses an hour catches up
+# on the next, since every check it makes counts from the state, never from the run.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  clock:
+    name: '⏰ Clock'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: write # start the Markdown run that redraws the boards
+      contents: write # every game's state under .github, and the boards' lines in the settings
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true # zizmor: ignore[artipacked] - the job pushes the games' state, and nothing that runs after it reads the checkout.
+
+      # No setup-python on purpose: the scripts are stdlib only.
+      - name: '⏰ Tick every game'
+        id: tick
+        env:
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.repository_owner_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="$(git symbolic-ref --quiet --short HEAD)"
+          games=(.github/tictactoe .github/connectfour .github/checkers .github/chess)
+          for attempt in 1 2 3 4 5; do
+            # Always from the latest state: a move may have come since, and the hour is ticked on top of it.
+            git fetch --quiet origin "$branch"
+            git reset --quiet --hard "origin/$branch"
+            : > "$RUNNER_TEMP/clock-outputs"
+            rm -rf "$RUNNER_TEMP/clock" # a run that lost the race posts none of its notices
+            GITHUB_OUTPUT="$RUNNER_TEMP/clock-outputs" python3 .github/scripts/clock.py .github --out "$RUNNER_TEMP/clock"
+            if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard -- "${games[@]}")" ]; then
+              break # nothing to save: no week up and no fresh board due
+            fi
+            git add -- .github/markdown.yaml
+            for folder in "${games[@]}"; do
+              if [ -d "$folder" ]; then git add -- "$folder"; fi # a game's folder comes with its first move
+            done
+            git -c user.name='github-actions[bot]' \
+                -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                commit --quiet -F "$RUNNER_TEMP/clock/commit.txt"
+            if git push --quiet origin "HEAD:$branch"; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              echo "::error::could not save the games to $branch after five attempts"
+              exit 1
+            fi
+            sleep $((attempt * 2))
+          done
+          cat "$RUNNER_TEMP/clock-outputs" >> "$GITHUB_OUTPUT"
+
+      - name: '🔑 Mint the notice token'
+        id: app
+        if: ${{ steps.tick.outcome == 'success' && steps.tick.outputs.notices != '0' }}
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.PLAY_APP_CLIENT_ID }}
+          private-key: ${{ secrets.PLAY_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: play
+          permission-issues: write
+
+      # Before the redraw, so a redraw that fails never keeps a player from hearing what the Arbiter played.
+      - name: "💬 Post the Arbiter's notices"
+        if: ${{ steps.app.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+          PLAY: ${{ github.repository_owner }}/play
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source .github/scripts/arbiter.sh
+          # One line a notice: the issue it goes on, or `logbook`, then its file.
+          while read -r target file; do
+            [[ "$file" =~ ^(tictactoe|connectfour|checkers|chess)\.md$ ]] || continue
+            if [ "$target" = logbook ]; then
+              target="$(desk arbiter-logbook "♟️ The Arbiter's logbook" "$(printf '%s\n' \
+                "♟️ **The Arbiter's logbook.** When a side lets a week pass without moving, in any of the" \
+                "profile's four games, the Arbiter plays a random legal move for it. The first such move is" \
+                "told on the issue of the move it answers; any after it are noted here, and @$OWNER is told" \
+                "here when the next move is theirs.")")"
+            fi
+            [[ "$target" =~ ^[1-9][0-9]{0,15}$ ]] || continue
+            say "$target" "$RUNNER_TEMP/clock/$file"
+          done < "$RUNNER_TEMP/clock/notices.txt"
+          settle
+
+      - name: '🖌️ Redraw the boards'
+        if: ${{ !cancelled() && steps.tick.outcome == 'success' && steps.tick.outputs.changed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run markdown.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"

@@ -161,10 +161,18 @@ elements:
       - ["Language", "JAVASCRIPT"]
       - ["Opened", "3 OCT"]
   # issues:end
-  # The game on this page: the board, whose turn it is and until when, and
-  # every legal move as a link to its ready-made issue. After every move, and
-  # every hour, .github/scripts/chess.py rewrites the lines between the next
-  # two, and nothing else in this file.
+  # The games on this page, in their tiers: each board, whose turn it is and
+  # until when, and every legal move as a link to its ready-made issue, or
+  # for two days after a game ends, its final board. After every move,
+  # .github/scripts/games.py rewrites the lines between a game's two markers,
+  # and chess.py chess's; every hour clock.py rewrites them all; and nothing
+  # else in this file.
+  # tictactoe:start
+  # tictactoe:end
+  # connectfour:start
+  # connectfour:end
+  # checkers:start
+  # checkers:end
   # chess:start
   chess:
     kind: "chess"
@@ -213,6 +221,11 @@ elements:
       - ["tannergolden", 0, 0, 0, 24684994]
     measure: {}
   # chess:end
+  # The Hall of Fame of all four games: each one's series, the leading
+  # winners and the leaderboard. Every game's run rewrites the lines between
+  # the next two, from all four games' state.
+  # hall:start
+  # hall:end
 
 trophies:
   style: trophy

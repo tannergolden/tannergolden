@@ -1,0 +1,52 @@
+name: Games Tests
+
+# The tests of the profile's four games and everything they share: each
+# game's rules held to their known counts (perft for chess and checkers, every
+# game of Tic-Tac-Toe), every legal move named, every game played through
+# every way a move can go, the two-day final boards, the one clock, the Hall
+# of Fame of all four, and the settings' regions. They run when the games'
+# code or their workflows change, and not on every move, so a move costs one
+# short job and nobody can make the tests run by opening issues. The moves'
+# own commits touch only the games' state and the page's settings, so they
+# never start this. The rest of the scripts' tests run beside them, since a
+# game's run writes the same settings file.
+on:
+  push:
+    paths:
+      - '.github/scripts/*.py'
+      - '.github/scripts/arbiter.sh'
+      - '.github/workflows/chess.yml'
+      - '.github/workflows/tictactoe.yml'
+      - '.github/workflows/connectfour.yml'
+      - '.github/workflows/checkers.yml'
+      - '.github/workflows/game.yml'
+      - '.github/workflows/clock.yml'
+      - '.github/workflows/games-tests.yml'
+  workflow_dispatch:
+
+# A newer push to the same branch makes an older run's result moot.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  test:
+    name: '🧪 Games Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read # the code under test
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # No setup-python on purpose: the scripts are stdlib only.
+      - name: '🧪 Check the rules, the names and the games'
+        env:
+          CHESS_PERFT_DEEP: '1'
+          CHECKERS_PERFT_DEEP: '1'
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py'

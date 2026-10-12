@@ -6,7 +6,8 @@ name: '📝 Markdown'
 # placards, and the trophy case. Once a day at 05:00 UTC, which is midnight
 # EST, so the page's day, and a holiday's set with it, changes over at the
 # page's own midnight. Picks starts it too, as soon as it has picked new
-# placards.
+# placards, and so do the games: every move that changes a board, and the
+# clock in any hour that changed one.
 #
 # `theme` is the page's one theme, and every part is drawn in it. Everything
 # else the page sets is in .github/markdown.yaml.
@@ -15,11 +16,12 @@ on:
     - cron: '0 5 * * *' # 00:00 EST
   workflow_dispatch:
 
-# One drawing at a time. Every move redraws the page, and two runs at once
-# would each push the board as it stood when they began, so the older could
-# land last and leave the page a move behind, every link on it stale. A run
-# that starts while one is drawing waits for it, then draws the page as it is
-# by then; GitHub keeps only the newest waiting run, which is the one needed.
+# One drawing at a time. Every move redraws the page, in any of the four
+# games, and two runs at once would each push the boards as they stood when
+# they began, so the older could land last and leave the page a move behind,
+# every link on it stale. A run that starts while one is drawing waits for
+# it, then draws the page as it is by then; GitHub keeps only the newest
+# waiting run, which is the one needed.
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false

@@ -35,4 +35,6 @@ jobs:
     with:
       mode: profile
       theme: blackprint # the page's one theme
-    secrets: inherit # zizmor: ignore[secrets-inherit] - first-party callee at the ref pinned above.
+    # The one secret the kit takes, and nothing else: the page's other secrets, such as the Arbiter's key, stay here.
+    secrets:
+      MARKDOWN_TOKEN: ${{ secrets.MARKDOWN_TOKEN }}

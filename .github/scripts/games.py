@@ -539,8 +539,8 @@ def kept(mod: ModuleType, owner: str) -> str:
 
 
 def how_it_ended(mod: ModuleType, record: dict | None, owner: str) -> str:
-    """How the last game ended, as the next game's note opens with it until a player moves in it: who won it, or how
-    it was drawn."""
+    """How the last game ended, as the next game's note opens with it until that game's first move after any opening
+    the Arbiter played, a player's or the Arbiter's own after a week: who won it, or how it was drawn."""
     if not record:
         return ""
     if record["winner"]:
@@ -572,7 +572,7 @@ def board(mod: ModuleType, game: dict | None, hall: list, owner: str, moment: dt
         element["last"] = last_move(mod, current, positions)
     element["history"] = score_sheet(mod, current, positions)
     fresh = len(current["moves"]) <= (1 if mod.ARBITER_OPENS else 0)  # no move yet but the Arbiter's opening
-    record = hall[-1] if hall and fresh else None  # the game that ended, when no player has moved in this one
+    record = hall[-1] if hall and fresh else None  # the game that ended, while this one has no move but its opening
     opens = mod.OPENS_NOTE.format(owner=owner)
     if fresh:
         parts = [(how_it_ended(mod, record, owner), False), (opens, True), (who_plays(side, owner), True)]

@@ -120,6 +120,8 @@ BOOK_LINES = (
     ("d2d4 g8f6", ("Play an Indian Defence!", "Answer with an Indian Defence!")),
     ("d2d4 f7f5", ("Play the Dutch!", "Answer with the Dutch Defence!")),
     ("d2d4 c7c5", ("Play the Old Benoni!",)),
+    ("d2d4 e7e5", ("Offer the Englund Gambit!",)),
+    ("f2f4 e7e5", ("Offer From's Gambit!",)),
     ("c2c4 e7e5", ("Play the Reversed Sicilian!",)),
     ("c2c4 c7c5", ("Play the Symmetrical English!",)),
     ("e2e4 e7e5 f2f4", ("Offer the King's Gambit!", "Play the King's Gambit!")),
@@ -1471,7 +1473,7 @@ def tiers(r: Reading, board_: Board) -> list[list[str]]:
             t = [base, [f"Develop {who}!", f"Bring Out {who}!"], [f"Develop {who} to {to}!"]]
         else:
             t = [["Develop the Bishop!", "Bring Out the Bishop!"], [f"Develop {who}!", f"Bring Out {who}!"],
-                 [f"Develop the Bishop to {to}!"]]
+                 [f"Develop the Bishop to {to}!", f"Post the Bishop on {to}!"]]
     elif key == "aim-f7":
         target = label(TARGET_F7[r.turn])
         t = [[f"Aim the Bishop at {target}!", f"Develop the Bishop, Eye {target}!"],
@@ -1583,7 +1585,7 @@ def tiers(r: Reading, board_: Board) -> list[list[str]]:
              [f"Lift the Rook to {to}!"]]
     elif key == "sortie":
         t = [["Bring Out the Queen Early!", "Send the Queen Out Early!", "Launch an Early Queen Sortie!"],
-             [f"Bring the Queen Out to {to}!"]]
+             [f"Bring the Queen Out to {to}!", f"Send the Queen Out to {to}!"]]
     elif key == "centralise":
         t = [[f"Centralise the {P}!", f"Post the {P} in the Centre!", f"Bring the {P} to the Centre!"],
              [f"Centralise the {P} on {to}!"], fit(f"Centralise {exact} on {to}!")]

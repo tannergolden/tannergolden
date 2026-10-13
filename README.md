@@ -83,8 +83,8 @@ Arbiter draws which side moves first.
 Pick a move under a board, and its link opens a ready-made issue in
 [`play`](https://github.com/tannergolden/play): submit it as it opens. The
 first move to reach the game is the one played. The Official Arbiter rules on
-it, answers on your issue, and redraws the board within a few minutes. Chess is
-open below, and the other three open with a click.
+it, answers on your issue, and redraws the board within a few minutes. Chess's
+board is always in view below, and the other three open with a click.
 
 One clock keeps all four, ticking twice an hour. A side that goes a week without
 moving gets a random legal move from the Arbiter, and a finished game's winning

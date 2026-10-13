@@ -35,13 +35,15 @@ end. What all four share is below.
 ## 🎯 Making A Move
 
 1. **Find the board** under Play Against Me on
-   [@tannergolden's profile](https://github.com/tannergolden). Chess is open,
-   and the other three open with a click.
+   [@tannergolden's profile](https://github.com/tannergolden). Chess's board
+   is always in view, and the other three open with a click.
 2. **Open the list of moves** under the board. On GitHub's turn it lists every
    legal move: a name for it, the move in the game's own notation, the same
-   move in plain words, and a **Play ↗** link. A Pentago move is a hole and
-   then a quarter turn, so each hole has eight links in place of one, a link
-   for each turn.
+   move in plain words, and a **Play ↗** link. A list of more than ten is
+   sorted into groups, by piece in Chess and Checkers, by quarter in Pentago and
+   by board in Tic-Tac, each a click to open. A Pentago move is a hole and then
+   a quarter turn, so each hole has eight links in place of one, a link for
+   each turn.
 3. **Follow a move's link.** It opens a new issue in
    [tannergolden/play](https://github.com/tannergolden/play) with the move
    already in its title.

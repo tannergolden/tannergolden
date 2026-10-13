@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""Every legal move named for what it is and never for what it does to the game: every title, emoji, notation and
-words read from a fixed grammar of the move's own facts and checked against the board, a move that mates or gives
-the queen away read just as a quiet one, and every board's names unique and within what the kit takes.
+"""Every legal move named as players name it and never for what it does to the game: every name, emoji, notation and
+words read from a fixed grammar of the move's own facts and checked against the board, no square in any name, a move
+that mates or gives the queen away read just as a quiet one, and every name within what the kit takes.
 
   python3 -m unittest discover -s .github/scripts -p 'test_chess*.py'
 """
@@ -35,7 +35,8 @@ DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
 JUDGED = re.compile(
     r"\b(?:good|bad|safe\w*|sound|strong|weak\w*|win\w*|won|los[et]\w*|draw\w*|save|saves|saved|saving|hold\w*|slip\w*|"
     r"only|best|forc\w*|blunder\w*|mistake\w*|check\w*|mate[sd]?|mating|stalemat\w*|threat\w*|block\w*|fork\w*|"
-    r"pin|pins|pinned|skewer\w*|discover\w*|double\w*|trap\w*|shot|sacrific\w*|gambit\w*|exchang\w*|"
+    r"pin|pins|pinned|skewer\w*|discover\w*|double[ -](?:attack|check)\w*|doubled|trap\w*|shot|sacrific\w*|gambit\w*|"
+    r"exchang\w*|"
     r"trad(?:e|es|ed|ing)|swap\w*|attack\w*|defen[cd]\w*|guard\w*|escap\w*|hang\w*|material|next|leaves|lets|rim|"
     r"outpost\w*|open\w*|battery|seventh|passed|luft|fianchetto\w*|seiz\w*|command\w*|control\w*|dog|bridge|"
     r"centre|center|centralis\w*|develop\w*|tempo|danger\w*|protect\w*|support\w*|tactic\w*|greek|gift|book|"
@@ -55,26 +56,21 @@ FLAGS = ("⚠", "🏆", "🔑", "🛡", "⚡", "🎯", "💥", "💸", "📌", "
 KEY = {"castle": "🏰", "promotion": "👑", "capture": "⚔️", "k": "🤴", "q": "👸", "r": "🗼", "b": "⛪", "n": "🐴",
        "p": "♟️"}
 NAMES = {"k": "King", "q": "Queen", "r": "Rook", "b": "Bishop", "n": "Knight", "p": "Pawn"}
-COMMANDS = {"Bring", "Castle", "March", "Push", "Send", "Step", "Swing", "Take"}
+LONGEST_NAME = 24  # a name is short: Underpromotion to Bishop is the longest
 
-# Every title is one of these forms, and nothing else: the facts of the move it may say, and no more.
+# Every name is one of these forms, and nothing else: the move's kind as players call it, and no square.
 SQ = "[a-h][1-8]"
-NAME = r"the (?P<name>King|Queen|(?:King's |Queen's )?(?:Rook|Bishop|Knight)|[a-h]-Pawn)"
 PIECE = "Queen|Rook|Bishop|Knight"
 FORMS = {
-    "castle": re.compile(r"Castle (?P<wing>Kingside|Queenside)!"),
-    "push": re.compile(rf"Push the (?P<file>[a-h])-Pawn to (?P<to>{SQ})!"),
-    "march": re.compile(r"March the (?P<file>[a-h])-Pawn Two Squares!"),
-    "crown": re.compile(rf"Push the (?P<file>[a-h])-Pawn to (?P<to>{SQ}), Crown a (?P<new>{PIECE})!"),
-    "take-crown": re.compile(rf"Take the (?P<victim>{PIECE}) on (?P<to>{SQ}) From (?P<start>{SQ}),"
-                             rf" Crown a (?P<new>{PIECE})!"),
-    "passant": re.compile(rf"Take the Pawn on (?P<at>{SQ}) en Passant With the (?P<file>[a-h])-Pawn!"),
-    "take": re.compile(rf"Take the (?P<victim>{PIECE}|Pawn) on (?P<to>{SQ}) With {NAME}(?: From (?P<start>{SQ}))?!"),
-    "bring-out": re.compile(rf"Bring Out {NAME}(?: From (?P<start>{SQ}))? to (?P<to>{SQ})!"),
-    "send": re.compile(rf"Send {NAME}(?: From (?P<start>{SQ}))? to (?P<to>{SQ})!"),
-    "bring-back": re.compile(rf"Bring {NAME} Back(?: From (?P<start>{SQ}))? to (?P<to>{SQ})!"),
-    "swing": re.compile(rf"Swing {NAME}(?: From (?P<start>{SQ}))? to (?P<to>{SQ})!"),
-    "step": re.compile(rf"Step the King (?P<way>Forward|Back|Across) to (?P<to>{SQ})!"),
+    "castle": re.compile(r"(?P<wing>Kingside|Queenside) Castling"),
+    "promotion": re.compile(r"Promotion to (?P<new>Queen)"),
+    "underpromotion": re.compile(r"Underpromotion to (?P<new>Rook|Bishop|Knight)"),
+    "passant": re.compile(r"En Passant"),
+    "take": re.compile(rf"(?P<piece>King|{PIECE}|Pawn) Takes (?P<victim>{PIECE}|Pawn)"),
+    "push": re.compile(r"Pawn Push"),
+    "double-push": re.compile(r"Double Pawn Push"),
+    "retreat": re.compile(rf"(?P<piece>{PIECE}) Retreat"),
+    "move": re.compile(rf"(?P<piece>King|{PIECE}) Move"),
 }
 # And the words are one of these.
 SAYS = {
@@ -151,8 +147,6 @@ class Facts:
     new: str  # what a promotion makes
     rise: int  # ranks gained toward the other side, less than nothing going back
     two: bool  # a pawn's two squares
-    home: bool  # it leaves the square the game sets its kind out on
-    name: str  # the piece as its side calls it
 
 
 @functools.cache
@@ -174,24 +168,7 @@ def facts(position: Position, move: Move) -> Facts:
                  victim=NAMES[board[at].lower()] if at is not None else "",
                  at=label(at) if at is not None else "", passing=passing,
                  new=NAMES[move.promotion] if move.promotion else "", rise=(move.end // 8 - move.start // 8) * forward,
-                 two=kind == "p" and abs(move.end - move.start) == 16,
-                 home=move.start // 8 == (0 if white else 7) and "rnbqkbnr"[move.start % 8] == kind,
-                 name=named(board, move.start))
-
-
-def named(board: tuple[str, ...], index: int) -> str:
-    """The piece on the square, as its side calls it."""
-    piece = board[index]
-    kind, white = piece.lower(), piece.isupper()
-    if kind == "p":
-        return f"{label(index)[0]}-Pawn"
-    if kind == "b":
-        shade = (index % 8 + index // 8) % 2
-        if [(i % 8 + i // 8) % 2 for i, other in enumerate(board) if other == piece].count(shade) == 1:
-            return ("King's" if (shade == 1) == white else "Queen's") + " Bishop"
-    if kind in "nr" and index // 8 == (0 if white else 7) and index % 8 in ((1, 6) if kind == "n" else (0, 7)):
-        return ("King's " if index % 8 > 3 else "Queen's ") + NAMES[kind]
-    return NAMES[kind]
+                 two=kind == "p" and abs(move.end - move.start) == 16)
 
 
 def read(title: str) -> tuple[str, dict]:
@@ -203,8 +180,8 @@ def read(title: str) -> tuple[str, dict]:
 
 
 def shape(text: str) -> str:
-    """The text with its squares and its pawns' files left out: its form."""
-    return re.sub(r"\b[a-h](?=-Pawn\b)", "#", re.sub("[a-h][1-8]", "##", text))
+    """The text with its squares left out: its form."""
+    return re.sub("[a-h][1-8]", "##", text)
 
 
 def entry(fen: str, uci: str) -> dict:
@@ -298,7 +275,7 @@ class Neutral(unittest.TestCase):
 
 
 class Truth(unittest.TestCase):
-    """A title says only true facts of its move, in one of a few fixed forms."""
+    """A name says only true facts of its move, in one of a few fixed forms."""
 
     def test_every_title_says_what_its_move_is(self):
         for position, _, row, seen in rows():
@@ -309,38 +286,25 @@ class Truth(unittest.TestCase):
                 raise AssertionError(f"{row['title']!r} on {position.fen}: {error}") from None
 
     def check(self, form: str, said: dict, seen: Facts) -> None:
+        self.assertEqual(said.get("wing") or "", seen.wing)
         if form == "castle":
-            self.assertEqual(said["wing"], seen.wing)
             return
-        self.assertFalse(seen.wing)
-        self.assertEqual(said.get("to", seen.to), seen.to)
         self.assertEqual(said.get("new") or "", seen.new)
-        self.assertEqual(said.get("victim") or "", "" if form == "passant" else seen.victim)
-        self.assertEqual(said.get("file", seen.file), seen.file)
-        if form in ("push", "march", "crown"):
-            self.assertEqual((seen.kind, seen.two, seen.victim), ("p", form == "march", ""))
-        elif form == "take-crown":
-            self.assertEqual(said["start"], seen.start)
-        elif form == "passant":
-            self.assertTrue(seen.passing)
-            self.assertEqual(said["at"], seen.at)
-        elif form == "step":
-            self.assertEqual(seen.kind, "k")
-            self.assertEqual(said["way"], "Forward" if seen.rise > 0 else "Back" if seen.rise < 0 else "Across")
-        else:
-            self.assertFalse(seen.passing or seen.new)
-            if said["start"]:  # the square it leaves, said when another move would read alike, by the piece's kind
-                self.assertEqual((said["start"], said["name"]), (seen.start, NAMES[seen.kind]))
-            else:
-                self.assertEqual(said["name"], seen.name)
-            if form == "bring-out":
-                self.assertTrue(seen.kind in "nbq" and seen.home and seen.rise > 0)
-            elif form == "send":
-                self.assertTrue(seen.kind in "nbrq" and seen.rise > 0 and not (seen.kind in "nbq" and seen.home))
-            elif form == "bring-back":
-                self.assertTrue(seen.kind in "nbrq" and seen.rise < 0)
-            elif form == "swing":
-                self.assertTrue(seen.kind in "rq" and seen.rise == 0)
+        if form in ("promotion", "underpromotion"):
+            return
+        self.assertEqual(form == "passant", seen.passing)
+        if form == "passant":
+            return
+        self.assertEqual(said.get("victim") or "", seen.victim)
+        if form == "take":
+            self.assertEqual(said["piece"], NAMES[seen.kind])
+        elif form in ("push", "double-push"):
+            self.assertEqual((seen.kind, seen.two), ("p", form == "double-push"))
+        elif form == "retreat":
+            self.assertTrue(seen.kind in "nbrq" and seen.rise < 0 and said["piece"] == NAMES[seen.kind])
+        else:  # a move: the king's any way but castling, or another piece's forward or along its rank
+            self.assertEqual(said["piece"], NAMES[seen.kind])
+            self.assertTrue(seen.kind == "k" or (seen.kind in "nbrq" and seen.rise >= 0))
 
     def test_the_words_say_the_move_exactly(self):
         for _, _, row, seen in rows():
@@ -370,12 +334,9 @@ class Truth(unittest.TestCase):
                 # the rules' SAN, given no replies, as only its mark for check or mate would need them
                 self.assertEqual(row["san"], san(position, Move.from_uci(row["uci"]), legal, []).rstrip("+#"), row)
 
-    def test_the_square_a_piece_leaves_is_named_only_where_two_moves_would_read_alike(self):
-        for position, listed in sweep():
-            plain = [re.sub(rf" From {SQ}", "", m["title"]) for m in listed if " From " in m["title"]
-                     and read(m["title"])[0] != "take-crown"]
-            for title in plain:
-                self.assertGreater(plain.count(title), 1, (position.fen, title))
+    def test_no_name_holds_a_square_a_file_or_a_rank(self):
+        for title in {row["title"] for _, _, row, _ in rows()}:
+            self.assertIsNone(re.search(rf"{SQ}|\b[a-h]-|\b(?:From|to [a-h]|on|file|rank)\b", title), title)
 
     def test_the_sweep_meets_every_kind_of_move(self):
         self.assertEqual({read(row["title"])[0] for _, _, row, _ in rows()}, set(FORMS))
@@ -392,13 +353,12 @@ class Truth(unittest.TestCase):
 
 
 class Titles(unittest.TestCase):
-    def test_every_board_names_every_move_once_in_what_the_kit_accepts(self):
+    def test_every_board_names_every_move_in_what_the_kit_accepts(self):
         for position, listed in sweep():
             self.assertEqual(len(listed), len(legal_moves(position)))
-            self.assertEqual(len({m["title"] for m in listed}), len(listed), position.fen)
             self.assertTrue(all(set(m) == {"uci", "san", "piece", "emoji", "title", "words"} for m in listed))
         for title in {row["title"] for _, _, row, _ in rows()}:
-            self.assertTrue(KIT_TITLE.fullmatch(title) and len(title) <= LONGEST, title)
+            self.assertTrue(KIT_TITLE.fullmatch(title) and len(title) <= min(LONGEST, LONGEST_NAME), title)
             self.assertFalse(any(dash in title for dash in DASHES), title)
         for said in {row["words"] for _, _, row, _ in rows()}:
             self.assertTrue(KIT_WORDS.fullmatch(said) and len(said) <= WORDS_LONGEST, said)
@@ -406,78 +366,69 @@ class Titles(unittest.TestCase):
         for emoji in {row["emoji"] for _, _, row, _ in rows()}:
             self.assertTrue(KIT_EMOJI.fullmatch(emoji) and emoji in KEY.values(), emoji)
 
-    def test_every_title_is_an_order_in_title_case(self):
+    def test_every_name_is_in_title_case_with_no_mark_a_score_sheet_reads_as_a_verdict(self):
         for title in {row["title"] for _, _, row, _ in rows()}:
-            self.assertIn(title.split()[0], COMMANDS, title)
-            self.assertTrue(title.endswith("!"), title)
-            for word in re.split(r"[ -]", title):
-                letters = re.sub("[^A-Za-z]", "", word.split("'")[0])
-                if len(letters) >= 4:
-                    self.assertTrue(letters[0].isupper(), (title, word))
+            self.assertFalse(set(title) & set("!?"), title)  # an annotator's ! and ? judge a move
+            for word in title.split():
+                self.assertTrue(word[0].isupper() or word == "to", (title, word))
 
     def test_the_twenty_opening_moves(self):
         title = titled(START)
         self.assertEqual(len(title), 20)
-        self.assertEqual({san: title[san] for san in ("Na3", "Nc3", "Nf3", "Nh3")},
-                         {"Na3": "Bring Out the Queen's Knight to a3!", "Nc3": "Bring Out the Queen's Knight to c3!",
-                          "Nf3": "Bring Out the King's Knight to f3!", "Nh3": "Bring Out the King's Knight to h3!"})
+        self.assertEqual({title[san] for san in ("Na3", "Nc3", "Nf3", "Nh3")}, {"Knight Move"})
         for file in "abcdefgh":
-            self.assertEqual(title[f"{file}3"], f"Push the {file}-Pawn to {file}3!")
-            self.assertEqual(title[f"{file}4"], f"March the {file}-Pawn Two Squares!")
+            self.assertEqual(title[f"{file}3"], "Pawn Push")
+            self.assertEqual(title[f"{file}4"], "Double Pawn Push")
         start = listing(Position.from_fen(START))
         self.assertEqual({m["emoji"] for m in start if m["piece"] == "knight"}, {"🐴"})
         self.assertEqual({m["emoji"] for m in start if m["piece"] == "pawn"}, {"♟️"})
         replies = titled("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1")
-        self.assertEqual((replies["c5"], replies["e5"], replies["Nf6"]),
-                         ("March the c-Pawn Two Squares!", "March the e-Pawn Two Squares!",
-                          "Bring Out the King's Knight to f6!"))
+        self.assertEqual((replies["c5"], replies["e5"], replies["e6"], replies["Nf6"]),
+                         ("Double Pawn Push", "Double Pawn Push", "Pawn Push", "Knight Move"))
 
     def test_the_rules_name_castling_promotion_and_en_passant(self):
         castles = {m["san"]: m
                    for m in listing(Position.from_fen("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1"))}
         self.assertEqual([castles[s][k] for s in ("O-O", "O-O-O") for k in ("emoji", "title", "words")],
-                         ["🏰", "Castle Kingside!", "King from e1 to g1, castling kingside",
-                          "🏰", "Castle Queenside!", "King from e1 to c1, castling queenside"])
+                         ["🏰", "Kingside Castling", "King from e1 to g1, castling kingside",
+                          "🏰", "Queenside Castling", "King from e1 to c1, castling queenside"])
         self.assertEqual((castles["Rd1"]["title"], castles["Rf1"]["title"], castles["Kd1"]["title"]),
-                         ("Swing the Queen's Rook to d1!", "Swing the King's Rook to f1!",
-                          "Step the King Across to d1!"))
+                         ("Rook Move", "Rook Move", "King Move"))
         crowned = {m["san"]: m for m in listing(Position.from_fen("r3k3/1P6/8/8/8/8/8/4K3 w - - 0 1"))}
         self.assertEqual([crowned[s][k] for s in ("b8=Q", "bxa8=N") for k in ("emoji", "title", "words")],
-                         ["👑", "Push the b-Pawn to b8, Crown a Queen!", "Pawn from b7 to b8, becoming a queen",
-                          "👑", "Take the Rook on a8 From b7, Crown a Knight!",
-                          "Pawn from b7 takes the rook on a8, becoming a knight"])
+                         ["👑", "Promotion to Queen", "Pawn from b7 to b8, becoming a queen",
+                          "👑", "Underpromotion to Knight", "Pawn from b7 takes the rook on a8, becoming a knight"])
+        self.assertEqual({crowned[s]["title"] for s in ("b8=R", "b8=B", "bxa8=R", "bxa8=B")},
+                         {"Underpromotion to Rook", "Underpromotion to Bishop"})
         passing = entry("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3", "e5f6")
         self.assertEqual((passing["emoji"], passing["title"], passing["san"], passing["words"]),
-                         ("⚔️", "Take the Pawn on f5 en Passant With the e-Pawn!", "exf6",
+                         ("⚔️", "En Passant", "exf6",
                           "Pawn from e5 takes the pawn on f5, en passant"))
 
-    def test_a_piece_is_named_as_its_side_calls_it(self):
+    def test_a_capture_reads_as_descriptive_notation_reads_it_and_a_piece_going_back_retreats(self):
         scholar = titled("r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4")
-        self.assertEqual((scholar["Qxf7"], scholar["Bxf7"], scholar["Qd1"], scholar["Qf5"], scholar["Qg6"]),
-                         ("Take the Pawn on f7 With the Queen!", "Take the Pawn on f7 With the King's Bishop!",
-                          "Bring the Queen Back to d1!", "Swing the Queen to f5!", "Send the Queen to g6!"))
+        self.assertEqual((scholar["Qxf7"], scholar["Bxf7"], scholar["Qxe5"], scholar["Qd1"], scholar["Qf5"],
+                          scholar["Qg6"], scholar["Bf1"]),
+                         ("Queen Takes Pawn", "Bishop Takes Pawn", "Queen Takes Pawn", "Queen Retreat", "Queen Move",
+                          "Queen Move", "Bishop Retreat"))
         black = titled("rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2")
-        self.assertEqual((black["Bc5"], black["Bb4"], black["Qg5"], black["Ne7"]),
-                         ("Bring Out the King's Bishop to c5!", "Bring Out the King's Bishop to b4!",
-                          "Bring Out the Queen to g5!", "Bring Out the King's Knight to e7!"))
-        bishops = titled("4k3/8/8/8/8/8/8/1BBBK3 w - - 0 1")  # two of White's bishops on the light squares, b1 and d1
-        self.assertEqual((bishops["Bd2"], bishops["Be2"], bishops["Bbc2"], bishops["Bdc2"]),
-                         ("Bring Out the Queen's Bishop to d2!", "Send the Bishop to e2!",
-                          "Send the Bishop From b1 to c2!", "Send the Bishop From d1 to c2!"))
-
-    def test_two_pieces_that_reach_one_square_name_the_squares_they_leave(self):
-        knights = {m["uci"]: m["title"] for m in listing(Position.from_fen("4k3/8/8/8/8/2N3N1/8/4K3 w - - 0 1"))}
-        self.assertEqual(tuple(knights[uci] for uci in ("c3e4", "g3e4", "c3e2", "g3e2", "c3b5")),
-                         ("Send the Knight From c3 to e4!", "Send the Knight From g3 to e4!",
-                          "Bring the Knight Back From c3 to e2!", "Bring the Knight Back From g3 to e2!",
-                          "Send the Knight to b5!"))
-        rooks = titled("4k3/8/8/8/8/R6R/8/4K3 w - - 0 1")
-        self.assertEqual((rooks["Rad3"], rooks["Rhd3"], rooks["Ra8"]),
-                         ("Swing the Rook From a3 to d3!", "Swing the Rook From h3 to d3!", "Send the Rook to a8!"))
+        self.assertEqual((black["Bc5"], black["Bb4"], black["Qg5"], black["Ne7"], black["Ke7"]),
+                         ("Bishop Move", "Bishop Move", "Queen Move", "Knight Move", "King Move"))
         takers = titled("4k3/8/3n4/1N3N2/8/8/8/4K3 w - - 0 1")
-        self.assertEqual((takers["Nbxd6"], takers["Nfxd6"]),
-                         ("Take the Knight on d6 With the Knight From b5!",
-                          "Take the Knight on d6 With the Knight From f5!"))
+        self.assertEqual((takers["Nbxd6"], takers["Nfxd6"]), ("Knight Takes Knight", "Knight Takes Knight"))
+
+    def test_two_moves_may_share_a_name_and_their_notation_tells_them_apart(self):
+        knights = {m["uci"]: (m["title"], m["san"])
+                   for m in listing(Position.from_fen("4k3/8/8/8/8/2N3N1/8/4K3 w - - 0 1"))}
+        self.assertEqual([knights[uci][0] for uci in ("c3e4", "g3e4", "c3e2", "g3e2", "c3b5")],
+                         ["Knight Move", "Knight Move", "Knight Retreat", "Knight Retreat", "Knight Move"])
+        self.assertEqual(len({knights[uci][1] for uci in ("c3e4", "g3e4", "c3e2", "g3e2")}), 4,
+                         "the notation says which knight goes")
+        rooks = {m["san"]: m["title"] for m in listing(Position.from_fen("4k3/8/8/8/8/R6R/8/4K3 w - - 0 1"))}
+        self.assertEqual((rooks["Rad3"], rooks["Rhd3"], rooks["Ra8"], rooks["Ra1"]),
+                         ("Rook Move", "Rook Move", "Rook Move", "Rook Retreat"))
+        for position, listed in sweep()[::5]:
+            self.assertEqual(len({m["san"] for m in listed}), len(listed), position.fen)
 
     def test_the_words_never_say_where_the_move_leads(self):
         said = {uci: words(Position.from_fen(fen), Move.from_uci(uci)) for fen, uci in (

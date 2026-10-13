@@ -139,7 +139,7 @@ class Turns(unittest.TestCase):
         self.assertEqual(outcome.game["moves"][0]["san"], "e4")
         self.assertEqual(outcome.game["started"], "2026-10-11T17:00:00Z")
         self.assertEqual(outcome.issue, 101)
-        self.assertRegex(outcome.comment, r"^♟️ \*\*1\. e4 is on the board\.\*\*\n\S+ \*[^*]+!\* · Pawn from e2 to e4,"
+        self.assertRegex(outcome.comment, r"^♟️ \*\*1\. e4 is on the board\.\*\*\n\S+ \*[^*]+\* · Pawn from e2 to e4,"
                                           r" two squares\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\) can pick"
                                           r" Black's reply on \[the board\]")
         self.assertTrue(outcome.commit.startswith("chore(chess): ♟️ play 1. e4 in game 1\n\nMove 1, by tannergolden."))
@@ -156,7 +156,7 @@ class Turns(unittest.TestCase):
         table.move("e2e4")
         outcome = table.move("c7c5")
         self.assertRegex(outcome.comment, r"\*\*1\.\.\. c5 is on the board\.\*\* Well played, @octocat\.\n"
-                                          r"\S+ \*[^*]+!\* · Pawn from c7 to c5, two squares\n@tannergolden, it's your"
+                                          r"\S+ \*[^*]+\* · Pawn from c7 to c5, two squares\n@tannergolden, it's your"
                                           r" move\.\n$")
 
     def test_the_owner_cannot_play_for_github(self):
@@ -314,7 +314,7 @@ class Endings(unittest.TestCase):
         outcome = table.play(FOOLS_MATE)
         self.assertIn("🏆 **2... Qh4#: checkmate!** GitHub wins game 1, and @octocat takes a place in the"
                       " [Hall of Fame](https://github.com/tannergolden) for the winning move.\n", outcome.comment)
-        self.assertRegex(outcome.comment, r"\n\S+ \*[^*]+!\* · Queen from d8 to h4\n")
+        self.assertRegex(outcome.comment, r"\n\S+ \*[^*]+\* · Queen from d8 to h4\n")
         self.assertIn("Its final board stays up for two days: game 2 opens 13 Oct, and @tannergolden opens it as"
                       " White.", outcome.comment)
         record = table.hall[-1]
@@ -539,7 +539,7 @@ class Clock(unittest.TestCase):
         outcome = table.wait(dt.timedelta(days=8))
         self.assertEqual(outcome.issue, 102)  # the last move GitHub played
         self.assertIn(f"⏰ **A week passed without a move from {LINKED}**, so the Arbiter played 2. ", outcome.comment)
-        self.assertRegex(outcome.comment, r"for White, at random\.\n\S+ \*[^*]+!\* · [^\n]+\nGitHub's turn")
+        self.assertRegex(outcome.comment, r"for White, at random\.\n\S+ \*[^*]+\* · [^\n]+\nGitHub's turn")
         self.assertIsNone(PING.search(outcome.comment), "the owner's own lapse goes to GitHub's player, unpinged")
 
     def test_the_arbiters_pick_is_the_same_however_often_it_is_asked(self):
@@ -658,7 +658,7 @@ class Board(unittest.TestCase):
             self.assertRegex(url, KIT_LINK)
             issue = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["title"][0]
             self.assertRegex(issue, r"^chess: [a-h][1-8][a-h][1-8][qrbn]? · game 1 · move 2$")
-        self.assertEqual(len({entry[1] for entry in entries}), len(entries), "no two moves on a board share a title")
+        self.assertEqual(len({entry[2] for entry in entries}), len(entries), "each move once, by its own notation")
         e5 = next(entry for entry in entries if entry[2] == "e5")
         self.assertEqual((e5[3], e5[4]), ("Pawn from e7 to e5, two squares", chess.link(OWNER, "e7e5", 1, 2)))
         self.assertEqual(table.board(), element, "the same board, the same names")

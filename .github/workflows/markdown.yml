@@ -1,16 +1,18 @@
 name: '📝 Markdown'
 
-# The stub tannergolden/markdown's README gives every page, with this page's two
-# choices: profile mode and the blackprint. It draws the whole page in one run
-# and one commit: the header and footer, the badges, the schematic and the
-# placards, and the trophy case. Once a day at 05:00 UTC, which is midnight
-# EST, so the page's day, and a holiday's set with it, changes over at the
-# page's own midnight. Picks starts it too, as soon as it has picked new
-# placards, and so do the games: every move that changes a board, and the
-# clock on any tick that changed one.
+# The stub tannergolden/markdown's README gives every page, with this page's
+# choices: profile mode, the Medieval collection's Chessmen all year, and the
+# holiday sets on. It draws the whole page in one run and one commit: the
+# header and footer, the badges, the schematic and the placards, and the
+# trophy case. Once a day at 05:00 UTC, which is midnight EST, so the page's
+# day, and a holiday's set with it, changes over at the page's own midnight.
+# Picks starts it too, as soon as it has picked new placards, and so do the
+# games: every move that changes a board, and the clock on any tick that
+# changed one.
 #
-# `theme` is the page's one theme, and every part is drawn in it. Everything
-# else the page sets is in .github/markdown.yaml.
+# `theme` is the page's one theme, and every part is drawn in it, except while
+# a holiday's set is up around its day (`holidays`). Everything else the page
+# sets is in .github/markdown.yaml.
 on:
   schedule:
     - cron: '0 5 * * *' # 00:00 EST
@@ -36,7 +38,8 @@ jobs:
     uses: tannergolden/markdown/.github/workflows/markdown.yml@v1 # zizmor: ignore[unpinned-uses] - first-party workflow on its moving major, the way every stub calls it.
     with:
       mode: profile
-      theme: blackprint # the page's one theme
+      theme: medieval-chessmen # the page's one theme: the Medieval collection's Chessmen, all year
+      holidays: 'true' # each holiday's set takes the page around its day, then hands it back
     # The one secret the kit takes, and nothing else: the page's other secrets, such as the Arbiter's key, stay here.
     secrets:
       MARKDOWN_TOKEN: ${{ secrets.MARKDOWN_TOKEN }}

@@ -31,8 +31,11 @@ with no move on its turn loses.
 ## 🎯 Making A Move
 
 1. **Open the list under the Checkers board** on Black's turn. It holds every
-   legal move, each with a name, the move in checkers notation, such as `9-13`,
-   the same move in words, such as _Man from 9 to 13_, and a **Play ↗** link.
+   legal move, each with the name a checkers player gives it, such as **Man
+   Move**, **Double Jump** or **Crowning Move**, the move in checkers notation,
+   such as `9-13`, the same move in words, such as _Man from 9 to 13_, and a
+   **Play ↗** link. A name never holds a square, so two moves can share one,
+   and the notation tells them apart.
 2. **Follow a move's link.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    move, such as `checkers: 9-13 · game 1 · move 1`.

@@ -33,12 +33,12 @@ in a row wins.
 ## 🎯 Making A Move
 
 1. **Open the list under the Pentago board** on Black's turn. It holds every
-   empty hole, grouped by quarter when there are more than ten, each with a
-   name, the hole, such as `e4`, the move in words, such as _A black marble on
-   e4, then a quarter turns_, and eight links, one for each turn the move can
-   end with: ↻ turns a quarter clockwise and ↺ anticlockwise, and `UL`, `UR`,
-   `LL` and `LR` name the upper left, upper right, lower left and lower right
-   quarters.
+   empty hole, grouped by quarter when there are more than ten, each named for
+   its kind of hole, **Centre**, **Corner** or **Edge**, with the hole, such as
+   `e4`, the move in words, such as _A black marble on e4, then a quarter
+   turns_, and eight links, one for each turn the move can end with: ↻ turns a
+   quarter clockwise and ↺ anticlockwise, and `UL`, `UR`, `LL` and `LR` name the
+   upper left, upper right, lower left and lower right quarters.
 2. **Follow the link for the turn you want.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    whole move, such as `pentago: e4-ur-cw · game 1 · move 7`.
@@ -56,8 +56,9 @@ turn it is, when a move is turned away, and the clock.
   a marble that is nobody's. No five runs through it, and it turns with its
   quarter like any marble.
 - **The Arbiter draws which side sets the first ghost** when the board opens.
-  GitHub's ghost is picked from the list under the board like any move, one
-  link a hole and no turn, its link titled with the hole, such as
+  GitHub's ghost is picked from the list under the board like any move, each
+  hole named for its kind, such as **Centre Ghost**, one link a hole and no
+  turn, its link titled with the hole, such as
   `pentago: b5 · game 1 · move 1`.
 - **Once both ghosts are down, the Arbiter draws which side sets the first
   marble**, in the same run.

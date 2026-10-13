@@ -33,9 +33,10 @@ row wins the game.
 ## 🎯 Making A Move
 
 1. **Open the list under the Tic-Tac board** on O's turn. It holds every square
-   O may take, grouped by board when there are more than ten, each with a name,
-   the move in notation, such as `Oe5`, the same move in words, such as _O
-   takes the centre of the centre board_, and a **Play ↗** link.
+   O may take, grouped by board when there are more than ten, each named for
+   its kind of square, **Centre**, **Corner** or **Edge**, with the move in
+   notation, such as `Oe5`, the same move in words, such as _O takes the centre
+   of the centre board_, and a **Play ↗** link.
 2. **Follow a move's link.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    square, such as `tictac: e5 · game 1 · move 7`.
@@ -53,8 +54,8 @@ is, when a move is turned away, and the clock.
   chooses. Nobody can take a ghost's square, and no line runs through it.
 - **The Arbiter draws which side places the first ghost** when the board
   opens. GitHub's ghost is picked from the list under the board like any move,
-  each square named for where the ghost would lock it, its link titled with the
-  square, such as `tictac: e5 · game 1 · move 1`.
+  each square named for its kind, such as **Centre Ghost**, its link titled
+  with the square, such as `tictac: e5 · game 1 · move 1`.
 - **Once both ghosts are down, the Arbiter draws which side makes the first
   mark**, in the same run. The first mark may go on any square of any board.
 - **A side that goes a week without placing its ghost** gets one on a random

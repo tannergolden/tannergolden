@@ -38,12 +38,13 @@ end. What all four share is below.
    [@tannergolden's profile](https://github.com/tannergolden). Chess's board
    is always in view, and the other three open with a click.
 2. **Open the list of moves** under the board. On GitHub's turn it lists every
-   legal move: a name for it, the move in the game's own notation, the same
-   move in plain words, and a **Play ↗** link. A list of more than ten is
-   sorted into groups, by piece in Chess and Checkers, by quarter in Pentago and
-   by board in Tic-Tac, each a click to open. A Pentago move is a hole and then
-   a quarter turn, so each hole has eight links in place of one, a link for
-   each turn.
+   legal move: the name players give it, the move in the game's own notation,
+   the same move in plain words, and a **Play ↗** link. A name never holds a
+   square, so two moves can share one, and the notation tells them apart. A list
+   of more than ten is sorted into groups, by piece in Chess and Checkers, by
+   quarter in Pentago and by board in Tic-Tac, each a click to open. A Pentago
+   move is a hole and then a quarter turn, so each hole has eight links in place
+   of one, a link for each turn.
 3. **Follow a move's link.** It opens a new issue in
    [tannergolden/play](https://github.com/tannergolden/play) with the move
    already in its title.

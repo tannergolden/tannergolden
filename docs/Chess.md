@@ -30,9 +30,11 @@ Black. Checkmate wins, and a game ends only when the rules of chess end it.
 ## 🎯 Making A Move
 
 1. **Open the list under the Chess board** on Black's turn. It holds every legal
-   move, grouped by piece, each with a name, the move in standard notation, such
-   as `Nf6`, the same move in words, such as _Knight from g8 to f6_, and a
-   **Play ↗** link.
+   move, grouped by piece, each with the name a chess player gives it, such as
+   **Knight Move**, **Pawn Takes Pawn** or **Kingside Castling**, the move in
+   standard notation, such as `Nf6`, the same move in words, such as _Knight
+   from g8 to f6_, and a **Play ↗** link. A name never holds a square, so two
+   moves can share one, and the notation tells them apart.
 2. **Follow a move's link.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    move, such as `chess: g8f6 · game 1 · move 2`.

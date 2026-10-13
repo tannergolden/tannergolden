@@ -73,10 +73,12 @@ one from data measured on a schedule.
 
 Four games, each on its own board, and in every one I play one side while you
 play the other with everyone else on GitHub. I always play White in Chess,
-Checkers and Connect Four, and X in Tic-Tac-Toe. I open every game of Chess. In
-Checkers, Black moves first, so GitHub opens. In Connect Four and Tic-Tac-Toe,
-the Arbiter opens every game for a side drawn at random, with a random first
-move.
+Checkers and Pentago, and X in Tic-Tac. White moves first in Chess, so I open
+every game, unless a week passes first and the Arbiter opens it for me. In
+Checkers, Black moves first, so GitHub opens. Pentago and Tic-Tac open under the
+Ghost Rule: each side first places a ghost, a hole or a square that is nobody's,
+the Arbiter drawing which side places first, and once both ghosts are down, the
+Arbiter draws which side moves first.
 
 Pick a move under a board, and its link opens a ready-made issue in
 [`play`](https://github.com/tannergolden/play): submit it as it opens. The
@@ -86,17 +88,20 @@ open below, and the other three open with a click.
 
 One clock keeps all four, ticking twice an hour. A side that goes a week without
 moving gets a random legal move from the Arbiter, and a finished game's winning
-board stays up for two days before a fresh board comes by itself. A win counts
-only for the player who makes the winning move: the checkmate in Chess, the move
-that leaves the other side no move in Checkers, the fourth disc in a row in
-Connect Four, or the third mark in a row in Tic-Tac-Toe. A move the Arbiter
-plays counts for nobody, and a draw is nobody's win. Every win earns its player
-a place in the Hall of Fame below.
+board stays up for two days, with a countdown to the next, before a fresh board
+comes by itself. A win counts only for the player who makes the winning move:
+the checkmate in Chess, the move that leaves the other side no move in
+Checkers, the move that makes five of its own colour in a row in Pentago, or
+the mark that wins a third board in a row in Tic-Tac. A move the Arbiter plays
+counts for nobody, and so does a Pentago turn that makes five for the other
+side; a draw is nobody's win. The players with the most wins take their places
+in the Hall of Fame below, and every game a player wins gets a replay of every
+move, posted on the winning move's issue.
 
 📖 Each game has a guide to its rules and how its moves are written:
 [Chess](docs/Chess.md), [Checkers](docs/Checkers.md),
-[Connect Four](docs/Connect-Four.md) and [Tic-Tac-Toe](docs/Tic-Tac-Toe.md),
-with what all four share in [Games](docs/README.md).
+[Pentago](docs/Pentago.md) and [Tic-Tac](docs/Tic-Tac.md), with what all four
+share in [Games](docs/README.md).
 
 <!-- markdown:element:chess:start -->
 <details open>
@@ -194,76 +199,11 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 </details>
 <!-- markdown:element:checkers:end -->
 
-<!-- markdown:element:connectfour:start -->
-<details>
-<summary><b>⚫ Connect Four</b></summary>
+<!-- markdown:element:pentago:start -->
+<!-- markdown:element:pentago:end -->
 
-<picture>
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-still-dark.svg">
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/connectfour-narrow-still-day.svg">
-  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-narrow-dark.svg">
-  <source media="(max-width: 585px)" srcset="assets/elements/connectfour-narrow-day.svg">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/connectfour-still-dark.svg">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/connectfour-still-day.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/connectfour-dark.svg">
-  <img alt="Connect Four: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden drops the White discs and GitHub the Black, after 1. 6, the Arbiter&#x27;s move for @tannergolden: a white disc down column 6, to row 1. It is GitHub&#x27;s turn as Black, due by 19 Oct. Column 6, from the foot: White." src="assets/elements/connectfour-day.svg">
-</picture>
-
-<details>
-<summary>⚫ <b>GitHub's Turn</b> · 7 open columns · open to choose one</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| ⬅️ | **Lay the First Disc on the Left Edge!** `1` | A black disc down column 1, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⬇️ | **Send Black to the Floor in Column 2!** `2` | A black disc down column 2, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⬇️ | **Drop Black Down Column 3!** `3` | A black disc down column 3, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⬇️ | **Send Black to the Floor in the Centre Column!** `4` | A black disc down column 4, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ⬇️ | **Slide Black Down Column 5 to Row 1!** `5` | A black disc down column 5, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🧱 | **Land Black on White in Column 6!** `6` | A black disc down column 6, to row 2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| ➡️ | **Drop Black to Row 1 on the Right Edge!** `7` | A black disc down column 7, to row 1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-
-</details>
-
-@tannergolden always drops the white discs and GitHub the black, and the Arbiter opens every game for a side drawn at random, with a random first disc. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move.
-
-</details>
-<!-- markdown:element:connectfour:end -->
-
-<!-- markdown:element:tictactoe:start -->
-<details>
-<summary><b>❌ Tic-Tac-Toe</b></summary>
-
-<picture>
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-still-dark.svg">
-  <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/tictactoe-narrow-still-day.svg">
-  <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-narrow-dark.svg">
-  <source media="(max-width: 585px)" srcset="assets/elements/tictactoe-narrow-day.svg">
-  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-still-dark.svg">
-  <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictactoe-still-day.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictactoe-dark.svg">
-  <img alt="Tic-Tac-Toe: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, after 1. Oa1, the Arbiter&#x27;s move for GitHub: O takes the lower left corner. It is @tannergolden&#x27;s turn as X, due by 19 Oct. X: no mark yet; O: a1." src="assets/elements/tictactoe-day.svg">
-</picture>
-
-<details>
-<summary>❌ <b>@tannergolden's Turn</b> · 8 open cells · only @tannergolden can play these</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Take a Corner Along From Theirs, Upper Left!** `Xa3` | X takes the upper left corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📏 | **Take an Edge by No Mark, Top!** `Xb3` | X takes the top edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📐 | **Take the Corner Across From Theirs!** `Xc3` | X takes the upper right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📏 | **Take an Edge by Their Corner, Left!** `Xa2` | X takes the left edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 🔳 | **Take the Centre!** `Xb2` | X takes the centre | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📏 | **Take an Edge by No Mark, Right!** `Xc2` | X takes the right edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📏 | **Take an Edge by Their Corner, Bottom!** `Xb1` | X takes the bottom edge | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-| 📐 | **Take a Corner Along From Theirs, Lower Right!** `Xc1` | X takes the lower right corner | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
-
-</details>
-
-@tannergolden always plays X and GitHub O, and the Arbiter opens every game for a side drawn at random, with a random first move. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move. Three in a row wins, and a full board without one is a draw.
-
-</details>
-<!-- markdown:element:tictactoe:end -->
+<!-- markdown:element:tictac:start -->
+<!-- markdown:element:tictac:end -->
 
 ### 🏆 Hall of Fame
 

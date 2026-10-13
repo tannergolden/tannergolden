@@ -1,8 +1,8 @@
 name: Games Tests
 
 # The tests of the profile's four games and everything they share: each
-# game's rules held to their known counts (perft for chess and checkers, every
-# game of Tic-Tac-Toe), every legal move named, every game played through
+# game's rules held to their known counts (perft for chess and checkers) or
+# to their own lines of play, every legal move named, every game played through
 # every way a move can go, the two-day final boards, the one clock, the Hall
 # of Fame of all four, and the settings' regions. They run when the games'
 # code or their workflows change, and not on every move, so a move costs one
@@ -16,8 +16,8 @@ on:
       - '.github/scripts/*.py'
       - '.github/scripts/arbiter.sh'
       - '.github/workflows/chess.yml'
-      - '.github/workflows/tictactoe.yml'
-      - '.github/workflows/connectfour.yml'
+      - '.github/workflows/tictac.yml'
+      - '.github/workflows/pentago.yml'
       - '.github/workflows/checkers.yml'
       - '.github/workflows/game.yml'
       - '.github/workflows/clock.yml'

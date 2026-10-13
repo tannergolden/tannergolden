@@ -35,7 +35,7 @@ from page import GITHUB, HOUSE, parse, profile
 
 KEY, TITLE = "checkers", "Checkers"
 EXT, RECORD = "pdn", "PDN"  # a finished game's file, and what the note's link calls it
-ARBITER_OPENS, OPENER = False, GITHUB  # GitHub plays Black, which moves first in American checkers
+GHOST_RULE, OPENER = False, GITHUB  # GitHub plays Black, which moves first in American checkers
 SQ = r"(?:3[0-2]|[12][0-9]|[1-9])"
 CODE = re.compile(rf"{SQ}(?:-{SQ}|(?:x{SQ})+)")  # a move as an issue's title carries it
 WORDS = {HOUSE: "White", GITHUB: "Black"}  # what each side is called, in every game

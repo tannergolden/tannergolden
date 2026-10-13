@@ -1,62 +1,68 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""The three games beside chess on the profile, Tic-Tac-Toe, Connect Four and Checkers: one engine for all three.
+"""The three games beside chess on the profile, Tic-Tac, Pentago and Checkers: one engine for all three.
 
-  python3 .github/scripts/games.py tictactoe .github/tictactoe [--now 2026-10-12T16:00:00Z]
+  python3 .github/scripts/games.py tictac .github/tictac [--now 2026-10-12T16:00:00Z]
 
 Each plays as chess.py plays chess, and says what it says the way chess says
 it. The owner of the profile is the house, and GitHub, anyone else, the
 other side; the first of GitHub's moves to reach the game is the one played.
 Each move arrives from tannergolden/play's Move Intake, which starts the
-game's workflow with the move as its issue title carries it (a cell, `b2`; a
-column, `4`; or a checkers move, `11-15` or `22x15x8`), the game and move it
-was picked at, the issue it came from and who opened it; they arrive here as
-MOVE, GAME, MOVE_NUMBER, ISSUE, PLAYER and PLAYER_ID, and are checked again.
-Moves count both sides', from 1 for the first.
+game's workflow with the move as its issue title carries it (a square, `e5`;
+a hole and its turn, `e4-ur-cw`; or a checkers move, `11-15` or `22x15x8`),
+the game and move it was picked at, the issue it came from and who opened
+it; they arrive here as MOVE, GAME, MOVE_NUMBER, ISSUE, PLAYER and
+PLAYER_ID, and are checked again. A move's number counts every turn of both
+sides from 1 for the first, a game's ghosts included.
 
 Sides: each player keeps one colour in every game. The house plays X in
-Tic-Tac-Toe and White in Connect Four and Checkers, as it plays White in
-chess; GitHub plays O, or Black. Only who moves first can change. Checkers
-is American checkers, where Black moves first, so GitHub opens every game of
+Tic-Tac and White in Pentago and Checkers, as it plays White in chess;
+GitHub plays O, or Black. Only who moves first can change. Checkers is
+American checkers, where Black moves first, so GitHub opens every game of
 it; the first starts as soon as a run first meets the game, and a fresh
-board's week counts from its start like any turn's. In Tic-Tac-Toe and
-Connect Four the Arbiter opens every game itself, for a side drawn at
-random, with a random legal move, so that side's mark or disc goes first: O
-opens a game of Tic-Tac-Toe the Arbiter opened for GitHub, and a white disc
-a game of Connect Four it opened for the house. Both picks are seeded as the
-Arbiter's week moves are, and the opening counts for nobody and answers no
-issue. `game.json` records the side it opened for as `opens`.
+board's week counts from its start like any turn's.
+
+Tic-Tac and Pentago open under the Ghost Rule, which takes the first move's
+edge from both sides. When a fresh board's start has come, the Arbiter draws
+the side that places the first ghost (`places`); that side locks one square
+with a ghost, or sets one marble that is nobody's, and then the other side
+does; and as the second ghost goes down, in the same run, the Arbiter draws
+the side that makes the first move (`opens`), anywhere. Its draws are seeded
+as its week moves are, and count for nobody. `game.json` keeps the ghosts in
+`ghosts`, each a turn as a move is kept, before `moves`.
 
 A move is played only when it is for the game and the move on the board, by
 the side whose turn it is, and legal. Anything else is turned away with a
 reply saying why, in the very words the intake uses, and nothing changes.
 With no MOVE the run is the clock (clock.py runs every game's in one run):
 when the side to move has gone a week without moving, the Arbiter plays a
-legal move for it at random, and says so on the issue of the move it
-answers, once, and after that in the owner's logbook.
+legal move for it at random, a ghost on a random square where one is due,
+and says so on the issue of the move it answers, once, and after that in the
+owner's logbook.
 
 A game ends when the rules end it, never by resigning or agreeing a draw.
 Its record goes into the Hall of Fame and its moves into a file of their own,
 and its final board stays up for two days: until then nothing can be played,
-and then the next game's fresh board comes by itself, the Arbiter's opening
-already on it where the Arbiter opens. The week for its next move counts
-from the moment it came.
+and then the next game's fresh board comes by itself, with the Arbiter's
+draw for its first ghost where the Ghost Rule opens it. The week for its next
+move counts from the moment it came.
 
-  .github/<game>/game.json           the game on the board: its number, start, the side the Arbiter opened for where
-                                     it opens, its moves, and while a final board is up, the game that ended
+  .github/<game>/game.json           the game on the board: its number, start, the sides the Arbiter drew under the
+                                     Ghost Rule, its ghosts, its moves, and while a final board is up, the game that
+                                     ended
   .github/<game>/hall-of-fame.json   every finished game: result, deciding move, players, the house's moves, the
                                      final board and the winning line
-  .github/<game>/games/game-N.txt    each finished game, every move with who played it (game-N.pdn for checkers)
+  .github/<game>/games/game-N.txt    each finished game, every turn with who played it (game-N.pdn for checkers)
 
 After every run it sets the game's board out for the page between its own
-markers in .github/markdown.yaml (`# tictactoe:start` and `# tictactoe:end`,
-and so on), with every legal move named by the game's names module and a
-link that opens its ready-made issue, and the Hall of Fame of all four games
-between `# hall:start` and `# hall:end` (hall.py). It writes comment.md and
+markers in .github/markdown.yaml (`# tictac:start` and `# tictac:end`, and so
+on), with every legal move named by the game's names module and a link that
+opens its ready-made issue, and the Hall of Fame of all four games between
+`# hall:start` and `# hall:end` (hall.py). It writes comment.md and
 commit.txt into --out, and sets `changed`, `issue` and `logbook` as step
 outputs, as chess.py does. Stdlib only, with each game's module beside it:
-tictactoe.py, connectfour.py and checkers.py, and their rules and names.
+tictac.py, pentago.py and checkers.py, and their rules and names.
 """
 from __future__ import annotations
 
@@ -95,13 +101,14 @@ from page import (
     until,
 )
 
-GAMES = ("tictactoe", "connectfour", "checkers")
+GAMES = ("tictac", "pentago", "checkers")
 ROWS = 3  # the score sheet's latest rows
+GHOST_ROW = "G"  # the score sheet's row of the two ghosts, under the Ghost Rule
 COUNT = re.compile(r"[1-9][0-9]{0,8}")  # a game or a move: up to 999,999,999, as the page's links carry
 ID = re.compile(r"[1-9][0-9]{0,15}")  # an issue or an account: up to 16 digits, as the intake passes on
 LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})")
-ORDER = ("kind", "board", "fen", "opens", "game", "move", "players", "due", "next", "last", "result", "line",
-         "kings", "alert", "history", "note", "moves")
+ORDER = ("kind", "board", "fen", "places", "opens", "game", "move", "players", "due", "next", "next_at", "last",
+         "result", "line", "kings", "alert", "history", "note", "moves")
 
 # The refusals, word for word as the intake's (tannergolden/play), which turns the same moves away before they come.
 OVER = ("⌛ **Game {game} is over**, so `{code}` wasn't played.\n"
@@ -112,6 +119,10 @@ HOUSE_TURN = ("⏳ **It's {owner}'s turn as {house}**, so `{code}` wasn't played
               "GitHub plays {github}: once {house} moves, pick {github}'s reply on {board}.\n")
 GITHUB_TURN = ("⏳ **It's GitHub's turn as {github}**, so `{code}` wasn't played.\n"
                "{github}'s moves are for everyone but you. Your turn comes next.\n")
+HOUSE_GHOST = ("⏳ **It's {owner}'s turn to {verb} a ghost**, so `{code}` wasn't played.\n"
+               "Once {owner}'s ghost is down, pick a {spot} for GitHub's on {board}.\n")
+GITHUB_GHOST = ("⏳ **It's GitHub's turn to {verb} a ghost**, so `{code}` wasn't played.\n"
+                "GitHub's ghost is for everyone but you. Your turn comes next.\n")
 OPENS = ("⏳ **Game {number} opens {day}**, so `{code}` wasn't played.\n"
          "Game {ended}'s final board stays up until then: pick a move from {board} once game {number} is on it.\n")
 
@@ -158,25 +169,67 @@ class End:
     line: list | None = None  # the winning cells as the board's own field takes them
 
 
-# --- the sides ---------------------------------------------------------------------------------------------------
+# --- the sides and the turns ---------------------------------------------------------------------------------------
+def ghostly(mod: ModuleType) -> bool:
+    """Whether the game opens under the Ghost Rule."""
+    return getattr(mod, "GHOST_RULE", False)
+
+
+def ghosts_of(game: dict) -> list[dict]:
+    return game.get("ghosts", [])
+
+
+def ghosting(mod: ModuleType, game: dict) -> bool:
+    """Whether a game under the Ghost Rule is still at its ghosts: fewer than two down."""
+    return ghostly(mod) and len(ghosts_of(game)) < 2
+
+
+def turns(game: dict) -> list[dict]:
+    """Every turn played, in order: the ghosts, then the moves."""
+    return [*ghosts_of(game), *game["moves"]]
+
+
 def opener(mod: ModuleType, game: dict) -> str:
-    """The side that moves first: the side the game always opens with, or the side the Arbiter opened for."""
+    """The side that makes the first move: the side the game always opens with, or the side the Arbiter drew."""
     return mod.OPENER or game.get("opens", HOUSE)
 
 
-def side_of(mod: ModuleType, game: dict, ply: int) -> str:
-    """Whose move a ply is, counting from 1: the opener's odd ones, the other side's even ones."""
+def side_of(mod: ModuleType, game: dict, turn: int) -> str:
+    """Whose turn a turn is, counting from 1: under the Ghost Rule, the first ghost's the side drawn to place it and
+    the second the other's; then the opener's odd moves and the other side's even ones."""
+    if ghostly(mod):
+        if turn <= 2:
+            return game["places"] if turn == 1 else other(game["places"])
+        turn -= 2
     first = opener(mod, game)
-    return first if ply % 2 else other(first)
+    return first if turn % 2 else other(first)
+
+
+def ply_of(mod: ModuleType, turn: int) -> int:
+    """A turn's number among the moves alone, its ghosts left out."""
+    return turn - 2 if ghostly(mod) else turn
 
 
 def named_side(side: str, owner: str) -> str:
     return f"@{owner}" if side == HOUSE else "GitHub"
 
 
+def login(side: str, owner: str) -> str:
+    """A side as a commit names it: the owner's login, with no @ to link it, or GitHub."""
+    return owner if side == HOUSE else "GitHub"
+
+
 def numbered(ply: int, shown: str) -> str:
     """A move with its number, as a score sheet writes it: `3. Xa2` for the opener's, `3... Oc2` for the reply."""
     return f"{(ply + 1) // 2}. {shown}" if ply % 2 else f"{ply // 2}... {shown}"
+
+
+def turn_named(mod: ModuleType, turn: int, shown: str) -> str:
+    """A turn with its number as the score sheet writes it: a ghost on the ghosts' row, `G. e5` and `G... b8`, and
+    a move by its number among the moves."""
+    if ghostly(mod) and turn <= 2:
+        return f"{GHOST_ROW}. {shown}" if turn == 1 else f"{GHOST_ROW}... {shown}"
+    return numbered(ply_of(mod, turn), shown)
 
 
 def who(played: dict) -> str:
@@ -197,8 +250,11 @@ def pick(options: list, text: str):
 
 # --- the game ----------------------------------------------------------------------------------------------------
 def replay(mod: ModuleType, game: dict) -> list:
-    """Every position of the game, from the first to the one on the board."""
-    positions = [mod.start(opener(mod, game))]
+    """Every position of the game, from the first to the one on the board; none while its ghosts go down."""
+    if ghosting(mod, game):
+        return []
+    first = opener(mod, game)
+    positions = [mod.start(first, [g["move"] for g in ghosts_of(game)]) if ghostly(mod) else mod.start(first)]
     for index, played in enumerate(game["moves"], 1):
         if played["move"] not in mod.legal(positions[-1]):
             raise ValueError(f"game {game['game']}, move {index}: {played['move']} is not legal there")
@@ -206,29 +262,25 @@ def replay(mod: ModuleType, game: dict) -> list:
     return positions
 
 
-def settle(mod: ModuleType, game: dict | None, moment: dt.datetime) -> tuple[dict, dict | None]:
-    """The game brought up to the moment. The first game begins at once, its start the moment, and where the
-    Arbiter opens, a fresh board's opening is played as soon as its start has come: a side drawn at random, then a
-    random legal move for it, stamped at the start itself so the week for the reply counts from there. Returns the
-    game, and the opening when this is the moment it was played."""
+def settle(mod: ModuleType, game: dict | None, moment: dt.datetime) -> tuple[dict, str | None]:
+    """The game brought up to the moment. The first game begins at once, its start the moment; and under the Ghost
+    Rule, once a fresh board's start has come, the Arbiter draws the side that places its first ghost. Returns the
+    game, and the side drawn when this is the moment it was drawn."""
     if game is None:
         game = {"game": 1, "started": stamp(moment), "moves": []}
-    if not mod.ARBITER_OPENS or game["moves"] or parse(game["started"]) > moment:
+    if not ghostly(mod) or game.get("places") or parse(game["started"]) > moment:
         return game, None
     number, started = game["game"], game["started"]
-    opens = pick([HOUSE, GITHUB], f"{mod.KEY}:{number}:opens:{started}")
-    position = mod.start(opens)
-    code = pick(sorted(mod.legal(position)), f"{mod.KEY}:{number}:1:{started}")
-    opening = {"move": code, "shown": mod.shown(position, code), "player": None, "player_id": None, "issue": None,
-               "arbiter": True, "at": started}
-    return {"game": number, "started": started, "opens": opens, "moves": [opening]}, opening
+    places = pick([HOUSE, GITHUB], f"{mod.KEY}:{number}:places:{started}")
+    return {"game": number, "started": started, "places": places, "ghosts": [], "moves": []}, places
 
 
 def contributors(mod: ModuleType, game: dict) -> list[dict]:
-    """Everyone who played a move for GitHub in the game, most moves first: the Arbiter's count for nobody."""
+    """Everyone who played a turn for GitHub in the game, its ghost included, most turns first: the Arbiter's count
+    for nobody."""
     counts: dict[int, dict] = {}
-    for ply, played in enumerate(game["moves"], 1):
-        if side_of(mod, game, ply) == GITHUB and not played.get("arbiter"):
+    for turn, played in enumerate(turns(game), 1):
+        if side_of(mod, game, turn) == GITHUB and not played.get("arbiter"):
             entry = counts.setdefault(played["player_id"], {"player": played["player"],
                                                             "player_id": played["player_id"], "moves": 0})
             entry["player"] = played["player"]  # the newest login, should it have changed
@@ -237,13 +289,13 @@ def contributors(mod: ModuleType, game: dict) -> list[dict]:
 
 
 def house_moves(mod: ModuleType, game: dict) -> int:
-    """How many of the house's moves in the game the owner made: the Arbiter's are not theirs."""
-    return sum(1 for ply, played in enumerate(game["moves"], 1)
-               if side_of(mod, game, ply) == HOUSE and not played.get("arbiter"))
+    """How many of the house's turns in the game the owner made, its ghost included: the Arbiter's are not theirs."""
+    return sum(1 for turn, played in enumerate(turns(game), 1)
+               if side_of(mod, game, turn) == HOUSE and not played.get("arbiter"))
 
 
 def same(played: dict, request: Request) -> bool:
-    """Whether a move on record came from this very request: the same issue, the same move and the same player. A
+    """Whether a turn on record came from this very request: the same issue, the same move and the same player. A
     run made over again, such as a re-run of its job, finds its own move already played."""
     return (request.issue is not None and played.get("issue") == request.issue and not played.get("arbiter")
             and played.get("player_id") == request.player_id)
@@ -258,8 +310,17 @@ def ending_of(mod: ModuleType, positions: list, codes: list[str]) -> End | None:
 
 # --- what the replies say ----------------------------------------------------------------------------------------
 def entry_of(mod: ModuleType, position, game: int, ply: int, code: str) -> dict:
-    """A move as the board listed it: its notation, words, emoji and title."""
+    """A move as the board names it: its notation, words, emoji and title. A game whose list names a choice the
+    move only begins, a Pentago hole, names the whole move itself (`entry`)."""
+    if hasattr(mod, "entry"):
+        return mod.entry(position, code)
     return next(entry for entry in mod.listing(position, game, ply) if entry["code"] == code)
+
+
+def ghost_entry(mod: ModuleType, game: dict, code: str) -> dict:
+    """A ghost as the board listed it: its emoji, title and words."""
+    taken = [g["move"] for g in ghosts_of(game)]
+    return next(entry for entry in mod.ghost_listing(taken) if entry["code"] == code)
 
 
 def named(mod: ModuleType, position, game: int, ply: int, code: str) -> str:
@@ -268,14 +329,28 @@ def named(mod: ModuleType, position, game: int, ply: int, code: str) -> str:
     return f"{entry['emoji']} *{entry['title']}* · {entry['words']}"
 
 
-def turn_line(mod: ModuleType, game: dict, side: str, position, owner: str, board: str) -> str:
+def ghost_named(mod: ModuleType, game: dict, code: str) -> str:
+    entry = ghost_entry(mod, game, code)
+    return f"{entry['emoji']} *{entry['title']}* · {entry['words']}"
+
+
+def turn_line(mod: ModuleType, game: dict, side: str, position, owner: str, board: str, *,
+              first: bool = False) -> str:
     """The line a reply ends on: whose turn it is now, and what that side faces. The owner is pinged when the move
-    is theirs, and only then."""
+    is theirs, and only then. `first` is the game's first move, which answers nothing."""
     faces, facing = mod.pressure(position)
     if side == HOUSE:
         return f"@{owner}, it's your move{', ' + faces if faces else ''}."
     return (f"GitHub's turn{', ' + facing if facing else ''}: anyone but {handle(owner)} can pick"
-            f" {mod.WORDS[GITHUB]}'s reply on {board}.")
+            f" {mod.WORDS[GITHUB]}'s {'first move' if first else 'reply'} on {board}.")
+
+
+def ghost_turn_line(mod: ModuleType, side: str, owner: str, board: str) -> str:
+    """The line a ghost's reply ends on while the other side's ghost is still to come."""
+    verb = mod.GHOSTS[0]
+    if side == HOUSE:
+        return f"@{owner}, it's your turn to {verb} a ghost."
+    return f"GitHub's turn to {verb} a ghost: anyone but {handle(owner)} can pick a {mod.SPOT} for it on {board}."
 
 
 def played_text(mod: ModuleType, game: dict, shown: str, side: str, player: str, name: str, after, owner: str,
@@ -289,6 +364,20 @@ def played_text(mod: ModuleType, game: dict, shown: str, side: str, player: str,
     return f"{sign} **{shown} is on the board.{alarm}** Well played, @{player}.\n{name}\n{turn}\n"
 
 
+def ghost_text(mod: ModuleType, game: dict, shown: str, side: str, player: str, name: str, drawn: str | None,
+               owner: str, board: str) -> str:
+    """The reply to a ghost that is placed: the ghost, its name, and whose turn it is; once both are down, the side
+    the Arbiter drew to open, and its turn."""
+    praise = "" if side == HOUSE or not player else f" Well played, @{player}."
+    head = f"👻 **{shown} is on the board.**{praise}"
+    if not drawn:
+        return f"{head}\n{name}\n{ghost_turn_line(mod, other(side), owner, board)}\n"
+    position = mod.start(drawn, [g["move"] for g in ghosts_of(game)])
+    draw = (f"🎲 Both ghosts are down, so the Arbiter drew the side that moves first:"
+            f" {named_side(drawn, owner)}, as {mod.WORDS[drawn]}.")
+    return f"{head}\n{name}\n{draw}\n{turn_line(mod, game, drawn, position, owner, board, first=True)}\n"
+
+
 def ended_text(mod: ModuleType, game: dict, end: End, shown: str, mover: dict, owner: str, name: str,
                opens: dt.datetime) -> str:
     """What the reply says when a move ends the game: how it ended, the move that did it, and when the next game's
@@ -298,6 +387,9 @@ def ended_text(mod: ModuleType, game: dict, end: End, shown: str, mover: dict, o
         cry = mod.cry(end, mod.WORDS[other(winner)])
         if mover.get("arbiter"):
             head = f"🏆 **{shown}: {cry}** {named_side(winner, owner)} wins game {number} on the Arbiter's move."
+        elif not side_won_by_mover(mod, game, winner):
+            head = (f"🏆 **{shown}: {cry}** {named_side(winner, owner)} wins game {number} on the other side's move,"
+                    " which counts for nobody.")
         elif winner == HOUSE:
             head = f"🏆 **{shown}: {cry}** @{owner} wins game {number}."
         else:
@@ -305,10 +397,15 @@ def ended_text(mod: ModuleType, game: dict, end: End, shown: str, mover: dict, o
                     f" [Hall of Fame]({profile(owner)}) for the winning move.")
     else:
         head = f"🤝 **{shown}: game {number} is drawn {mod.DRAWN[end.reason]}.**"
-    nxt = ("the Arbiter opens it for a side drawn at random" if mod.ARBITER_OPENS
+    nxt = (f"the Arbiter draws the side that {mod.GHOSTS[1]} its first ghost" if ghostly(mod)
            else f"{named_side(mod.OPENER, owner)} opens it as {mod.WORDS[mod.OPENER]}")
     return (f"{head}\n{name}\nIts final board stays up for two days: game {number + 1} opens {day(opens)}, and"
             f" {nxt}.\n")
+
+
+def side_won_by_mover(mod: ModuleType, game: dict, winner: str) -> bool:
+    """Whether the side that won made the last move: in Pentago a turn can win the game for the other side."""
+    return side_of(mod, game, len(turns(game))) == winner
 
 
 # --- moves ---------------------------------------------------------------------------------------------------------
@@ -317,9 +414,9 @@ def apply(mod: ModuleType, game: dict, hall: list, positions: list, code: str, m
     """Plays a legal move into the game; when it ends the game, records it, and sets the next game to come two days
     on, its board showing the one that ended until then."""
     position = positions[-1]
-    ply = len(game["moves"]) + 1
+    turn = len(turns(game)) + 1
     text = mod.shown(position, code)
-    shown = numbered(ply, text)
+    shown = turn_named(mod, turn, text)
     game = {**{key: value for key, value in game.items() if key not in ("moves", "ended")},
             "moves": [*game["moves"], {"move": code, "shown": text, **mover, "at": stamp(moment)}]}
     positions = [*positions, mod.make(position, code)]
@@ -327,8 +424,10 @@ def apply(mod: ModuleType, game: dict, hall: list, positions: list, code: str, m
     outcome = Outcome(game=game, hall=hall, changed=True)
     if end:
         deciding = {"move": shown, **{key: mover.get(key) for key in ("player", "player_id", "arbiter", "issue")}}
+        if end.winner and not side_won_by_mover(mod, game, end.winner):
+            deciding["own"] = False  # a Pentago turn that won the game for the other side: the win is nobody's own
         record = {"game": game["game"], "result": mod.RESULTS[end.winner], "reason": end.reason,
-                  "winner": {HOUSE: owner, GITHUB: "GitHub"}.get(end.winner or ""), "plies": len(game["moves"]),
+                  "winner": {HOUSE: owner, GITHUB: "GitHub"}.get(end.winner or ""), "plies": len(turns(game)),
                   "started": game["started"], "ended": stamp(moment), "deciding": deciding,
                   "players": contributors(mod, game), "house_moves": house_moves(mod, game),
                   "final": mod.final(positions[-1])}
@@ -342,22 +441,50 @@ def apply(mod: ModuleType, game: dict, hall: list, positions: list, code: str, m
     return outcome, shown, end
 
 
-def opened_commit(mod: ModuleType, game: dict, owner: str) -> str:
-    """The commit for the Arbiter's opening of a fresh board."""
-    side = opener(mod, game)
-    body = (f"The Arbiter opens every game of {mod.TITLE} for a side drawn at random, with a random move that counts"
-            " for nobody.")
-    return (f"chore({mod.KEY}): 🎲 open game {game['game']} for {owner if side == HOUSE else 'GitHub'} with"
-            f" {numbered(1, game['moves'][0]['shown'])}\n\n{textwrap.fill(body, 72)}")
+def place_ghost(mod: ModuleType, game: dict, hall: list, code: str, mover: dict,
+                moment: dt.datetime) -> tuple[Outcome, str, str | None]:
+    """Places a ghost; with the second down, the Arbiter draws the side that makes the first move, in the same run.
+    Returns the outcome, the ghost as the score sheet numbers it, and the side drawn, if one was."""
+    turn = len(ghosts_of(game)) + 1
+    ghosts = [*ghosts_of(game), {"move": code, "shown": code, **mover, "at": stamp(moment)}]
+    game = {**game, "ghosts": ghosts}
+    drawn = None
+    if len(ghosts) == 2:
+        drawn = pick([HOUSE, GITHUB], f"{mod.KEY}:{game['game']}:opens:{stamp(moment)}")
+        game = {key: game[key] for key in ("game", "started", "places")} | {"ghosts": ghosts, "opens": drawn,
+                                                                            "moves": []}
+    return Outcome(game=game, hall=hall, changed=True), turn_named(mod, turn, code), drawn
+
+
+def drawn_commit(mod: ModuleType, game: dict, owner: str) -> str:
+    """The commit for the Arbiter's draw of the side that places a fresh board's first ghost."""
+    verb, does = mod.GHOSTS[:2]
+    body = (f"Under the Ghost Rule each side {does} one ghost before the first move of {mod.TITLE}, the Arbiter"
+            f" drawing the side that {does} first, and then the side that moves first.")
+    return (f"chore({mod.KEY}): 🎲 start game {game['game']}, {login(game['places'], owner)} to {verb} the first"
+            f" ghost\n\n{textwrap.fill(body, 72)}")
 
 
 def started_commit(mod: ModuleType, game: dict, owner: str) -> str:
-    """The commit for a first game that begins without an opening of the Arbiter's: its start, and who opens it."""
+    """The commit for a first game that begins without a draw of the Arbiter's: its start, and who opens it."""
     side = opener(mod, game)
-    named, said = (owner if side == HOUSE else "GitHub"), mod.WORDS[side]
-    body = (f"{named} opens every game of {mod.TITLE} as {said}, and the week for the first move of game"
+    named_, said = login(side, owner), mod.WORDS[side]
+    body = (f"{named_} opens every game of {mod.TITLE} as {said}, and the week for the first move of game"
             f" {game['game']} counts from now.")
-    return f"chore({mod.KEY}): 🏁 start game {game['game']}, {named} to open as {said}\n\n{textwrap.fill(body, 72)}"
+    return f"chore({mod.KEY}): 🏁 start game {game['game']}, {named_} to open as {said}\n\n{textwrap.fill(body, 72)}"
+
+
+def ghost_commit(mod: ModuleType, game: dict, shown: str, side: str, drawn: str | None, owner: str, *,
+                 late: bool = False) -> str:
+    """The commit for a ghost: placed, the Arbiter's after a week without one (`late`), and with the second, the
+    side the Arbiter drew to move first."""
+    verb = mod.GHOSTS[0]
+    head = f"chore({mod.KEY}): 👻 {verb} {shown} for {mod.WORDS[side]} in game {game['game']}"
+    if late:
+        head += " after a week without one"
+    if drawn:
+        head += f", drawing {login(drawn, owner)} to open"
+    return head
 
 
 def verdict(mod: ModuleType, end: End) -> str:
@@ -365,14 +492,33 @@ def verdict(mod: ModuleType, end: End) -> str:
     return f"{mod.WORDS[end.winner]} wins" if end.winner else "drawn"
 
 
+def refusal_for_side(mod: ModuleType, current: dict, turn: int, side: str, is_owner: bool, code: str, owner: str,
+                     board: str) -> tuple[str, str] | None:
+    """The reply and the log for a move sent on the other side's turn, in the intake's words, or None."""
+    words = {"house": mod.WORDS[HOUSE], "github": mod.WORDS[GITHUB]}
+    if ghostly(mod) and turn <= 2:
+        verb = mod.GHOSTS[0]
+        if side == HOUSE and not is_owner:
+            return (HOUSE_GHOST.format(owner=handle(owner), verb=verb, code=code, board=board, spot=mod.SPOT),
+                    "the house's ghost")
+        if side == GITHUB and is_owner:
+            return GITHUB_GHOST.format(verb=verb, code=code), "GitHub's ghost"
+        return None
+    if side == HOUSE and not is_owner:
+        return (HOUSE_TURN.format(owner=handle(owner), code=code, board=board, **words), f"{words['house']}'s turn")
+    if side == GITHUB and is_owner:
+        return GITHUB_TURN.format(code=code, **words), f"{words['github']}'s turn"
+    return None
+
+
 def play(mod: ModuleType, game: dict | None, hall: list, request: Request, owner: str, owner_id: int,
          moment: dt.datetime) -> Outcome:
     """One move from the intake: played, or turned away with the reason."""
-    current, opening = settle(mod, game, moment)
+    current, drawn = settle(mod, game, moment)
     number, board = current["game"], f"[the board]({profile(owner)})"
-    outcome = Outcome(game=current, hall=hall, issue=request.issue, changed=game is None or opening is not None)
-    if opening:
-        outcome.commit = opened_commit(mod, current, owner)
+    outcome = Outcome(game=current, hall=hall, issue=request.issue, changed=game is None or drawn is not None)
+    if drawn:
+        outcome.commit = drawn_commit(mod, current, owner)
     elif game is None:
         outcome.commit = started_commit(mod, current, owner)
 
@@ -382,11 +528,11 @@ def play(mod: ModuleType, game: dict | None, hall: list, request: Request, owner
 
     # While the last game's final board is up, nothing can be played: a move for any game is told when the next
     # one opens, in the intake's words, which never say a game is under way before it is.
-    waiting = number > 1 and not current["moves"] and parse(current["started"]) > moment
+    waiting = number > 1 and not turns(current) and parse(current["started"]) > moment
     if request.game < number:
         ended = next((record for record in hall if record["game"] == request.game), None)
         if ended and ended["plies"] == request.move and same(ended["deciding"], request):
-            outcome.redraw = not current["moves"]  # its ending is still the last thing to happen
+            outcome.redraw = not turns(current)  # its ending is still the last thing to happen
             later = (f"Game {number} opens {day(parse(current['started']))} on {board}." if waiting
                      else f"Game {number} is under way on {board}.")
             return refuse(f"✅ **{ended['deciding']['move']} already ended game {request.game}**, played from this"
@@ -399,116 +545,173 @@ def play(mod: ModuleType, game: dict | None, hall: list, request: Request, owner
     if request.game > number:
         return refuse(f"❓ **There's no game {request.game} yet**, so `{request.code}` wasn't played.\nGame {number}"
                       f" is under way on {board}: pick a move there.\n", "a later game")
-    positions = replay(mod, current)
-    position, ply = positions[-1], len(current["moves"]) + 1
-    if request.move < ply:
-        earlier = current["moves"][request.move - 1]
-        shown = numbered(request.move, earlier["shown"])
+    played_so_far = turns(current)
+    turn = len(played_so_far) + 1
+    if request.move < turn:
+        earlier = played_so_far[request.move - 1]
+        shown = turn_named(mod, request.move, earlier["shown"])
         if earlier["move"] == request.code and same(earlier, request):
-            if request.move == ply - 1:  # the last move on the board: answer as when it was played, and draw again
+            if request.move == turn - 1:  # the last turn on the board: answer as when it was played, and draw again
                 outcome.redraw = True
-                name = named(mod, positions[-2], number, request.move, earlier["move"])
-                return refuse(played_text(mod, current, shown, side_of(mod, current, request.move), request.player,
-                                          name, position, owner, board), "already played from this issue")
+                return refuse(again(mod, current, request, owner, board), "already played from this issue")
             return refuse(f"✅ **{shown} is already on the board**, played from this issue.\nThe game has moved on"
                           f" since: pick a move from {board} as it stands now.\n", "already played from this issue")
         by = ("you" if not earlier.get("arbiter") and earlier["player_id"] == request.player_id else
               "the Arbiter" if earlier.get("arbiter") else handle(earlier["player"]))
         return refuse(TOO_LATE.format(ply=request.move, code=request.code, numbered=shown, by=by, board=board),
                       "stale")
-    if request.move > ply:
-        return refuse(f"❓ **The board is on move {ply}, not move {request.move}**, so `{request.code}` wasn't"
+    if request.move > turn:
+        return refuse(f"❓ **The board is on move {turn}, not move {request.move}**, so `{request.code}` wasn't"
                       f" played.\nPick a move from {board} as it stands now.\n", "a later move")
-    side, is_owner = side_of(mod, current, ply), request.player_id == owner_id
-    words = {"house": mod.WORDS[HOUSE], "github": mod.WORDS[GITHUB]}
-    if side == HOUSE and not is_owner:
-        return refuse(HOUSE_TURN.format(owner=handle(owner), code=request.code, board=board, **words),
-                      f"{words['house']}'s turn")
-    if side == GITHUB and is_owner:
-        return refuse(GITHUB_TURN.format(code=request.code, **words), f"{words['github']}'s turn")
+    side, is_owner = side_of(mod, current, turn), request.player_id == owner_id
+    refused = refusal_for_side(mod, current, turn, side, is_owner, request.code, owner, board)
+    if refused:
+        return refuse(*refused)
+    mover = {"player": request.player, "player_id": request.player_id, "issue": request.issue, "arbiter": False}
+    if ghosting(mod, current):
+        free = mod.ghost_cells([g["move"] for g in ghosts_of(current)])
+        if request.code not in free or not mod.GHOST_CODE.fullmatch(request.code):
+            spot = mod.SPOT
+            return refuse(f"🚫 **`{request.code}` isn't a {spot} a ghost can go on**: a ghost goes on an empty {spot}"
+                          f" alone, such as `{free[0]}`.\nNothing was played. Every {spot} listed under {board} is"
+                          " open: pick one there.\n", "illegal ghost")
+        name = ghost_named(mod, current, request.code)
+        result, shown, opened = place_ghost(mod, current, hall, request.code, mover, moment)
+        result.issue = request.issue
+        result.comment = ghost_text(mod, result.game, shown, side, request.player, name, opened, owner, board)
+        result.commit = ghost_commit(mod, current, shown, side, opened, owner)
+        result.commit += f"\n\nMove {turn}, by {request.player}."
+        if drawn:
+            result.commit += f" The Arbiter drew {login(current['places'], owner)} to {mod.GHOSTS[0]} the first ghost."
+        result.log = f"{mod.GHOSTS[3]} {shown}" + (f", the Arbiter drawing {opened} to open" if opened else "")
+        return result
+    positions = replay(mod, current)
+    position = positions[-1]
     if request.code not in mod.legal(position):
         return refuse(f"🚫 **`{request.code}` isn't a legal move here**: {mod.why_illegal(position, request.code)}.\n"
                       f"Nothing was played. Every move listed under {board} is legal: pick one there.\n", "illegal")
-
-    mover = {"player": request.player, "player_id": request.player_id, "issue": request.issue, "arbiter": False}
-    name = named(mod, position, number, ply, request.code)
+    name = named(mod, position, number, turn, request.code)
     result, shown, end = apply(mod, current, hall, positions, request.code, mover, owner, moment)
     result.issue = request.issue
     if end:
-        result.comment = ended_text(mod, current, end, shown, mover, owner, name, moment + DISPLAY)
+        ended = {**current, "moves": [*current["moves"], {"move": request.code}]}
+        result.comment = ended_text(mod, ended, end, shown, mover, owner, name, moment + DISPLAY)
         sign = "🏆" if end.winner else "🤝"
         result.commit = f"chore({mod.KEY}): {sign} play {shown}, ending game {number}: {verdict(mod, end)}"
     else:
         after = mod.make(position, request.code)
         result.comment = played_text(mod, current, shown, side, request.player, name, after, owner, board)
         result.commit = f"chore({mod.KEY}): {mod.LEAD[mod.WORDS[side]]} play {shown} in game {number}"
-    result.commit += f"\n\nMove {ply}, by {request.player}."
-    if opening:
-        result.commit += f" The Arbiter opened game {number} first, with {numbered(1, opening['shown'])}."
-    elif game is None:
+    result.commit += f"\n\nMove {turn}, by {request.player}."
+    if game is None:  # the first game starts with this very move, as checkers' does when GitHub opens before the clock
         result.commit += f" Game {number} starts with it."
     result.log = f"played {shown}" + (f", {end.reason}" if end else "")
     return result
 
 
+def again(mod: ModuleType, current: dict, request: Request, owner: str, board: str) -> str:
+    """The reply to the last turn on the board sent again from its own issue, as when it was played."""
+    played_so_far = turns(current)
+    turn = len(played_so_far)
+    earlier = played_so_far[-1]
+    shown = turn_named(mod, turn, earlier["shown"])
+    side = side_of(mod, current, turn)
+    if ghostly(mod) and turn <= 2:
+        name = ghost_named(mod, {**current, "ghosts": ghosts_of(current)[:turn - 1]}, earlier["move"])
+        opened = current.get("opens") if turn == 2 else None
+        return ghost_text(mod, current, shown, side, request.player, name, opened, owner, board)
+    positions = replay(mod, current)
+    name = named(mod, positions[-2], current["game"], turn, earlier["move"])
+    return played_text(mod, current, shown, side, request.player, name, positions[-1], owner, board)
+
+
 def tick(mod: ModuleType, game: dict | None, hall: list, owner: str, moment: dt.datetime) -> Outcome:
-    """The clock: a fresh board's opening once its start has come, where the Arbiter opens, and after a week without
-    a move, the Arbiter's random move for the side to move."""
-    settled, opening = settle(mod, game, moment)
-    outcome = Outcome(game=settled, hall=hall, changed=game is None or opening is not None)
+    """The clock: under the Ghost Rule a fresh board's draw once its start has come, and after a week without a
+    move, the Arbiter's random move for the side to move, a ghost on a random square where one is due."""
+    settled, drawn = settle(mod, game, moment)
+    outcome = Outcome(game=settled, hall=hall, changed=game is None or drawn is not None)
     said = []
-    if opening:
-        outcome.commit = opened_commit(mod, settled, owner)
-        said.append(f"the Arbiter opened game {settled['game']} with {numbered(1, opening['shown'])}")
+    if drawn:
+        outcome.commit = drawn_commit(mod, settled, owner)
+        said.append(f"the Arbiter drew {named_side(drawn, owner)} to {mod.GHOSTS[0]} game {settled['game']}'s first"
+                    " ghost")
     elif game is None:
         outcome.commit = started_commit(mod, settled, owner)
         said.append(f"game {settled['game']} started, {named_side(opener(mod, settled), owner)} to open")
-    if not settled["moves"] and parse(settled["started"]) > moment:
+    played_so_far = turns(settled)
+    if not played_so_far and parse(settled["started"]) > moment:
         outcome.log = f"game {settled['game'] - 1}'s final board is up until {settled['started']}"
         return outcome
-    last = parse(settled["moves"][-1]["at"] if settled["moves"] else settled["started"])
+    last = parse(played_so_far[-1]["at"] if played_so_far else settled["started"])
     if moment - last < WEEK:
         outcome.log = "; ".join([*said, f"the side to move has until {stamp(last + WEEK)}"])
         return outcome
-    positions = replay(mod, settled)
-    position, ply, number = positions[-1], len(settled["moves"]) + 1, settled["game"]
-    code = pick(sorted(mod.legal(position)), f"{mod.KEY}:{number}:{ply}:{stamp(last)}")
+    turn, number = len(played_so_far) + 1, settled["game"]
     mover = {"player": None, "player_id": None, "issue": None, "arbiter": True}
-    side = side_of(mod, settled, ply)
-    name = named(mod, position, number, ply, code)
-    result, shown, end = apply(mod, settled, hall, positions, code, mover, owner, moment)
+    side = side_of(mod, settled, turn)
+    board = f"[the board]({profile(owner)})"
+    late = "GitHub" if side == GITHUB else handle(owner)
     # The notice goes on the issue of the move the Arbiter answers, once: its first move after a player's (the move
-    # that ended the last game, when it opens the next) is told there, and a move after another of its own, its
-    # opening included, goes in the owner's logbook, so no player's issue collects a notice a week and none is lost.
-    before = settled["moves"][-1] if settled["moves"] else (hall[-1]["deciding"] if hall else None)
+    # that ended the last game, when it is the first of the next) is told there, and a move after another of its
+    # own goes in the owner's logbook, so no player's issue collects a notice a week and none is lost.
+    before = played_so_far[-1] if played_so_far else (hall[-1]["deciding"] if hall else None)
+    if ghosting(mod, settled):
+        free = mod.ghost_cells([g["move"] for g in ghosts_of(settled)])
+        code = pick(sorted(free), f"{mod.KEY}:{number}:{turn}:{stamp(last)}")
+        name = ghost_named(mod, settled, code)
+        result, shown, opened = place_ghost(mod, settled, hall, code, mover, moment)
+        head = (f"⏰ **A week passed without a ghost from {late}**, so the Arbiter {mod.GHOSTS[3]} {shown} for"
+                f" {mod.WORDS[side]}, at random.")
+        result.comment = f"{head}\n\n{ghost_text(mod, result.game, shown, side, '', name, opened, owner, board)}"
+        result.commit = (ghost_commit(mod, settled, shown, side, opened, owner, late=True)
+                         + f"\n\nMove {turn} of game {number}, by the Arbiter.")
+        log = f"the Arbiter {mod.GHOSTS[3]} {shown}" + (f", drawing {opened} to open" if opened else "")
+        end = None
+    else:
+        positions = replay(mod, settled)
+        position = positions[-1]
+        code = pick(sorted(mod.legal(position)), f"{mod.KEY}:{number}:{turn}:{stamp(last)}")
+        name = named(mod, position, number, turn, code)
+        result, shown, end = apply(mod, settled, hall, positions, code, mover, owner, moment)
+        head = (f"⏰ **A week passed without a move from {late}**, so the Arbiter played {shown} for"
+                f" {mod.WORDS[side]}, at random.")
+        if end:
+            ended = {**settled, "moves": [*settled["moves"], {"move": code}]}
+            result.comment = f"{head}\n\n{ended_text(mod, ended, end, shown, mover, owner, name, moment + DISPLAY)}"
+        else:
+            after = mod.make(position, code)
+            result.comment = f"{head}\n{name}\n{turn_line(mod, settled, other(side), after, owner, board)}\n"
+        result.commit = (f"chore({mod.KEY}): ⏰ play {shown} for {mod.WORDS[side]} after a week without a move"
+                         f"\n\nMove {turn} of game {number}, by the Arbiter.")
+        if end:
+            result.commit += f" It ends the game: {verdict(mod, end)}."
+        log = f"the Arbiter played {shown}" + (f", {end.reason}" if end else "")
+    if drawn:
+        result.commit += f" The Arbiter first drew {login(drawn, owner)} to {mod.GHOSTS[0]} the first ghost."
     if before and not before.get("arbiter") and before.get("issue"):
         result.issue = before["issue"]
     else:
         result.logbook = True
-    board = f"[the board]({profile(owner)})"
-    late = "GitHub" if side == GITHUB else handle(owner)
-    head = (f"⏰ **A week passed without a move from {late}**, so the Arbiter played {shown} for"
-            f" {mod.WORDS[side]}, at random.")
-    if end:
-        result.comment = f"{head}\n\n{ended_text(mod, settled, end, shown, mover, owner, name, moment + DISPLAY)}"
-    else:
-        after = mod.make(position, code)
-        result.comment = f"{head}\n{name}\n{turn_line(mod, settled, other(side), after, owner, board)}\n"
-    result.commit = (f"chore({mod.KEY}): ⏰ play {shown} for {mod.WORDS[side]} after a week without a move"
-                     f"\n\nMove {ply} of game {number}, by the Arbiter.")
-    if end:
-        result.commit += f" It ends the game: {verdict(mod, end)}."
-    if opening:
-        result.commit += f" It opened the game first, with {numbered(1, opening['shown'])}."
-    result.log = "; ".join([*said, f"the Arbiter played {shown}" + (f", {end.reason}" if end else "")])
+    result.log = "; ".join([*said, log])
     return result
 
 
 # --- the board -----------------------------------------------------------------------------------------------------
+def ghost_row(mod: ModuleType, game: dict) -> list:
+    """The score sheet's ghosts' row: each ghost in the order it went down, and who chose GitHub's."""
+    ghosts = ghosts_of(game)
+    github = next((g for turn, g in enumerate(ghosts, 1) if side_of(mod, game, turn) == GITHUB), None)
+    return [GHOST_ROW, ghosts[0]["move"] if ghosts else "", ghosts[1]["move"] if len(ghosts) > 1 else "",
+            who(github) if github else ""]
+
+
 def score_sheet(mod: ModuleType, game: dict, positions: list) -> list[list]:
-    """The score sheet's latest rows: each move's number, the opener's move, the reply and who chose GitHub's, and
-    the row the next move goes on."""
-    moves, rows = game["moves"], []
+    """The score sheet's latest rows: under the Ghost Rule the ghosts' row first; then each move's number, the
+    opener's move, the reply and who chose GitHub's, and the row the next move goes on."""
+    rows = [ghost_row(mod, game)] if ghostly(mod) else []
+    if ghosting(mod, game):
+        return rows
+    moves = game["moves"]
     for i in range(0, len(moves), 2):
         first = moves[i]
         reply = moves[i + 1] if i + 1 < len(moves) else None
@@ -522,9 +725,13 @@ def score_sheet(mod: ModuleType, game: dict, positions: list) -> list[list]:
 
 def last_move(mod: ModuleType, game: dict, positions: list) -> dict:
     """The last move as the board shows it: its notation as the score sheet writes it, a won game's last move with
-    its `#`, its words, who played it, and the day."""
-    played, before, ply = game["moves"][-1], positions[-2], len(game["moves"])
-    entry = entry_of(mod, before, game["game"], ply, played["move"])
+    its `#`, its words, who played it, and the day; under the Ghost Rule, before the first move, the last ghost."""
+    if not game["moves"]:
+        played = ghosts_of(game)[-1]
+        entry = ghost_entry(mod, {**game, "ghosts": ghosts_of(game)[:-1]}, played["move"])
+        return {"move": played["move"], "words": entry["words"], "by": who(played), "when": day(parse(played["at"]))}
+    played, before = game["moves"][-1], positions[-2]
+    entry = entry_of(mod, before, game["game"], len(turns(game)), played["move"])
     return {"move": mod.notation(before, played["move"]), "words": entry["words"], "by": who(played),
             "when": day(parse(played["at"])), **mod.marked(before, played["move"])}
 
@@ -539,8 +746,8 @@ def kept(mod: ModuleType, owner: str) -> str:
 
 
 def how_it_ended(mod: ModuleType, record: dict | None, owner: str) -> str:
-    """How the last game ended, as the next game's note opens with it until that game's first move after any opening
-    the Arbiter played, a player's or the Arbiter's own after a week: who won it, or how it was drawn."""
+    """How the last game ended, as the next game's note opens with it until that game's first move: who won it, or
+    how it was drawn."""
     if not record:
         return ""
     if record["winner"]:
@@ -557,33 +764,47 @@ def who_plays(side: str, owner: str) -> str:
 def board(mod: ModuleType, game: dict | None, hall: list, owner: str, moment: dt.datetime) -> dict:
     """The game's element for the page: what its board draws, and what the README carries round it."""
     current, _ = settle(mod, game, moment)
-    if not current["moves"] and parse(current["started"]) > moment:
+    if not turns(current) and parse(current["started"]) > moment:
         if current.get("ended"):
             return finished(mod, current, hall, owner)
         current, _ = settle(mod, current, parse(current["started"]))  # its record is gone: the fresh board early
     positions = replay(mod, current)
-    position, ply, number = positions[-1], len(current["moves"]) + 1, current["game"]
-    side = side_of(mod, current, ply)
-    element = {"kind": mod.KEY, **mod.fields(current, positions, over=False), "game": number, "move": (ply + 1) // 2,
-               "players": len(contributors(mod, current))}
-    clock = parse(current["moves"][-1]["at"] if current["moves"] else current["started"]) + WEEK
+    played_so_far = turns(current)
+    turn, number = len(played_so_far) + 1, current["game"]
+    ply = ply_of(mod, turn)
+    side = side_of(mod, current, turn)
+    element = {"kind": mod.KEY, **mod.fields(current, positions, over=False), "game": number,
+               "move": max(1, (ply + 1) // 2), "players": len(contributors(mod, current))}
+    clock = parse(played_so_far[-1]["at"] if played_so_far else current["started"]) + WEEK
     element["due"] = day(clock)
-    if current["moves"]:
+    if played_so_far:
         element["last"] = last_move(mod, current, positions)
     element["history"] = score_sheet(mod, current, positions)
-    fresh = len(current["moves"]) <= (1 if mod.ARBITER_OPENS else 0)  # no move yet but the Arbiter's opening
-    record = hall[-1] if hall and fresh else None  # the game that ended, while this one has no move but its opening
+    if hasattr(mod, "alert"):
+        said = mod.alert(None if ghosting(mod, current) else positions[-1])
+        if said:
+            element["alert"] = said
+    fresh = not current["moves"]  # no move yet: its ghosts, or a board before its first move
+    record = hall[-1] if hall and fresh else None  # the game that ended, while this one has no move yet
     opens = mod.OPENS_NOTE.format(owner=owner)
     if fresh:
         parts = [(how_it_ended(mod, record, owner), False), (opens, True), (who_plays(side, owner), True)]
     else:
         parts = [(who_plays(side, owner), True)]
-    parts.append((f"The move is due by {until(clock)}, or the Arbiter plays a random legal move.", True))
+    if ghosting(mod, current):
+        parts.append((f"The ghost is due by {until(clock)}, or the Arbiter {mod.GHOSTS[1]} one at random.", True))
+    else:
+        parts.append((f"The move is due by {until(clock)}, or the Arbiter plays a random legal move.", True))
     parts += [(mod.RULE, False), (kept(mod, owner) if hall else "", False)]
     element["note"] = sentences(parts)
+    if ghosting(mod, current):
+        listed = mod.ghost_listing([g["move"] for g in ghosts_of(current)])
+    else:
+        listed = mod.listing(positions[-1], number, turn)
     element["moves"] = [[entry["emoji"], entry["title"], entry["notation"], entry["words"],
-                         link(owner, mod.KEY, entry["code"], number, ply)]
-                        for entry in mod.listing(position, number, ply)]
+                         [[q, w, link(owner, mod.KEY, code, number, turn)] for q, w, code in entry["turns"]]
+                         if "turns" in entry else link(owner, mod.KEY, entry["code"], number, turn)]
+                        for entry in listed]
     return ordered(element)
 
 
@@ -597,8 +818,8 @@ def finished(mod: ModuleType, game: dict, hall: list, owner: str) -> dict:
     number, ply = ended["game"], len(ended["moves"])
     won = end.winner if end else None
     element = {"kind": mod.KEY, **mod.fields(ended, positions, over=True), "game": number, "move": ply // 2 + 1,
-               "players": len(contributors(mod, ended)), "next": day(opens)}
-    if ended["moves"]:
+               "players": len(contributors(mod, ended)), "next": day(opens), "next_at": stamp(opens)}
+    if turns(ended):
         element["last"] = last_move(mod, ended, positions)
     if end:
         element["result"] = {"winner": won, "how": end.reason}
@@ -608,20 +829,27 @@ def finished(mod: ModuleType, game: dict, hall: list, owner: str) -> dict:
     deciding = record.get("deciding") or {}
     over = (f"Game {number} is over, and its final board stays up for two days: game {number + 1} opens"
             f" {until(opens)}, and nothing can be played until then.")
-    nobody = ("The winning move was the Arbiter's, played after a week without one, so the win counts for nobody."
-              if won and deciding.get("arbiter") else "")
+    nobody = ""
+    if won and deciding.get("arbiter"):
+        nobody = "The winning move was the Arbiter's, played after a week without one, so the win counts for nobody."
+    elif won and deciding.get("own") is False:
+        nobody = ("The move that won it was the other side's, its turn making five for the winner alone, so the win"
+                  " counts for nobody.")
     element["note"] = sentences([(over, True), (nobody, True), (kept(mod, owner), False)])
     return ordered(element)
 
 
 # --- a finished game's record ------------------------------------------------------------------------------------
 def text_record(mod: ModuleType, game: dict, positions: list, record: dict, owner: str) -> str:
-    """A finished game as plain text: a header naming the game, its days and its result, then every move, numbered,
+    """A finished game as plain text: a header naming the game, its days and its result, then every turn, numbered,
     with who played it."""
     first = opener(mod, game)
     sides = f"@{owner} played {mod.WORDS[HOUSE]} and GitHub played {mod.WORDS[GITHUB]}; "
-    sides += (f"the Arbiter opened for {named_side(first, owner)}, so {mod.WORDS[first]} moved first."
-              if mod.ARBITER_OPENS else f"{mod.WORDS[first]} moves first.")
+    if ghostly(mod):
+        sides += (f"under the Ghost Rule the Arbiter drew {named_side(game['places'], owner)} to {mod.GHOSTS[0]} the"
+                  f" first ghost and {named_side(first, owner)} to move first, as {mod.WORDS[first]}.")
+    else:
+        sides += f"{mod.WORDS[first]} moves first."
     deciding = record["deciding"]["move"]
     if record["winner"]:
         result = f"{'@' + owner if record['winner'] == owner else 'GitHub'} won with {deciding}, {record['reason']}."
@@ -630,11 +858,11 @@ def text_record(mod: ModuleType, game: dict, positions: list, record: dict, owne
     lines = [f"{mod.TITLE}, game {game['game']}: @{owner} against GitHub",
              f"Played from {date(parse(game['started']))} to {date(parse(record['ended']))}, in EST.", sides, result,
              ""]
-    width = max(len(numbered(ply, played["shown"])) for ply, played in enumerate(game["moves"], 1)) + 3
-    for ply, played in enumerate(game["moves"], 1):
-        by = ("the Arbiter, opening the game" if played.get("arbiter") and ply == 1 and mod.ARBITER_OPENS else
-              "the Arbiter, after a week" if played.get("arbiter") else f"@{played['player']}")
-        lines.append(f"{numbered(ply, played['shown']).ljust(width)}{by}")
+    played_so_far = turns(game)
+    width = max(len(turn_named(mod, turn, played["shown"])) for turn, played in enumerate(played_so_far, 1)) + 3
+    for turn, played in enumerate(played_so_far, 1):
+        by = "the Arbiter, after a week" if played.get("arbiter") else f"@{played['player']}"
+        lines.append(f"{turn_named(mod, turn, played['shown']).ljust(width)}{by}")
     lines += ["", f"Result: {record['result']}, {mod.WORDS[HOUSE]}'s score first"]
     return "\n".join(lines) + "\n"
 
@@ -676,8 +904,8 @@ def regions(root: Path, owner: str, owner_id: int, moment: dt.datetime, keys: tu
 
 def main(argv: list[str] | None = None, env: dict | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("key", choices=GAMES, help="the game: tictactoe, connectfour or checkers")
-    parser.add_argument("folder", type=Path, help="where the game's state lives, such as .github/tictactoe")
+    parser.add_argument("key", choices=GAMES, help="the game: tictac, pentago or checkers")
+    parser.add_argument("folder", type=Path, help="where the game's state lives, such as .github/tictac")
     parser.add_argument("--out", type=Path, help="where comment.md and commit.txt go (default: $RUNNER_TEMP)")
     parser.add_argument("--now", help="the time to play at, ISO 8601 (default: now)")
     parser.add_argument("--settings", type=Path, default=Path(".github/markdown.yaml"),

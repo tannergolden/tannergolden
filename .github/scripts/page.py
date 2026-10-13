@@ -11,8 +11,8 @@ two days before the next game's fresh board comes (`DISPLAY`).
 
 Every game sets its board out for the page between its own marker lines under
 `elements:` in .github/markdown.yaml, and the Hall of Fame of all four games
-between its own: `# tictactoe:start` and `# tictactoe:end`, then connectfour,
-checkers, chess and hall. `set_out` writes the regions it is given, each only
+between its own: `# tictac:start` and `# tictac:end`, then pentago, checkers,
+chess and hall. `set_out` writes the regions it is given, each only
 when it changed, and adds a region whose markers are missing at the end of
 `elements:`; nothing else in the file is touched. Stdlib only.
 """
@@ -26,7 +26,7 @@ WEEK = dt.timedelta(days=7)  # how long a side has to move before the Arbiter mo
 DISPLAY = dt.timedelta(days=2)  # how long a finished game's final board stays up
 EST = dt.timezone(dt.timedelta(hours=-5), "EST")  # the page tells time in EST, as its settings say
 NOTE = 400  # the most a note under a board may run to, as the kit takes a line of the README
-REGIONS = ("tictactoe", "connectfour", "checkers", "chess", "hall")  # the settings' regions, in the page's order
+REGIONS = ("tictac", "pentago", "checkers", "chess", "hall")  # the settings' regions, in the page's order
 HOUSE, GITHUB = "house", "github"  # the two sides of every game: the owner of the profile, and everyone else
 
 

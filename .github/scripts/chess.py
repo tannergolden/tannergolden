@@ -563,7 +563,7 @@ def finished(game: dict, hall: list, owner: str) -> dict:
     end = ending(positions)
     winner = {"w": "house", "b": "github"}.get(end.winner or "") if end else None
     element = {"kind": "chess", "fen": position.fen, "game": number, "move": position.fullmove,
-               "players": len(contributors(ended)), "next": day(opens)}
+               "players": len(contributors(ended)), "next": day(opens), "next_at": stamp(opens)}
     if ended["moves"]:
         element["last"] = last_move(ended, positions)
     if in_check(position):

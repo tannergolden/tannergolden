@@ -6,7 +6,7 @@
 
 Every game keeps its finished games in .github/<game>/hall-of-fame.json and
 the game on its board in game.json. The Hall reads all four, in tier order
-(Tic-Tac-Toe, Connect Four, Checkers, Chess), and sets them out for the page
+(Tic-Tac, Pentago, Checkers, Chess), and sets them out for the page
 as one element, `hall-of-fame`:
 
   series   each game's games finished, the house's wins, GitHub's wins and
@@ -37,7 +37,7 @@ from pathlib import Path
 from page import GITHUB, HOUSE, day, other, parse
 from page import load as load_game
 
-GAMES = ("tictactoe", "connectfour", "checkers", "chess")  # tier order, for every list of the four games
+GAMES = ("tictac", "pentago", "checkers", "chess")  # tier order, for every list of the four games
 OPENERS = {"checkers": GITHUB, "chess": HOUSE}  # who always opens these; the Arbiter's games say whom it opened for
 PEOPLE, LEADERS = 5, 10  # the page's places: the podium's winners, and GitHub's players under the house's row
 DEPTH = 2  # the lists run to twice the page's places, so a player whose account is gone leaves no gap
@@ -50,22 +50,29 @@ def load(root: Path) -> dict[str, tuple[dict | None, list]]:
 
 
 def opener(key: str, game: dict) -> str:
-    """The side that moved first in a game: the side the game says the Arbiter opened for, or the side that always
-    opens it."""
+    """The side that moved first in a game: the side the Arbiter drew to open it, or the side that always opens it."""
     return game.get("opens") or OPENERS.get(key, HOUSE)
 
 
+def turns(key: str, game: dict) -> list[tuple[str, dict]]:
+    """Every turn played in a game, with the side that played it: under the Ghost Rule its two ghosts first, the side
+    the Arbiter drew placing the first, then its moves, from the side that opened (`opener`)."""
+    out = [(game["places"] if i == 0 else other(game["places"]), played)
+           for i, played in enumerate(game.get("ghosts", []))]
+    first = opener(key, game)
+    return out + [(first if ply % 2 else other(first), played) for ply, played in enumerate(game.get("moves", []), 1)]
+
+
 def tally(key: str, game: dict | None) -> tuple[int, list[dict]]:
-    """The game on a board, counted: the house's moves in it, and everyone who has moved for GitHub, most moves
-    first. Whose move a ply is comes from the side that opened (`opener`); the Arbiter's moves count for nobody."""
+    """The game on a board, counted: the house's turns in it, and everyone who has played a turn for GitHub, most
+    first, a ghost a turn like any move; the Arbiter's count for nobody."""
     if not game:
         return 0, []
-    first = opener(key, game)
     house, counts = 0, {}
-    for ply, played in enumerate(game.get("moves", []), 1):
+    for side, played in turns(key, game):
         if played.get("arbiter"):
             continue
-        if (first if ply % 2 else other(first)) == HOUSE:
+        if side == HOUSE:
             house += 1
             continue
         entry = counts.setdefault(played["player_id"], {"player": played["player"], "player_id": played["player_id"],
@@ -76,9 +83,10 @@ def tally(key: str, game: dict | None) -> tuple[int, list[dict]]:
 
 
 def winner(record: dict, owner: str):
-    """Whose win a finished game is: the house's, a player's account ID, or None for a draw or the Arbiter's win."""
+    """Whose win a finished game is: the house's, a player's account ID, or None for a draw, the Arbiter's win, or a
+    win the other side's move made, as a Pentago turn can make five for the side that did not turn."""
     deciding = record.get("deciding") or {}
-    if not record.get("winner") or deciding.get("arbiter"):
+    if not record.get("winner") or deciding.get("arbiter") or deciding.get("own") is False:
         return None
     return HOUSE if record["winner"] == owner else deciding.get("player_id")
 
@@ -90,10 +98,8 @@ def logins(states: dict) -> dict[int, str]:
         for record in hall:
             seen += [(parse(record["ended"]), p["player_id"], p["player"]) for p in record.get("players", [])]
         if game:
-            first = opener(key, game)
             seen += [(parse(played["at"]), played["player_id"], played["player"])
-                     for ply, played in enumerate(game.get("moves", []), 1)
-                     if not played.get("arbiter") and (first if ply % 2 else other(first)) == GITHUB]
+                     for side, played in turns(key, game) if not played.get("arbiter") and side == GITHUB]
     newest: dict[int, str] = {}
     for _, account, login in sorted(seen, key=lambda event: event[0]):
         newest[account] = login

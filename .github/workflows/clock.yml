@@ -1,13 +1,13 @@
 name: Clock
 
-# The one clock for the profile's four games: Tic-Tac-Toe, Connect Four,
-# Checkers and Chess. Twice an hour, .github/scripts/clock.py ticks each game
-# in turn: a first game of Checkers starts on its first run, GitHub to open it
-# as Black; once a finished game's final board has been up for two days, the
-# next game's fresh board comes, in Tic-Tac-Toe and Connect Four with the
-# Arbiter's random opening on it, for a side drawn at random; and when the
+# The one clock for the profile's four games: Tic-Tac, Pentago, Checkers and
+# Chess. Twice an hour, .github/scripts/clock.py ticks each game in turn: a
+# first game of Checkers starts on its first run, GitHub to open it as Black;
+# under the Ghost Rule the Arbiter draws the side that places the first ghost
+# of a fresh board of Tic-Tac or Pentago; once a finished game's final board
+# has been up for two days, the next game's fresh board comes; and when the
 # side to move has gone a week without moving, the Arbiter plays a random
-# legal move for it, so no game stalls. No game's own workflow keeps a
+# legal move for it, or places its ghost at random, so no game stalls. No game's own workflow keeps a
 # schedule: they only play moves.
 #
 # One run saves every game that moved on in one commit, the bot's, with the
@@ -60,7 +60,7 @@ jobs:
         run: |
           set -euo pipefail
           branch="$(git symbolic-ref --quiet --short HEAD)"
-          games=(.github/tictactoe .github/connectfour .github/checkers .github/chess)
+          games=(.github/tictac .github/pentago .github/checkers .github/chess)
           for attempt in 1 2 3 4 5; do
             # Always from the latest state: a move may have come since, and the tick is played on top of it.
             git fetch --quiet origin "$branch"
@@ -114,7 +114,7 @@ jobs:
           source .github/scripts/arbiter.sh
           # One line a notice: the issue it goes on, or `logbook`, then its file.
           while read -r target file; do
-            [[ "$file" =~ ^(tictactoe|connectfour|checkers|chess)\.md$ ]] || continue
+            [[ "$file" =~ ^(tictac|pentago|checkers|chess)\.md$ ]] || continue
             if [ "$target" = logbook ]; then
               target="$(desk arbiter-logbook "⚖️ The Arbiter's logbook" "$(printf '%s\n%s %s %s\n' \
                 "⚖️ **The Arbiter's logbook.**" \

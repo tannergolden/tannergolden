@@ -1,21 +1,24 @@
-name: Connect Four
+name: Pentago
 
-# Connect Four on the profile, the second tier of its four games: seven
-# columns of falling discs. The owner always drops the white discs and GitHub,
-# anyone else, the black. The Arbiter opens every game, for a side drawn at
-# random, with a random disc, so that side's colour drops first. Every move
-# reaches it from tannergolden/play's Move Intake: a player picks a move on
-# the board, its link opens an issue there, and the intake starts this through
+# Pentago on the profile, the second tier of its four games: six holes by six
+# in four quarters that turn, where a move sets a marble and then turns any
+# quarter a quarter turn, and five in a row wins. The owner always plays White
+# and GitHub, anyone else, Black. Every game opens under the Ghost Rule: the
+# Arbiter draws the side that sets the first ghost, a marble that is nobody's,
+# the other side sets the second, and then the Arbiter draws the side that
+# sets the first marble. Every move, a ghost's included, reaches it from
+# tannergolden/play's Move Intake: a player picks a hole and a turn on the
+# board, its link opens an issue there, and the intake starts this through
 # the Official Arbiter with the move, the game and move it was picked at, the
 # issue and who opened it. game.yml, which the three games beside chess share,
 # plays it or turns it away, replies on the issue with which and why, and
 # redraws the page. This only plays moves: clock.yml keeps every game's time.
-# The state lives in .github/connectfour.
+# The state lives in .github/pentago.
 on:
   workflow_dispatch:
     inputs:
       move:
-        description: 'The column, from 1 at the left to 7.'
+        description: 'The hole and its turn, such as e4-ur-cw, or a ghost''s hole, such as b5.'
         required: true
         type: string
       game:
@@ -23,7 +26,7 @@ on:
         required: true
         type: string
       move_number:
-        description: 'The move the board was on when it was picked, from 1 for the first.'
+        description: 'The move the board was on when it was picked, from 1 for the first ghost.'
         required: true
         type: string
       issue:
@@ -45,14 +48,14 @@ on:
 permissions: {}
 
 jobs:
-  connectfour:
-    name: '⚫ Connect Four'
+  pentago:
+    name: '🌀 Pentago'
     permissions:
       actions: write # start the Markdown run that redraws the board
-      contents: write # the game's state under .github/connectfour, and the board's lines in the settings
+      contents: write # the game's state under .github/pentago, and the board's lines in the settings
     uses: ./.github/workflows/game.yml # zizmor: ignore[self-repository] - actionlint, which lints these too, rejects the $/ form; ./ is this same file at this same commit.
     with:
-      key: connectfour
+      key: pentago
       move: ${{ inputs.move }}
       game: ${{ inputs.game }}
       move_number: ${{ inputs.move_number }}

@@ -7,13 +7,13 @@
 
 .github/workflows/clock.yml runs this twice an hour, off the hour, and no
 game's own workflow keeps a schedule of its own. For each game, in tier
-order (Tic-Tac-Toe, Connect Four, Checkers, Chess), it does what that game's
-clock does: the first game of Checkers starts, GitHub to open it as Black,
-and those of Tic-Tac-Toe and Connect Four open; once a finished game's two
-days are up, the next game's fresh board comes, in Tic-Tac-Toe and Connect
-Four with the Arbiter's random opening on it, for a side drawn at random;
-and when the side to move has gone a week without moving, the Arbiter plays
-a random legal move for it. Every game whose state changed is saved, every
+order (Tic-Tac, Pentago, Checkers, Chess), it does what that game's clock
+does: the first game of Checkers starts, GitHub to open it as Black, and
+under the Ghost Rule the Arbiter draws the side that places the first ghost
+of Tic-Tac and of Pentago; once a finished game's two days are up, the next
+game's fresh board comes, with that draw; and when the side to move has gone
+a week without moving, the Arbiter plays a random legal move for it, or
+places its ghost on a random square. Every game whose state changed is saved, every
 board and the Hall of Fame of all four are set out again between their
 markers in .github/markdown.yaml, and one commit and one redraw cover them
 all.

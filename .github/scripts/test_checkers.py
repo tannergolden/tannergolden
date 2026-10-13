@@ -254,6 +254,32 @@ class Endings(unittest.TestCase):
         self.assertEqual((table.hall[-1]["winner"], table.hall[-1]["result"]), (OWNER, "0-1"))
         self.assertTrue(outcome.record[1].rstrip().endswith("{Black has no move left.} 0-1"))
 
+    def test_a_person_s_win_gets_a_replay_of_every_move_and_a_draw_none(self):
+        # The replay's facts (replays.py): every move with every square its piece passed, the men it took and
+        # whether it was crowned, beside the game's PDN, and the final board's link to its page.
+        table = Table()
+        name, facts = table.play(DARK_WINS).replay
+        game = table.game["ended"]
+        self.assertEqual((name, facts["kind"], facts["winner"], facts["by"], facts["by_id"], facts["reason"]),
+                         ("game-1.replay.json", "checkers", GITHUB, OCTOCAT, OCTOCAT_ID, "no move left"))
+        self.assertNotIn("places", facts, "checkers has no ghosts, and GitHub always opens")
+        plies = facts["plies"]
+        self.assertEqual([ply["move"] for ply in plies], DARK_WINS)
+        self.assertEqual([ply["notation"] for ply in plies],
+                         [games.numbered(ply, code) for ply, code in enumerate(DARK_WINS, 1)])
+        self.assertEqual([ply["side"] for ply in plies],
+                         [games.side_of(table.mod, game, ply) for ply in range(1, len(DARK_WINS) + 1)])
+        for ply, before in zip(plies, games.replay(table.mod, game)):
+            move = R.find(before, ply["move"])
+            self.assertEqual((ply["path"], ply["captures"], ply["crowns"], ply["piece"]),
+                             (list(move.path), list(move.captures), move.crowns, before.pieces[move.path[0]]))
+        self.assertTrue(any(ply["captures"] for ply in plies), "the line takes men")
+        self.assertIn(" 🎬 [Watch the replay](https://github.com/tannergolden/play/blob/HEAD/replays/checkers/game-1.md)"
+                      " of every move.", table.board()["note"])
+        table = Table()
+        self.assertIsNone(table.play(REPEATED).replay)
+        self.assertNotIn("Watch the replay", table.board()["note"])
+
     def test_a_game_is_drawn_by_repetition_and_by_forty_moves(self):
         for codes, reason, said in ((REPEATED, "repetition", "by repetition"),
                                     (FORTY, "forty moves", "by the forty-move rule")):

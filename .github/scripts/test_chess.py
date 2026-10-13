@@ -49,6 +49,8 @@ KIT_EMOJI = re.compile("[←-⯿\U0001f000-\U0001faff‍️]{1,8}")
 KIT_WHO = re.compile(r"@[A-Za-z0-9][A-Za-z0-9-]{0,38}|the Arbiter")
 KIT_DAY = re.compile(r"(?:[1-9]|[12][0-9]|3[01]) (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)")
 KIT_HOW = re.compile(r"[a-z][a-z0-9 ,'-]{0,23}")  # how a game ended, as a finished board's plate says it
+# The moment a finished game's fresh board comes, with its offset, which the final board counts down to.
+KIT_MOMENT = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(?::[0-9]{2})?(?:Z|[+-][0-9]{2}:[0-9]{2})")
 # Nothing that would open a block of its own in the README where a note is set.
 KIT_BLOCK = re.compile(r"\s|```|~~~|#{1,6}(?:\s|$)|>|[-*+](?:\s|$)|[0-9]+[.)](?:\s|$)|\[[^\]]*\]:|[-=*_\s]+$")
 # A mention GitHub notifies: an @handle outside the text of a link.
@@ -384,6 +386,8 @@ class TwoDays(unittest.TestCase):
                          ("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3", 1, 3, 1))
         self.assertEqual(element["result"], {"winner": "github", "how": "checkmate"})
         self.assertEqual(element["next"], "13 Oct")
+        self.assertEqual(element["next_at"], chess.stamp(chess.parse(table.game["started"])),
+                         "the moment the fresh board comes, for the kit's countdown")
         self.assertEqual(element["check"], "e1", "the mated king is marked")
         self.assertEqual(element["last"]["san"], "Qh4#")
         self.assertEqual(element["history"], [[1, "f3", "e5", "@octocat"], [2, "g4", "Qh4#", "@octocat"],
@@ -445,6 +449,61 @@ class TwoDays(unittest.TestCase):
         table.game, table.hall = outcome.game, outcome.hall
         self.assertIn("The winning move was the Arbiter's, played after a week without one, so the win counts for"
                       " nobody.", table.board()["note"])
+
+
+class Replay(unittest.TestCase):
+    """A game won by a person's own move gets a replay (replays.py): every move with what it did on the board, who
+    played it and when, written beside the game's PGN for tannergolden/play's Replay workflow, and linked from the
+    final board. A draw gets none, and nor does a mate the Arbiter played."""
+
+    def test_a_mate_by_github_s_player_gets_a_replay_of_every_move(self):
+        table = Table()
+        outcome = table.play(FOOLS_MATE)
+        name, facts = outcome.replay
+        self.assertEqual(name, "game-1.replay.json")
+        record, game = table.hall[-1], table.game["ended"]
+        self.assertEqual({key: facts[key] for key in ("replay", "kind", "game", "winner", "by", "by_id", "issue",
+                                                      "reason", "line", "started", "ended", "final")},
+                         {"replay": 1, "kind": "chess", "game": 1, "winner": "github", "by": OCTOCAT,
+                          "by_id": OCTOCAT_ID, "issue": 104, "reason": "checkmate", "line": None,
+                          "started": game["started"], "ended": record["ended"],
+                          "final": "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3"})
+        self.assertEqual((facts["players"], facts["house_moves"]), (record["players"], record["house_moves"]))
+        plies = facts["plies"]
+        self.assertEqual([(ply["side"], ply["notation"], ply["move"], ply["from"], ply["to"], ply["piece"], ply["by"],
+                           ply["by_id"]) for ply in plies],
+                         [("house", "1. f3", "f3", "f2", "f3", "P", OWNER, OWNER_ID),
+                          ("github", "1... e5", "e5", "e7", "e5", "p", OCTOCAT, OCTOCAT_ID),
+                          ("house", "2. g4", "g4", "g2", "g4", "P", OWNER, OWNER_ID),
+                          ("github", "2... Qh4#", "Qh4#", "d8", "h4", "q", OCTOCAT, OCTOCAT_ID)])
+        self.assertEqual([ply["check"] for ply in plies], [None, None, None, "e1"], "the king the mate put in check")
+        self.assertEqual([ply["when"] for ply in plies], [chess.day(chess.parse(m["at"])) for m in game["moves"]])
+        self.assertEqual(plies[-1]["words"], "Queen from d8 to h4")
+        note = table.board()["note"]
+        self.assertIn(" 🎬 [Watch the replay](https://github.com/tannergolden/play/blob/HEAD/replays/chess/game-1.md) of"
+                      " every move.", note)
+        self.assertTrue(KIT_LINE.fullmatch(note) and not KIT_BLOCK.match(note), note)
+
+    def test_the_owner_s_mate_gets_one_too_with_what_each_move_took(self):
+        facts = Table().play(SCHOLARS_MATE).replay[1]
+        last = facts["plies"][-1]
+        self.assertEqual((facts["winner"], facts["by"], facts["by_id"], len(facts["plies"])),
+                         ("house", OWNER, OWNER_ID, 7))
+        self.assertEqual((last["notation"], last["taken_at"], last["check"]), ("4. Qxf7#", "f7", "e8"))
+
+    def test_a_draw_and_a_mate_the_arbiter_played_get_no_replay(self):
+        table = Table()
+        self.assertIsNone(table.play(LOYDS_STALEMATE).replay)
+        self.assertNotIn("Watch the replay", table.board()["note"])
+        arbiter = {"player": None, "player_id": None, "issue": None, "arbiter": True}
+        table = Table()
+        table.play(FOOLS_MATE[:-1])
+        positions = chess.replay(table.game)
+        mate = next(move for move in rules.legal_moves(positions[-1]) if move.uci == FOOLS_MATE[-1])
+        outcome, _, _ = chess.apply(table.game, table.hall, positions, mate, arbiter, OWNER, table.clock)
+        table.game, table.hall = outcome.game, outcome.hall
+        self.assertIsNone(outcome.replay)
+        self.assertNotIn("Watch the replay", table.board()["note"])
 
 
 class Clock(unittest.TestCase):
@@ -734,6 +793,9 @@ class Board(unittest.TestCase):
                 self.assertRegex(element["result"]["how"], KIT_HOW)
                 self.assertIn(element["result"]["winner"], ("house", "github", None))
                 self.assertRegex(element["next"], KIT_DAY)
+                self.assertRegex(element["next_at"], KIT_MOMENT)
+            else:
+                self.assertNotIn("next_at", element, "a game under way has no fresh board to count down to")
 
     def test_a_reply_names_the_move_as_the_board_listed_it(self):
         table = Table()
@@ -840,7 +902,7 @@ class Script(unittest.TestCase):
             self.assertTrue((out / "commit.txt").read_text(encoding="utf-8").endswith(
                 "Run: https://github.com/tannergolden/tannergolden/actions/runs/1\n"))
             self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"),
-                             "changed=true\nissue=12\nlogbook=false\n")
+                             "changed=true\nissue=12\nlogbook=false\nreplay=false\n")
 
     def test_a_turned_away_move_saves_nothing_and_still_replies(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -853,7 +915,7 @@ class Script(unittest.TestCase):
             self.assertFalse(folder.exists())
             self.assertIn(f"It's {LINKED}'s turn", (out / "comment.md").read_text(encoding="utf-8"))
             self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"),
-                             "changed=false\nissue=13\nlogbook=false\n")
+                             "changed=false\nissue=13\nlogbook=false\nreplay=false\n")
 
     def test_every_run_sets_the_board_and_the_hall_out_between_their_markers_and_nowhere_else(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -899,8 +961,16 @@ class Script(unittest.TestCase):
             self.assertEqual(saved["ended"]["game"], 1)
             settings = (Path(temp) / "markdown.yaml").read_text(encoding="utf-8")
             self.assertIn('    result: {"winner": "github", "how": "checkmate"}\n', settings)
-            self.assertIn('    series: {"tictactoe": [0, 0, 0, 0], "connectfour": [0, 0, 0, 0],'
+            self.assertIn('    series: {"tictac": [0, 0, 0, 0], "pentago": [0, 0, 0, 0],'
                           ' "checkers": [0, 0, 0, 0], "chess": [1, 0, 1, 0]}\n', settings)
+            facts = json.loads((folder / "games" / "game-1.replay.json").read_text(encoding="utf-8"))
+            self.assertEqual(([ply["move"] for ply in facts["plies"]], facts["by"]),
+                             (["f3", "e5", "g4", "Qh4#"], OCTOCAT))
+            self.assertIn("🎬 [Watch the replay](https://github.com/tannergolden/play/blob/HEAD/replays/chess/"
+                          "game-1.md)", settings)
+            outputs = (Path(temp) / "output.txt").read_text(encoding="utf-8").splitlines()
+            self.assertEqual([line for line in outputs if line.startswith("replay=")],
+                             ["replay=false"] * 3 + ["replay=true"], "the mate, a person's own, asks for its replay")
 
     def test_the_clock_run_takes_no_move(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -920,8 +990,9 @@ class Script(unittest.TestCase):
                             PLAYER=OWNER, PLAYER_ID=str(OWNER_ID))
             self.run_script(folder, "2026-10-08T09:00:00Z")  # told on the owner's issue 5
             self.run_script(folder, "2026-10-15T09:00:00Z")  # the Arbiter after itself: the logbook
-            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8").splitlines()[-6:],
-                             ["changed=true", "issue=5", "logbook=false", "changed=true", "issue=", "logbook=true"])
+            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8").splitlines()[-8:],
+                             ["changed=true", "issue=5", "logbook=false", "replay=false", "changed=true", "issue=",
+                              "logbook=true", "replay=false"])
 
     def test_anything_malformed_is_turned_away_on_its_issue_and_changes_nothing(self):
         with tempfile.TemporaryDirectory() as temp:

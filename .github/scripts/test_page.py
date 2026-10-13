@@ -64,13 +64,16 @@ class Regions(unittest.TestCase):
         self.assertEqual(text, SETTINGS.replace('  chess:\n    kind: "chess"\n',
                                                 '  chess:\n    kind: "chess"\n    game: 2\n'))
 
+    def test_the_regions_are_the_four_games_in_tier_order_then_the_hall(self):
+        self.assertEqual(page.REGIONS, ("tictac", "pentago", "checkers", "chess", "hall"))
+
     def test_a_region_without_its_markers_is_added_at_the_end_of_elements(self):
-        changed = page.set_out(self.settings, {"tictactoe": [("tictactoe", {"kind": "tictactoe"})],
+        changed = page.set_out(self.settings, {"tictac": [("tictac", {"kind": "tictac"})],
                                                "hall": [("hall-of-fame", {"kind": "hall-of-fame", "people": [],
                                                                           "measure": {}})]})
-        self.assertEqual(changed, ["tictactoe", "hall"])
+        self.assertEqual(changed, ["tictac", "hall"])
         text = self.settings.read_text(encoding="utf-8")
-        self.assertIn('  # chess:end\n  # tictactoe:start\n  tictactoe:\n    kind: "tictactoe"\n  # tictactoe:end\n'
+        self.assertIn('  # chess:end\n  # tictac:start\n  tictac:\n    kind: "tictac"\n  # tictac:end\n'
                       '  # hall:start\n  hall-of-fame:\n    kind: "hall-of-fame"\n    people: []\n    measure: {}\n'
                       '  # hall:end\n\n# The trophies.\ntrophies:\n', text,
                       "after the section's last entry, before the blank line and the comment that open the next")
@@ -100,14 +103,22 @@ class Regions(unittest.TestCase):
                 page.set_out(self.settings, {"chess": [("chess", {"kind": "chess"})]})
 
     def test_an_element_is_written_a_field_a_line_and_a_list_an_item_a_line(self):
-        element = {"kind": "tictactoe", "board": "XXX/.O./O..", "result": {"winner": "house", "how": "three in a row"},
-                   "history": [[1, "Xa3", "Ob2", "@octocat"]], "moves": [["📐", "Mark the Corner!", "Xc3", "X", "u"]],
-                   "people": [], "leaders": [["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]]}
-        self.assertEqual(page.element_yaml("tictactoe", element).splitlines(), [
-            "  tictactoe:", '    kind: "tictactoe"', '    board: "XXX/.O./O.."',
-            '    result: {"winner": "house", "how": "three in a row"}', "    history:",
-            '      - [1, "Xa3", "Ob2", "@octocat"]', "    moves:", '      - ["📐", "Mark the Corner!", "Xc3", "X", "u"]',
-            "    people: []", "    leaders:", '      - ["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]'])
+        element = {"kind": "tictac", "places": "house", "result": {"winner": "house", "how": "three boards in a row"},
+                   "history": [["G", "e5", "a1", "@octocat"], [1, "Xb8", "Oe6", "@octocat"]],
+                   "moves": [["🔳", "Take the Centre!", "Xb8", "X", "u"]], "people": [],
+                   "leaders": [["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]]}
+        self.assertEqual(page.element_yaml("tictac", element).splitlines(), [
+            "  tictac:", '    kind: "tictac"', '    places: "house"',
+            '    result: {"winner": "house", "how": "three boards in a row"}', "    history:",
+            '      - ["G", "e5", "a1", "@octocat"]', '      - [1, "Xb8", "Oe6", "@octocat"]', "    moves:",
+            '      - ["🔳", "Take the Centre!", "Xb8", "X", "u"]', "    people: []", "    leaders:",
+            '      - ["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]'])
+        pentago = {"kind": "pentago",
+                   "moves": [["⚪", "Take the Hole!", "e4", "W", [["ul", "cw", "u"], ["ul", "acw", "v"]]]]}
+        self.assertEqual(page.element_yaml("pentago", pentago).splitlines(), [
+            "  pentago:", '    kind: "pentago"', "    moves:",
+            '      - ["⚪", "Take the Hole!", "e4", "W", [["ul", "cw", "u"], ["ul", "acw", "v"]]]'],
+            "a hole's turns, each with its link, inline in its row")
         chess = {"kind": "chess", "moves": [{"piece": "pawn", "list": [["🥾", "March!", "e4", "Pawn", "u"]]}]}
         self.assertEqual(page.element_yaml("chess", chess).splitlines(), [
             "  chess:", '    kind: "chess"', "    moves:", '      - piece: "pawn"', "        list:",

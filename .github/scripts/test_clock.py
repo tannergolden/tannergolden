@@ -74,12 +74,14 @@ class Run(unittest.TestCase):
     def notices(self) -> list[str]:
         return (self.out / "notices.txt").read_text(encoding="utf-8").splitlines()
 
-    def test_the_first_run_opens_the_arbiter_s_games_starts_checkers_and_sets_every_board_and_the_hall_out(self):
+    def test_the_first_run_draws_who_places_the_first_ghost_starts_checkers_and_sets_every_board_out(self):
         code, said = self.run_clock(T0)
         self.assertEqual((code, said), (0, {"changed": "true", "notices": "0"}))
-        for key in ("tictactoe", "connectfour"):
+        for key in ("tictac", "pentago"):
             game, _ = self.state(key)
-            self.assertEqual((game["game"], len(game["moves"]), game["moves"][0]["arbiter"]), (1, 1, True))
+            self.assertEqual({k: v for k, v in game.items() if k != "places"},
+                             {"game": 1, "started": page.stamp(T0), "ghosts": [], "moves": []})
+            self.assertIn(game["places"], ("house", "github"), "the Arbiter's draw of the side that places first")
         self.assertEqual(self.state("checkers"), ({"game": 1, "started": page.stamp(T0), "moves": []}, []),
                          "checkers starts at once, with GitHub to open as Black")
         self.assertEqual(self.state("chess"), (None, []), "the house opens chess itself, with its first move")
@@ -87,14 +89,15 @@ class Run(unittest.TestCase):
         found = [text.index(f"  # {region}:start\n") for region in page.REGIONS]
         self.assertEqual(found, sorted(found), "every region, in the page's order")
         self.assertTrue(text.endswith("  # hall:end\n\ntrophies:\n  style: trophy\n"))
-        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictactoe, connectfour and"
-                                                 " checkers\n\nchore(tictactoe): 🎲 open game 1 for "))
-        self.assertIn("\n\nchore(connectfour): 🎲 open game 1 for ", self.commit())
+        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictac, pentago and checkers\n\n"
+                                                 "chore(tictac): 🎲 start game 1, "))
+        self.assertIn("\n\nchore(pentago): 🎲 start game 1, ", self.commit())
+        self.assertIn(" to place the first ghost\n\nUnder the Ghost Rule each side places one ghost", self.commit())
         self.assertIn("\n\nchore(checkers): 🏁 start game 1, GitHub to open as Black\n\n", self.commit())
         self.assertIn('  checkers:\n    kind: "checkers"\n', text)
         self.assertIn(f'    due: "{page.day(T0 + page.WEEK)}"\n', text.split("# checkers:start")[1])
         self.assertTrue(self.commit().endswith("\n\nRun: https://github.com/tannergolden/tannergolden/actions/runs/1\n"))
-        self.assertEqual(self.notices(), [], "an opening answers no issue")
+        self.assertEqual(self.notices(), [], "a draw answers no issue")
 
     def test_a_tick_with_nothing_to_do_changes_nothing(self):
         self.run_clock(T0)
@@ -111,19 +114,21 @@ class Run(unittest.TestCase):
         chess.save(self.root / "chess", chess_game)
         code, said = self.run_clock(T0 + page.WEEK + dt.timedelta(hours=1))
         self.assertEqual((code, said), (0, {"changed": "true", "notices": "4"}))
-        self.assertEqual(self.notices(), ["logbook tictactoe.md", "logbook connectfour.md", "logbook checkers.md",
+        self.assertEqual(self.notices(), ["logbook tictac.md", "logbook pentago.md", "logbook checkers.md",
                                           "41 chess.md"],
-                         "after its own opening, or a start nobody moved from, the Arbiter writes in the logbook; after"
-                         " the owner's move, on its issue")
-        for key, arbiter in (("tictactoe", [True, True]), ("connectfour", [True, True]), ("checkers", [True])):
+                         "after a start nobody played from, the Arbiter writes in the logbook; after the owner's move,"
+                         " on its issue")
+        for key, ghosts, moves in (("tictac", [True], []), ("pentago", [True], []), ("checkers", None, [True])):
             game, _ = self.state(key)
-            self.assertEqual([played["arbiter"] for played in game["moves"]], arbiter)
+            self.assertEqual(([g["arbiter"] for g in game["ghosts"]] if "ghosts" in game else None,
+                              [played["arbiter"] for played in game["moves"]]), (ghosts, moves))
             self.assertTrue((self.out / f"{key}.md").read_text(encoding="utf-8").startswith(
-                "⏰ **A week passed without a move from "))
+                f"⏰ **A week passed without a {'ghost' if ghosts else 'move'} from "))
+        self.assertIn(", so the Arbiter set G. ", (self.out / "pentago.md").read_text(encoding="utf-8"))
         self.assertIn("so the Arbiter played 1. ", (self.out / "checkers.md").read_text(encoding="utf-8"))
         self.assertIn(" for Black, at random.", (self.out / "checkers.md").read_text(encoding="utf-8"))
-        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictactoe, connectfour, checkers"
-                                                 " and chess\n\n"))
+        self.assertTrue(self.commit().startswith("chore(games): ⏰ run the clock for tictac, pentago, checkers and"
+                                                 " chess\n\n"))
         self.assertTrue(self.state("chess")[0]["moves"][-1]["arbiter"])
 
     def test_a_finished_game_s_fresh_board_comes_on_the_first_tick_after_its_two_days(self):
@@ -151,16 +156,16 @@ class Run(unittest.TestCase):
 
     def test_a_board_set_out_anew_with_no_move_says_the_engine_sets_it_out_differently(self):
         self.run_clock(T0)
-        self.stale("tictactoe")
+        self.stale("tictac")
         code, said = self.run_clock(T0 + dt.timedelta(minutes=1))
         self.assertEqual((code, said["changed"], said["notices"]), (0, "true", "0"))
         self.assertEqual(self.commit().splitlines()[0], "chore(games): 🖌️ set the boards out for the page")
-        self.assertIn("The clock set out tictactoe again, as the engine sets it out now: no game moved.", self.said())
+        self.assertIn("The clock set out tictac again, as the engine sets it out now: no game moved.", self.said())
         self.assertNotIn("two days", self.said(), "no final board came down")
-        self.stale("connectfour")
+        self.stale("pentago")
         self.stale("checkers")
         self.run_clock(T0 + dt.timedelta(minutes=2))
-        self.assertIn("The clock set out connectfour and checkers again, as the engine sets them out now", self.said())
+        self.assertIn("The clock set out pentago and checkers again, as the engine sets them out now", self.said())
 
     def test_a_fresh_board_and_a_board_set_out_anew_are_each_told_for_what_they_are(self):
         game, hall = None, []
@@ -172,27 +177,28 @@ class Run(unittest.TestCase):
             game, hall = outcome.game, outcome.hall
         opens = page.parse(game["started"])
         self.run_clock(opens - dt.timedelta(minutes=1))
-        self.stale("tictactoe")
+        self.stale("tictac")
         code, said = self.run_clock(opens + dt.timedelta(minutes=59))
         self.assertEqual((code, said["changed"]), (0, "true"))
         self.assertIn("The clock set out chess again: a final board's two days are up, and the fresh board has come."
-                      " It also set out tictactoe again, as the engine sets it out now: no game moved.", self.said())
+                      " It also set out tictac again, as the engine sets it out now: no game moved.", self.said())
 
     def test_one_game_s_own_commit_stands_when_it_alone_moved_on(self):
         self.run_clock(T0)
-        for key in ("tictactoe", "checkers"):  # a move three days in, so only Connect Four's week runs out
+        for key in ("tictac", "checkers"):  # a turn three days in, a ghost or a move, so only Pentago's week runs out
             mod = games.rules(key)
             game, hall = self.state(key)
-            ply = len(game["moves"]) + 1
-            player = (OWNER, OWNER_ID) if games.side_of(mod, game, ply) == "house" else (OCTOCAT, OCTOCAT_ID)
-            code = mod.legal(games.replay(mod, game)[-1])[0]
-            moved = games.play(mod, game, hall, games.Request(code, 1, ply, 60, *player), OWNER, OWNER_ID,
+            turn = len(games.turns(game)) + 1
+            player = (OWNER, OWNER_ID) if games.side_of(mod, game, turn) == "house" else (OCTOCAT, OCTOCAT_ID)
+            code = mod.ghost_cells([])[0] if games.ghosting(mod, game) else mod.legal(games.replay(mod, game)[-1])[0]
+            moved = games.play(mod, game, hall, games.Request(code, 1, turn, 60, *player), OWNER, OWNER_ID,
                                T0 + dt.timedelta(days=3))
             self.assertTrue(moved.changed, moved.comment)
             games.save(self.root / key, moved)
         code, said = self.run_clock(T0 + page.WEEK + dt.timedelta(minutes=1))
         self.assertEqual((code, said["notices"]), (0, "1"))
-        self.assertTrue(self.commit().startswith("chore(connectfour): ⏰ play 1... "), self.commit())
+        self.assertTrue(self.commit().startswith("chore(pentago): 👻 set G. "), self.commit())
+        self.assertIn(" after a week without one\n\nMove 1 of game 1, by the Arbiter.", self.commit())
 
     def test_a_run_without_its_owner_or_its_settings_stops(self):
         with contextlib.redirect_stdout(io.StringIO()):

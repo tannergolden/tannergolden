@@ -93,6 +93,11 @@ Connect Four, or the third mark in a row in Tic-Tac-Toe. A move the Arbiter
 plays counts for nobody, and a draw is nobody's win. Every win earns its player
 a place in the Hall of Fame below.
 
+📖 Each game has a guide to its rules and how its moves are written:
+[Chess](docs/Chess.md), [Checkers](docs/Checkers.md),
+[Connect Four](docs/Connect-Four.md) and [Tic-Tac-Toe](docs/Tic-Tac-Toe.md),
+with what all four share in [The Games](docs/README.md).
+
 <!-- markdown:element:chess:start -->
 <details open>
 <summary><b>♟️ Chess</b></summary>

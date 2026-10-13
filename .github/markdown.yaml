@@ -72,6 +72,10 @@ badges:
 
 # The drawings in the README's body, each where its markers stand. The
 # schematic is written by hand; the kit lays its boxes out from the wires.
+# Its labels fit the pixel sets the page is drawn in, the Chessmen and the
+# holidays': short enough to need no ellipsis, and with no semicolon, which
+# their letters lack. A set that cannot letter a label draws the whole
+# schematic in the standard look instead.
 elements:
   how-it-fits:
     kind: schematic
@@ -85,9 +89,9 @@ elements:
       schematic and the placards, and the trophies. The stub names the page's
       one theme, the Medieval collection's Chessmen, and every part is drawn
       in it, or in a holiday's set around each holiday.
-    caption: HOW IT FITS TOGETHER  ·  TIMES IN EST  ·  NOT TO SCALE
+    caption: HOW IT ALL FITS  ·  TIMES IN EST  ·  NOT TO SCALE
     groups:
-      page: THIS README  ·  EVERY IMAGE DRAWN, NEVER FETCHED
+      page: THIS README  ·  DRAWN, NEVER FETCHED
     boxes:
       standards: {title: Standards, path: reusable workflows @v1, icon: scale}
       path: {title: Golden Path, path: use this template, icon: compass}
@@ -95,7 +99,7 @@ elements:
       markdown: {title: Markdown, path: one stub · 00:00, icon: sync, note: 1}
       header: {title: Header and footer, path: name and figures, icon: grid, in: page}
       badges: {title: Badges, path: two of them live, icon: tag, in: page}
-      drawings: {title: Schematic and placards, path: placards picked weekly, icon: layers, in: page, note: 2}
+      drawings: {title: 'Schematic, placards', path: placards picked weekly, icon: layers, in: page, note: 2}
       trophies: {title: Trophies, path: the case and its history, icon: trophy, in: page}
     wires:
       - [standards, path, BY LINK]
@@ -107,7 +111,7 @@ elements:
       - [markdown, drawings]
       - [markdown, trophies, DRAWS]
     notes:
-      - [1, "NAMES THE PAGE'S ONE THEME; EVERY PART MATCHES IT"]
+      - [1, NAMES THE ONE THEME EVERY PART IS DRAWN IN]
       - [2, PLACARDS PICKED WEDNESDAYS AND FRIDAYS]
   # The two repositories on this account that shipped most recently. Every
   # Wednesday .github/scripts/releases.py rewrites the lines between the next

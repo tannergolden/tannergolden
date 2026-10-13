@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""Every square named for where its mark goes and for nothing the mark does: the emoji by the square's place in its
-board, the title and words from that place and the board's, each of the 81 titles its own, and a square named alike
-whatever the game, the move or the marks round it, so a mark that wins the game reads as any other. A ghost's square is
-named the same way, for the square it locks.
+"""Every square named as tic-tac-toe players name it and for nothing the mark does: the Centre, a Corner or an Edge of
+its board, with no square or board in the name, the emoji by the same kind, the words from the square's place and its
+board's, and a square named alike whatever the game, the move or the marks round it, so a mark that wins the game reads
+as any other. A ghost's square is named the same way, for the square it locks.
 
   python3 -m unittest discover -s .github/scripts -p 'test_tictac*.py'
 
@@ -35,7 +35,8 @@ DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
 BOARDS = ("upper left", "top", "upper right", "left", "centre", "right", "lower left", "bottom", "lower right")
 SPOTS = ("upper left corner", "top edge", "upper right corner", "left edge", "centre", "right edge",
          "lower left corner", "bottom edge", "lower right corner")
-SMALL = {"the", "of"}  # the words a title keeps in lower case
+KINDS = {"centre": "Centre", "corner": "Corner", "edge": "Edge"}  # a square's kind in its board, as the game names it
+WHERE = re.compile(r"[a-i][1-9]|\b(?:upper|lower|top|bottom|left|right|board|of|the)\b", re.IGNORECASE)
 # What no name may say: a verdict, what the mark does to the game or its board, or where it sends the other side.
 JUDGED = ("good", "bad", "safe", "strong", "weak", "best", "only", "win", "wins", "winning", "won", "lose", "loses",
           "lost", "draw", "draws", "drawn", "save", "saves", "block", "blocks", "threat", "threatens", "fork", "trap",
@@ -51,17 +52,17 @@ def place(cell: str) -> tuple[str, str]:
     return SPOTS[(2 - y % 3) * 3 + x % 3], BOARDS[(2 - y // 3) * 3 + x // 3]
 
 
+def kind(cell: str) -> str:
+    """A square's kind in its board, worked out from its place: `Centre`, `Corner` or `Edge`."""
+    return KINDS[place(cell)[0].split()[-1]]
+
+
 def expected(mark: str, cell: str) -> dict:
     """What the listing names a square for `mark`, worked out from the square alone."""
     spot, board = place(cell)
-    emoji = "🔳" if spot == "centre" else "📐" if spot.endswith("corner") else "📏"
-    return {"code": cell, "notation": f"{mark}{cell}", "emoji": emoji, "title": capitals(f"take the {spot} of the"
-                                                                                       f" {board} board!"),
+    emoji = {"Centre": "🔳", "Corner": "📐", "Edge": "📏"}[kind(cell)]
+    return {"code": cell, "notation": f"{mark}{cell}", "emoji": emoji, "title": kind(cell),
             "words": f"{mark} takes the {spot} of the {board} board"}
-
-
-def capitals(text: str) -> str:
-    return " ".join(word if word in SMALL else word[0].upper() + word[1:] for word in text.split())
 
 
 def boards(n: int, seed: int) -> list[R.Position]:
@@ -83,19 +84,17 @@ class Listing(unittest.TestCase):
         for position in BOARDS_SEEN:
             self.assertEqual([entry["code"] for entry in listing(position, 1, 3)], R.legal(position), position.board)
 
-    def test_a_square_is_named_for_its_place_in_its_board_and_its_board_s_place(self):
+    def test_a_square_is_named_for_its_kind_and_its_words_say_where_it_is(self):
         start = R.opening(R.X, ("a1", "i9"))
         named = {entry["code"]: entry for entry in listing(start, 1, 3)}
-        self.assertEqual(named["e5"], {"code": "e5", "notation": "Xe5", "emoji": "🔳",
-                                       "title": "Take the Centre of the Centre Board!",
+        self.assertEqual(named["e5"], {"code": "e5", "notation": "Xe5", "emoji": "🔳", "title": "Centre",
                                        "words": "X takes the centre of the centre board"})
-        self.assertEqual(named["f6"], {"code": "f6", "notation": "Xf6", "emoji": "📐",
-                                       "title": "Take the Upper Right Corner of the Centre Board!",
+        self.assertEqual(named["f6"], {"code": "f6", "notation": "Xf6", "emoji": "📐", "title": "Corner",
                                        "words": "X takes the upper right corner of the centre board"})
-        self.assertEqual((named["a8"]["emoji"], named["a8"]["title"]), ("📏", "Take the Left Edge of the Upper Left"
-                                                                              " Board!"))
-        self.assertEqual(named["h1"]["title"], "Take the Bottom Edge of the Lower Right Board!")
-        self.assertEqual(named["b2"]["words"], "X takes the centre of the lower left board")
+        self.assertEqual((named["a8"]["emoji"], named["a8"]["title"]), ("📏", "Edge"))
+        self.assertEqual(named["h1"]["title"], "Edge")
+        self.assertEqual((named["b2"]["title"], named["b2"]["words"]),
+                         ("Centre", "X takes the centre of the lower left board"))
         o_first = {entry["code"]: entry for entry in listing(R.opening(R.O, ()), 1, 3)}
         self.assertEqual((o_first["e5"]["notation"], o_first["e5"]["words"]),
                          ("Oe5", "O takes the centre of the centre board"), "the mark to go down leads both")
@@ -105,17 +104,17 @@ class Listing(unittest.TestCase):
             for entry in listing(position, 1, 3):
                 self.assertEqual(entry, expected(position.turn, entry["code"]), position.board)
 
-    def test_each_of_the_81_squares_has_a_title_of_its_own_in_what_the_kit_takes(self):
+    def test_every_square_is_a_centre_a_corner_or_an_edge_in_what_the_kit_takes(self):
         named = listing(R.opening(R.X), 1, 1)
         self.assertEqual(len(named), 81)
         titles = [entry["title"] for entry in named]
-        self.assertEqual(len(set(titles)), 81, "every board tells its squares apart")
+        self.assertEqual({title: titles.count(title) for title in set(titles)}, {"Centre": 9, "Corner": 36, "Edge": 36})
         for entry in named:
             with self.subTest(code=entry["code"]):
                 self.assertRegex(entry["emoji"], KIT_EMOJI)
-                self.assertTrue(KIT_TITLE.fullmatch(entry["title"]) and entry["title"].endswith("!"), entry)
+                self.assertTrue(KIT_TITLE.fullmatch(entry["title"]), entry)
                 self.assertTrue(KIT_WORDS.fullmatch(entry["words"]), entry)
-                self.assertEqual(capitals(entry["title"]), entry["title"], "every word capitalized but the and of")
+                self.assertIsNone(WHERE.search(entry["title"]), "a name holds no square and no board")
                 for dash in DASHES:
                     self.assertNotIn(dash, entry["title"] + entry["words"])
         emoji = [entry["emoji"] for entry in named]
@@ -146,7 +145,7 @@ class Listing(unittest.TestCase):
     def test_a_listing_handed_out_can_be_changed_without_changing_the_next(self):
         position = R.opening(R.X, ("e5",))
         first = listing(position, 1, 3)
-        first[0]["title"] = "Changed!"
+        first[0]["title"] = "Changed"
         first.pop()
         self.assertEqual(listing(position, 1, 3), [expected(R.X, cell) for cell in R.legal(position)])
 
@@ -162,12 +161,11 @@ class Listing(unittest.TestCase):
 
 
 class Ghosts(unittest.TestCase):
-    def test_a_ghost_is_named_for_the_square_it_would_lock(self):
+    def test_a_ghost_is_named_for_the_kind_of_square_it_would_lock(self):
         named = {entry["code"]: entry for entry in ghost_listing(())}
-        self.assertEqual(named["e5"], {"code": "e5", "notation": "e5", "emoji": "👻",
-                                       "title": "Lock the Centre of the Centre Board!",
+        self.assertEqual(named["e5"], {"code": "e5", "notation": "e5", "emoji": "👻", "title": "Centre Ghost",
                                        "words": "A ghost locks the centre of the centre board"})
-        self.assertEqual(named["a1"]["title"], "Lock the Lower Left Corner of the Lower Left Board!")
+        self.assertEqual(named["a1"]["title"], "Corner Ghost")
         self.assertEqual(named["d9"]["words"], "A ghost locks the upper left corner of the top board")
 
     def test_every_open_square_is_listed_once_as_the_board_is_read(self):
@@ -176,13 +174,14 @@ class Ghosts(unittest.TestCase):
                          [cell for cell in R.READING if cell != "e5"], "the second ghost goes anywhere but the first's")
         self.assertEqual(tictac.ghost_cells(["e5"]), [cell for cell in R.READING if cell != "e5"])
 
-    def test_every_ghost_s_name_is_its_own_and_in_what_the_kit_takes(self):
+    def test_every_ghost_s_name_is_its_square_s_kind_and_in_what_the_kit_takes(self):
         named = ghost_listing(())
-        self.assertEqual(len({entry["title"] for entry in named}), 81)
+        self.assertEqual({entry["title"] for entry in named}, {"Centre Ghost", "Corner Ghost", "Edge Ghost"})
         for entry in named:
             spot, board = place(entry["code"])
             with self.subTest(code=entry["code"]):
-                self.assertEqual(entry["title"], capitals(f"lock the {spot} of the {board} board!"))
+                self.assertEqual(entry["title"], f"{kind(entry['code'])} Ghost")
+                self.assertIsNone(WHERE.search(entry["title"]), "a name holds no square and no board")
                 self.assertEqual(entry["words"], f"A ghost locks the {spot} of the {board} board")
                 self.assertEqual((entry["emoji"], entry["notation"]), ("👻", entry["code"]))
                 self.assertTrue(KIT_TITLE.fullmatch(entry["title"]) and KIT_WORDS.fullmatch(entry["words"]), entry)

@@ -105,19 +105,19 @@ class Regions(unittest.TestCase):
     def test_an_element_is_written_a_field_a_line_and_a_list_an_item_a_line(self):
         element = {"kind": "tictac", "places": "house", "result": {"winner": "house", "how": "three boards in a row"},
                    "history": [["G", "e5", "a1", "@octocat"], [1, "Xb8", "Oe6", "@octocat"]],
-                   "moves": [["🔳", "Take the Centre!", "Xb8", "X", "u"]], "people": [],
+                   "moves": [["🔳", "Centre", "Xb8", "X", "u"]], "people": [],
                    "leaders": [["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]]}
         self.assertEqual(page.element_yaml("tictac", element).splitlines(), [
             "  tictac:", '    kind: "tictac"', '    places: "house"',
             '    result: {"winner": "house", "how": "three boards in a row"}', "    history:",
             '      - ["G", "e5", "a1", "@octocat"]', '      - [1, "Xb8", "Oe6", "@octocat"]', "    moves:",
-            '      - ["🔳", "Take the Centre!", "Xb8", "X", "u"]', "    people: []", "    leaders:",
+            '      - ["🔳", "Centre", "Xb8", "X", "u"]', "    people: []", "    leaders:",
             '      - ["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]'])
         pentago = {"kind": "pentago",
-                   "moves": [["⚪", "Take the Hole!", "e4", "W", [["ul", "cw", "u"], ["ul", "acw", "v"]]]]}
+                   "moves": [["⚪", "Edge", "e4", "W", [["ul", "cw", "u"], ["ul", "acw", "v"]]]]}
         self.assertEqual(page.element_yaml("pentago", pentago).splitlines(), [
             "  pentago:", '    kind: "pentago"', "    moves:",
-            '      - ["⚪", "Take the Hole!", "e4", "W", [["ul", "cw", "u"], ["ul", "acw", "v"]]]'],
+            '      - ["⚪", "Edge", "e4", "W", [["ul", "cw", "u"], ["ul", "acw", "v"]]]'],
             "a hole's turns, each with its link, inline in its row")
         chess = {"kind": "chess", "moves": [{"piece": "pawn", "list": [["🥾", "March!", "e4", "Pawn", "u"]]}]}
         self.assertEqual(page.element_yaml("chess", chess).splitlines(), [

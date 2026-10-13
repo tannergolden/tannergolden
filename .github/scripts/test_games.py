@@ -223,7 +223,7 @@ def named(side: str) -> str:
 
 def unsaid(text: str) -> str:
     """A reply or note without the move titles it quotes, which are names in each game's own words."""
-    return re.sub(r"\*[^*\n]+!\*", "", text)
+    return re.sub(r"\*[^*\n]+\*(?= · )", "", text)
 
 
 def links(entry: list) -> list[str]:
@@ -310,14 +310,14 @@ class GhostRule(unittest.TestCase):
     def test_a_ghost_s_reply_names_it_and_says_whose_turn_comes_next(self):
         table = Table("tictac", HOUSE, HOUSE)
         first, second = table.outcomes[1:3]
-        self.assertEqual(first.comment, "👻 **G. e5 is on the board.**\n👻 *Lock the Centre of the Centre Board!* · A"
+        self.assertEqual(first.comment, "👻 **G. e5 is on the board.**\n👻 *Centre Ghost* · A"
                                         " ghost locks the centre of the centre board\nGitHub's turn to place a ghost:"
                                         f" anyone but {LINKED} can pick a square for it on {BOARD}.\n")
         self.assertEqual((first.issue, first.commit, first.log),
                          (101, "chore(tictac): 👻 place G. e5 for X in game 1\n\nMove 1, by tannergolden.",
                           "placed G. e5"))
-        self.assertEqual(second.comment, "👻 **G... a1 is on the board.** Well played, @octocat.\n👻 *Lock the Lower"
-                                         " Left Corner of the Lower Left Board!* · A ghost locks the lower left corner"
+        self.assertEqual(second.comment, "👻 **G... a1 is on the board.** Well played, @octocat.\n👻 *Corner"
+                                         " Ghost* · A ghost locks the lower left corner"
                                          " of the lower left board\n🎲 Both ghosts are down, so the Arbiter drew the"
                                          " side that moves first: @tannergolden, as X.\n@tannergolden, it's your move,"
                                          " in any open board.\n")
@@ -326,12 +326,12 @@ class GhostRule(unittest.TestCase):
                                " 2, by octocat.", "placed G... a1, the Arbiter drawing house to open"))
         table = Table("pentago", GITHUB, GITHUB)
         first, second = table.outcomes[1:3]
-        self.assertEqual(first.comment, "👻 **G. e5 is on the board.** Well played, @octocat.\n👻 *Ghost the Centre of"
-                                        " the Upper Right Quarter!* · A ghost on e5, the centre of the upper right"
+        self.assertEqual(first.comment, "👻 **G. e5 is on the board.** Well played, @octocat.\n👻 *Centre Ghost*"
+                                        " · A ghost on e5, the centre of the upper right"
                                         " quarter\n@tannergolden, it's your turn to set a ghost.\n")
         self.assertEqual(first.commit, "chore(pentago): 👻 set G. e5 for Black in game 1\n\nMove 1, by octocat.")
-        self.assertEqual(second.comment, "👻 **G... e2 is on the board.**\n👻 *Ghost the Centre of the Lower Right"
-                                         " Quarter!* · A ghost on e2, the centre of the lower right quarter\n🎲 Both"
+        self.assertEqual(second.comment, "👻 **G... e2 is on the board.**\n👻 *Centre Ghost*"
+                                         " · A ghost on e2, the centre of the lower right quarter\n🎲 Both"
                                          " ghosts are down, so the Arbiter drew the side that moves first: GitHub, as"
                                          f" Black.\nGitHub's turn: anyone but {LINKED} can pick Black's first move"
                                          f" on {BOARD}.\n")
@@ -464,15 +464,15 @@ class Turns(unittest.TestCase):
     def test_a_mark_is_played_and_the_reply_says_whose_turn_it_is_and_where(self):
         table = Table("tictac", HOUSE, HOUSE)
         outcome = table.move("b8")  # a board's centre: O is sent to the centre board
-        self.assertEqual(outcome.comment, "❌ **1. Xb8 is on the board.**\n🔳 *Take the Centre of the Upper Left Board!*"
+        self.assertEqual(outcome.comment, "❌ **1. Xb8 is on the board.**\n🔳 *Centre*"
                                           " · X takes the centre of the upper left board\nGitHub's turn, in the centre"
                                           f" board: anyone but {LINKED} can pick O's reply on {BOARD}.\n")
         self.assertEqual(outcome.commit, "chore(tictac): ❌ play 1. Xb8 in game 1\n\nMove 3, by tannergolden.")
         self.assertIsNone(PING.search(outcome.comment), "the owner's own move pings nobody")
         self.assertEqual(table.board()["alert"], "centre board")
         outcome = table.move("e6")  # the top edge: X is sent to the top board
-        self.assertEqual(outcome.comment, "⭕ **1... Oe6 is on the board.** Well played, @octocat.\n📏 *Take the Top Edge"
-                                          " of the Centre Board!* · O takes the top edge of the centre board\n"
+        self.assertEqual(outcome.comment, "⭕ **1... Oe6 is on the board.** Well played, @octocat.\n📏 *Edge*"
+                                          " · O takes the top edge of the centre board\n"
                                           "@tannergolden, it's your move, in the top board.\n")
         self.assertEqual((outcome.issue, outcome.log), (table.issue, "played 1... Oe6"))
         self.assertEqual(table.board()["alert"], "top board")
@@ -480,13 +480,13 @@ class Turns(unittest.TestCase):
     def test_a_pentago_reply_names_the_whole_move(self):
         table = Table("pentago", GITHUB, GITHUB)
         outcome = table.move("a1-lr-cw")
-        self.assertEqual(outcome.comment, "⚫ **1. a1-lr-cw is on the board.** Well played, @octocat.\n⚫ *Take the Lower"
-                                          " Left Corner of the Lower Left Quarter!* · A black marble on a1, then the"
+        self.assertEqual(outcome.comment, "⚫ **1. a1-lr-cw is on the board.** Well played, @octocat.\n⚫ *Corner*"
+                                          " · A black marble on a1, then the"
                                           " lower right quarter turns clockwise\n@tannergolden, it's your move.\n")
         self.assertEqual(outcome.commit, "chore(pentago): ⚫ play 1. a1-lr-cw in game 1\n\nMove 3, by octocat.")
         outcome = table.move("d6-lr-acw")
-        self.assertEqual(outcome.comment, "⚪ **1... d6-lr-acw is on the board.**\n⚪ *Take the Upper Left Corner of the"
-                                          " Upper Right Quarter!* · A white marble on d6, then the lower right quarter"
+        self.assertEqual(outcome.comment, "⚪ **1... d6-lr-acw is on the board.**\n⚪ *Corner*"
+                                          " · A white marble on d6, then the lower right quarter"
                                           f" turns anticlockwise\nGitHub's turn: anyone but {LINKED} can pick Black's"
                                           f" reply on {BOARD}.\n")
         element = table.board()
@@ -627,8 +627,8 @@ class Endings(unittest.TestCase):
         outcome = table.play(TT_FIRST_WINS)
         ended = table.clock
         opens = ended + page.DISPLAY
-        self.assertEqual(outcome.comment, "🏆 **9. Xi9#: three boards in a row!** @tannergolden wins game 1.\n📐 *Take"
-                                          " the Upper Right Corner of the Upper Right Board!* · X takes the upper right"
+        self.assertEqual(outcome.comment, "🏆 **9. Xi9#: three boards in a row!** @tannergolden wins game 1.\n📐 *Corner*"
+                                          " · X takes the upper right"
                                           " corner of the upper right board\nIts final board stays up for two days:"
                                           f" game 2 opens {page.day(opens)}, and the Arbiter draws the side that places"
                                           " its first ghost.\n")
@@ -700,8 +700,8 @@ class Endings(unittest.TestCase):
         table = Table("pentago", GITHUB, HOUSE)  # the house opens, and GitHub's turn stands White's five up
         outcome = table.play(PG_FOR_THE_OTHER)
         self.assertEqual(outcome.comment, "🏆 **5... f5-ul-cw#: five in a row!** @tannergolden wins game 1 on the other"
-                                          " side's move, which counts for nobody.\n⚫ *Take the Right Edge of the Upper"
-                                          " Right Quarter!* · A black marble on f5, then the upper left quarter turns"
+                                          " side's move, which counts for nobody.\n⚫ *Edge*"
+                                          " · A black marble on f5, then the upper left quarter turns"
                                           " clockwise\nIts final board stays up for two days: game 2 opens"
                                           f" {page.day(table.clock + page.DISPLAY)}, and the Arbiter draws the side"
                                           " that sets its first ghost.\n")
@@ -907,7 +907,7 @@ class Clock(unittest.TestCase):
         self.assertEqual((played["arbiter"], played["player"], played["issue"]), (True, None, None))
         self.assertRegex(outcome.comment, r"^⏰ \*\*A week passed without a move from \[@tannergolden\]"
                                           r"\([^)]+\)\*\*, so the Arbiter played 1\. X[a-i][1-9] for X, at"
-                                          r" random\.\n\S+ \*[^*]+!\* · X takes [^\n]+\nGitHub's turn, in the [a-z ]+"
+                                          r" random\.\n\S+ \*[^*]+\* · X takes [^\n]+\nGitHub's turn, in the [a-z ]+"
                                           r" board: anyone but")
         self.assertEqual((outcome.issue, outcome.logbook), (102, False), "told on the issue of the turn it answers")
         self.assertIsNone(PING.search(outcome.comment), "the owner's own lapse goes to GitHub's player, unpinged")
@@ -1157,8 +1157,8 @@ class Board(unittest.TestCase):
                     want = table.mod.legal(games.replay(table.mod, table.game)[-1])
                 self.assertEqual([link["move"] for link in found], want)
                 self.assertEqual({(link["game"], link["ply"]) for link in found}, {("1", str(turn))})
-                self.assertEqual(len({entry[1] for entry in element["moves"]}), len(element["moves"]),
-                                 "no two moves on a board share a title")
+                self.assertEqual(len({entry[2] for entry in element["moves"]}), len(element["moves"]),
+                                 "each move once, by its own notation")
                 if key == "pentago" and turn > 2:
                     self.assertTrue(all([[q, w] for q, w, _ in entry[4]] == TURNS for entry in element["moves"]))
                     self.assertEqual(len(titles), 8 * len(element["moves"]), "each hole once, with its eight turns")

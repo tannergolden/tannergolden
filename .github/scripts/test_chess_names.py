@@ -359,6 +359,7 @@ class Titles(unittest.TestCase):
             self.assertTrue(all(set(m) == {"uci", "san", "piece", "emoji", "title", "words"} for m in listed))
         for title in {row["title"] for _, _, row, _ in rows()}:
             self.assertTrue(KIT_TITLE.fullmatch(title) and len(title) <= min(LONGEST, LONGEST_NAME), title)
+            self.assertTrue(2 <= len(title.split()) <= 4, f"{title!r} is not two to four words")
             self.assertFalse(any(dash in title for dash in DASHES), title)
         for said in {row["words"] for _, _, row, _ in rows()}:
             self.assertTrue(KIT_WORDS.fullmatch(said) and len(said) <= WORDS_LONGEST, said)

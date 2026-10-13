@@ -119,7 +119,9 @@ def called(position: Position, move) -> str:
     if not move.captures:
         return "Crowning Move" if move.crowns else NAMES["king" if mover(position, move) == "King" else "step"]
     jump = JUMPS.get(len(move.captures), "Multiple Jump")
-    return f"Crowning {jump}" if move.crowns else f"King {jump}" if mover(position, move) == "King" else jump
+    if move.crowns or mover(position, move) == "King":
+        return f"{'Crowning' if move.crowns else 'King'} {jump}"
+    return "Single Jump" if jump == "Jump" else jump
 
 
 def form(text: str) -> str:
@@ -172,8 +174,9 @@ class Names(unittest.TestCase):
             for move, _, title, _ in listed:
                 self.assertEqual(title, called(position, move), (position.fen, move.code))
                 seen.add(title)
-        self.assertTrue({"Man Move", "King Move", "Crowning Move", "Jump", "Double Jump", "King Jump",
+        self.assertTrue({"Man Move", "King Move", "Crowning Move", "Single Jump", "Double Jump", "King Jump",
                          "Crowning Jump"} <= seen, seen)
+        self.assertTrue(all(2 <= len(title.split()) <= 4 for title in seen), "a name is two to four words")
 
     def test_no_name_holds_a_square(self):
         for position, listed in NAMED.items():
@@ -220,13 +223,13 @@ class Names(unittest.TestCase):
         self.assertEqual(name(*at("W:W30:B1,19,26", "30x23x16"))[:2], ("⛓️", "Double Jump"))
         self.assertEqual(name(*at("B:WK16:BK11", "11x20"))[:2], ("⚔️", "King Jump"))
         listed = {move.code: title for move, _, title, _ in named(Position.from_fen("W:WK6,14:B10,24,K28"))}
-        self.assertEqual(listed, {"6x15": "King Jump", "14x7": "Jump"})
+        self.assertEqual(listed, {"6x15": "King Jump", "14x7": "Single Jump"})
         listed = {move.code: title for move, _, title, _ in named(Position.from_fen("B:W7,K8,16,24,29:BK27"))}
         self.assertEqual(listed, {"27x20x11x2": "King Triple Jump", "27x20x11x4": "King Triple Jump"})
 
     def test_jumps_of_one_kind_share_a_name_and_their_notation_tells_them_apart(self):
         listed = {move.code: title for move, _, title, _ in named(Position.from_fen("W:W19,20,27:B1,16,23"))}
-        self.assertEqual(listed, {"19x12": "Jump", "20x11": "Jump", "27x18": "Jump"})
+        self.assertEqual(listed, {"19x12": "Single Jump", "20x11": "Single Jump", "27x18": "Single Jump"})
 
     def test_a_king_s_long_runs_on_a_crowded_board_are_multiple_jumps(self):
         nines = {move.code: title for move, _, title, _ in named(Position.from_fen(CROWDED[2]))

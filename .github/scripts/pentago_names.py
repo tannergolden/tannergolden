@@ -8,10 +8,10 @@ A Pentago move is two choices, a hole for the marble and then a quarter to
 twist a notch and which way (a game block, as the rules call a quarter), so
 the board lists every empty hole once, with its eight turns after it, each a
 code of its own (`e4-ur-cw`) that its link carries. A name is what a player
-calls the hole inside its quarter: the Centre, a Corner or an Edge. It never
-says which quarter the hole is in or what the move would do, so a move that
-wins and one that changes nothing read alike, and the notation and the words
-beside it say exactly where it goes.
+calls the move by the hole inside its quarter: a Centre Move, a Corner Move or
+an Edge Move. It never says which quarter the hole is in or what the move
+would do, so a move that wins and one that changes nothing read alike, and the
+notation and the words beside it say exactly where it goes.
 Under the Ghost Rule a ghost's hole is one choice, named the same way: a
 Centre Ghost, a Corner Ghost or an Edge Ghost.
 
@@ -43,7 +43,7 @@ def listing(position: Position, game: int, ply: int) -> list[dict]:
     if ending(position):
         return []
     colour = position.turn
-    return [{"code": cell, "notation": cell, "emoji": SIGNS[colour], "title": kind(cell),
+    return [{"code": cell, "notation": cell, "emoji": SIGNS[colour], "title": f"{kind(cell)} Move",
              "words": f"A {COLOUR[colour]} marble on {cell}, then a quarter turns",
              "turns": [(q, w, f"{cell}-{q}-{w}") for q, w in TURNS]} for cell in empty(position)]
 
@@ -56,7 +56,7 @@ def entry(position: Position, code: str) -> dict:
     words = f"A {COLOUR[colour]} marble on {cell}"
     if not won_unturned(position, code):
         words += f", then the {QNAME[quarter]} quarter turns {WAYS[way]}"
-    return {"code": code, "notation": code, "emoji": SIGNS[colour], "title": kind(cell), "words": words}
+    return {"code": code, "notation": code, "emoji": SIGNS[colour], "title": f"{kind(cell)} Move", "words": words}
 
 
 def ghost_words(cell: str) -> str:

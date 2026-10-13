@@ -61,7 +61,7 @@ def kind(cell: str) -> str:
 
 def expected(colour: str, cell: str) -> dict:
     """What the listing names a hole for the colour to move, worked out from the hole alone."""
-    return {"code": cell, "notation": cell, "emoji": {R.W: "⚪", R.B: "⚫"}[colour], "title": kind(cell),
+    return {"code": cell, "notation": cell, "emoji": {R.W: "⚪", R.B: "⚫"}[colour], "title": f"{kind(cell)} Move",
             "words": f"A {'white' if colour == R.W else 'black'} marble on {cell}, then a quarter turns",
             "turns": [(q, w, f"{cell}-{q}-{w}") for q, w in ORDER]}
 
@@ -92,12 +92,12 @@ class Listing(unittest.TestCase):
 
     def test_a_hole_is_named_for_its_kind_and_its_words_say_where_it_is(self):
         named = {row["code"]: row for row in listing(R.opening(R.W, ("e5", "e2")), 1, 3)}
-        self.assertEqual(named["b5"], {"code": "b5", "notation": "b5", "emoji": "⚪", "title": "Centre",
+        self.assertEqual(named["b5"], {"code": "b5", "notation": "b5", "emoji": "⚪", "title": "Centre Move",
                                        "words": "A white marble on b5, then a quarter turns",
                                        "turns": [(q, w, f"b5-{q}-{w}") for q, w in ORDER]})
-        self.assertEqual(named["e4"]["title"], "Edge")
-        self.assertEqual(named["a1"]["title"], "Corner")
-        self.assertEqual(named["f3"]["title"], "Corner")
+        self.assertEqual(named["e4"]["title"], "Edge Move")
+        self.assertEqual(named["a1"]["title"], "Corner Move")
+        self.assertEqual(named["f3"]["title"], "Corner Move")
         black = listing(R.opening(R.B, ()), 1, 3)[0]
         self.assertEqual((black["emoji"], black["words"]), ("⚫", "A black marble on a6, then a quarter turns"))
 
@@ -109,13 +109,15 @@ class Listing(unittest.TestCase):
     def test_every_hole_is_a_centre_a_corner_or_an_edge_in_what_the_kit_takes(self):
         named = listing(R.opening(R.W), 1, 1)
         titles = [row["title"] for row in named]
-        self.assertEqual({title: titles.count(title) for title in set(titles)}, {"Centre": 4, "Corner": 16, "Edge": 16})
+        self.assertEqual({title: titles.count(title) for title in set(titles)},
+                         {"Centre Move": 4, "Corner Move": 16, "Edge Move": 16})
         for row in named:
             with self.subTest(code=row["code"]):
                 self.assertRegex(row["emoji"], KIT_EMOJI)
                 self.assertTrue(KIT_TITLE.fullmatch(row["title"]), row)
                 self.assertTrue(KIT_WORDS.fullmatch(row["words"]), row)
                 self.assertIsNone(WHERE.search(row["title"]), "a name holds no hole and no quarter")
+                self.assertTrue(2 <= len(row["title"].split()) <= 4, "a name is two to four words")
                 for dash in DASHES:
                     self.assertNotIn(dash, row["title"] + row["words"])
 
@@ -150,7 +152,7 @@ class Entry(unittest.TestCase):
     def test_a_move_made_is_named_with_its_turn_in_full(self):
         start = R.opening(R.W, ("e5", "e2"))
         self.assertEqual(entry(start, "e4-ur-cw"), {"code": "e4-ur-cw", "notation": "e4-ur-cw", "emoji": "⚪",
-                                                    "title": "Edge",
+                                                    "title": "Edge Move",
                                                     "words": "A white marble on e4, then the upper right quarter"
                                                              " turns clockwise"})
         self.assertEqual(entry(R.opening(R.B), "a1-ll-acw")["words"],
@@ -161,7 +163,7 @@ class Entry(unittest.TestCase):
                                     R.B if cell in ("d6", "e6", "f6", "d5") else "" for cell in R.CELLS))
         named = entry(position, "a5-lr-cw")
         self.assertEqual((named["words"], named["title"], named["emoji"]),
-                         ("A white marble on a5", "Edge", "⚪"))
+                         ("A white marble on a5", "Edge Move", "⚪"))
 
     def test_every_move_named_on_many_boards_is_in_what_the_kit_takes(self):
         for position in BOARDS[::5]:
@@ -199,6 +201,7 @@ class Ghosts(unittest.TestCase):
             with self.subTest(code=row["code"]):
                 self.assertEqual(row["title"], f"{kind(row['code'])} Ghost")
                 self.assertIsNone(WHERE.search(row["title"]), "a name holds no hole and no quarter")
+                self.assertTrue(2 <= len(row["title"].split()) <= 4, "a name is two to four words")
                 self.assertEqual(row["words"], f"A ghost on {row['code']}, the {spot} of the {quarter} quarter")
                 self.assertTrue(KIT_TITLE.fullmatch(row["title"]) and KIT_WORDS.fullmatch(row["words"]), row)
                 self.assertNotRegex(row["title"] + " " + row["words"], BANNED)

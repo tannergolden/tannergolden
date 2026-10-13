@@ -7,11 +7,11 @@
 A name is what a checkers player calls the move, and it says what the move
 is, never where it goes or what it does to the game. The laws of checkers
 know a move and a capturing move, each by a man or a king, and the names
-follow them: a Man Move or a King Move; a Jump, a Double Jump or a Triple
-Jump by how many pieces it takes, and a Multiple Jump past three, with
-"King" before a king's ("King Double Jump"); and a man that reaches the far
-row and is crowned makes a Crowning Move, or a Crowning Jump when it gets
-there by jumping ("Crowning Double Jump"). No name holds a square, so one
+follow them: a Man Move or a King Move; a Single Jump, a Double Jump or a
+Triple Jump by how many pieces it takes, and a Multiple Jump past three, a
+king's with "King" before it ("King Jump", "King Double Jump"); and a man
+that reaches the far row and is crowned makes a Crowning Move, or a Crowning
+Jump when it gets there by jumping ("Crowning Double Jump"). No name holds a square, so one
 name fits many moves on a board, and the notation and the words beside it
 tell them apart.
 
@@ -62,16 +62,18 @@ def kind_word(piece: str) -> str:
 
 
 def title(position: Position, move: Move) -> str:
-    """The move's name as a checkers player calls it, which holds no square: `Man Move`, `King Move`, `Crowning
-    Move`, `Jump`, `Double Jump`, `Triple Jump` or `Multiple Jump`, a king's with `King` before it and a man's that
-    ends crowned with `Crowning`: `King Double Jump`, `Crowning Jump`."""
+    """The move's name as a checkers player calls it, two to four words that hold no square: `Man Move`, `King Move`,
+    `Crowning Move`, `Single Jump`, `Double Jump`, `Triple Jump` or `Multiple Jump`, a king's with `King` before it and
+    a man's that ends crowned with `Crowning`: `King Jump`, `King Double Jump`, `Crowning Jump`."""
     taken = len(move.captures)
     if not taken:
         return "Crowning Move" if move.crowns else f"{kind_word(position.pieces[move.path[0]])} Move"
     jump = JUMPS[taken - 1] if taken <= len(JUMPS) else "Multiple Jump"
     if move.crowns:
         return f"Crowning {jump}"
-    return f"King {jump}" if position.pieces[move.path[0]].isupper() else jump
+    if position.pieces[move.path[0]].isupper():
+        return f"King {jump}"
+    return "Single Jump" if taken == 1 else jump
 
 
 def listed(squares: Sequence[int]) -> str:

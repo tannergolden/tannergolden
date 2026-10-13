@@ -4,13 +4,13 @@
 
   from tictac_names import listing, ghost_listing
 
-A name is what a tic-tac-toe player calls the square inside its small board:
-the Centre, a Corner or an Edge, the three moves there are in the game. It
-never says which board the square is on or what the mark does to the game, so
-a mark that wins and one that changes nothing read alike, and the notation
-and the words beside it say exactly where it goes. Under the Ghost Rule a
-ghost's square is named the same way, as a Centre Ghost, a Corner Ghost or
-an Edge Ghost.
+A name is what a tic-tac-toe player calls the move by the square it takes in
+its small board: a Centre Move, a Corner Move or an Edge Move, the three moves
+there are in the game. It never says which board the square is on or what the
+mark does to the game, so a mark that wins and one that changes nothing read
+alike, and the notation and the words beside it say exactly where it goes.
+Under the Ghost Rule a ghost's square is named the same way, as a Centre
+Ghost, a Corner Ghost or an Edge Ghost.
 
 The emoji names the kind of square (🔳 a board's centre, 📐 a corner, 📏 an
 edge, and 👻 a ghost's), the notation is the mark and the square (`Xe5`), or
@@ -64,8 +64,8 @@ def listing(position: Position, game: int, ply: int) -> list[dict]:
 
 @functools.lru_cache(maxsize=256)
 def _listing(position: Position) -> tuple[dict, ...]:
-    return tuple({"code": cell, "notation": f"{position.turn}{cell}", "emoji": sign(cell), "title": kind(cell),
-                  "words": words(position, cell)} for cell in legal(position))
+    return tuple({"code": cell, "notation": f"{position.turn}{cell}", "emoji": sign(cell),
+                  "title": f"{kind(cell)} Move", "words": words(position, cell)} for cell in legal(position))
 
 
 def ghost_listing(ghosts: tuple[str, ...]) -> list[dict]:

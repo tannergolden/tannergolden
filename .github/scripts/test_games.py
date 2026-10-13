@@ -464,14 +464,14 @@ class Turns(unittest.TestCase):
     def test_a_mark_is_played_and_the_reply_says_whose_turn_it_is_and_where(self):
         table = Table("tictac", HOUSE, HOUSE)
         outcome = table.move("b8")  # a board's centre: O is sent to the centre board
-        self.assertEqual(outcome.comment, "❌ **1. Xb8 is on the board.**\n🔳 *Centre*"
+        self.assertEqual(outcome.comment, "❌ **1. Xb8 is on the board.**\n🔳 *Centre Move*"
                                           " · X takes the centre of the upper left board\nGitHub's turn, in the centre"
                                           f" board: anyone but {LINKED} can pick O's reply on {BOARD}.\n")
         self.assertEqual(outcome.commit, "chore(tictac): ❌ play 1. Xb8 in game 1\n\nMove 3, by tannergolden.")
         self.assertIsNone(PING.search(outcome.comment), "the owner's own move pings nobody")
         self.assertEqual(table.board()["alert"], "centre board")
         outcome = table.move("e6")  # the top edge: X is sent to the top board
-        self.assertEqual(outcome.comment, "⭕ **1... Oe6 is on the board.** Well played, @octocat.\n📏 *Edge*"
+        self.assertEqual(outcome.comment, "⭕ **1... Oe6 is on the board.** Well played, @octocat.\n📏 *Edge Move*"
                                           " · O takes the top edge of the centre board\n"
                                           "@tannergolden, it's your move, in the top board.\n")
         self.assertEqual((outcome.issue, outcome.log), (table.issue, "played 1... Oe6"))
@@ -480,12 +480,12 @@ class Turns(unittest.TestCase):
     def test_a_pentago_reply_names_the_whole_move(self):
         table = Table("pentago", GITHUB, GITHUB)
         outcome = table.move("a1-lr-cw")
-        self.assertEqual(outcome.comment, "⚫ **1. a1-lr-cw is on the board.** Well played, @octocat.\n⚫ *Corner*"
+        self.assertEqual(outcome.comment, "⚫ **1. a1-lr-cw is on the board.** Well played, @octocat.\n⚫ *Corner Move*"
                                           " · A black marble on a1, then the"
                                           " lower right quarter turns clockwise\n@tannergolden, it's your move.\n")
         self.assertEqual(outcome.commit, "chore(pentago): ⚫ play 1. a1-lr-cw in game 1\n\nMove 3, by octocat.")
         outcome = table.move("d6-lr-acw")
-        self.assertEqual(outcome.comment, "⚪ **1... d6-lr-acw is on the board.**\n⚪ *Corner*"
+        self.assertEqual(outcome.comment, "⚪ **1... d6-lr-acw is on the board.**\n⚪ *Corner Move*"
                                           " · A white marble on d6, then the lower right quarter"
                                           f" turns anticlockwise\nGitHub's turn: anyone but {LINKED} can pick Black's"
                                           f" reply on {BOARD}.\n")
@@ -627,7 +627,7 @@ class Endings(unittest.TestCase):
         outcome = table.play(TT_FIRST_WINS)
         ended = table.clock
         opens = ended + page.DISPLAY
-        self.assertEqual(outcome.comment, "🏆 **9. Xi9#: three boards in a row!** @tannergolden wins game 1.\n📐 *Corner*"
+        self.assertEqual(outcome.comment, "🏆 **9. Xi9#: three boards in a row!** @tannergolden wins game 1.\n📐 *Corner Move*"
                                           " · X takes the upper right"
                                           " corner of the upper right board\nIts final board stays up for two days:"
                                           f" game 2 opens {page.day(opens)}, and the Arbiter draws the side that places"
@@ -700,7 +700,7 @@ class Endings(unittest.TestCase):
         table = Table("pentago", GITHUB, HOUSE)  # the house opens, and GitHub's turn stands White's five up
         outcome = table.play(PG_FOR_THE_OTHER)
         self.assertEqual(outcome.comment, "🏆 **5... f5-ul-cw#: five in a row!** @tannergolden wins game 1 on the other"
-                                          " side's move, which counts for nobody.\n⚫ *Edge*"
+                                          " side's move, which counts for nobody.\n⚫ *Edge Move*"
                                           " · A black marble on f5, then the upper left quarter turns"
                                           " clockwise\nIts final board stays up for two days: game 2 opens"
                                           f" {page.day(table.clock + page.DISPLAY)}, and the Arbiter draws the side"

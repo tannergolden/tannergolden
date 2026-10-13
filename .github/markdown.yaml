@@ -72,10 +72,9 @@ badges:
 
 # The drawings in the README's body, each where its markers stand. The
 # schematic is written by hand; the kit lays its boxes out from the wires.
-# Its labels fit the pixel sets the page is drawn in, the Chessmen and the
-# holidays': short enough to need no ellipsis, and with no semicolon, which
-# their letters lack. A set that cannot letter a label draws the whole
-# schematic in the standard look instead.
+# Its labels are short enough for the pixel sets the page is drawn in, the
+# Chessmen and the holidays', to set whole: a set cuts a label too long for
+# its room short with an ellipsis.
 elements:
   how-it-fits:
     kind: schematic
@@ -87,7 +86,7 @@ elements:
       once a day, at 00:00 EST, the kit it calls measures the page and redraws
       what moved in one commit: the header and footer, the badges, this
       schematic and the placards, and the trophies. The stub names the page's
-      one theme, the Medieval collection's Chessmen, and every part is drawn
+      one theme, the medieval collection's Chessmen, and every part is drawn
       in it, or in a holiday's set around each holiday.
     caption: HOW IT ALL FITS  ·  TIMES IN EST  ·  NOT TO SCALE
     groups:

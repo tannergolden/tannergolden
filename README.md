@@ -71,37 +71,23 @@ one from data measured on a schedule.
 
 ## 🎲 Play Against Me
 
-Four games, each on its own board, and in every one I play one side while you
-play the other with everyone else on GitHub. I always play White in Chess,
-Checkers and Pentago, and X in Tic-Tac. White moves first in Chess, so I open
-every game, unless a week passes first and the Arbiter opens it for me. In
-Checkers, Black moves first, so GitHub opens. Pentago and Tic-Tac open under the
-Ghost Rule: each side first places a ghost, a hole or a square that is nobody's,
-the Arbiter drawing which side places first, and once both ghosts are down, the
-Arbiter draws which side moves first.
+Four games, Chess, Checkers, Pentago and Tic-Tac, with me on one side and
+everyone else on GitHub on the other. I always play White, and X in Tic-Tac.
 
-Pick a move under a board, and its link opens a ready-made issue in
-[`play`](https://github.com/tannergolden/play): submit it as it opens. The
-first move to reach the game is the one played. The Official Arbiter rules on
-it, answers on your issue, and redraws the board within a few minutes. Chess's
-board is always in view below, and the other three open with a click.
+1. **Pick a move** from the list under a board. Chess is always in view, and
+   the other three open with a click.
+2. **Submit the issue its link opens**, unchanged. The first move to reach the
+   game is the one played.
+3. **The Official Arbiter answers on your issue** and redraws the board within
+   a few minutes.
 
-One clock keeps all four, ticking twice an hour. A side that goes a week without
-moving gets a random legal move from the Arbiter, and a finished game's winning
-board stays up for two days, with a countdown to the next, before a fresh board
-comes by itself. A win counts only for the player who makes the winning move:
-the checkmate in Chess, the move that leaves the other side no move in
-Checkers, the move that makes five of its own colour in a row in Pentago, or
-the mark that wins a third board in a row in Tic-Tac. A move the Arbiter plays
-counts for nobody, and so does a Pentago turn that makes five for the other
-side; a draw is nobody's win. The players with the most wins take their places
-in the Hall of Fame below, and every game a player wins gets a replay of every
-move, posted on the winning move's issue.
+Each side has a week to move, or the Arbiter moves for it at random. A win
+counts for the player who makes the winning move, and the most wins top the
+Hall of Fame below.
 
-📖 Each game has a guide to its rules and how its moves are written:
-[Chess](docs/Chess.md), [Checkers](docs/Checkers.md),
-[Pentago](docs/Pentago.md) and [Tic-Tac](docs/Tic-Tac.md), with what all four
-share in [Games](docs/README.md).
+📖 The rules and everything else are in [Games](docs/README.md) and each game's
+guide: [Chess](docs/Chess.md), [Checkers](docs/Checkers.md),
+[Pentago](docs/Pentago.md) and [Tic-Tac](docs/Tic-Tac.md).
 
 <!-- markdown:element:chess:start -->
 <picture>

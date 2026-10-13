@@ -33,10 +33,10 @@ row wins the game.
 ## 🎯 Making A Move
 
 1. **Open the list under the Tic-Tac board** on O's turn. It holds every square
-   O may take, grouped by board when there are more than ten, each named for
-   its kind of square, **Centre**, **Corner** or **Edge**, with the move in
-   notation, such as `Oe5`, the same move in words, such as _O takes the centre
-   of the centre board_, and a **Play ↗** link.
+   O may take, grouped by board when there are more than ten, each named for its
+   kind of square, **Centre Move**, **Corner Move** or **Edge Move**, with the
+   move in notation, such as `Oe5`, the same move in words, such as _O takes the
+   centre of the centre board_, and a **Play ↗** link.
 2. **Follow a move's link.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    square, such as `tictac: e5 · game 1 · move 7`.

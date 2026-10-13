@@ -34,11 +34,11 @@ in a row wins.
 
 1. **Open the list under the Pentago board** on Black's turn. It holds every
    empty hole, grouped by quarter when there are more than ten, each named for
-   its kind of hole, **Centre**, **Corner** or **Edge**, with the hole, such as
-   `e4`, the move in words, such as _A black marble on e4, then a quarter
-   turns_, and eight links, one for each turn the move can end with: ↻ turns a
-   quarter clockwise and ↺ anticlockwise, and `UL`, `UR`, `LL` and `LR` name the
-   upper left, upper right, lower left and lower right quarters.
+   its kind of hole, **Centre Move**, **Corner Move** or **Edge Move**, with the
+   hole, such as `e4`, the move in words, such as _A black marble on e4, then a
+   quarter turns_, and eight links, one for each turn the move can end with: ↻
+   turns a quarter clockwise and ↺ anticlockwise, and `UL`, `UR`, `LL` and `LR`
+   name the upper left, upper right, lower left and lower right quarters.
 2. **Follow the link for the turn you want.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    whole move, such as `pentago: e4-ur-cw · game 1 · move 7`.

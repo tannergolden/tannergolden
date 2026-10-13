@@ -42,7 +42,7 @@ first disc, so either colour can drop first. Four in a row wins.
 
 Only @tannergolden can drop the white discs. Anyone else can drop the black,
 whoever dropped the last one included, and the first move to reach the game is
-the one played. [The Games](README.md) has the rest of what all four games
+the one played. [Games](Games.md) has the rest of what all four games
 share: whose turn it is, when a move is turned away, and the clock.
 
 ## 📜 The Rules

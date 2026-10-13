@@ -1,5 +1,5 @@
 <!--
-title: '🎲 THE GAMES'
+title: '🎲 GAMES'
 description: 'How to play the four games on the profile against @tannergolden: making a move, whose turn it is, the clock and the Arbiter, and what happens when a game ends.'
 tags: [games, how-to-play, chess, checkers, connect-four, tic-tac-toe]
 category: docs
@@ -8,7 +8,7 @@ category: docs
 <!-- markdownlint-disable MD041 -->
 <div align="center">
 
-# 🎲 THE GAMES
+# 🎲 GAMES
 
 <a name="top"></a>
 

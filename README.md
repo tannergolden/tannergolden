@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,186. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,194. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -104,9 +104,6 @@ move, posted on the winning move's issue.
 share in [Games](docs/README.md).
 
 <!-- markdown:element:chess:start -->
-<details open>
-<summary><b>♟️ Chess</b></summary>
-
 <picture>
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-narrow-still-dark.svg">
   <source media="(max-width: 585px) and (prefers-reduced-motion: reduce)" srcset="assets/elements/chess-narrow-still-day.svg">
@@ -121,7 +118,7 @@ share in [Games](docs/README.md).
 <details>
 <summary>♔ <b>@tannergolden's Turn</b> · 20 legal moves · only @tannergolden can play these</summary>
 
-<details open>
+<details>
 <summary>♘ Knights · 4 moves</summary>
 
 |  | Move | In words | Play |
@@ -133,7 +130,7 @@ share in [Games](docs/README.md).
 
 </details>
 
-<details open>
+<details>
 <summary>♙ Pawns · 16 moves</summary>
 
 |  | Move | In words | Play |
@@ -160,8 +157,6 @@ share in [Games](docs/README.md).
 </details>
 
 Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. A side that goes a week without moving gets a random legal move from the Arbiter.
-
-</details>
 <!-- markdown:element:chess:end -->
 
 <!-- markdown:element:checkers:start -->
@@ -217,7 +212,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 <details>
 <summary>⚫ <b>GitHub's Turn</b> · 36 holes for a ghost · open to choose one</summary>
 
-<details open>
+<details>
 <summary>⚫ Upper Left Quarter · 9 moves</summary>
 
 |  | Hole | In words | Then turn |
@@ -234,7 +229,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>⚫ Upper Right Quarter · 9 moves</summary>
 
 |  | Hole | In words | Then turn |
@@ -251,7 +246,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>⚫ Lower Left Quarter · 9 moves</summary>
 
 |  | Hole | In words | Then turn |
@@ -268,7 +263,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>⚫ Lower Right Quarter · 9 moves</summary>
 
 |  | Hole | In words | Then turn |
@@ -310,7 +305,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 <details>
 <summary>❌ <b>@tannergolden's Turn</b> · 81 squares to lock · only @tannergolden can play these</summary>
 
-<details open>
+<details>
 <summary>❌ Upper Left Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -327,7 +322,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Top Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -344,7 +339,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Upper Right Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -361,7 +356,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Left Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -378,7 +373,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Centre Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -395,7 +390,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Right Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -412,7 +407,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Lower Left Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -429,7 +424,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Bottom Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -446,7 +441,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 </details>
 
-<details open>
+<details>
 <summary>❌ Lower Right Board · 9 moves</summary>
 
 |  | Move | In words | Play |
@@ -525,16 +520,16 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 25, 10,508 XP, case 39% complete, 4-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 25, 10,529 XP, case 39% complete, 4-day streak"></picture>
   <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, Longest Streak to Bronze 85%, Polyglot I 80%"></picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 1,010, 34% to Gold, top 13%, up 85 this week"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 1,015, 34% to Gold, top 13%, up 90 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-repos"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/repos.svg"><img src="assets/trophies/repos-day.svg" alt="Repositories trophy: Bronze, 7, 20% to Silver, top 39%"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Unranked, 6 days, 85% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 14, 56% to Bronze"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-pulls"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/pulls.svg"><img src="assets/trophies/pulls-day.svg" alt="Pull Requests trophy: Unranked, 2, 40% to Bronze"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-pulls"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/pulls.svg"><img src="assets/trophies/pulls-day.svg" alt="Pull Requests trophy: Unranked, 3, 60% to Bronze, up 1 this week"></picture></a>
 </p>
 
 <details>
@@ -552,9 +547,9 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-polyglot"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/polyglot.svg"><img src="assets/trophies/achievements/polyglot-day.svg" alt="Polyglot: 80% (4 of 5)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-branching-out"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/branching-out.svg"><img src="assets/trophies/achievements/branching-out-day.svg" alt="Branching Out: 70% (7 of 10)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-shipwright"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/shipwright.svg"><img src="assets/trophies/achievements/shipwright-day.svg" alt="Shipwright: 30% (3 of 10)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-monolith"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/monolith.svg"><img src="assets/trophies/achievements/monolith-day.svg" alt="Monolith: 17% (174 of 1,000)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-bug-hunter"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/bug-hunter.svg"><img src="assets/trophies/achievements/bug-hunter-day.svg" alt="Bug Hunter: 8% (2 of 25)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-merge-master"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/merge-master.svg"><img src="assets/trophies/achievements/merge-master-day.svg" alt="Merge Master: 8% (2 of 25)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-monolith"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/monolith.svg"><img src="assets/trophies/achievements/monolith-day.svg" alt="Monolith: 17% (175 of 1,000)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-bug-hunter"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/bug-hunter.svg"><img src="assets/trophies/achievements/bug-hunter-day.svg" alt="Bug Hunter: 12% (3 of 25)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-merge-master"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/merge-master.svg"><img src="assets/trophies/achievements/merge-master-day.svg" alt="Merge Master: 12% (3 of 25)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-closer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/closer.svg"><img src="assets/trophies/achievements/closer-day.svg" alt="Closer: 4% (4 of 100)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-fan-club"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/fan-club.svg"><img src="assets/trophies/achievements/fan-club-day.svg" alt="Fan Club: 0% (0 of 100)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-forked"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/forked.svg"><img src="assets/trophies/achievements/forked-day.svg" alt="Forked: 0% (0 of 10)"></picture></a>
@@ -567,9 +562,9 @@ depends on a third-party service.
 
 <p align="center"><b>Craft</b></p>
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 26% to By the Book III"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 27% to By the Book III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 49% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 51% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 33% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: earned, Rare"></picture></a>
@@ -591,8 +586,8 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-night-owl"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/night-owl.svg"><img src="assets/trophies/achievements/night-owl-day.svg" alt="Night Owl I: earned, Uncommon, 30% to Night Owl II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-comeback"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/comeback.svg"><img src="assets/trophies/achievements/comeback-day.svg" alt="Comeback: earned, Common"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-long-game"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/long-game.svg"><img src="assets/trophies/achievements/long-game-day.svg" alt="Long Game: 66% (2 of 3)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 38% (19 of 50)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-early-bird"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/early-bird.svg"><img src="assets/trophies/achievements/early-bird-day.svg" alt="Early Bird: 18% (9 of 50)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 52% (26 of 50)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-early-bird"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/early-bird.svg"><img src="assets/trophies/achievements/early-bird-day.svg" alt="Early Bird: 20% (10 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-weekender"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekender.svg"><img src="assets/trophies/achievements/weekender-day.svg" alt="Weekender: 15% (4 of 26)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-year-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/year-of-code.svg"><img src="assets/trophies/achievements/year-of-code-day.svg" alt="Year of Code: 6% (19 of 300)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-weekday-warrior"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekday-warrior.svg"><img src="assets/trophies/achievements/weekday-warrior-day.svg" alt="Weekday Warrior: 6% (12 of 200)"></picture></a>

@@ -167,51 +167,153 @@ elements:
   # .github/scripts/games.py rewrites the lines between a game's two markers,
   # and chess.py chess's; twice an hour clock.py rewrites them all; and nothing
   # else in this file.
-  # tictactoe:start
-  tictactoe:
-    kind: "tictactoe"
-    board: ".../.../O.."
-    opens: "github"
+  # tictac:start
+  tictac:
+    kind: "tictac"
+    board: "........./........./........./........./........./........./........./........./........."
+    places: "house"
     game: 1
     move: 1
     players: 0
-    due: "19 Oct"
-    last: {"move": "Oa1", "words": "O takes the lower left corner", "by": "the Arbiter", "when": "12 Oct"}
+    due: "20 Oct"
+    alert: "place a ghost"
     history:
-      - [1, "Oa1", "", "the Arbiter"]
-    note: "@tannergolden always plays X and GitHub O, and the Arbiter opens every game for a side drawn at random, with a random first move. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move. Three in a row wins, and a full board without one is a draw."
+      - ["G", "", "", ""]
+    note: "@tannergolden always plays X and GitHub O. Under the Ghost Rule each side first locks a square with a ghost, and then the Arbiter draws who makes the first mark. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The ghost is due by 20 Oct, 04:25 EST, or the Arbiter places one at random."
     moves:
-      - ["📐", "Take a Corner Along From Theirs, Upper Left!", "Xa3", "X takes the upper left corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["📏", "Take an Edge by No Mark, Top!", "Xb3", "X takes the top edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["📐", "Take the Corner Across From Theirs!", "Xc3", "X takes the upper right corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["📏", "Take an Edge by Their Corner, Left!", "Xa2", "X takes the left edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🔳", "Take the Centre!", "Xb2", "X takes the centre", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["📏", "Take an Edge by No Mark, Right!", "Xc2", "X takes the right edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["📏", "Take an Edge by Their Corner, Bottom!", "Xb1", "X takes the bottom edge", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["📐", "Take a Corner Along From Theirs, Lower Right!", "Xc1", "X takes the lower right corner", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictactoe%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-  # tictactoe:end
-  # connectfour:start
-  connectfour:
-    kind: "connectfour"
-    board: "......./......./......./......./......./.....L."
-    opens: "house"
+      - ["👻", "Lock the Upper Left Corner of the Upper Left Board!", "a9", "A ghost locks the upper left corner of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Upper Left Board!", "b9", "A ghost locks the top edge of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Upper Left Board!", "c9", "A ghost locks the upper right corner of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Top Board!", "d9", "A ghost locks the upper left corner of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Top Board!", "e9", "A ghost locks the top edge of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Top Board!", "f9", "A ghost locks the upper right corner of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Upper Right Board!", "g9", "A ghost locks the upper left corner of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Upper Right Board!", "h9", "A ghost locks the top edge of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Upper Right Board!", "i9", "A ghost locks the upper right corner of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i9%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Upper Left Board!", "a8", "A ghost locks the left edge of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Upper Left Board!", "b8", "A ghost locks the centre of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Upper Left Board!", "c8", "A ghost locks the right edge of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Top Board!", "d8", "A ghost locks the left edge of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Top Board!", "e8", "A ghost locks the centre of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Top Board!", "f8", "A ghost locks the right edge of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Upper Right Board!", "g8", "A ghost locks the left edge of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Upper Right Board!", "h8", "A ghost locks the centre of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Upper Right Board!", "i8", "A ghost locks the right edge of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i8%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Upper Left Board!", "a7", "A ghost locks the lower left corner of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Upper Left Board!", "b7", "A ghost locks the bottom edge of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Upper Left Board!", "c7", "A ghost locks the lower right corner of the upper left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Top Board!", "d7", "A ghost locks the lower left corner of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Top Board!", "e7", "A ghost locks the bottom edge of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Top Board!", "f7", "A ghost locks the lower right corner of the top board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Upper Right Board!", "g7", "A ghost locks the lower left corner of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Upper Right Board!", "h7", "A ghost locks the bottom edge of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Upper Right Board!", "i7", "A ghost locks the lower right corner of the upper right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i7%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Left Board!", "a6", "A ghost locks the upper left corner of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Left Board!", "b6", "A ghost locks the top edge of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Left Board!", "c6", "A ghost locks the upper right corner of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Centre Board!", "d6", "A ghost locks the upper left corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Centre Board!", "e6", "A ghost locks the top edge of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Centre Board!", "f6", "A ghost locks the upper right corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Right Board!", "g6", "A ghost locks the upper left corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Right Board!", "h6", "A ghost locks the top edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Right Board!", "i6", "A ghost locks the upper right corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Left Board!", "a5", "A ghost locks the left edge of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Left Board!", "b5", "A ghost locks the centre of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Left Board!", "c5", "A ghost locks the right edge of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Centre Board!", "d5", "A ghost locks the left edge of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Centre Board!", "e5", "A ghost locks the centre of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Centre Board!", "f5", "A ghost locks the right edge of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Right Board!", "g5", "A ghost locks the left edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Right Board!", "h5", "A ghost locks the centre of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Right Board!", "i5", "A ghost locks the right edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Left Board!", "a4", "A ghost locks the lower left corner of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Left Board!", "b4", "A ghost locks the bottom edge of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Left Board!", "c4", "A ghost locks the lower right corner of the left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Centre Board!", "d4", "A ghost locks the lower left corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Centre Board!", "e4", "A ghost locks the bottom edge of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Centre Board!", "f4", "A ghost locks the lower right corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Right Board!", "g4", "A ghost locks the lower left corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Right Board!", "h4", "A ghost locks the bottom edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Right Board!", "i4", "A ghost locks the lower right corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Lower Left Board!", "a3", "A ghost locks the upper left corner of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Lower Left Board!", "b3", "A ghost locks the top edge of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Lower Left Board!", "c3", "A ghost locks the upper right corner of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Bottom Board!", "d3", "A ghost locks the upper left corner of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Bottom Board!", "e3", "A ghost locks the top edge of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Bottom Board!", "f3", "A ghost locks the upper right corner of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Left Corner of the Lower Right Board!", "g3", "A ghost locks the upper left corner of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Top Edge of the Lower Right Board!", "h3", "A ghost locks the top edge of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Upper Right Corner of the Lower Right Board!", "i3", "A ghost locks the upper right corner of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Lower Left Board!", "a2", "A ghost locks the left edge of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Lower Left Board!", "b2", "A ghost locks the centre of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Lower Left Board!", "c2", "A ghost locks the right edge of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Bottom Board!", "d2", "A ghost locks the left edge of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Bottom Board!", "e2", "A ghost locks the centre of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Bottom Board!", "f2", "A ghost locks the right edge of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Left Edge of the Lower Right Board!", "g2", "A ghost locks the left edge of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Centre of the Lower Right Board!", "h2", "A ghost locks the centre of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Right Edge of the Lower Right Board!", "i2", "A ghost locks the right edge of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Lower Left Board!", "a1", "A ghost locks the lower left corner of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Lower Left Board!", "b1", "A ghost locks the bottom edge of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Lower Left Board!", "c1", "A ghost locks the lower right corner of the lower left board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Bottom Board!", "d1", "A ghost locks the lower left corner of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Bottom Board!", "e1", "A ghost locks the bottom edge of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Bottom Board!", "f1", "A ghost locks the lower right corner of the bottom board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Left Corner of the Lower Right Board!", "g1", "A ghost locks the lower left corner of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Bottom Edge of the Lower Right Board!", "h1", "A ghost locks the bottom edge of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Lock the Lower Right Corner of the Lower Right Board!", "i1", "A ghost locks the lower right corner of the lower right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+  # tictac:end
+  # pentago:start
+  pentago:
+    kind: "pentago"
+    board: "....../....../....../....../....../......"
+    places: "github"
     game: 1
     move: 1
     players: 0
-    due: "19 Oct"
-    last: {"move": "6", "words": "A white disc down column 6, to row 1", "by": "the Arbiter", "when": "12 Oct"}
+    due: "20 Oct"
+    alert: "set a ghost"
     history:
-      - [1, "6", "", ""]
-    note: "@tannergolden always drops the white discs and GitHub the black, and the Arbiter opens every game for a side drawn at random, with a random first disc. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 01:15 EST, or the Arbiter plays a random legal move."
+      - ["G", "", "", ""]
+    note: "@tannergolden always plays White and GitHub Black. Under the Ghost Rule each side first sets a ghost, a marble that is nobody's, and then the Arbiter draws who sets the first marble. Anyone but @tannergolden can play on this turn, and the first pick in is played. The ghost is due by 20 Oct, 04:25 EST, or the Arbiter sets one at random."
     moves:
-      - ["⬅️", "Lay the First Disc on the Left Edge!", "1", "A black disc down column 1, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%201%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["⬇️", "Send Black to the Floor in Column 2!", "2", "A black disc down column 2, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%202%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["⬇️", "Drop Black Down Column 3!", "3", "A black disc down column 3, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%203%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["⬇️", "Send Black to the Floor in the Centre Column!", "4", "A black disc down column 4, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%204%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["⬇️", "Slide Black Down Column 5 to Row 1!", "5", "A black disc down column 5, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%205%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["🧱", "Land Black on White in Column 6!", "6", "A black disc down column 6, to row 2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%206%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-      - ["➡️", "Drop Black to Row 1 on the Right Edge!", "7", "A black disc down column 7, to row 1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=connectfour%3A%207%20%C2%B7%20game%201%20%C2%B7%20move%202"]
-  # connectfour:end
+      - ["👻", "Ghost the Upper Left Corner of the Upper Left Quarter!", "a6", "A ghost on a6, the upper left corner of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Top Edge of the Upper Left Quarter!", "b6", "A ghost on b6, the top edge of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Upper Right Corner of the Upper Left Quarter!", "c6", "A ghost on c6, the upper right corner of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Upper Left Corner of the Upper Right Quarter!", "d6", "A ghost on d6, the upper left corner of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Top Edge of the Upper Right Quarter!", "e6", "A ghost on e6, the top edge of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Upper Right Corner of the Upper Right Quarter!", "f6", "A ghost on f6, the upper right corner of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Left Edge of the Upper Left Quarter!", "a5", "A ghost on a5, the left edge of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Centre of the Upper Left Quarter!", "b5", "A ghost on b5, the centre of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Right Edge of the Upper Left Quarter!", "c5", "A ghost on c5, the right edge of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Left Edge of the Upper Right Quarter!", "d5", "A ghost on d5, the left edge of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Centre of the Upper Right Quarter!", "e5", "A ghost on e5, the centre of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Right Edge of the Upper Right Quarter!", "f5", "A ghost on f5, the right edge of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Left Corner of the Upper Left Quarter!", "a4", "A ghost on a4, the lower left corner of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Bottom Edge of the Upper Left Quarter!", "b4", "A ghost on b4, the bottom edge of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Right Corner of the Upper Left Quarter!", "c4", "A ghost on c4, the lower right corner of the upper left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Left Corner of the Upper Right Quarter!", "d4", "A ghost on d4, the lower left corner of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Bottom Edge of the Upper Right Quarter!", "e4", "A ghost on e4, the bottom edge of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Right Corner of the Upper Right Quarter!", "f4", "A ghost on f4, the lower right corner of the upper right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Upper Left Corner of the Lower Left Quarter!", "a3", "A ghost on a3, the upper left corner of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Top Edge of the Lower Left Quarter!", "b3", "A ghost on b3, the top edge of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Upper Right Corner of the Lower Left Quarter!", "c3", "A ghost on c3, the upper right corner of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Upper Left Corner of the Lower Right Quarter!", "d3", "A ghost on d3, the upper left corner of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Top Edge of the Lower Right Quarter!", "e3", "A ghost on e3, the top edge of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Upper Right Corner of the Lower Right Quarter!", "f3", "A ghost on f3, the upper right corner of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f3%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Left Edge of the Lower Left Quarter!", "a2", "A ghost on a2, the left edge of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Centre of the Lower Left Quarter!", "b2", "A ghost on b2, the centre of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Right Edge of the Lower Left Quarter!", "c2", "A ghost on c2, the right edge of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Left Edge of the Lower Right Quarter!", "d2", "A ghost on d2, the left edge of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Centre of the Lower Right Quarter!", "e2", "A ghost on e2, the centre of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Right Edge of the Lower Right Quarter!", "f2", "A ghost on f2, the right edge of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f2%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Left Corner of the Lower Left Quarter!", "a1", "A ghost on a1, the lower left corner of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Bottom Edge of the Lower Left Quarter!", "b1", "A ghost on b1, the bottom edge of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Right Corner of the Lower Left Quarter!", "c1", "A ghost on c1, the lower right corner of the lower left quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Left Corner of the Lower Right Quarter!", "d1", "A ghost on d1, the lower left corner of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Bottom Edge of the Lower Right Quarter!", "e1", "A ghost on e1, the bottom edge of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👻", "Ghost the Lower Right Corner of the Lower Right Quarter!", "f1", "A ghost on f1, the lower right corner of the lower right quarter", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f1%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+  # pentago:end
   # checkers:start
   checkers:
     kind: "checkers"
@@ -276,7 +378,7 @@ elements:
   # hall:start
   hall-of-fame:
     kind: "hall-of-fame"
-    series: {"tictactoe": [0, 0, 0, 0], "connectfour": [0, 0, 0, 0], "checkers": [0, 0, 0, 0], "chess": [0, 0, 0, 0]}
+    series: {"tictac": [0, 0, 0, 0], "pentago": [0, 0, 0, 0], "checkers": [0, 0, 0, 0], "chess": [0, 0, 0, 0]}
     people: []
     leaders:
       - ["tannergolden", 0, 0, [0, 0, 0, 0], 24684994]

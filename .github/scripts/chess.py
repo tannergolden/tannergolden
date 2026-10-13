@@ -32,6 +32,8 @@ first move counts from then.
                                     up, the game that ended
   .github/chess/hall-of-fame.json   every finished game: result, deciding move, players, the owner's moves
   .github/chess/games/game-N.pgn    each finished game, every move with who played it
+  .github/chess/games/game-N.replay.json
+                                    a game a person's own move won: what each move did, for its replay (replays.py)
 
 After every run it sets the board out for the page: the position, the last
 move in words with who played it when, any check, whose turn it is and until
@@ -45,9 +47,11 @@ between `# hall:start` and `# hall:end`, and nothing else in that file, for
 tannergolden/markdown to draw in the page's one theme.
 
 It writes comment.md, the reply to post, and commit.txt into the run's
-temporary folder (--out), and sets `changed`, `issue` and `logbook` as step
-outputs: whether the page is to be drawn again, the issue the reply goes on,
-and whether it goes in the owner's logbook of the Arbiter's moves instead. A
+temporary folder (--out), and sets `changed`, `issue`, `logbook` and `replay`
+as step outputs: whether the page is to be drawn again, the issue the reply
+goes on, whether it goes in the owner's logbook of the Arbiter's moves instead,
+and whether a person's own move won the game, for the workflow to ask
+tannergolden/play for its replay, whose page the final board links. A
 request that is not in the form the intake sends is turned away on its issue
 like any move that can't be played.
 Stdlib only, with chess_rules.py, chess_names.py, hall.py and page.py beside it.
@@ -66,6 +70,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import hall as halls
+import replays
 from chess_names import listing
 from chess_names import words as move_words
 from chess_rules import (
@@ -148,6 +153,7 @@ class Outcome:
     issue: int | None = None  # the issue the comment goes on
     commit: str = ""
     pgn: tuple[str, str] | None = None  # a finished game's file name and text
+    replay: tuple[str, dict] | None = None  # a won game's replay facts, and their file's name
     log: str = ""
     finished: dict | None = None  # the finished game's Hall of Fame record
     redraw: bool = False  # nothing to save, but the page is drawn again: a run of the last move over again
@@ -299,6 +305,8 @@ def apply(game: dict, hall: list, positions: list[Position], move: Move, mover: 
         outcome.hall = [*hall, record]
         outcome.finished = record
         outcome.pgn = (f"game-{game['game']}.pgn", pgn(game, positions, end, owner, moment))
+        if replays.due(record):
+            outcome.replay = (replays.name(game["game"]), replays.chess_facts(game, positions, record, owner))
         outcome.game = {**new_game(game["game"] + 1, moment + DISPLAY), "ended": game}
     return outcome, shown, end
 
@@ -577,7 +585,9 @@ def finished(game: dict, hall: list, owner: str) -> dict:
             f" {until(opens)}, and nothing can be played until then.")
     nobody = ("The winning move was the Arbiter's, played after a week without one, so the win counts for nobody."
               if winner and deciding.get("arbiter") else "")
-    element["note"] = sentences([(over, True), (nobody, True), (kept(owner), False)])
+    watch = (f"🎬 [Watch the replay]({replays.page(owner, 'chess', number)}) of every move."
+             if replays.due(record) else "")
+    element["note"] = sentences([(over, True), (nobody, True), (watch, True), (kept(owner), False)])
     return element
 
 
@@ -595,6 +605,10 @@ def save(folder: Path, outcome: Outcome) -> None:
         name, text = outcome.pgn
         (folder / "games").mkdir(exist_ok=True)
         (folder / "games" / name).write_text(text, encoding="utf-8")
+    if outcome.replay:
+        name, facts = outcome.replay
+        (folder / "games").mkdir(exist_ok=True)
+        (folder / "games" / name).write_text(dump(facts), encoding="utf-8")
 
 
 def request_from(env: dict) -> Request | None:
@@ -672,6 +686,7 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
             handle_.write(f"changed={'true' if outcome.changed or drawn or outcome.redraw else 'false'}\n")
             handle_.write(f"issue={outcome.issue or ''}\n")
             handle_.write(f"logbook={'true' if outcome.logbook else 'false'}\n")
+            handle_.write(f"replay={'true' if outcome.replay else 'false'}\n")
     target = f" (game {request.game}, move {request.move}, @{request.player})" if request else ""
     print(f"{'Move ' + request.uci if request else 'Move' if malformed else 'Clock'}{target}: {outcome.log}.")
     return 0

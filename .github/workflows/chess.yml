@@ -42,7 +42,9 @@ name: Chess
 # game rules on a move still answers its issue, and the owner hears of it
 # once, in a notice that closes itself when moves go through again. The
 # games' tests run when their code changes (games-tests.yml), not on every
-# move.
+# move. A person's own winning move also asks tannergolden/play's Replay
+# workflow, through the same App, to draw the game's replay, whose facts the
+# engine keeps beside the game's record.
 on:
   workflow_dispatch:
     inputs:
@@ -197,6 +199,29 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run markdown.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
+
+      # A person's own winning move gets a replay, which tannergolden/play draws and keeps: ask it to draw this one
+      # now. Best effort: play's Replay workflow also looks for new replays every hour, so a dispatch that fails
+      # only means the replay comes within the hour.
+      - name: '🔑 Mint the replay token'
+        id: replay-app
+        if: ${{ !cancelled() && steps.play.outcome == 'success' && steps.play.outputs.replay == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.PLAY_APP_CLIENT_ID }}
+          private-key: ${{ secrets.PLAY_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: play
+          permission-actions: write
+
+      - name: '🎬 Ask play for the replay'
+        if: ${{ !cancelled() && steps.replay-app.outcome == 'success' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ steps.replay-app.outputs.token }}
+          PLAY: ${{ github.repository_owner }}/play
+        run: gh workflow run replay.yml --repo "$PLAY"
 
       # A run that fails before the game rules on a move (the game, or its save) still answers the move's issue. The
       # owner hears of it once, in a notice the next move that goes through closes, however many moves it stops. A

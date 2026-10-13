@@ -54,14 +54,18 @@ move counts from the moment it came.
   .github/<game>/hall-of-fame.json   every finished game: result, deciding move, players, the house's moves, the
                                      final board and the winning line
   .github/<game>/games/game-N.txt    each finished game, every turn with who played it (game-N.pdn for checkers)
+  .github/<game>/games/game-N.replay.json
+                                     a game a person's own move won: what each turn did, for its replay (replays.py)
 
 After every run it sets the game's board out for the page between its own
 markers in .github/markdown.yaml (`# tictac:start` and `# tictac:end`, and so
 on), with every legal move named by the game's names module and a link that
 opens its ready-made issue, and the Hall of Fame of all four games between
 `# hall:start` and `# hall:end` (hall.py). It writes comment.md and
-commit.txt into --out, and sets `changed`, `issue` and `logbook` as step
-outputs, as chess.py does. Stdlib only, with each game's module beside it:
+commit.txt into --out, and sets `changed`, `issue`, `logbook` and `replay`
+as step outputs, as chess.py does: `replay` when a person's own move won the
+game, for the workflow to ask tannergolden/play for its replay. A final board
+links that replay's page. Stdlib only, with each game's module beside it:
 tictac.py, pentago.py and checkers.py, and their rules and names.
 """
 from __future__ import annotations
@@ -81,6 +85,7 @@ from pathlib import Path
 from types import ModuleType
 
 import hall as halls
+import replays
 from page import (
     DISPLAY,
     GITHUB,
@@ -155,6 +160,7 @@ class Outcome:
     issue: int | None = None  # the issue the comment goes on
     commit: str = ""
     record: tuple[str, str] | None = None  # a finished game's file name and text
+    replay: tuple[str, dict] | None = None  # a won game's replay facts, and their file's name
     log: str = ""
     finished: dict | None = None  # the finished game's Hall of Fame record
     redraw: bool = False  # nothing to save, but the page is drawn again: a run of the last move over again
@@ -437,6 +443,8 @@ def apply(mod: ModuleType, game: dict, hall: list, positions: list, code: str, m
         outcome.finished = record
         write = getattr(mod, "record", None) or (lambda *args: text_record(mod, *args))
         outcome.record = (f"game-{game['game']}.{mod.EXT}", write(game, positions, record, owner))
+        if replays.due(record):
+            outcome.replay = (replays.name(game["game"]), replays.facts(mod, game, positions, record, owner))
         outcome.game = {"game": game["game"] + 1, "started": stamp(moment + DISPLAY), "moves": [], "ended": game}
     return outcome, shown, end
 
@@ -835,7 +843,9 @@ def finished(mod: ModuleType, game: dict, hall: list, owner: str) -> dict:
     elif won and deciding.get("own") is False:
         nobody = ("The move that won it was the other side's, its turn making five for the winner alone, so the win"
                   " counts for nobody.")
-    element["note"] = sentences([(over, True), (nobody, True), (kept(mod, owner), False)])
+    watch = (f"🎬 [Watch the replay]({replays.page(owner, mod.KEY, number)}) of every move."
+             if replays.due(record) else "")
+    element["note"] = sentences([(over, True), (nobody, True), (watch, True), (kept(mod, owner), False)])
     return ordered(element)
 
 
@@ -876,6 +886,10 @@ def save(folder: Path, outcome: Outcome) -> None:
         name, text = outcome.record
         (folder / "games").mkdir(exist_ok=True)
         (folder / "games" / name).write_text(text, encoding="utf-8")
+    if outcome.replay:
+        name, facts = outcome.replay
+        (folder / "games").mkdir(exist_ok=True)
+        (folder / "games" / name).write_text(dump(facts), encoding="utf-8")
 
 
 def request_from(mod: ModuleType, env: dict) -> Request | None:
@@ -956,6 +970,7 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
             handle_.write(f"changed={'true' if outcome.changed or drawn or outcome.redraw else 'false'}\n")
             handle_.write(f"issue={outcome.issue or ''}\n")
             handle_.write(f"logbook={'true' if outcome.logbook else 'false'}\n")
+            handle_.write(f"replay={'true' if outcome.replay else 'false'}\n")
     target = f" (game {request.game}, move {request.move}, @{request.player})" if request else ""
     print(f"{args.key}: {'Move ' + request.code if request else 'Move' if malformed else 'Clock'}{target}:"
           f" {outcome.log}.")

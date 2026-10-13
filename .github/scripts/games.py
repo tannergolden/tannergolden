@@ -753,13 +753,15 @@ def kept(mod: ModuleType, owner: str) -> str:
             f"{mod.KEY}/games).")
 
 
-def how_it_ended(mod: ModuleType, record: dict | None, owner: str) -> str:
+def how_it_ended(mod: ModuleType, record: dict | None, owner: str, *, short: bool = False) -> str:
     """How the last game ended, as the next game's note opens with it until that game's first move: who won it, or
-    how it was drawn."""
+    how it was drawn, or only that it was drawn where the note has no room to say how (`short`)."""
     if not record:
         return ""
     if record["winner"]:
         return f"{named_side(HOUSE if record['winner'] == owner else GITHUB, owner)} won game {record['game']}."
+    if short:
+        return f"Game {record['game']} was drawn."
     return f"Game {record['game']} was drawn {mod.DRAWN[record['reason']]}."
 
 
@@ -805,6 +807,9 @@ def board(mod: ModuleType, game: dict | None, hall: list, owner: str, moment: dt
         parts.append((f"The move is due by {until(clock)}, or the Arbiter plays a random legal move.", True))
     parts += [(mod.RULE, False), (kept(mod, owner) if hall else "", False)]
     element["note"] = sentences(parts)
+    if record and not element["note"].startswith(parts[0][0]):  # no room to say how it was drawn: say it was
+        parts[0] = (how_it_ended(mod, record, owner, short=True), False)
+        element["note"] = sentences(parts)
     if ghosting(mod, current):
         listed = mod.ghost_listing([g["move"] for g in ghosts_of(current)])
     else:

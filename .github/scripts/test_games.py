@@ -865,9 +865,10 @@ class TwoDays(unittest.TestCase):
                     self.assertTrue(outcome.commit.startswith("chore(pentago): 🎲 start game 2, "))
 
     def test_the_next_board_says_how_the_last_game_ended_until_its_first_move(self):
-        # The sentence is said whenever it fits in the note's one line beside everything that must be said, and the
-        # first move takes it away: GitHub's turns always leave it room, the house's leave a draw's none in Pentago,
-        # nor Tic-Tac's draw with no line left.
+        # The sentence is said in full whenever it fits in the note's one line beside everything that must be said,
+        # and in short where it doesn't, and the first move takes it away: GitHub's turns always leave it room, and
+        # the house's leave a draw's how none in Pentago, nor in Tic-Tac's draw with no line left.
+        short = "Game 1 was drawn."
         for key, line, opens, said in (("tictac", TT_FIRST_WINS, HOUSE, f"@{OWNER} won game 1."),
                                        ("tictac", TT_NO_LINE, HOUSE, "Game 1 was drawn with no line of three boards"
                                                                      " left for either side."),
@@ -888,10 +889,12 @@ class TwoDays(unittest.TestCase):
                 for side, note in notes:
                     if note.startswith(f"{said} "):
                         continue
-                    self.assertGreater(len(f"{said} {note}"), page.NOTE, note)
+                    self.assertTrue(note.startswith(f"{short} "), note)
+                    self.assertGreater(len(f"{said} {note[len(short) + 1:]}"), page.NOTE, note)
                     self.assertEqual(side, HOUSE, "GitHub's turns leave it room")
                 self.assertTrue(any(side == GITHUB for side, _ in notes))
                 self.assertNotIn(said, table.board()["note"], "the first move takes it away")
+                self.assertFalse(table.board()["note"].startswith(short), "the first move takes it away")
 
 
 class Clock(unittest.TestCase):

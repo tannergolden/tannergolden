@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Tanner Golden
 # SPDX-License-Identifier: MIT
-"""Every legal move named for what it is and for nothing it does: the emoji by the kind of move, the title and words
-from the move's own pieces and squares, each title its own on its board, and no name that judges, warns, looks ahead
-or names an opening, so two moves of one kind read alike whatever follows them.
+"""Every legal move named as checkers players name it and for nothing it does: the emoji and the name by the kind of
+move, with no square in the name, the words from the move's own pieces and squares, and no name that judges, warns,
+looks ahead or names an opening, so two moves of one kind read alike whatever follows them.
 
   python3 -m unittest discover -s .github/scripts -p 'test_checkers*.py'
 """
@@ -29,7 +29,8 @@ KIT_TITLE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9 ,.'!-]{0,46}[A-Za-z0-9,.'!-])?
 KIT_WORDS = re.compile(r"[A-Za-z][A-Za-z0-9 ,.'-]{0,79}")
 CODE = re.compile(r"[0-9]{1,2}(?:-[0-9]{1,2}|(?:x[0-9]{1,2})+)")  # a move as checkers writes it, with no mark after
 DASHES = [chr(cp) for cp in (0x2013, 0x2014, 0x2015)]
-SMALL = {"and", "on", "the", "to"}  # the short words a title keeps in lower case
+NAMES = {"step": "Man Move", "king": "King Move"}  # a step's name, by who steps; a man that reaches the far row crowns
+JUMPS = {1: "Jump", 2: "Double Jump", 3: "Triple Jump"}  # a jump's, by how many it takes; more is a Multiple Jump
 # The emoji of each kind of move, and nothing else.
 KINDS = {"step": "👣", "king": "⚜️", "jump": "⚔️", "jumps": "⛓️", "crown": "👑"}
 # Emoji that judge or flag a move, the owner's and the last round's, none of which a name may carry.
@@ -112,19 +113,26 @@ def shape(position: Position, move) -> tuple:
             way if mover(position, move) == "King" else None)
 
 
+def called(position: Position, move) -> str:
+    """The move's name, worked out here from the rules' own facts: a step by who makes it, a jump by how many it
+    takes, a king's jump with King before it, and a man's move that ends crowned with Crowning."""
+    if not move.captures:
+        return "Crowning Move" if move.crowns else NAMES["king" if mover(position, move) == "King" else "step"]
+    jump = JUMPS.get(len(move.captures), "Multiple Jump")
+    return f"Crowning {jump}" if move.crowns else f"King {jump}" if mover(position, move) == "King" else jump
+
+
 def form(text: str) -> str:
     """A title or words with every square struck out, which is all that may tell two moves of one kind apart."""
     return re.sub(r"[0-9]+", "#", text)
 
 
 class Names(unittest.TestCase):
-    def test_every_board_names_every_legal_move_once_in_what_the_kit_accepts(self):
+    def test_every_board_names_every_legal_move_in_what_the_kit_accepts(self):
         count = 0
         for position in [*BOARDS, *map(Position.from_fen, CROWDED)]:
             listed = NAMED.get(position) or named(position)
             self.assertEqual([move for move, _, _, _ in listed], legal_moves(position))
-            titles = [title for _, _, title, _ in listed]
-            self.assertEqual(len(set(titles)), len(titles), position.fen)
             for _, emoji, title, said in listed:
                 count += 1
                 self.assertTrue(KIT_EMOJI.fullmatch(emoji), emoji)
@@ -150,54 +158,27 @@ class Names(unittest.TestCase):
             for move, emoji, title, _ in listed:
                 self.assertEqual(emoji, KINDS[kind_of(position, move)], title)
 
-    def test_every_title_is_a_call_in_title_case_and_never_names_a_colour(self):
+    def test_every_name_is_in_title_case_and_never_names_a_colour(self):
         for listed in NAMED.values():
             for _, _, title, said in listed:
-                self.assertTrue(title.endswith("!") and title[0].isupper(), title)
+                self.assertFalse(set(title) & set("!?"), title)  # an annotator's ! and ? judge a move
                 self.assertNotRegex(title + said, r"\b(Dark|Light|dark|light)\b")
-                for word in re.findall(r"[A-Za-z][A-Za-z'-]*", title):
-                    self.assertTrue(word[0].isupper() or word in SMALL, title)
+                for word in title.split():
+                    self.assertTrue(word[0].isupper(), title)
 
-    def test_a_step_names_its_piece_and_both_its_squares(self):
-        for position, listed in NAMED.items():
-            verbs = defaultdict(set)
-            for move, _, title, _ in listed:
-                if move.captures:
-                    continue
-                start, end = move.path
-                if move.crowns:
-                    self.assertEqual(title, f"Crown the Man From {start} on {end}!")
-                elif mover(position, move) == "King":
-                    side = "White" if row_col(end)[0] > row_col(start)[0] else "Black"
-                    self.assertRegex(title, rf"^(Send|Move) the King From {start} to {end} Toward {side}'s Side!$")
-                    verbs["King"].add(title.split()[0])
-                else:
-                    self.assertRegex(title, rf"^(Advance|March|Push) the Man From {start} to {end}!$")
-                    verbs["Man"].add(title.split()[0])
-            self.assertTrue(all(len(seen) == 1 for seen in verbs.values()), (position.fen, verbs))
-
-    def test_a_jump_names_what_it_takes_and_the_king_when_a_king_jumps(self):
+    def test_every_move_is_named_for_its_kind_as_players_call_it(self):
+        seen = set()
         for position, listed in NAMED.items():
             for move, _, title, _ in listed:
-                if not move.captures:
-                    continue
-                lead = {1: ("Jump the ",), 2: ("Double Jump ", "Jump Two "), 3: ("Triple Jump ", "Jump Three ")}
-                self.assertTrue(title.startswith(lead.get(len(move.captures), ("Jump ",))), title)
-                self.assertEqual("With the King" in title, mover(position, move) == "King", title)
-                self.assertEqual(title.endswith(f", Crowned on {move.path[-1]}!"), move.crowns, title)
-                what = title.split(" From ")[0].split(", Crowned")[0]  # what it takes, and nothing of where it goes
-                taken = [int(square) for square in re.findall(r"[0-9]+", what)]
-                if taken:  # the squares it takes, in the order it takes them
-                    self.assertEqual(taken, list(move.captures), title)
+                self.assertEqual(title, called(position, move), (position.fen, move.code))
+                seen.add(title)
+        self.assertTrue({"Man Move", "King Move", "Crowning Move", "Jump", "Double Jump", "King Jump",
+                         "Crowning Jump"} <= seen, seen)
 
-    def test_every_number_in_a_title_is_a_square_of_the_move(self):
+    def test_no_name_holds_a_square(self):
         for position, listed in NAMED.items():
             for move, _, title, _ in listed:
-                for number in map(int, re.findall(r"[0-9]+", title)):
-                    self.assertIn(number, {*move.path, *move.captures}, (position.fen, move.code, title))
-                for what, square in re.findall(r"\b(Man|King) on ([0-9]+)", title):
-                    self.assertIn(int(square), move.captures, (position.fen, move.code, title))
-                    self.assertEqual(names.kind_word(position.pieces[int(square)]), what, (position.fen, title))
+                self.assertNotRegex(title, r"[0-9]|\b(?:From|to|on|Toward|Side)\b", (position.fen, move.code))
 
     def test_the_words_say_the_move_as_a_score_sheet_would(self):
         self.assertEqual(name(START, find(START, "11-15"))[2], "Man from 11 to 15")
@@ -223,48 +204,35 @@ class Names(unittest.TestCase):
                 self.assertEqual(said, plain + (", crowned" if move.crowns else ""))
 
     def test_the_first_move_and_white_s_replies(self):
-        self.assertEqual([title for _, _, title, _ in named(START)],
-                         ["Push the Man From 9 to 13!", "Push the Man From 9 to 14!", "Push the Man From 10 to 14!",
-                          "Push the Man From 10 to 15!", "Push the Man From 11 to 15!", "Push the Man From 11 to 16!",
-                          "Push the Man From 12 to 16!"])
+        self.assertEqual([(move.code, title) for move, _, title, _ in named(START)],
+                         [(code, "Man Move") for code in ("9-13", "9-14", "10-14", "10-15", "11-15", "11-16", "12-16")])
         self.assertEqual({emoji for _, emoji, _, _ in named(START)}, {"👣"})
         replies = named(make(START, find(START, "11-15")))
         self.assertEqual([(move.code, title) for move, _, title, _ in replies],
-                         [("21-17", "Advance the Man From 21 to 17!"), ("22-17", "Advance the Man From 22 to 17!"),
-                          ("22-18", "Advance the Man From 22 to 18!"), ("23-18", "Advance the Man From 23 to 18!"),
-                          ("23-19", "Advance the Man From 23 to 19!"), ("24-19", "Advance the Man From 24 to 19!"),
-                          ("24-20", "Advance the Man From 24 to 20!")])
+                         [(code, "Man Move") for code in ("21-17", "22-17", "22-18", "23-18", "23-19", "24-19",
+                                                          "24-20")])
 
     def test_kings_crownings_and_jumps_say_what_they_are(self):
         listed = {move.code: (emoji, title) for move, emoji, title, _ in named(Position.from_fen("W:W6,8,K26:BK11"))}
-        self.assertEqual(listed["8-3"], ("👑", "Crown the Man From 8 on 3!"))
-        self.assertEqual(listed["26-22"], ("⚜️", "Send the King From 26 to 22 Toward Black's Side!"))
-        self.assertEqual(listed["26-30"], ("⚜️", "Send the King From 26 to 30 Toward White's Side!"))
-        self.assertEqual(name(*at("W:W9,22:B1,6", "9x2"))[:2], ("👑", "Jump the Man on 6, Crowned on 2!"))
-        self.assertEqual(name(*at("W:W30:B1,19,26", "30x23x16"))[:2], ("⛓️", "Double Jump the Men on 26 and 19!"))
-        self.assertEqual(name(*at("B:WK16:BK11", "11x20"))[:2], ("⚔️", "Jump the King on 16 With the King!"))
+        self.assertEqual(listed["8-3"], ("👑", "Crowning Move"))
+        self.assertEqual((listed["26-22"], listed["26-30"]), (("⚜️", "King Move"), ("⚜️", "King Move")))
+        self.assertEqual(name(*at("W:W9,22:B1,6", "9x2"))[:2], ("👑", "Crowning Jump"))
+        self.assertEqual(name(*at("W:W30:B1,19,26", "30x23x16"))[:2], ("⛓️", "Double Jump"))
+        self.assertEqual(name(*at("B:WK16:BK11", "11x20"))[:2], ("⚔️", "King Jump"))
         listed = {move.code: title for move, _, title, _ in named(Position.from_fen("W:WK6,14:B10,24,K28"))}
-        self.assertEqual(listed, {"6x15": "Jump the Man on 10 With the King!", "14x7": "Jump the Man on 10!"})
+        self.assertEqual(listed, {"6x15": "King Jump", "14x7": "Jump"})
         listed = {move.code: title for move, _, title, _ in named(Position.from_fen("B:W7,K8,16,24,29:BK27"))}
-        self.assertEqual(listed, {"27x20x11x2": "Triple Jump 24, 16 and 7 With the King!",
-                                  "27x20x11x4": "Triple Jump 24, 16 and 8 With the King!"})
+        self.assertEqual(listed, {"27x20x11x2": "King Triple Jump", "27x20x11x4": "King Triple Jump"})
 
-    def test_jumps_that_take_the_same_piece_say_where_each_starts_and_their_kind_reads_alike(self):
+    def test_jumps_of_one_kind_share_a_name_and_their_notation_tells_them_apart(self):
         listed = {move.code: title for move, _, title, _ in named(Position.from_fen("W:W19,20,27:B1,16,23"))}
-        self.assertEqual(listed, {"19x12": "Jump the Man on 16 From 19!", "20x11": "Jump the Man on 16 From 20!",
-                                  "27x18": "Jump the Man on 23 From 27!"})  # one of their kind, so it says so too
+        self.assertEqual(listed, {"19x12": "Jump", "20x11": "Jump", "27x18": "Jump"})
 
-    def test_a_crowded_board_still_gives_every_move_its_own_title(self):
-        for fen in CROWDED:
-            with self.subTest(fen=fen):
-                listed = named(Position.from_fen(fen))
-                self.assertGreater(len(listed), 8)
-                self.assertEqual(len({title for _, _, title, _ in listed}), len(listed))
-                self.assertFalse(any(re.fullmatch(r"Jump [0-9x]+!", title) for _, _, title, _ in listed))
+    def test_a_king_s_long_runs_on_a_crowded_board_are_multiple_jumps(self):
         nines = {move.code: title for move, _, title, _ in named(Position.from_fen(CROWDED[2]))
                  if len(move.captures) == 9}
         self.assertEqual(len(nines), 6)
-        self.assertEqual(nines["32x23x14x7x16x23x30x21x14x5"], "Jump 27, 18, 10, 11, 19, 26, 25, 17 and 9!")
+        self.assertEqual(set(nines.values()), {"King Multiple Jump"})
 
     def test_a_board_is_named_the_same_every_time(self):
         for position in BOARDS[::50]:

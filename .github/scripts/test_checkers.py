@@ -163,13 +163,13 @@ class Opening(unittest.TestCase):
                                           " are for everyone but you. Your turn comes next.\n")
         opened = table.move("11-15")
         self.assertRegex(opened.comment, r"^⛂ \*\*1\. 11-15 is on the board\.\*\* Well played, @octocat\.\n\S+"
-                                         r" \*[^*]+!\* · Man from 11 to 15\n@tannergolden, it's your move\.\n$")
+                                         r" \*[^*]+\* · Man from 11 to 15\n@tannergolden, it's your move\.\n$")
         self.assertEqual(opened.commit, "chore(checkers): ⛂ play 1. 11-15 in game 1\n\nMove 1, by octocat.")
         outcome = table.move("23-19", player=OCTOCAT)
         self.assertEqual(outcome.comment, f"⏳ **It's {LINKED}'s turn as White**, so `23-19` wasn't played.\nGitHub"
                                           f" plays Black: once White moves, pick Black's reply on {BOARD}.\n")
         reply = table.move("23-19")
-        self.assertRegex(reply.comment, r"^⛀ \*\*1\.\.\. 23-19 is on the board\.\*\*\n\S+ \*[^*]+!\* · Man from 23 to"
+        self.assertRegex(reply.comment, r"^⛀ \*\*1\.\.\. 23-19 is on the board\.\*\*\n\S+ \*[^*]+\* · Man from 23 to"
                                         r" 19\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\) can pick Black's"
                                         r" reply on \[the board\]")
         self.assertEqual(reply.commit, "chore(checkers): ⛀ play 1... 23-19 in game 1\n\nMove 2, by tannergolden.")
@@ -348,7 +348,8 @@ class Board(unittest.TestCase):
             self.assertTrue(all(links), titles)
             self.assertEqual([link["move"] for link in links], [move.code for move in R.legal_moves(position)])
             self.assertEqual({(link["game"], link["ply"]) for link in links}, {("1", str(ply))})
-            self.assertEqual(len({entry[1] for entry in element["moves"]}), len(element["moves"]))
+            self.assertEqual(len({entry[2] for entry in element["moves"]}), len(element["moves"]),
+                             "each move once, by its own notation")
             side = games.side_of(table.mod, table.current(), ply)
             player, player_id = (OWNER, OWNER_ID) if side == HOUSE else (OCTOCAT, OCTOCAT_ID)
             for link in links:
@@ -388,7 +389,7 @@ class Board(unittest.TestCase):
         for dash in DASHES:
             self.assertNotIn(dash, "".join(texts))
         for text in texts:
-            self.assertNotRegex(re.sub(r"\*[^*\n]+!\*", "", text), SIDE_WORDS)
+            self.assertNotRegex(re.sub(r"\*[^*\n]+\*(?= · )", "", text), SIDE_WORDS)
         table = Table()
         for outcome in (table.move("22-18"), table.move("11-15", game=3), table.move("11-15", move=4)):
             self.assertIsNone(PING.search(outcome.comment), outcome.comment)

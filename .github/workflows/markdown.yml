@@ -1,17 +1,19 @@
 name: '📝 Markdown'
 
 # The stub tannergolden/markdown's README gives every page, with this page's
-# choices: profile mode, the medieval collection's Illuminated all year, and the
-# holiday sets on. It draws the whole page in one run and one commit: the
-# header and footer, the badges, the schematic and the placards, and the
-# trophy case. Once a day at 05:00 UTC, which is midnight EST, so the page's
-# day, and a holiday's set with it, changes over at the page's own midnight.
+# choices: profile mode, the medieval collection's Illuminated all year with
+# Capricorn's roundel on every header, and the holiday sets on. It draws the
+# whole page in one run and one commit: the header and footer, the badges,
+# the schematic and the placards, and the trophy case. Once a day at 05:00
+# UTC, which is midnight EST, so the page's day, and a holiday's set with it,
+# changes over at the page's own midnight.
 # Picks starts it too, as soon as it has picked new placards, and so do the
 # games: every move that changes a board, and the clock on any tick that
 # changed one.
 #
 # `theme` is the page's one theme, and every part is drawn in it, except while
-# a holiday's set is up around its day (`holidays`). Everything else the page
+# a holiday's set is up around its day (`holidays`). `sign` is the sign of the
+# zodiac its headers carry in a gold roundel all year. Everything else the page
 # sets is in .github/markdown.yaml.
 on:
   schedule:
@@ -39,6 +41,7 @@ jobs:
     with:
       mode: profile
       theme: medieval-illuminated # the page's one theme: the medieval collection's Illuminated, all year
+      sign: capricorn # the sign every header carries in its gold roundel, all year
       holidays: 'true' # each holiday's set takes the page around its day, then hands it back
     # The one secret the kit takes, and nothing else: the page's other secrets, such as the Arbiter's key, stay here.
     secrets:

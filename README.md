@@ -28,8 +28,7 @@ category: docs
 <div align="center">
 
 <a href="./"><img alt="Status: Active" src="assets/badges/static/status.svg"></a>
-<a href="./"><img alt="Role: Profile" src="assets/badges/static/role.svg"></a>
-<a href="./"><img alt="Context: AI Infrastructure" src="assets/badges/static/context.svg"></a>
+<a href="./"><img alt="Context: Reproducibility" src="assets/badges/static/context.svg"></a>
 <a href="./LICENSE"><img alt="License: MIT" src="assets/badges/static/license.svg"></a>
 
 <a href="https://github.com/tannergolden/standards/actions/workflows/self-checks.yml"><img alt="Standards CI: Passing" src="assets/badges/dynamic/standards-ci.svg"></a>
@@ -498,7 +497,7 @@ depends on a third-party service.
   <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/how-it-fits-narrow-dark.svg">
   <source media="(max-width: 585px)" srcset="assets/elements/how-it-fits-narrow-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/how-it-fits-dark.svg">
-  <img alt="Schematic of tannergolden. Standards holds the rules and the reusable workflows every repository calls at v1, and the Golden Path template follows them by link, so every new repository starts from it. A repository adds one Markdown stub, and once a day, at 00:00 EST, the kit it calls measures the page and redraws what moved in one commit: the header and footer, the badges, this schematic and the placards, and the trophies. The stub names the page&#x27;s one theme, the medieval collection&#x27;s Chessmen, and every part is drawn in it, or in a holiday&#x27;s set around each holiday." src="assets/elements/how-it-fits-day.svg">
+  <img alt="Schematic of tannergolden. Standards holds the rules and the reusable workflows every repository calls at v1, and the Golden Path template follows them by link, so every new repository starts from it. A repository adds one Markdown stub, and once a day, at 00:00 EST, the kit it calls measures the page and redraws what moved in one commit: the header and footer, the badges, this schematic and the placards, and the trophies. The stub names the page&#x27;s one theme, the medieval collection&#x27;s Illuminated, and every part is drawn in it, or in a holiday&#x27;s set around each holiday." src="assets/elements/how-it-fits-day.svg">
 </picture>
 <!-- markdown:element:how-it-fits:end -->
 

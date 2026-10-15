@@ -27,7 +27,7 @@ banners:
     Golden Path: https://github.com/tannergolden/path
     Markdown: https://github.com/tannergolden/markdown
 
-# The row under the header: the conventional four, then two live badges the
+# The row under the header: the conventional three, then two live badges the
 # run measures, whose gold labels say so and whose colour can go yellow or
 # red. In the page's print, every one is drawn as its plate.
 badges:
@@ -36,14 +36,9 @@ badges:
     message: Active
     icon: pulse
     link: ./
-  - name: role
-    label: Role
-    message: Profile
-    icon: home
-    link: ./
   - name: context
     label: Context
-    message: AI Infrastructure
+    message: Reproducibility
     icon: chip
     link: ./
   - name: license
@@ -73,7 +68,7 @@ badges:
 # The drawings in the README's body, each where its markers stand. The
 # schematic is written by hand; the kit lays its boxes out from the wires.
 # Its labels are short enough for the pixel sets the page is drawn in, the
-# Chessmen and the holidays', to set whole: a set cuts a label too long for
+# Illuminated and the holidays', to set whole: a set cuts a label too long for
 # its room short with an ellipsis.
 elements:
   how-it-fits:
@@ -86,7 +81,7 @@ elements:
       once a day, at 00:00 EST, the kit it calls measures the page and redraws
       what moved in one commit: the header and footer, the badges, this
       schematic and the placards, and the trophies. The stub names the page's
-      one theme, the medieval collection's Chessmen, and every part is drawn
+      one theme, the medieval collection's Illuminated, and every part is drawn
       in it, or in a holiday's set around each holiday.
     caption: HOW IT ALL FITS  ·  TIMES IN EST  ·  NOT TO SCALE
     groups:

@@ -497,7 +497,7 @@ depends on a third-party service.
   <source media="(max-width: 585px) and (prefers-color-scheme: dark)" srcset="assets/elements/how-it-fits-narrow-dark.svg">
   <source media="(max-width: 585px)" srcset="assets/elements/how-it-fits-narrow-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/how-it-fits-dark.svg">
-  <img alt="Schematic of tannergolden. Standards holds the rules and the reusable workflows every repository calls at v1, and the Golden Path template follows them by link, so every new repository starts from it. A repository adds one Markdown stub, and once a day, at 00:00 EST, the kit it calls measures the page and redraws what moved in one commit: the header and footer, the badges, this schematic and the placards, and the trophies. The stub names the page&#x27;s one theme, the medieval collection&#x27;s Illuminated, and every part is drawn in it, or in a holiday&#x27;s set around each holiday." src="assets/elements/how-it-fits-day.svg">
+  <img alt="Schematic of tannergolden. Standards holds the rules and the reusable workflows every repository calls at v1, and the Golden Path template follows them by link, so every new repository starts from it. A repository adds one Markdown stub, and once a day, at 00:00 EST, the kit it calls measures the page and redraws what moved in one commit: the header and footer, the badges, this schematic and the placards, and the trophies. The stub names the page&#x27;s one theme, the medieval collection&#x27;s Illuminated, and every part is drawn in it, or in a holiday&#x27;s set around each holiday, with Capricorn&#x27;s roundel on every header." src="assets/elements/how-it-fits-day.svg">
 </picture>
 <!-- markdown:element:how-it-fits:end -->
 

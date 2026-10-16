@@ -146,20 +146,20 @@ elements:
     link: "https://github.com/langgenius/dify/issues/43768"
     desc: "#43768: bump to python 3.14."
     cells:
-      - ["Stars", "158K"]
-      - ["Language", "TYPESCRIPT"]
+      - ["Stars", "159K"]
+      - ["Language", "PYTHON"]
       - ["Opened", "9 OCT"]
   issue-2:
     kind: "placard"
-    owner: "tt-a1i"
-    name: "archify"
+    owner: "immich-app"
+    name: "immich"
     icon: "flag"
-    link: "https://github.com/tt-a1i/archify/issues/681"
-    desc: "#681: [Proposal]: Normalize brand-source provenance links for shared diagrams."
+    link: "https://github.com/immich-app/immich/issues/32476"
+    desc: "#32476: Ui inconsistency in mobile app Library Tab."
     cells:
-      - ["Stars", "81.1K"]
-      - ["Language", "JAVASCRIPT"]
-      - ["Opened", "3 OCT"]
+      - ["Stars", "116K"]
+      - ["Language", "TYPESCRIPT"]
+      - ["Opened", "15 OCT"]
   # issues:end
   # The games on this page, in their tiers: each board, whose turn it is and
   # until when, and every legal move as a link to its ready-made issue, or

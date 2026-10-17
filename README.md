@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,320. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 7. Contributions, last year: 1,322. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -284,168 +284,167 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictac-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictac-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictac-dark.svg">
-  <img alt="Tic-Tac: game 1, the ghosts. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. It is @tannergolden&#x27;s turn to place a ghost, due by 20 Oct. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
+  <img alt="Tic-Tac: game 1, the ghosts. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. Ghosts lock e5. After G. e5: a ghost locks the centre of the centre board. It is GitHub&#x27;s turn to place a ghost, due by 24 Oct. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
 </picture>
 
 <details>
-<summary>❌ <b>@tannergolden's Turn</b> · 81 squares to lock · only @tannergolden can play these</summary>
+<summary>⭕ <b>GitHub's Turn</b> · 80 squares to lock · open to choose one</summary>
 
 <details>
-<summary>❌ Upper Left Board · 9 moves</summary>
+<summary>⭕ Upper Left Board · 9 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `a9` | A ghost locks the upper left corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b9` | A ghost locks the top edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c9` | A ghost locks the upper right corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `a8` | A ghost locks the left edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `b8` | A ghost locks the centre of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `c8` | A ghost locks the right edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `a7` | A ghost locks the lower left corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b7` | A ghost locks the bottom edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c7` | A ghost locks the lower right corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-
-</details>
-
-<details>
-<summary>❌ Top Board · 9 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `d9` | A ghost locks the upper left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e9` | A ghost locks the top edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f9` | A ghost locks the upper right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `d8` | A ghost locks the left edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `e8` | A ghost locks the centre of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `f8` | A ghost locks the right edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `d7` | A ghost locks the lower left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e7` | A ghost locks the bottom edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f7` | A ghost locks the lower right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `a9` | A ghost locks the upper left corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b9` | A ghost locks the top edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c9` | A ghost locks the upper right corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `a8` | A ghost locks the left edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `b8` | A ghost locks the centre of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `c8` | A ghost locks the right edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `a7` | A ghost locks the lower left corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b7` | A ghost locks the bottom edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c7` | A ghost locks the lower right corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>❌ Upper Right Board · 9 moves</summary>
+<summary>⭕ Top Board · 9 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `g9` | A ghost locks the upper left corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `h9` | A ghost locks the top edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `i9` | A ghost locks the upper right corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i9%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `g8` | A ghost locks the left edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `h8` | A ghost locks the centre of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `i8` | A ghost locks the right edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i8%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `g7` | A ghost locks the lower left corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `h7` | A ghost locks the bottom edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `i7` | A ghost locks the lower right corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i7%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `d9` | A ghost locks the upper left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e9` | A ghost locks the top edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f9` | A ghost locks the upper right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `d8` | A ghost locks the left edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `e8` | A ghost locks the centre of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `f8` | A ghost locks the right edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `d7` | A ghost locks the lower left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e7` | A ghost locks the bottom edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f7` | A ghost locks the lower right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>❌ Left Board · 9 moves</summary>
+<summary>⭕ Upper Right Board · 9 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `a6` | A ghost locks the upper left corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b6` | A ghost locks the top edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c6` | A ghost locks the upper right corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `a5` | A ghost locks the left edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `b5` | A ghost locks the centre of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `c5` | A ghost locks the right edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `a4` | A ghost locks the lower left corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b4` | A ghost locks the bottom edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c4` | A ghost locks the lower right corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `g9` | A ghost locks the upper left corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `h9` | A ghost locks the top edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `i9` | A ghost locks the upper right corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i9%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `g8` | A ghost locks the left edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `h8` | A ghost locks the centre of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `i8` | A ghost locks the right edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i8%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `g7` | A ghost locks the lower left corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `h7` | A ghost locks the bottom edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `i7` | A ghost locks the lower right corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i7%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>❌ Centre Board · 9 moves</summary>
+<summary>⭕ Left Board · 9 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `d6` | A ghost locks the upper left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e6` | A ghost locks the top edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f6` | A ghost locks the upper right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `d5` | A ghost locks the left edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `e5` | A ghost locks the centre of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `f5` | A ghost locks the right edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `d4` | A ghost locks the lower left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e4` | A ghost locks the bottom edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f4` | A ghost locks the lower right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `a6` | A ghost locks the upper left corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b6` | A ghost locks the top edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c6` | A ghost locks the upper right corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `a5` | A ghost locks the left edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `b5` | A ghost locks the centre of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `c5` | A ghost locks the right edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `a4` | A ghost locks the lower left corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b4` | A ghost locks the bottom edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c4` | A ghost locks the lower right corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>❌ Right Board · 9 moves</summary>
+<summary>⭕ Centre Board · 8 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `g6` | A ghost locks the upper left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `h6` | A ghost locks the top edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `i6` | A ghost locks the upper right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `g5` | A ghost locks the left edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `h5` | A ghost locks the centre of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `i5` | A ghost locks the right edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `g4` | A ghost locks the lower left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `h4` | A ghost locks the bottom edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `i4` | A ghost locks the lower right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `d6` | A ghost locks the upper left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e6` | A ghost locks the top edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f6` | A ghost locks the upper right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `d5` | A ghost locks the left edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `f5` | A ghost locks the right edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `d4` | A ghost locks the lower left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e4` | A ghost locks the bottom edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f4` | A ghost locks the lower right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>❌ Lower Left Board · 9 moves</summary>
+<summary>⭕ Right Board · 9 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `a3` | A ghost locks the upper left corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b3` | A ghost locks the top edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c3` | A ghost locks the upper right corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `a2` | A ghost locks the left edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `b2` | A ghost locks the centre of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `c2` | A ghost locks the right edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `a1` | A ghost locks the lower left corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b1` | A ghost locks the bottom edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c1` | A ghost locks the lower right corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `g6` | A ghost locks the upper left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `h6` | A ghost locks the top edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `i6` | A ghost locks the upper right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `g5` | A ghost locks the left edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `h5` | A ghost locks the centre of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `i5` | A ghost locks the right edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `g4` | A ghost locks the lower left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `h4` | A ghost locks the bottom edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `i4` | A ghost locks the lower right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>❌ Bottom Board · 9 moves</summary>
+<summary>⭕ Lower Left Board · 9 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `d3` | A ghost locks the upper left corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e3` | A ghost locks the top edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f3` | A ghost locks the upper right corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `d2` | A ghost locks the left edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `e2` | A ghost locks the centre of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `f2` | A ghost locks the right edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `d1` | A ghost locks the lower left corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e1` | A ghost locks the bottom edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f1` | A ghost locks the lower right corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `a3` | A ghost locks the upper left corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b3` | A ghost locks the top edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c3` | A ghost locks the upper right corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `a2` | A ghost locks the left edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `b2` | A ghost locks the centre of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `c2` | A ghost locks the right edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `a1` | A ghost locks the lower left corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b1` | A ghost locks the bottom edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c1` | A ghost locks the lower right corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>❌ Lower Right Board · 9 moves</summary>
+<summary>⭕ Bottom Board · 9 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👻 | **Corner Ghost** `g3` | A ghost locks the upper left corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `h3` | A ghost locks the top edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `i3` | A ghost locks the upper right corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `g2` | A ghost locks the left edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `h2` | A ghost locks the centre of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `i2` | A ghost locks the right edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `g1` | A ghost locks the lower left corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `h1` | A ghost locks the bottom edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `i1` | A ghost locks the lower right corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `d3` | A ghost locks the upper left corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e3` | A ghost locks the top edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f3` | A ghost locks the upper right corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `d2` | A ghost locks the left edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `e2` | A ghost locks the centre of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `f2` | A ghost locks the right edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `d1` | A ghost locks the lower left corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e1` | A ghost locks the bottom edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f1` | A ghost locks the lower right corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+
+</details>
+
+<details>
+<summary>⭕ Lower Right Board · 9 moves</summary>
+
+|  | Move | In words | Play |
+| :-: | :--- | :--- | :-: |
+| 👻 | **Corner Ghost** `g3` | A ghost locks the upper left corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `h3` | A ghost locks the top edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `i3` | A ghost locks the upper right corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `g2` | A ghost locks the left edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `h2` | A ghost locks the centre of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `i2` | A ghost locks the right edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `g1` | A ghost locks the lower left corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `h1` | A ghost locks the bottom edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `i1` | A ghost locks the lower right corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 </details>
 
-@tannergolden always plays X and GitHub O. Under the Ghost Rule each side first locks a square with a ghost, and then the Arbiter draws who makes the first mark. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The ghost is due by 20 Oct, 04:25 EST, or the Arbiter places one at random.
+@tannergolden always plays X and GitHub O. Under the Ghost Rule each side first locks a square with a ghost, and then the Arbiter draws who makes the first mark. Anyone but @tannergolden can play on this turn, and the first pick in is played. The ghost is due by 24 Oct, 05:31 EST, or the Arbiter places one at random.
 
 </details>
 <!-- markdown:element:tictac:end -->
@@ -469,7 +468,7 @@ GitHub plays Black, which moves first in American checkers, so GitHub opens ever
 
 |  | Player | ♔♚ | ⛀⛂ | ⚪⚫ | ❌⭕ | Moves | Wins |
 | :-: | :--- | --: | --: | --: | --: | --: | --: |
-| 🏠 | **[@tannergolden](https://github.com/tannergolden)** | **0** | **0** | **0** | **0** | **0** | **0** |
+| 🏠 | **[@tannergolden](https://github.com/tannergolden)** | **0** | **0** | **0** | **0** | **1** | **0** |
 
 A win counts only for the player who makes the winning move: the checkmate in Chess, the move that leaves the other side no move in Checkers, the move that makes five in a row for its side in Pentago and the mark that wins a third board in a row in Tic-Tac. A move the Arbiter plays, for either side, counts for nobody, and a draw is nobody's win.
 
@@ -505,14 +504,14 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 26, 10,600 XP, case 40% complete, 7-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 26, 10,609 XP, case 40% complete, 8-day streak"></picture>
   <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, Polyglot I 80%, Green Machine II 71%"></picture>
 </p>
 
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 1,041, 36% to Gold, top 13%, up 143 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-repos"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/repos.svg"><img src="assets/trophies/repos-day.svg" alt="Repositories trophy: Bronze, 7, 20% to Silver, top 39%"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Bronze, 7 days, 0% to Silver, top 50%, up 1 this week, newly reached"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Bronze, 8 days, 4% to Silver, top 46%, up 2 this week, newly reached"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 14, 56% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-pulls"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/pulls.svg"><img src="assets/trophies/pulls-day.svg" alt="Pull Requests trophy: Unranked, 3, 60% to Bronze, up 1 this week"></picture></a>
 </p>
@@ -536,7 +535,7 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-monolith"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/monolith.svg"><img src="assets/trophies/achievements/monolith-day.svg" alt="Monolith: 17% (175 of 1,000)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-bug-hunter"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/bug-hunter.svg"><img src="assets/trophies/achievements/bug-hunter-day.svg" alt="Bug Hunter: 12% (3 of 25)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-merge-master"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/merge-master.svg"><img src="assets/trophies/achievements/merge-master-day.svg" alt="Merge Master: 12% (3 of 25)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-closer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/closer.svg"><img src="assets/trophies/achievements/closer-day.svg" alt="Closer: 5% (5 of 100)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-closer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/closer.svg"><img src="assets/trophies/achievements/closer-day.svg" alt="Closer: 11% (11 of 100)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-fan-club"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/fan-club.svg"><img src="assets/trophies/achievements/fan-club-day.svg" alt="Fan Club: 0% (0 of 100)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-forked"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/forked.svg"><img src="assets/trophies/achievements/forked-day.svg" alt="Forked: 0% (0 of 10)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-long-haul"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/long-haul.svg"><img src="assets/trophies/achievements/long-haul-day.svg" alt="Long Haul: 0% (0 of 1)"></picture></a>
@@ -573,9 +572,9 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-long-game"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/long-game.svg"><img src="assets/trophies/achievements/long-game-day.svg" alt="Long Game: 66% (2 of 3)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 56% (28 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-early-bird"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/early-bird.svg"><img src="assets/trophies/achievements/early-bird-day.svg" alt="Early Bird: 20% (10 of 50)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-weekender"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekender.svg"><img src="assets/trophies/achievements/weekender-day.svg" alt="Weekender: 15% (4 of 26)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-weekender"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekender.svg"><img src="assets/trophies/achievements/weekender-day.svg" alt="Weekender: 19% (5 of 26)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-year-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/year-of-code.svg"><img src="assets/trophies/achievements/year-of-code-day.svg" alt="Year of Code: 7% (23 of 300)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-weekday-warrior"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekday-warrior.svg"><img src="assets/trophies/achievements/weekday-warrior-day.svg" alt="Weekday Warrior: 7% (15 of 200)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-year-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/year-of-code.svg"><img src="assets/trophies/achievements/year-of-code-day.svg" alt="Year of Code: 7% (22 of 300)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-four-seasons"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/four-seasons.svg"><img src="assets/trophies/achievements/four-seasons-day.svg" alt="Four Seasons: 0% (0 of 1)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-friday-deploy"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/friday-deploy.svg"><img src="assets/trophies/achievements/friday-deploy-day.svg" alt="Friday Deploy: 0% (0 of 1)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-perfect-month"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/perfect-month.svg"><img src="assets/trophies/achievements/perfect-month-day.svg" alt="Perfect Month: 0% (0 of 1)"></picture></a>

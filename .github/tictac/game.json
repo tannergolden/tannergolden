@@ -2,6 +2,16 @@
   "game": 1,
   "started": "2026-10-13T09:25:10Z",
   "places": "house",
-  "ghosts": [],
+  "ghosts": [
+    {
+      "move": "e5",
+      "shown": "e5",
+      "player": "tannergolden",
+      "player_id": 24684994,
+      "issue": 7,
+      "arbiter": false,
+      "at": "2026-10-17T10:31:55Z"
+    }
+  ],
   "moves": []
 }

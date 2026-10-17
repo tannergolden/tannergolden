@@ -51,9 +51,10 @@ end. What all four share is below.
 4. **Submit the issue as it opens.** The title is all the game reads, so leave
    it exactly as it is. The note box is optional, and only for people: the game
    never reads it.
-5. **Give it a few minutes.** A bot checks the move, reacts with 🚀 and closes
-   the issue, which means the move was received. Then the game plays it, the
-   Official Arbiter answers on your issue, and the board is redrawn.
+5. **Give it a few minutes.** A bot reacts with 👀 as it picks your issue up,
+   checks the move, then reacts with 🚀 and closes the issue, which means the
+   move was received. Then the game plays it, the Official Arbiter answers on
+   your issue, and the board is redrawn.
 
 A move's title reads `game: move · game N · move M`, such as
 `chess: e2e4 · game 1 · move 12`. Its move number counts every move both sides

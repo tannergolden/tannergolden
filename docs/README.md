@@ -51,10 +51,12 @@ end. What all four share is below.
 4. **Submit the issue as it opens.** The title is all the game reads, so leave
    it exactly as it is. The note box is optional, and only for people: the game
    never reads it.
-5. **Give it a few minutes.** A bot reacts with 👀 as it picks your issue up,
-   checks the move, then reacts with 🚀 and closes the issue, which means the
-   move was received. Then the game plays it, the Official Arbiter answers on
-   your issue, and the board is redrawn.
+5. **Give it a few minutes.** The Official Arbiter reacts with 👀 as it picks
+   your issue up and checks the move, and a bot reacts with 🚀 as the move is
+   sent on to its game. Your issue stays open until the Arbiter rules on it:
+   it answers on your issue, labels it `played` or `turned away`, files it in
+   its game's milestone, such as `Chess · game 1`, and closes it. Then the
+   board is redrawn.
 
 A move's title reads `game: move · game N · move M`, such as
 `chess: e2e4 · game 1 · move 12`. Its move number counts every move both sides
@@ -85,8 +87,8 @@ that goes a week without placing its ghost gets one at random from the Arbiter.
 
 ## 🚫 When A Move Is Turned Away
 
-Nothing is played, and the reply on your issue says why. A move is turned away
-when:
+Nothing is played: the reply on your issue says why, and the issue is labelled
+`turned away` and closed as not planned. A move is turned away when:
 
 - it isn't your side's turn;
 - it isn't a legal move on the board as it stands;

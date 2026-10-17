@@ -40,7 +40,9 @@ with no move on its turn loses.
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    move, such as `checkers: 9-13 · game 1 · move 1`.
 3. **Submit it as it opens, without changing the title.** Within a few minutes
-   the Official Arbiter answers on your issue and the board is redrawn.
+   the Official Arbiter answers on your issue and closes it, as `played` or
+   `turned away`, in the milestone `Checkers · game N`. Then the board is
+   redrawn.
 
 Only @tannergolden can play White's moves. Anyone else can play Black's,
 whoever played the last one included, and the first move to reach the game is

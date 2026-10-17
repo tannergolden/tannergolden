@@ -77,8 +77,8 @@ everyone else on GitHub on the other. I always play White, and X in Tic-Tac.
    the other three open with a click.
 2. **Submit the issue its link opens**, unchanged. The first move to reach the
    game is the one played.
-3. **The Official Arbiter answers on your issue** and redraws the board within
-   a few minutes.
+3. **The Official Arbiter rules on it** within a few minutes: it answers on
+   your issue, closes it as `played` or `turned away`, and redraws the board.
 
 Each side has a week to move, or the Arbiter moves for it at random. A win
 counts for the player who makes the winning move, and the most wins top the

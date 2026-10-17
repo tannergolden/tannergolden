@@ -8,12 +8,13 @@ name: Pentago
 # the other side sets the second, and then the Arbiter draws the side that
 # sets the first marble. Every move, a ghost's included, reaches it from
 # tannergolden/play's Move Intake: a player picks a hole and a turn on the
-# board, its link opens an issue there, and the intake starts this through
-# the Official Arbiter with the move, the game and move it was picked at, the
+# board, its link opens an issue there, and the intake starts this through the
+# Official Arbiter with the move, the game and move it was picked at, the
 # issue and who opened it. game.yml, which the three games beside chess share,
-# plays it or turns it away, replies on the issue with which and why, and
-# redraws the page. This only plays moves: clock.yml keeps every game's time.
-# The state lives in .github/pentago.
+# plays it or turns it away, replies on the issue with which and why, closes
+# it as `played` or `turned away` in the game's milestone, such as
+# `Pentago · game 1`, and redraws the page. This only plays moves: clock.yml
+# keeps every game's time. The state lives in .github/pentago.
 on:
   workflow_dispatch:
     inputs:

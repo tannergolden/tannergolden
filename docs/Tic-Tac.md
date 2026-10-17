@@ -41,7 +41,9 @@ row wins the game.
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    square, such as `tictac: e5 · game 1 · move 7`.
 3. **Submit it as it opens, without changing the title.** Within a few minutes
-   the Official Arbiter answers on your issue and the board is redrawn.
+   the Official Arbiter answers on your issue and closes it, as `played` or
+   `turned away`, in the milestone `Tic-Tac · game N`. Then the board is
+   redrawn.
 
 Only @tannergolden can play X. Anyone else can play O, whoever played the last
 O included, and the first move to reach the game is the one played.

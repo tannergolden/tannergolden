@@ -143,6 +143,7 @@ class Turns(unittest.TestCase):
                                           r" two squares\nGitHub's turn: anyone but \[@tannergolden\]\([^)]+\) can pick"
                                           r" Black's reply on \[the board\]")
         self.assertTrue(outcome.commit.startswith("chore(chess): ♟️ play 1. e4 in game 1\n\nMove 1, by tannergolden."))
+        self.assertEqual((outcome.ruling, outcome.filed), ("played", 1), "its issue closes as played, in game 1")
 
     def test_nobody_else_can_open_it(self):
         outcome = Table().move("e2e4", player=OCTOCAT)
@@ -150,6 +151,7 @@ class Turns(unittest.TestCase):
         self.assertIsNone(outcome.game)
         self.assertIn(f"⏳ **It's {LINKED}'s turn as White**, so `e2e4` wasn't played.", outcome.comment)
         self.assertIsNone(PING.search(outcome.comment), "a turn away never pings the owner")
+        self.assertEqual(outcome.ruling, "turned away", "its issue closes as not planned")
 
     def test_a_move_for_github_hands_the_turn_to_the_owner(self):
         table = Table()
@@ -166,6 +168,7 @@ class Turns(unittest.TestCase):
         self.assertFalse(outcome.changed)
         self.assertIn("⏳ **It's GitHub's turn as Black**, so `e7e5` wasn't played.\nBlack's moves are for everyone"
                       " but you.", outcome.comment)
+        self.assertEqual(outcome.ruling, "turned away")
 
     def test_the_first_move_to_arrive_is_the_one_played(self):
         table = Table()
@@ -177,6 +180,7 @@ class Turns(unittest.TestCase):
         self.assertIn("**Too late: move 2 is already on the board**, so `e7e5` wasn't played.\n1... c5 got there first,"
                       " played by [@octocat](https://github.com/octocat).", late.comment)
         self.assertIsNone(PING.search(late.comment), "a turn away pings nobody, not even the player it names")
+        self.assertEqual((first.ruling, late.ruling), ("played", "turned away"))
 
     def test_a_move_sent_twice_is_told_it_was_its_own(self):
         table = Table()
@@ -184,12 +188,16 @@ class Turns(unittest.TestCase):
         table.move("c7c5", move=2)
         again = table.move("c7c5", player=OCTOCAT, move=2)
         self.assertIn("1... c5 got there first, played by you.", again.comment)
+        self.assertEqual(again.ruling, "turned away", "a second issue for the same move was never played")
 
     def test_a_move_for_another_game_or_move_is_turned_away(self):
         table = Table()
         table.move("e2e4")
-        self.assertIn("There's no game 2 yet", table.move("e7e5", game=2, move=1).comment)
-        self.assertIn("The board is on move 2, not move 5**", table.move("e7e5", move=5).comment)
+        later_game, later_move = table.move("e7e5", game=2, move=1), table.move("e7e5", move=5)
+        self.assertIn("There's no game 2 yet", later_game.comment)
+        self.assertIn("The board is on move 2, not move 5**", later_move.comment)
+        self.assertEqual((later_game.ruling, later_move.ruling), ("turned away", "turned away"))
+        self.assertEqual((later_game.filed, later_move.filed), (None, 1), "a game that never was gets no milestone")
         self.assertEqual(len(table.game["moves"]), 1)
 
 
@@ -207,6 +215,7 @@ class Again(unittest.TestCase):
         self.assertTrue(again.redraw, "but the page is drawn again, in case the first run's drawing never happened")
         self.assertEqual((again.comment, again.issue), (first.comment, first.issue))
         self.assertNotIn("wasn't played", again.comment)
+        self.assertEqual((first.ruling, again.ruling), ("played", "played"), "its issue closes as played either way")
 
     def test_an_older_move_run_again_says_it_is_on_the_board_and_pings_nobody(self):
         table = Table()
@@ -220,6 +229,7 @@ class Again(unittest.TestCase):
                                         " as it stands now.\n")
         self.assertFalse(again.changed or again.redraw)
         self.assertIsNone(PING.search(again.comment))
+        self.assertEqual(again.ruling, "played")
 
     def test_someone_else_s_move_is_still_too_late(self):
         table = Table()
@@ -229,6 +239,7 @@ class Again(unittest.TestCase):
                           OWNER, OWNER_ID, table.clock)
         self.assertIn("⌛ **Too late: move 2 is already on the board**", late.comment)
         self.assertFalse(late.redraw)
+        self.assertEqual(late.ruling, "turned away")
 
     def test_the_move_that_ended_a_game_run_again_says_so(self):
         table = Table()
@@ -237,6 +248,7 @@ class Again(unittest.TestCase):
         self.assertEqual(again.comment, "✅ **2... Qh4# already ended game 1**, played from this issue.\n"
                                         f"Game 2 opens 13 Oct on {BOARD}.\n")
         self.assertTrue(again.redraw, "game 2 has no move yet, so the ending is still the last thing to happen")
+        self.assertEqual(again.ruling, "played", "the mate stands, so its issue closes as played")
         table.fresh()
         again = chess.play(table.game, table.hall, request("d8h4", 4, issue=table.issue), OWNER, OWNER_ID, table.clock)
         self.assertEqual(again.comment.splitlines()[1], f"Game 2 is under way on {BOARD}.")
@@ -306,6 +318,7 @@ class Legality(unittest.TestCase):
         self.assertFalse(outcome.changed)
         self.assertIn("🚫 **`e2e5` isn't a legal move here**: the pawn on e2 can't move to e5.\nNothing was played.",
                       outcome.comment)
+        self.assertEqual(outcome.ruling, "turned away")
 
 
 class Endings(unittest.TestCase):
@@ -346,8 +359,12 @@ class Endings(unittest.TestCase):
         self.assertEqual((table.hall[-1]["result"], table.hall[-1]["winner"]), ("1/2-1/2", None))
         self.assertIn("⏳ **Game 2 opens 14 Oct**", table.move("e2e4", game=1, move=20).comment)
         table.fresh()
-        self.assertIn("Game 1 is over", table.move("e2e4", game=1, move=20).comment)
-        self.assertTrue(table.move("d2d4").changed)
+        over = table.move("e2e4", game=1, move=20)
+        self.assertIn("Game 1 is over", over.comment)
+        self.assertEqual((over.ruling, over.filed), ("turned away", 1), "a game that was keeps its milestone")
+        opened = table.move("d2d4")
+        self.assertTrue(opened.changed)
+        self.assertEqual((opened.ruling, opened.filed), ("played", 2))
         self.assertEqual((table.game["game"], table.game["moves"][0]["san"]), (2, "d4"))
         self.assertNotIn("ended", table.game, "the game that ended leaves the state with the next game's first move")
 
@@ -420,6 +437,8 @@ class TwoDays(unittest.TestCase):
                 outcome = table.move("e2e4", player=OWNER, game=game, move=move)
                 self.assertEqual(outcome.comment, said)
                 self.assertFalse(outcome.changed)
+                self.assertEqual(outcome.ruling, "turned away")
+                self.assertEqual(outcome.filed, None if game == 3 else game, "game 2 is on the way; game 3 never was")
         self.assertIsNone(PING.search(said))
 
     def test_the_fresh_board_comes_by_itself_and_its_week_counts_from_then(self):
@@ -902,7 +921,7 @@ class Script(unittest.TestCase):
             self.assertTrue((out / "commit.txt").read_text(encoding="utf-8").endswith(
                 "Run: https://github.com/tannergolden/tannergolden/actions/runs/1\n"))
             self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"),
-                             "changed=true\nissue=12\nlogbook=false\nreplay=false\n")
+                             "changed=true\nissue=12\nlogbook=false\nreplay=false\nruling=played\ngame=1\n")
 
     def test_a_turned_away_move_saves_nothing_and_still_replies(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -915,7 +934,7 @@ class Script(unittest.TestCase):
             self.assertFalse(folder.exists())
             self.assertIn(f"It's {LINKED}'s turn", (out / "comment.md").read_text(encoding="utf-8"))
             self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8"),
-                             "changed=false\nissue=13\nlogbook=false\nreplay=false\n")
+                             "changed=false\nissue=13\nlogbook=false\nreplay=false\nruling=turned away\ngame=1\n")
 
     def test_every_run_sets_the_board_and_the_hall_out_between_their_markers_and_nowhere_else(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -990,9 +1009,10 @@ class Script(unittest.TestCase):
                             PLAYER=OWNER, PLAYER_ID=str(OWNER_ID))
             self.run_script(folder, "2026-10-08T09:00:00Z")  # told on the owner's issue 5
             self.run_script(folder, "2026-10-15T09:00:00Z")  # the Arbiter after itself: the logbook
-            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8").splitlines()[-8:],
-                             ["changed=true", "issue=5", "logbook=false", "replay=false", "changed=true", "issue=",
-                              "logbook=true", "replay=false"])
+            self.assertEqual((Path(temp) / "output.txt").read_text(encoding="utf-8").splitlines()[-12:],
+                             ["changed=true", "issue=5", "logbook=false", "replay=false", "ruling=", "game=",
+                              "changed=true", "issue=", "logbook=true", "replay=false", "ruling=", "game="],
+                             "the clock rules on no move")
 
     def test_anything_malformed_is_turned_away_on_its_issue_and_changes_nothing(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -1010,6 +1030,8 @@ class Script(unittest.TestCase):
                         "🚫 **This move can't be played as sent**, so nothing was played."))
                     self.assertIsNone(PING.search(reply), "a turned-away request pings nobody")
                     self.assertIn("issue=1\n", (Path(temp) / "output.txt").read_text(encoding="utf-8"))
+                    self.assertTrue((Path(temp) / "output.txt").read_text(encoding="utf-8").endswith(
+                        "ruling=turned away\ngame=\n"), "a request that can't be read names no game")
             self.assertFalse(folder.exists())
             for bad in ("-1", "0", "12345678901234567", "x"):  # nowhere to say so: the run stops
                 with self.subTest(issue=bad):

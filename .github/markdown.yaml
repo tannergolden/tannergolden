@@ -8,6 +8,11 @@
 # it, changes over at midnight EST.
 timezone: EST
 
+# My birthday, the month and the day: on it the whole page is drawn in the
+# kit's Birthday set for the day, over the medieval design and any holiday's
+# set, and handed back at the next midnight.
+birthday: 01-17
+
 banners:
   motto: Built to be rebuilt.
   # More general notes, numbered after the motto: the second says how to read

@@ -6,7 +6,8 @@ name: Chess
 # intake starts this through the Official Arbiter with the move, the game and
 # move it was picked at, the issue and who opened it. .github/scripts/chess.py
 # plays it or turns it away, the Arbiter replies on the issue with which and
-# why, and the Markdown run redraws the page.
+# why and closes it as `played` or `turned away`, and the Markdown run redraws
+# the page.
 #
 # It only plays moves. The one clock for all four games, clock.yml, keeps
 # the time: when the side to move has gone a week without moving, the Arbiter
@@ -38,13 +39,17 @@ name: Chess
 # secret here; without them a move is still played, and its reply fails. The
 # reply comes before the redraw, so a redraw that fails never swallows it, and
 # each move's issue is locked once answered (.github/scripts/arbiter.sh): only
-# the owner and the Arbiter write there after. A run that fails before the
-# game rules on a move still answers its issue, and the owner hears of it
-# once, in a notice that closes itself when moves go through again. The
-# games' tests run when their code changes (games-tests.yml), not on every
-# move. A person's own winning move also asks tannergolden/play's Replay
-# workflow, through the same App, to draw the game's replay, whose facts the
-# engine keeps beside the game's record.
+# the owner and the Arbiter write there after. The intake leaves the issue
+# open for the ruling, which follows the reply: the label `played` or
+# `turned away`, the milestone of the game it was sent for, such as
+# `Chess · game 1`, and its close, as completed or as not planned. A run that
+# fails before the game rules on a move still answers its issue and leaves it
+# open, for a run of it over again to rule on; the owner hears of it once, in
+# a notice that closes itself when moves go through again. The games' tests
+# run when their code changes (games-tests.yml), not on every move. A person's
+# own winning move also asks tannergolden/play's Replay workflow, through the
+# same App, to draw the game's replay, whose facts the engine keeps beside the
+# game's record.
 on:
   workflow_dispatch:
     inputs:
@@ -179,12 +184,17 @@ jobs:
           repositories: play
           permission-issues: write
 
-      # Before the redraw, so a redraw that fails never keeps a player from hearing how their move went.
+      # Before the redraw, so a redraw that fails never keeps a player from hearing how their move went. The
+      # ruling then closes the move's issue: as completed under `played`, or as not planned under `turned away`,
+      # in the milestone of the game it was sent for, when that game is one there is. The intake leaves a move it
+      # sent on open for exactly this.
       - name: '💬 Reply on the move'
         if: ${{ steps.app.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           ISSUE: ${{ steps.play.outputs.issue }}
+          RULING: ${{ steps.play.outputs.ruling }}
+          GAME: ${{ steps.play.outputs.game }}
           PLAY: ${{ github.repository_owner }}/play
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
@@ -192,6 +202,7 @@ jobs:
           set -euo pipefail
           source .github/scripts/arbiter.sh
           say "$ISSUE" "$RUNNER_TEMP/chess/comment.md"
+          rule "$ISSUE" "$RULING" Chess "$GAME"
           settle
 
       - name: '🖌️ Redraw the board'
@@ -223,9 +234,10 @@ jobs:
           PLAY: ${{ github.repository_owner }}/play
         run: gh workflow run replay.yml --repo "$PLAY"
 
-      # A run that fails before the game rules on a move (the game, or its save) still answers the move's issue. The
-      # owner hears of it once, in a notice the next move that goes through closes, however many moves it stops. A
-      # move its issue doesn't hold was never a player's, so nothing is said for it.
+      # A run that fails before the game rules on a move (the game, or its save) still answers the move's issue, and
+      # leaves it open for a run of it over again to rule on. The owner hears of it once, in a notice the next move
+      # that goes through closes, however many moves it stops. A move its issue doesn't hold was never a player's,
+      # so nothing is said for it.
       - name: '🔑 Mint the token for the failure notice'
         id: app-failed
         if: ${{ failure() && inputs.issue != '' && steps.issue.outcome != 'failure' && steps.play.outcome != 'success' }}

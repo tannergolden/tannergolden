@@ -2,13 +2,13 @@ name: Game
 
 # What a move does in any of the three games beside chess on the profile:
 # Tic-Tac, Pentago and Checkers. Each game's own workflow (tictac.yml,
-# pentago.yml, checkers.yml) starts this with its name
-# and the move as tannergolden/play's Move Intake sent it: the move as its
-# issue's title carries it, the game and move it was picked at, the issue,
-# and who opened it. .github/scripts/games.py plays it or turns it away, the
-# Arbiter replies on the issue with which and why, and the Markdown run
-# redraws the page. It only plays moves: the one clock for all four games,
-# the Arbiter's week and the fresh boards, is clock.yml's.
+# pentago.yml, checkers.yml) starts this with its name and the move as
+# tannergolden/play's Move Intake sent it: the move as its issue's title
+# carries it, the game and move it was picked at, the issue, and who opened
+# it. .github/scripts/games.py plays it or turns it away, the Arbiter replies
+# on the issue with which and why and closes it as `played` or `turned away`,
+# and the Markdown run redraws the page. It only plays moves: the one clock
+# for all four games, the Arbiter's week and the fresh boards, is clock.yml's.
 #
 # Every input is written by a stranger, by way of an issue title. Each one
 # reaches the script through an environment variable, never as an expression
@@ -23,11 +23,15 @@ name: Game
 # says so. The commits are the bot's, and their messages never name an issue.
 # The reply comes before the redraw, through the Official Arbiter's App
 # (.github/scripts/arbiter.sh), and each move's issue is locked once answered.
-# A run that fails before the game rules on a move still answers its issue,
-# and the owner hears of it once, in a notice that closes itself when moves go
-# through again. A person's own winning move also asks tannergolden/play's
-# Replay workflow, through the same App, to draw the game's replay, whose facts
-# the engine keeps beside the game's record.
+# The intake leaves the issue open for the ruling, which follows the reply:
+# the label `played` or `turned away`, the milestone of the game it was sent
+# for, such as `Pentago · game 1`, and its close, as completed or as not
+# planned. A run that fails before the game rules on a move still answers its
+# issue and leaves it open, for a run of it over again to rule on; the owner
+# hears of it once, in a notice that closes itself when moves go through
+# again. A person's own winning move also asks tannergolden/play's Replay
+# workflow, through the same App, to draw the game's replay, whose facts the
+# engine keeps beside the game's record.
 on:
   workflow_call:
     inputs:
@@ -177,12 +181,18 @@ jobs:
           repositories: play
           permission-issues: write
 
-      # Before the redraw, so a redraw that fails never keeps a player from hearing how their move went.
+      # Before the redraw, so a redraw that fails never keeps a player from hearing how their move went. The
+      # ruling then closes the move's issue: as completed under `played`, or as not planned under `turned away`,
+      # in the milestone of the game it was sent for, when that game is one there is. The intake leaves a move it
+      # sent on open for exactly this.
       - name: '💬 Reply on the move'
         if: ${{ steps.app.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           ISSUE: ${{ steps.play.outputs.issue }}
+          RULING: ${{ steps.play.outputs.ruling }}
+          KEY: ${{ inputs.key }}
+          GAME: ${{ steps.play.outputs.game }}
           PLAY: ${{ github.repository_owner }}/play
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
@@ -190,6 +200,13 @@ jobs:
           set -euo pipefail
           source .github/scripts/arbiter.sh
           say "$ISSUE" "$RUNNER_TEMP/game/comment.md"
+          case "$KEY" in
+            tictac) name=Tic-Tac ;;
+            pentago) name=Pentago ;;
+            checkers) name=Checkers ;;
+            *) name='' ;;
+          esac
+          rule "$ISSUE" "$RULING" "$name" "$GAME"
           settle
 
       - name: '🖌️ Redraw the board'
@@ -221,9 +238,10 @@ jobs:
           PLAY: ${{ github.repository_owner }}/play
         run: gh workflow run replay.yml --repo "$PLAY"
 
-      # A run that fails before the game rules on a move (the game, or its save) still answers the move's issue. The
-      # owner hears of it once, in a notice the next move that goes through closes, however many moves it stops. A
-      # move its issue doesn't hold was never a player's, so nothing is said for it.
+      # A run that fails before the game rules on a move (the game, or its save) still answers the move's issue, and
+      # leaves it open for a run of it over again to rule on. The owner hears of it once, in a notice the next move
+      # that goes through closes, however many moves it stops. A move its issue doesn't hold was never a player's,
+      # so nothing is said for it.
       - name: '🔑 Mint the token for the failure notice'
         id: app-failed
         if: ${{ failure() && inputs.issue != '' && steps.issue.outcome != 'failure' && steps.play.outcome != 'success' }}

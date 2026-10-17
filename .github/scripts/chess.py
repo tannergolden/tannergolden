@@ -47,13 +47,17 @@ between `# hall:start` and `# hall:end`, and nothing else in that file, for
 tannergolden/markdown to draw in the page's one theme.
 
 It writes comment.md, the reply to post, and commit.txt into the run's
-temporary folder (--out), and sets `changed`, `issue`, `logbook` and `replay`
-as step outputs: whether the page is to be drawn again, the issue the reply
-goes on, whether it goes in the owner's logbook of the Arbiter's moves instead,
-and whether a person's own move won the game, for the workflow to ask
-tannergolden/play for its replay, whose page the final board links. A
-request that is not in the form the intake sends is turned away on its issue
-like any move that can't be played.
+temporary folder (--out), and sets `changed`, `issue`, `logbook`, `replay`,
+`ruling` and `game` as step outputs: whether the page is to be drawn again,
+the issue the reply goes on, whether it goes in the owner's logbook of the
+Arbiter's moves instead, whether a person's own move won the game, for the
+workflow to ask tannergolden/play for its replay, whose page the final board
+links, the ruling on a player's move, `played` or `turned away`, by which the
+workflow labels and closes its issue, and the game whose milestone that issue
+joins: the one the move was sent for, or none for a game there never was.
+Both are empty for the clock, and a move already on the board from its own
+issue is `played`. A request that is not in the form the intake sends is
+turned away on its issue like any move that can't be played.
 Stdlib only, with chess_rules.py, chess_names.py, hall.py and page.py beside it.
 """
 from __future__ import annotations
@@ -158,6 +162,8 @@ class Outcome:
     finished: dict | None = None  # the finished game's Hall of Fame record
     redraw: bool = False  # nothing to save, but the page is drawn again: a run of the last move over again
     logbook: bool = False  # the comment goes in the owner's logbook of the Arbiter's moves, not on a player's issue
+    ruling: str = ""  # on a player's move, "played" or "turned away": how its issue is labelled and closed
+    filed: int | None = None  # the game whose milestone that issue joins: the one it was sent for, if there is one
 
 
 def new_game(number: int, started: dt.datetime) -> dict:
@@ -351,10 +357,11 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
     """One move from the intake: played, or turned away with the reason."""
     current = game or new_game(1, moment)
     number, board = current["game"], f"[the board]({profile(owner)})"
-    outcome = Outcome(game=game, hall=hall, issue=request.issue)
+    # A move for a game that never was joins no milestone, so a title can't make one up.
+    outcome = Outcome(game=game, hall=hall, issue=request.issue, filed=request.game if request.game <= number else None)
 
-    def refuse(text: str, log: str) -> Outcome:
-        outcome.comment, outcome.log = text, log
+    def refuse(text: str, log: str, ruling: str = "turned away") -> Outcome:
+        outcome.comment, outcome.log, outcome.ruling = text, log, ruling
         return outcome
 
     # While the last game's final board is up, nothing can be played: a move for any game is told when the next
@@ -367,7 +374,7 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
             later = (f"Game {number} opens {day(parse(current['started']))} on {board}." if waiting
                      else f"Game {number} is under way on {board}.")
             return refuse(f"✅ **{ended['deciding']['move']} already ended game {request.game}**, played from this"
-                          f" issue.\n{later}\n", "already played from this issue")
+                          f" issue.\n{later}\n", "already played from this issue", "played")
     if waiting:
         return refuse(OPENS.format(number=number, day=day(parse(current["started"])), uci=request.uci,
                                    ended=number - 1, board=board), "the last game's final board is up")
@@ -388,9 +395,10 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
                 outcome.redraw = True
                 name = named(before, number, request.move, Move.from_uci(earlier["uci"]))
                 return refuse(played_text(shown, before.turn == "w", request.player, name, owner, board),
-                              "already played from this issue")
+                              "already played from this issue", "played")
             return refuse(f"✅ **{shown} is already on the board**, played from this issue.\nThe game has moved on"
-                          f" since: pick a move from {board} as it stands now.\n", "already played from this issue")
+                          f" since: pick a move from {board} as it stands now.\n", "already played from this issue",
+                          "played")
         by = ("you" if not earlier.get("arbiter") and earlier["player_id"] == request.player_id else
               "the Arbiter" if earlier.get("arbiter") else handle(earlier["player"]))
         return refuse(f"⌛ **Too late: move {request.move} is already on the board**, so `{request.uci}` wasn't"
@@ -414,7 +422,7 @@ def play(game: dict | None, hall: list, request: Request, owner: str, owner_id: 
     mover = {"player": request.player, "player_id": request.player_id, "issue": request.issue, "arbiter": False}
     name = named(position, number, ply, moves[request.uci])
     outcome, shown, end = apply(current, hall, positions, moves[request.uci], mover, owner, moment)
-    outcome.issue = request.issue
+    outcome.issue, outcome.ruling, outcome.filed = request.issue, "played", number
     if end:
         outcome.comment = ended_text(end, shown, number, mover, owner, name, moment + DISPLAY)
         outcome.commit = f"chore(chess): 🏆 play {shown}, ending game {number} {end.result}"
@@ -659,6 +667,7 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
     game, hall = load(args.folder)
     if malformed:
         outcome = Outcome(game=game, hall=hall, issue=int(env["ISSUE"]), log=f"turned away, {malformed}",
+                          ruling="turned away",
                           comment=f"🚫 **This move can't be played as sent**, so nothing was played.\nEvery move listed"
                                   f" under [the board]({profile(owner)}) opens its issue ready-made: pick one there"
                                   " and send it unchanged.\n")
@@ -687,6 +696,8 @@ def main(argv: list[str] | None = None, env: dict | None = None) -> int:
             handle_.write(f"issue={outcome.issue or ''}\n")
             handle_.write(f"logbook={'true' if outcome.logbook else 'false'}\n")
             handle_.write(f"replay={'true' if outcome.replay else 'false'}\n")
+            handle_.write(f"ruling={outcome.ruling}\n")
+            handle_.write(f"game={outcome.filed or ''}\n")
     target = f" (game {request.game}, move {request.move}, @{request.player})" if request else ""
     print(f"{'Move ' + request.uci if request else 'Move' if malformed else 'Clock'}{target}: {outcome.log}.")
     return 0

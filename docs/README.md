@@ -1,8 +1,8 @@
 <!--
 title: '🎲 GAMES'
 description: 'How to play the four games on the profile against @tannergolden: making a move, whose turn it is, the clock and the Arbiter, and what happens when a game ends.'
-tags: [games, how-to-play, chess, checkers, pentago, tic-tac]
-category: docs
+type: index
+keywords: [how-to-play, chess, checkers, pentago, tic-tac]
 -->
 
 <!-- markdownlint-disable MD041 -->

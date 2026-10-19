@@ -1,8 +1,8 @@
 <!--
 title: '👋 TANNER GOLDEN'
 description: 'The GitHub profile of Tanner Golden: who I am, the case my work has earned, and where to find me, all drawn by GitHub Actions.'
-tags: [github-profile, readme, automation, github-actions]
-category: docs
+type: index
+keywords: [github-profile, readme, automation, github-actions]
 -->
 
 <!-- markdown:header:start -->

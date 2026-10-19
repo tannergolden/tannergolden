@@ -1,8 +1,8 @@
 <!--
 title: '🏁 CHECKERS'
 description: 'How to play Checkers against @tannergolden on the profile: making a move, the rules of American checkers the board holds to, how moves are written, the clock, and how a game ends.'
-tags: [games, how-to-play, checkers]
-category: docs
+type: guide
+keywords: [games, how-to-play]
 -->
 
 <!-- markdownlint-disable MD041 -->

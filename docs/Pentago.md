@@ -1,8 +1,8 @@
 <!--
 title: '🌀 PENTAGO'
 description: 'How to play Pentago against @tannergolden on the profile: the Ghost Rule, making a move, the rules the board holds to, how moves are written, the clock, and how a game ends.'
-tags: [games, how-to-play, pentago]
-category: docs
+type: guide
+keywords: [games, how-to-play]
 -->
 
 <!-- markdownlint-disable MD041 -->

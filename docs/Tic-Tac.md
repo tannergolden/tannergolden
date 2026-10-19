@@ -1,8 +1,8 @@
 <!--
 title: '❌ TIC-TAC'
 description: 'How to play Tic-Tac against @tannergolden on the profile: the Ghost Rule, making a move, the rules the board holds to, how moves are written, the clock, and how a game ends.'
-tags: [games, how-to-play, tic-tac, ultimate-tic-tac-toe]
-category: docs
+type: guide
+keywords: [games, how-to-play, ultimate-tic-tac-toe]
 -->
 
 <!-- markdownlint-disable MD041 -->

@@ -42,6 +42,9 @@ a workflow's output.
   actionlint and zizmor on the workflows.
 - The kit draws README.md between its `<!-- markdown:...:start -->` and `<!-- markdown:...:end -->` markers, and
   everything under `assets/`: edit only outside them.
+- Every folder under `.github/` keeps a README that logs its files. Redraw the logs in the same commit as a change to
+  a folder: `python3 <standards>/.github/scripts/update-doc-indexes.py --tree --write`, from tannergolden/standards
+  at `v1`.
 - A change to how a move is played or answered updates everything that tells it, in the same commits: `docs/README.md`,
   the game's own guide in `docs/`, Play Against Me in README.md, and the header comments of the workflows and of
   `arbiter.sh`.

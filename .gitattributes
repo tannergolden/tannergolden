@@ -1,0 +1,35 @@
+# =============================================================================
+# Git attributes - line endings, diffs, and what counts as binary
+# =============================================================================
+# Git reads this file only from the repository that owns it, so it cannot be
+# shared and always lives here.
+# =============================================================================
+
+# Normalise every text file to LF in the repository. Working copies still use
+# the platform's convention; only what Git stores is normalised.
+* text=auto
+
+# A shell script committed with CRLF fails on the runner with an error that
+# names the interpreter, not the line endings, so the Arbiter's is forced.
+*.sh text eol=lf
+
+# Language-aware diff hunk headers.
+*.md   diff=markdown
+*.py   diff=python
+*.json diff=json
+
+# --- Machine-written -------------------------------------------------------
+#
+# tannergolden/markdown draws everything under assets/, and each game's state
+# is written by its own workflow. Collapsed in pull-request diffs and kept out
+# of the language statistics, which the drawings would otherwise dominate.
+assets/**              linguist-generated=true
+.github/*/game.json    linguist-generated=true
+
+# Images are binary, never diffed or normalised.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary

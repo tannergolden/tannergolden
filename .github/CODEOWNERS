@@ -1,0 +1,13 @@
+# =============================================================================
+# CODEOWNERS - review ownership
+#
+# GitHub reads this only from the repository that owns it, so unlike the
+# community health files it cannot come from the account's .github repository
+# and has to live here.
+#
+# One maintainer, so one rule: a review request on anything opened by somebody
+# else, Dependabot included. On its own it only asks for a review; a merge
+# waits on it only where a ruleset requires code-owner review.
+# =============================================================================
+
+*                           @tannergolden

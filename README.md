@@ -693,21 +693,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 9 Oct.** [GitHub Copilot weekly releases - October 5](https://github.blog/changelog/2026-10-09-github-copilot-weekly-releases-october-5)
+> **GitHub changelog · 19 Oct.** [CodeQL changes for macOS 27, Xcode 27, and Swift 6.4](https://github.blog/changelog/2026-10-19-codeql-changes-for-macos-27-xcode-27-and-swift-6-4)
 
 > [!TIP]
-> **tldr-pages · [az-webapp](https://github.com/tldr-pages/tldr/blob/main/pages/common/az-webapp.md).** List all web applications: `az webapp list`
+> **tldr-pages · [openssl](https://github.com/tldr-pages/tldr/blob/main/pages/common/openssl.md).** Generate a self-signed certificate valid for a specified number of days (365): `openssl req -new -x509 -key <path/to/private.key> -out <path/to/certificate.crt> -days 365`
 
 > [!IMPORTANT]
-> **Advanced · Documentation.** Document each service's limits and failure behavior: maximum payload, rate limits, timeouts and what it returns when a dependency is down. Callers otherwise discover them in production and build workarounds that break when the limits change.
+> **Professional · Accessibility.** Build accessibility into your shared component library, so every team gets labeled controls, focus handling and sufficient contrast by default. Fixing one component fixes every screen that uses it; fixing screens one by one never finishes.
 
 > [!WARNING]
-> **Professional · Debugging.** Capturing with `tcpdump` on a busy host can drop packets and fill the disk. Use a capture filter, cap the size with `-c` or rotate files with `-C` and `-W`, and write to a volume with room to spare.
+> **Advisory · [GHSA-mc4q-93x5-f6hj](https://github.com/advisories/GHSA-mc4q-93x5-f6hj) · nuget.** `Microsoft.NETCore.App.Runtime.linux-arm` (\>= 9.0.0, \<= 9.0.20): Microsoft Security Advisory CVE-2026-58280 - .NET and Visual Studio Denial of Service Vulnerability. Update to `9.0.21` or later.
 
 > [!CAUTION]
-> **Beginner · CI.** Re-running an old deploy job in CI deploys that job's original commit, which can overwrite newer code in production. Start a fresh deploy from the current branch instead.
+> **Intermediate · Git.** A leading `+` in a push refspec, as in `git push origin +main`, forces that update exactly like `--force`, overwriting whatever the remote branch held. Read refspecs in scripts and aliases carefully before running them.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 42 of 2026. Open data this week: GitHub changelog, tldr-pages (CC BY 4.0).</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 43 of 2026. Open data this week: GitHub changelog, tldr-pages (CC BY 4.0), GitHub Advisory Database (CC BY 4.0).</sub>
 
 <!-- notes:end -->
 

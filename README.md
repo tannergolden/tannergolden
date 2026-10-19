@@ -18,7 +18,7 @@ category: docs
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 9. Contributions, last year: 1,460. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 9. Contributions, last year: 1,461. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -156,25 +156,25 @@ Anyone but @tannergolden can play on this turn, and the first pick in is played.
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/checkers-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/checkers-dark.svg">
-  <img alt="Checkers: game 1, move 1. Game 1 of @tannergolden against GitHub, before its first move. It is GitHub&#x27;s turn as Black, due by 19 Oct. @tannergolden, White: men on 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32; GitHub, Black: men on 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12." src="assets/elements/checkers-day.svg">
+  <img alt="Checkers: game 1, move 1. Game 1 of @tannergolden against GitHub, after 1. 12-16, the Arbiter&#x27;s move for GitHub: man from 12 to 16. It is @tannergolden&#x27;s turn as White, due by 26 Oct. @tannergolden, White: men on 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32; GitHub, Black: men on 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16." src="assets/elements/checkers-day.svg">
 </picture>
 
 <details>
-<summary>⛂ <b>GitHub's Turn</b> · 7 legal moves · open to choose one</summary>
+<summary>⛀ <b>@tannergolden's Turn</b> · 7 legal moves · only @tannergolden can play these</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👣 | **Man Move** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Man Move** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Man Move** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Man Move** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Man Move** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Man Move** `11-16` | Man from 11 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👣 | **Man Move** `12-16` | Man from 12 to 16 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👣 | **Man Move** `21-17` | Man from 21 to 17 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2021-17%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Man Move** `22-17` | Man from 22 to 17 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2022-17%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Man Move** `22-18` | Man from 22 to 18 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2022-18%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Man Move** `23-18` | Man from 23 to 18 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2023-18%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Man Move** `23-19` | Man from 23 to 19 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2023-19%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Man Move** `24-19` | Man from 24 to 19 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2024-19%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👣 | **Man Move** `24-20` | Man from 24 to 20 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2024-20%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
-GitHub plays Black, which moves first in American checkers, so GitHub opens every game, and @tannergolden plays White. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 06:10 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
+Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 26 Oct, 06:16 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
 
 </details>
 <!-- markdown:element:checkers:end -->

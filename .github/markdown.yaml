@@ -323,23 +323,24 @@ elements:
   # checkers:start
   checkers:
     kind: "checkers"
-    fen: "B:W21,22,23,24,25,26,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,9,10,11,12"
+    fen: "W:W21,22,23,24,25,26,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,9,10,11,16"
     game: 1
     move: 1
     players: 0
-    due: "19 Oct"
+    due: "26 Oct"
+    last: {"move": "12-16", "words": "Man from 12 to 16", "by": "the Arbiter", "when": "19 Oct"}
     kings: {"house": 0, "github": 0}
     history:
-      - [1, "", "", ""]
-    note: "GitHub plays Black, which moves first in American checkers, so GitHub opens every game, and @tannergolden plays White. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 19 Oct, 06:10 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned."
+      - [1, "12-16", "", "the Arbiter"]
+    note: "Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 26 Oct, 06:16 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned."
     moves:
-      - ["👣", "Man Move", "9-13", "Man from 9 to 13", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%201"]
-      - ["👣", "Man Move", "9-14", "Man from 9 to 14", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%201"]
-      - ["👣", "Man Move", "10-14", "Man from 10 to 14", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%201"]
-      - ["👣", "Man Move", "10-15", "Man from 10 to 15", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%201"]
-      - ["👣", "Man Move", "11-15", "Man from 11 to 15", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%201"]
-      - ["👣", "Man Move", "11-16", "Man from 11 to 16", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-16%20%C2%B7%20game%201%20%C2%B7%20move%201"]
-      - ["👣", "Man Move", "12-16", "Man from 12 to 16", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2012-16%20%C2%B7%20game%201%20%C2%B7%20move%201"]
+      - ["👣", "Man Move", "21-17", "Man from 21 to 17", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2021-17%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["👣", "Man Move", "22-17", "Man from 22 to 17", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2022-17%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["👣", "Man Move", "22-18", "Man from 22 to 18", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2022-18%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["👣", "Man Move", "23-18", "Man from 23 to 18", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2023-18%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["👣", "Man Move", "23-19", "Man from 23 to 19", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2023-19%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["👣", "Man Move", "24-19", "Man from 24 to 19", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2024-19%20%C2%B7%20game%201%20%C2%B7%20move%202"]
+      - ["👣", "Man Move", "24-20", "Man from 24 to 20", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2024-20%20%C2%B7%20game%201%20%C2%B7%20move%202"]
   # checkers:end
   # chess:start
   chess:

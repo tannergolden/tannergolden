@@ -1,5 +1,15 @@
 {
   "game": 1,
   "started": "2026-10-12T11:10:16Z",
-  "moves": []
+  "moves": [
+    {
+      "move": "12-16",
+      "shown": "12-16",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-10-19T11:16:53Z"
+    }
+  ]
 }

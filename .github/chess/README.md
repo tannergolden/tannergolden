@@ -28,7 +28,7 @@ a player's move, and by [`clock.yml`](../workflows/clock.yml) for a move the
 Arbiter makes when a side has gone a week without moving, or for a fresh board.
 Nothing else writes it, so never edit it by hand.
 
-How a move is played and how a game ends are in the [Chess](../../docs/Chess.md)
+How a move is played and how a game ends are in the [Chess](../../docs/library/Chess.md)
 guide.
 
 ---

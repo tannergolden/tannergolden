@@ -47,7 +47,7 @@ row wins the game.
 
 Only @tannergolden can play X. Anyone else can play O, whoever played the last
 O included, and the first move to reach the game is the one played.
-[Games](README.md) has the rest of what all four games share: whose turn it
+[Games](Games.md) has the rest of what all four games share: whose turn it
 is, when a move is turned away, and the clock.
 
 ## 👻 The Ghost Rule

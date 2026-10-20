@@ -49,7 +49,7 @@ in a row wins.
 
 Only @tannergolden can set the white marbles. Anyone else can set the black,
 whoever set the last one included, and the first move to reach the game is the
-one played. [Games](README.md) has the rest of what all four games share: whose
+one played. [Games](Games.md) has the rest of what all four games share: whose
 turn it is, when a move is turned away, and the clock.
 
 ## 👻 The Ghost Rule

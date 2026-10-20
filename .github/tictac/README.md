@@ -30,7 +30,7 @@ has gone a week without moving, or for a fresh board. Nothing else writes it, so
 never edit it by hand.
 
 How a move is played and how a game ends are in the
-[Tic-Tac](../../docs/Tic-Tac.md) guide.
+[Tic-Tac](../../docs/library/Tic-Tac.md) guide.
 
 ---
 

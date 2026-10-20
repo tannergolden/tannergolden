@@ -84,9 +84,9 @@ Each side has a week to move, or the Arbiter moves for it at random. A win
 counts for the player who makes the winning move, and the most wins top the
 Hall of Fame below.
 
-📖 The rules and everything else are in [Games](docs/README.md) and each game's
-guide: [Chess](docs/Chess.md), [Checkers](docs/Checkers.md),
-[Pentago](docs/Pentago.md) and [Tic-Tac](docs/Tic-Tac.md).
+📖 The rules and everything else are in [Games](docs/library/Games.md) and each game's
+guide: [Chess](docs/library/Chess.md), [Checkers](docs/library/Checkers.md),
+[Pentago](docs/library/Pentago.md) and [Tic-Tac](docs/library/Tic-Tac.md).
 
 <!-- markdown:element:chess:start -->
 <picture>

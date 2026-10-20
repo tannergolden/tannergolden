@@ -2,7 +2,7 @@
 # Markdown stub (.github/workflows/markdown.yml), which names the page's one
 # theme. Whatever is not written here is read from GitHub: the name, the bio
 # and every figure. Every key and its default:
-# https://github.com/tannergolden/markdown/blob/Development/docs/Settings.md
+# https://github.com/tannergolden/markdown/blob/Development/docs/references/Settings.md
 
 # The README tells time in EST, so the page's day, and a holiday's set with
 # it, changes over at midnight EST.

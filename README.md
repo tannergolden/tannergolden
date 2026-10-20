@@ -18,7 +18,7 @@ keywords: [github-profile, readme, automation, github-actions]
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 9. Contributions, last year: 1,544. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 9. Contributions, last year: 1,545. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -191,83 +191,82 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/pentago-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/pentago-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/pentago-dark.svg">
-  <img alt="Pentago: game 1, the ghosts. Game 1 of @tannergolden against GitHub, @tannergolden plays White and GitHub Black, under the Ghost Rule. It is GitHub&#x27;s turn to set a ghost, due by 20 Oct. The board is empty." src="assets/elements/pentago-day.svg">
+  <img alt="Pentago: game 1, the ghosts. Game 1 of @tannergolden against GitHub, @tannergolden plays White and GitHub Black, under the Ghost Rule. Ghosts on a4. After G. a4, the Arbiter&#x27;s move for GitHub: a ghost on a4, the lower left corner of the upper left quarter. It is @tannergolden&#x27;s turn to set a ghost, due by 27 Oct. The upper left quarter: a ghost on a4." src="assets/elements/pentago-day.svg">
 </picture>
 
 <details>
-<summary>⚫ <b>GitHub's Turn</b> · 36 holes for a ghost · open to choose one</summary>
+<summary>⚪ <b>@tannergolden's Turn</b> · 35 holes for a ghost · only @tannergolden can play these</summary>
 
 <details>
-<summary>⚫ Upper Left Quarter · 9 moves</summary>
+<summary>⚪ Upper Left Quarter · 8 moves</summary>
 
 |  | Hole | In words | Then turn |
 | :-: | :--- | :--- | :--- |
-| 👻 | **Corner Ghost** `a6` | A ghost on a6, the upper left corner of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b6` | A ghost on b6, the top edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c6` | A ghost on c6, the upper right corner of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `a5` | A ghost on a5, the left edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `b5` | A ghost on b5, the centre of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `c5` | A ghost on c5, the right edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `a4` | A ghost on a4, the lower left corner of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b4` | A ghost on b4, the bottom edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c4` | A ghost on c4, the lower right corner of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-
-</details>
-
-<details>
-<summary>⚫ Upper Right Quarter · 9 moves</summary>
-
-|  | Hole | In words | Then turn |
-| :-: | :--- | :--- | :--- |
-| 👻 | **Corner Ghost** `d6` | A ghost on d6, the upper left corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e6` | A ghost on e6, the top edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f6` | A ghost on f6, the upper right corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `d5` | A ghost on d5, the left edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `e5` | A ghost on e5, the centre of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `f5` | A ghost on f5, the right edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `d4` | A ghost on d4, the lower left corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e4` | A ghost on e4, the bottom edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f4` | A ghost on f4, the lower right corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `a6` | A ghost on a6, the upper left corner of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b6` | A ghost on b6, the top edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c6` | A ghost on c6, the upper right corner of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `a5` | A ghost on a5, the left edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `b5` | A ghost on b5, the centre of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `c5` | A ghost on c5, the right edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b4` | A ghost on b4, the bottom edge of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c4` | A ghost on c4, the lower right corner of the upper left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>⚫ Lower Left Quarter · 9 moves</summary>
+<summary>⚪ Upper Right Quarter · 9 moves</summary>
 
 |  | Hole | In words | Then turn |
 | :-: | :--- | :--- | :--- |
-| 👻 | **Corner Ghost** `a3` | A ghost on a3, the upper left corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b3` | A ghost on b3, the top edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c3` | A ghost on c3, the upper right corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `a2` | A ghost on a2, the left edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `b2` | A ghost on b2, the centre of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `c2` | A ghost on c2, the right edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `a1` | A ghost on a1, the lower left corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `b1` | A ghost on b1, the bottom edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `c1` | A ghost on c1, the lower right corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `d6` | A ghost on d6, the upper left corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e6` | A ghost on e6, the top edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f6` | A ghost on f6, the upper right corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `d5` | A ghost on d5, the left edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `e5` | A ghost on e5, the centre of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `f5` | A ghost on f5, the right edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `d4` | A ghost on d4, the lower left corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e4` | A ghost on e4, the bottom edge of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f4` | A ghost on f4, the lower right corner of the upper right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 <details>
-<summary>⚫ Lower Right Quarter · 9 moves</summary>
+<summary>⚪ Lower Left Quarter · 9 moves</summary>
 
 |  | Hole | In words | Then turn |
 | :-: | :--- | :--- | :--- |
-| 👻 | **Corner Ghost** `d3` | A ghost on d3, the upper left corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e3` | A ghost on e3, the top edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f3` | A ghost on f3, the upper right corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f3%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `d2` | A ghost on d2, the left edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Centre Ghost** `e2` | A ghost on e2, the centre of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `f2` | A ghost on f2, the right edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f2%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `d1` | A ghost on d1, the lower left corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Edge Ghost** `e1` | A ghost on e1, the bottom edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
-| 👻 | **Corner Ghost** `f1` | A ghost on f1, the lower right corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f1%20%C2%B7%20game%201%20%C2%B7%20move%201) |
+| 👻 | **Corner Ghost** `a3` | A ghost on a3, the upper left corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b3` | A ghost on b3, the top edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c3` | A ghost on c3, the upper right corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `a2` | A ghost on a2, the left edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `b2` | A ghost on b2, the centre of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `c2` | A ghost on c2, the right edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `a1` | A ghost on a1, the lower left corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20a1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `b1` | A ghost on b1, the bottom edge of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `c1` | A ghost on c1, the lower right corner of the lower left quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+
+</details>
+
+<details>
+<summary>⚪ Lower Right Quarter · 9 moves</summary>
+
+|  | Hole | In words | Then turn |
+| :-: | :--- | :--- | :--- |
+| 👻 | **Corner Ghost** `d3` | A ghost on d3, the upper left corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e3` | A ghost on e3, the top edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f3` | A ghost on f3, the upper right corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f3%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `d2` | A ghost on d2, the left edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Centre Ghost** `e2` | A ghost on e2, the centre of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `f2` | A ghost on f2, the right edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f2%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `d1` | A ghost on d1, the lower left corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20d1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Edge Ghost** `e1` | A ghost on e1, the bottom edge of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20e1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
+| 👻 | **Corner Ghost** `f1` | A ghost on f1, the lower right corner of the lower right quarter | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=pentago%3A%20f1%20%C2%B7%20game%201%20%C2%B7%20move%202) |
 
 </details>
 
 </details>
 
-@tannergolden always plays White and GitHub Black. Under the Ghost Rule each side first sets a ghost, a marble that is nobody's, and then the Arbiter draws who sets the first marble. Anyone but @tannergolden can play on this turn, and the first pick in is played. The ghost is due by 20 Oct, 04:25 EST, or the Arbiter sets one at random.
+@tannergolden always plays White and GitHub Black. Under the Ghost Rule each side first sets a ghost, a marble that is nobody's, and then the Arbiter draws who sets the first marble. Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The ghost is due by 27 Oct, 05:25 EST, or the Arbiter sets one at random.
 
 </details>
 <!-- markdown:element:pentago:end -->

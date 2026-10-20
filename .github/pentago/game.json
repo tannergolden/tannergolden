@@ -2,6 +2,16 @@
   "game": 1,
   "started": "2026-10-13T09:25:10Z",
   "places": "github",
-  "ghosts": [],
+  "ghosts": [
+    {
+      "move": "a4",
+      "shown": "a4",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-10-20T10:25:56Z"
+    }
+  ],
   "moves": []
 }

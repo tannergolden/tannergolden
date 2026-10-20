@@ -27,7 +27,9 @@ Arbiter answers a move on tannergolden/play. Each game has its engine, its rules
 (`*_rules.py`) and the names it gives its moves (`*_names.py`):
 [`chess.py`](chess.py) plays chess, and [`games.py`](games.py) plays the other
 three. The rest keep the clock and draw the page's other parts, from the Hall
-of Fame to the Field Notes, and each says what it does in its docstring.
+of Fame to the Field Notes, and each says what it does in its docstring. How
+they fit together, from a move's issue to its ruling, is in
+[How The Games Run](../../docs/technical/How-The-Games-Run.md).
 
 Run the tests with the tokens unset, as 🧪 Games Tests runs them:
 

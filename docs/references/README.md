@@ -37,9 +37,11 @@ option does, and what a file or a field holds.
 
 <!-- AUTO-INDEX:BEGIN dir=. style=log -->
 
-| Entry                    | Purpose    |
-| :----------------------- | :--------- |
-| [`README.md`](README.md) | This file. |
+| Entry                                                  | Purpose                                                                                                                                                                                                                                                           |
+| :----------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Game-State.md`](Game-State.md)                       | Every file a game keeps under .github/&lt;game&gt;/, field by field, the records of its finished games and their replays, and the regions of .github/markdown.yaml the games write. Consult it when reading a game's history, or a run that failed on its state.  |
+| [`README.md`](README.md)                               | This file.                                                                                                                                                                                                                                                        |
+| [`Workflows-&-Schedules.md`](Workflows-&-Schedules.md) | Every workflow on the profile at a glance: what starts it and when, in UTC and EST, what it may write, the secrets and tokens it reads, the commits it makes and how it keeps out of another run's way. Consult it when a run is due, late, or asks for a secret. |
 
 <!-- AUTO-INDEX:END -->
 

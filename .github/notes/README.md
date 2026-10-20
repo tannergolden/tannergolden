@@ -29,7 +29,10 @@ holds 1,000 notes, 250 for each level. Every Monday,
 by the week decides whether each comes from here or from a public dataset.
 
 Every note added makes the rotation longer. The script refuses an en or em
-dash in a note, so write without them.
+dash in a note, so write without them. `test_notes.py` holds each file to
+1,000 notes, 250 at each level, and the Monday run runs it before it draws:
+[How The Page Is Drawn](../../docs/technical/How-The-Page-Is-Drawn.md#changing-the-library)
+says how to change the library.
 
 ---
 

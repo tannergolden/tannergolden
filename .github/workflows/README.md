@@ -30,6 +30,9 @@ a script or a game's workflow changes.
 Never start a game's workflow by hand: every move reaches it as an issue in
 tannergolden/play.
 
+Each one's schedule, permissions, secrets and commits are in
+[Workflows & Schedules](../../docs/references/Workflows-&-Schedules.md).
+
 ---
 
 ## 📝 File Log

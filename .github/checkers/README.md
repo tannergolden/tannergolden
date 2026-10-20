@@ -29,7 +29,8 @@ side has gone a week without moving, or for a fresh board. Nothing else writes
 it, so never edit it by hand.
 
 How a move is played and how a game ends are in the
-[Checkers](../../docs/library/Checkers.md) guide.
+[Checkers](../../docs/library/Checkers.md) guide, and every field of the game's
+files in [Game State](../../docs/references/Game-State.md).
 
 ---
 

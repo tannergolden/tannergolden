@@ -38,9 +38,10 @@ something goes wrong.
 
 <!-- AUTO-INDEX:BEGIN dir=. style=log -->
 
-| Entry                    | Purpose    |
-| :----------------------- | :--------- |
-| [`README.md`](README.md) | This file. |
+| Entry                                      | Purpose                                                                                                                                                                                                                                                             |
+| :----------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`README.md`](README.md)                   | This file.                                                                                                                                                                                                                                                          |
+| [`Troubleshooting.md`](Troubleshooting.md) | What to do when a move is not ruled on or gets no reply, a board is not redrawn, the Arbiter moves late, or a run fails on a game's state or the settings: each symptom, what the run log says, and the way back. Read it when anything on the profile looks stuck. |
 
 <!-- AUTO-INDEX:END -->
 

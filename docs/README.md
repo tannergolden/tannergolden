@@ -1,6 +1,6 @@
 <!--
 title: '📚 DOCUMENTATION'
-description: 'Every document the profile keeps, in the seven folders the standards keep: the games'' guides in library/, and a place for every other kind.'
+description: 'Every document the profile keeps, in the seven folders the standards keep: the games'' guides in library/, and how the games and the page run, and what to do when they stick, in the others.'
 type: index
 keywords: [documentation, games]
 -->
@@ -28,6 +28,25 @@ Arbiter, and what happens when a game ends. Each game's own guide sits beside
 it, with its rules, how its moves are written and how its games end:
 [Chess](library/Chess.md), [Checkers](library/Checkers.md),
 [Pentago](library/Pentago.md) and [Tic-Tac](library/Tic-Tac.md).
+
+---
+
+## 🚀 Running The Profile
+
+For the owner, a maintainer or an agent about to change something here:
+
+- [Overview](introduction/Overview.md): what lives where, which run writes
+  each file, and how to work here.
+- [How The Games Run](technical/How-The-Games-Run.md): a move from its issue
+  to its ruling and the redraw, the engines and the clock.
+- [How The Page Is Drawn](technical/How-The-Page-Is-Drawn.md): the kit's
+  blocks and settings, the placards and the Field Notes.
+- [Game State](references/Game-State.md): every file a game keeps, and the
+  regions of the settings it writes.
+- [Workflows & Schedules](references/Workflows-&-Schedules.md): when each run
+  comes, what it may write, its secrets and its commits.
+- [Troubleshooting](operations/Troubleshooting.md): a move not ruled on, a
+  board not redrawn, a run that fails, and the way back.
 
 ---
 

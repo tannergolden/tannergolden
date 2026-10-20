@@ -37,9 +37,11 @@ one.
 
 <!-- AUTO-INDEX:BEGIN dir=. style=log -->
 
-| Entry                    | Purpose    |
-| :----------------------- | :--------- |
-| [`README.md`](README.md) | This file. |
+| Entry                                                  | Purpose                                                                                                                                                                                                                                                                           |
+| :----------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`How-The-Games-Run.md`](How-The-Games-Run.md)         | How a move travels from its issue on tannergolden/play to its ruling and the redraw, how the engine decides it, how the clock keeps every game's week, and what a game module gives the shared engine. Read it before changing a game's workflow, its script or arbiter.sh.       |
+| [`How-The-Page-Is-Drawn.md`](How-The-Page-Is-Drawn.md) | How README.md is put together: the blocks the Markdown Kit draws and the settings it reads, the regions the games and the pickers write, the weekly placards, and the Field Notes with their library. Read it before editing README.md, .github/markdown.yaml or a file of notes. |
+| [`README.md`](README.md)                               | This file.                                                                                                                                                                                                                                                                        |
 
 <!-- AUTO-INDEX:END -->
 

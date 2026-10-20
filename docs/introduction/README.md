@@ -37,9 +37,10 @@ for, how its parts fit together, and what to have in place before changing it.
 
 <!-- AUTO-INDEX:BEGIN dir=. style=log -->
 
-| Entry                    | Purpose    |
-| :----------------------- | :--------- |
-| [`README.md`](README.md) | This file. |
+| Entry                        | Purpose                                                                                                                                                                                                                            |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Overview.md`](Overview.md) | What the profile repository holds and how its parts fit: the page, the four games, the Field Notes and the placards, which run writes each file, and how to work here. Read it first, before changing anything in this repository. |
+| [`README.md`](README.md)     | This file.                                                                                                                                                                                                                         |
 
 <!-- AUTO-INDEX:END -->
 

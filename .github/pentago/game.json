@@ -11,7 +11,17 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-10-20T10:25:56Z"
+    },
+    {
+      "move": "b5",
+      "shown": "b5",
+      "player": "tannergolden",
+      "player_id": 24684994,
+      "issue": 12,
+      "arbiter": false,
+      "at": "2026-10-20T21:31:53Z"
     }
   ],
+  "opens": "github",
   "moves": []
 }

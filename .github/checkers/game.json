@@ -10,6 +10,15 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-10-19T11:16:53Z"
+    },
+    {
+      "move": "24-19",
+      "shown": "24-19",
+      "player": "tannergolden",
+      "player_id": 24684994,
+      "issue": 11,
+      "arbiter": false,
+      "at": "2026-10-20T16:48:46Z"
     }
   ]
 }

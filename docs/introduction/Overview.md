@@ -133,7 +133,7 @@ env -u GH_TOKEN -u GITHUB_TOKEN -u MARKDOWN_TOKEN \
 - **Commits** are Conventional Commits with an emoji and a scope, and land on
   Development, never force-pushed. The owner's standing rules for this
   repository, what may be named in it among them, are in
-  [CLAUDE.md](../../CLAUDE.md), and the
+  [AGENTS.md](../../AGENTS.md), and the
   [standards](https://github.com/tannergolden/standards/blob/Development/docs/README.md)
   have the rest.
 

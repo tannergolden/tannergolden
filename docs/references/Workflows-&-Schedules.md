@@ -25,19 +25,22 @@ _Each weekly run keeps a day of its own._
 The page tells time in EST, UTC-5, and never moves to daylight time, so each
 EST time below holds all year round.
 
-| Workflow                     | Cron, in UTC                 | In EST                          | Does                                                  |
-| :--------------------------- | :--------------------------- | :------------------------------ | :---------------------------------------------------- |
-| ⏰ Clock, `clock.yml`        | `17,47 * * * *`              | Twice an hour, at :17 and :47   | Every game's Arbiter, in one run                      |
-| 📝 Markdown, `markdown.yml`  | `0 5 * * *`                  | Every day at 00:00              | Draws the whole page                                  |
-| 📝 Notes, `notes.yml`        | `30 14 * * 1`                | Mondays at 09:30                | Redraws the Field Notes                               |
-| 📌 Picks, `picks.yml`        | `30 14 * * 3`, `30 14 * * 5` | Wednesdays and Fridays at 09:30 | Picks the latest releases, then the good first issues |
-| Dependabot, `dependabot.yml` | monthly, at 07:00 UTC        | Monthly, at 02:00               | One pull request updating every pinned action         |
+| Workflow                                      | Cron, in UTC                 | In EST                          | Does                                                                                    |
+| :-------------------------------------------- | :--------------------------- | :------------------------------ | :-------------------------------------------------------------------------------------- |
+| ⏰ Clock, `clock.yml`                         | `17,47 * * * *`              | Twice an hour, at :17 and :47   | Every game's Arbiter, in one run                                                        |
+| 📝 Markdown, `markdown.yml`                   | `0 5 * * *`                  | Every day at 00:00              | Draws the whole page                                                                    |
+| 📝 Notes, `notes.yml`                         | `30 14 * * 1`                | Mondays at 09:30                | Redraws the Field Notes                                                                 |
+| 📌 Picks, `picks.yml`                         | `30 14 * * 3`, `30 14 * * 5` | Wednesdays and Fridays at 09:30 | Picks the latest releases, then the good first issues                                   |
+| Dependabot, `dependabot.yml`                  | monthly, at 07:00 UTC        | Monthly, at 02:00               | One pull request updating every pinned action                                           |
+| 🔁 Intelligence Sync, `intelligence-sync.yml` | `23 6 * * 1`                 | Mondays at 01:23                | One pull request with the hub's latest universal rules for AI agents, when they changed |
 
 - **The clock runs off the hour**, since GitHub delays scheduled runs at the
   top of the hour and drops some; each tick catches up on whatever the one
   before it missed.
 - **Each weekly run has a day of its own**, at an hour well clear of the
-  Markdown run at midnight, so no two of them push at once.
+  Markdown run at midnight, so no two of them push at once. 🔁 Intelligence
+  Sync shares Monday with the Field Notes, but it pushes only its own branch,
+  `chore/intelligence`, and never Development.
 - **Every workflow but `game.yml` can also be run by hand.** Never start a
   game's workflow that way: every move reaches it as an issue in
   tannergolden/play, and a run with no issue is accepted only from the owner,
@@ -47,16 +50,17 @@ EST time below holds all year round.
 
 ## 🚀 What Starts Each Run, And What It Writes
 
-| Workflow                                    | Started by                                                                        | Writes                                               | Starts                                                         |
-| :------------------------------------------ | :-------------------------------------------------------------------------------- | :--------------------------------------------------- | :------------------------------------------------------------- |
-| `chess.yml`                                 | play's Move Intake, through the Official Arbiter                                  | `.github/chess/`, and the `chess` and `hall` regions | 📝 Markdown; play's `replay.yml` after a person's winning move |
-| `tictac.yml`, `pentago.yml`, `checkers.yml` | the same; each calls `game.yml` with its game's key                               | `.github/<game>/`, and its region and `hall`         | the same                                                       |
-| `game.yml`                                  | those three, as a reusable workflow                                               | as its caller                                        | as its caller                                                  |
-| `clock.yml`                                 | its schedule, or by hand                                                          | every game's folder, every game's region and `hall`  | 📝 Markdown, when anything changed                             |
-| `markdown.yml`                              | its schedule, Picks, the games, the clock, or by hand                             | the README's kit blocks, `assets/` and the lock      | nothing                                                        |
-| `notes.yml`                                 | its schedule, or by hand                                                          | the README's Field Notes block                       | nothing                                                        |
-| `picks.yml`                                 | its schedules, or by hand, which picks both                                       | the `releases` and `issues` regions                  | 📝 Markdown, when either moved                                 |
-| `games-tests.yml`                           | a push that changes the scripts, `arbiter.sh` or the games' workflows, or by hand | nothing                                              | nothing                                                        |
+| Workflow                                    | Started by                                                                        | Writes                                                                                      | Starts                                                         |
+| :------------------------------------------ | :-------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------ | :------------------------------------------------------------- |
+| `chess.yml`                                 | play's Move Intake, through the Official Arbiter                                  | `.github/chess/`, and the `chess` and `hall` regions                                        | 📝 Markdown; play's `replay.yml` after a person's winning move |
+| `tictac.yml`, `pentago.yml`, `checkers.yml` | the same; each calls `game.yml` with its game's key                               | `.github/<game>/`, and its region and `hall`                                                | the same                                                       |
+| `game.yml`                                  | those three, as a reusable workflow                                               | as its caller                                                                               | as its caller                                                  |
+| `clock.yml`                                 | its schedule, or by hand                                                          | every game's folder, every game's region and `hall`                                         | 📝 Markdown, when anything changed                             |
+| `markdown.yml`                              | its schedule, Picks, the games, the clock, or by hand                             | the README's kit blocks, `assets/` and the lock                                             | nothing                                                        |
+| `notes.yml`                                 | its schedule, or by hand                                                          | the README's Field Notes block                                                              | nothing                                                        |
+| `picks.yml`                                 | its schedules, or by hand, which picks both                                       | the `releases` and `issues` regions                                                         | 📝 Markdown, when either moved                                 |
+| `games-tests.yml`                           | a push that changes the scripts, `arbiter.sh` or the games' workflows, or by hand | nothing                                                                                     | nothing                                                        |
+| `intelligence-sync.yml`                     | its schedule, or by hand                                                          | `AGENTS.md`, on the `chore/intelligence` branch, as one pull request for the owner to merge | nothing                                                        |
 
 🧪 Games Tests watches `.github/scripts/*.py`, `.github/scripts/arbiter.sh`,
 the four games' workflows, `game.yml`, `clock.yml` and itself. A move's own
@@ -69,7 +73,8 @@ commit touches only the games' state and the settings, so it never starts it.
 Every workflow grants nothing at the top, `permissions: {}`, and each job only
 what it needs. Third-party actions are pinned to a commit, with their version
 in a comment, and Dependabot proposes their updates once a month; the kit's
-workflow is called at its moving major tag, `@v1`.
+workflow is called at its moving major tag, `@v1`, and tannergolden/intelligence's
+at its own, `@v0`.
 
 | Workflow                                   | The job may                               | For                                                                                                              |
 | :----------------------------------------- | :---------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
@@ -79,13 +84,15 @@ workflow is called at its moving major tag, `@v1`.
 | `notes.yml`                                | `contents: write`                         | The README's block                                                                                               |
 | `picks.yml`                                | `actions: write`, `contents: write`       | The placards' lines, and starting the Markdown run                                                               |
 | `games-tests.yml`                          | `contents: read`                          | The code under test, checked out without credentials                                                             |
+| `intelligence-sync.yml`                    | `contents: write`, `pull-requests: write` | Pushing `chore/intelligence`, and opening or updating its one pull request                                       |
 
-| Name                   | Kind                 | Read by                                                       | For                                                                                                                                                              |
-| :--------------------- | :------------------- | :------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PLAY_APP_CLIENT_ID`   | variable             | `chess.yml`, `game.yml`, `clock.yml`                          | The Official Arbiter App's Client ID                                                                                                                             |
-| `PLAY_APP_PRIVATE_KEY` | secret               | the same, the three games' workflows passing it to `game.yml` | The App's private key                                                                                                                                            |
-| `MARKDOWN_TOKEN`       | secret, optional     | `markdown.yml`, which hands it to the kit alone               | The kit's reads of GitHub; without it, the kit reads with the run's own token                                                                                    |
-| `GITHUB_TOKEN`         | each run's own token | every workflow that pushes or reads GitHub                    | Pushing; reading a move's issue on play; starting the Markdown run; the Advisory Database for the Field Notes; GitHub's API, search and GraphQL for the placards |
+| Name                   | Kind                 | Read by                                                             | For                                                                                                                                                              |
+| :--------------------- | :------------------- | :------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PLAY_APP_CLIENT_ID`   | variable             | `chess.yml`, `game.yml`, `clock.yml`                                | The Official Arbiter App's Client ID                                                                                                                             |
+| `PLAY_APP_PRIVATE_KEY` | secret               | the same, the three games' workflows passing it to `game.yml`       | The App's private key                                                                                                                                            |
+| `BOT_ACCESS_TOKEN`     | secret, optional     | `intelligence-sync.yml`, which hands it to the hub's workflow alone | Opening the sync pull request as the owner; without it, the run's own token opens it, and Actions must be allowed to create pull requests                        |
+| `MARKDOWN_TOKEN`       | secret, optional     | `markdown.yml`, which hands it to the kit alone                     | The kit's reads of GitHub; without it, the kit reads with the run's own token                                                                                    |
+| `GITHUB_TOKEN`         | each run's own token | every workflow that pushes or reads GitHub                          | Pushing; reading a move's issue on play; starting the Markdown run; the Advisory Database for the Field Notes; GitHub's API, search and GraphQL for the placards |
 
 From the App's two credentials, each run mints tokens that reach
 tannergolden/play alone: Issues write for the replies, the rulings and the

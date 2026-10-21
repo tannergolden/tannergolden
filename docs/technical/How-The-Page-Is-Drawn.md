@@ -48,17 +48,19 @@ its note.
 [`markdown.yml`](../../.github/workflows/markdown.yml) is the stub the kit's
 README gives every page, with this page's choices: `mode: profile`,
 `theme: medieval-illuminated` (the medieval collection's Illuminated, all
-year), `sign: capricorn` (the roundel every header carries) and
+year), `sign: capricorn` (the roundel every header carries),
 `holidays: 'true'` (a holiday's set takes the page around its day, then hands
-it back). It calls the kit's workflow at `@v1` and hands it `MARKDOWN_TOKEN`
-and no other secret.
+it back) and `author` (github-actions[bot], so no redraw counts as a
+contribution of mine). It calls the kit's workflow at `@v1` and hands it
+`MARKDOWN_TOKEN` and no other secret.
 
 - **When it runs**: every day at 05:00 UTC, which is midnight EST, so the
   page's day, and a holiday's set with it, changes at the page's own midnight;
   and whenever Picks has new placards, a move changes a board, or a tick of
   the clock changes one.
 - **What it writes**: the README's blocks, everything under `assets/` and the
-  lock, `.github/markdown.lock.json`, in one commit.
+  lock, `.github/markdown.lock.json`, in one commit that github-actions[bot]
+  both authors and commits.
 - **One drawing at a time.** Two runs at once could each push the boards as
   they stood when they began, so the older could land last and leave the page
   a move behind. A run that starts while one is drawing waits for it, then

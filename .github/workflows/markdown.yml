@@ -13,8 +13,10 @@ name: '📝 Markdown'
 #
 # `theme` is the page's one theme, and every part is drawn in it, except while
 # a holiday's set is up around its day (`holidays`). `sign` is the sign of the
-# zodiac its headers carry in a gold roundel all year. Everything else the page
-# sets is in .github/markdown.yaml.
+# zodiac its headers carry in a gold roundel all year. `author` makes the bot
+# the author of every redraw, so none counts as a contribution of mine; it is
+# the kit's own default from its next release. Everything else the page sets
+# is in .github/markdown.yaml.
 on:
   schedule:
     - cron: '0 5 * * *' # 00:00 EST
@@ -43,6 +45,7 @@ jobs:
       theme: medieval-illuminated # the page's one theme: the medieval collection's Illuminated, all year
       sign: capricorn # the sign every header carries in its gold roundel, all year
       holidays: 'true' # each holiday's set takes the page around its day, then hands it back
+      author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>' # the bot's redraws, never my contributions
     # The one secret the kit takes, and nothing else: the page's other secrets, such as the Arbiter's key, stay here.
     secrets:
       MARKDOWN_TOKEN: ${{ secrets.MARKDOWN_TOKEN }}

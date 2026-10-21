@@ -2,7 +2,6 @@
 title: '🖌️ HOW THE PAGE IS DRAWN'
 description: 'How README.md is put together: the blocks the Markdown Kit draws and the settings it reads, the regions the games and the pickers write, the weekly placards, and the Field Notes with their library. Read it before editing README.md, .github/markdown.yaml or a file of notes.'
 type: guide
-keywords: [readme, markdown-kit, settings, placards, field-notes, releases, good-first-issue]
 -->
 
 <!-- markdownlint-disable MD041 -->

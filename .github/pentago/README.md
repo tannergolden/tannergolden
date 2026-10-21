@@ -2,7 +2,6 @@
 title: '🌀 PENTAGO STATE'
 description: 'The Pentago game in progress on the profile, kept in game.json, which is written each time a move is played and never by hand.'
 type: index
-keywords: [pentago, state, games]
 -->
 
 <div align="center">

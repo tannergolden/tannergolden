@@ -2,7 +2,6 @@
 title: '⏰ WORKFLOWS & SCHEDULES'
 description: 'Every workflow on the profile at a glance: what starts it and when, in UTC and EST, what it may write, the secrets and tokens it reads, the commits it makes and how it keeps out of another run''s way. Consult it when a run is due, late, or asks for a secret.'
 type: reference
-keywords: [github-actions, cron, permissions, secrets, tokens, commits, concurrency]
 -->
 
 <!-- markdownlint-disable MD041 -->

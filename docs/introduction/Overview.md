@@ -2,7 +2,6 @@
 title: '🗺️ OVERVIEW'
 description: 'What the profile repository holds and how its parts fit: the page, the four games, the Field Notes and the placards, which run writes each file, and how to work here. Read it first, before changing anything in this repository.'
 type: guide
-keywords: [architecture, map, repository, automation, readme, state, setup]
 -->
 
 <!-- markdownlint-disable MD041 -->

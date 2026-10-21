@@ -2,7 +2,6 @@
 title: '⚙️ WORKFLOWS'
 description: 'Every workflow on the profile: the games, the clock that keeps their time, the runs that draw the page, and the tests.'
 type: index
-keywords: [github-actions, workflows, games]
 -->
 
 <div align="center">

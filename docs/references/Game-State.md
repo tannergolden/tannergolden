@@ -2,7 +2,6 @@
 title: '📦 GAME STATE'
 description: 'Every file a game keeps under .github/<game>/, field by field, the records of its finished games and their replays, and the regions of .github/markdown.yaml the games write. Consult it when reading a game''s history, or a run that failed on its state.'
 type: reference
-keywords: [json, hall-of-fame, pgn, pdn, replay, settings, regions, records]
 -->
 
 <!-- markdownlint-disable MD041 -->

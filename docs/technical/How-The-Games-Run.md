@@ -2,7 +2,6 @@
 title: '🎲 HOW THE GAMES RUN'
 description: 'How a move travels from its issue on tannergolden/play to its ruling and the redraw, how the engine decides it, how the clock keeps every game''s week, and what a game module gives the shared engine. Read it before changing a game''s workflow, its script or arbiter.sh.'
 type: guide
-keywords: [arbiter, clock, engine, moves, workflows, ghost-rule, chess]
 -->
 
 <!-- markdownlint-disable MD041 -->

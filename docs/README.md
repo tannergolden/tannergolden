@@ -2,7 +2,6 @@
 title: '📚 DOCUMENTATION'
 description: 'Every document the profile keeps, in the seven folders the standards keep: the games'' guides in library/, and how the games and the page run, and what to do when they stick, in the others.'
 type: index
-keywords: [documentation, games]
 -->
 
 <!-- markdownlint-disable MD041 -->

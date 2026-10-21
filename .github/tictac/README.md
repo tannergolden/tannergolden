@@ -2,7 +2,6 @@
 title: '❌ TIC-TAC STATE'
 description: 'The Tic-Tac game in progress on the profile, kept in game.json, which is written each time a move is played and never by hand.'
 type: index
-keywords: [tictac, state, games]
 -->
 
 <div align="center">

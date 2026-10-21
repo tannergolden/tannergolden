@@ -2,7 +2,6 @@
 title: '♟️ CHESS'
 description: 'How to play Chess against @tannergolden on the profile: making a move, the rules the board holds to, how moves are written, the clock, and how a game ends.'
 type: guide
-keywords: [games, how-to-play]
 -->
 
 <!-- markdownlint-disable MD041 -->

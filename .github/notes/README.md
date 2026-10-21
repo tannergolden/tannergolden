@@ -2,7 +2,6 @@
 title: '📝 NOTES'
 description: 'The five files of notes the Field Notes draw from, one for each kind of GitHub alert, 1,000 notes in each.'
 type: index
-keywords: [notes, alerts, field-notes]
 -->
 
 <div align="center">

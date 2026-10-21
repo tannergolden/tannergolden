@@ -2,7 +2,6 @@
 title: '🤖 Agent Instructions'
 description: 'How AI agents work on the profile, tannergolden/tannergolden: the universal rules first, then the rules for the games, the page and this public repository. Read it before any change here.'
 type: standard
-keywords: [agents-md, ai-agents, profile, games, arbiter, readme]
 -->
 
 <!-- markdownlint-disable MD041 -->

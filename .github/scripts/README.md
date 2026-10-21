@@ -2,7 +2,6 @@
 title: '🧰 SCRIPTS'
 description: 'Every script the profile's workflows run, from each game's engine and rules to the clock, the notes and the Hall of Fame, with the tests beside them.'
 type: index
-keywords: [python, games, tests]
 -->
 
 <div align="center">

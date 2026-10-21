@@ -26,7 +26,7 @@ EST time below holds all year round.
 
 | Workflow                                      | Cron, in UTC                 | In EST                          | Does                                                                                    |
 | :-------------------------------------------- | :--------------------------- | :------------------------------ | :-------------------------------------------------------------------------------------- |
-| ⏰ Clock, `clock.yml`                         | `17,47 * * * *`              | Twice an hour, at :17 and :47   | Every game's Arbiter, in one run                                                        |
+| ⏰ Clock, `clock.yml`                         | `17 * * * *`                 | Every hour, at :17              | Every game's Arbiter, in one run                                                        |
 | 📝 Markdown, `markdown.yml`                   | `0 5 * * *`                  | Every day at 00:00              | Draws the whole page                                                                    |
 | 📝 Notes, `notes.yml`                         | `30 14 * * 1`                | Mondays at 09:30                | Redraws the Field Notes                                                                 |
 | 📌 Picks, `picks.yml`                         | `30 14 * * 3`, `30 14 * * 5` | Wednesdays and Fridays at 09:30 | Picks the latest releases, then the good first issues                                   |

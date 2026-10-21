@@ -110,9 +110,9 @@ account is never played.
 - **A side that goes a week without moving gets a random legal move from the
   Arbiter**, or a ghost placed at random. The Arbiter says so on the issue of
   the move it answers.
-- **The clock checks every game twice an hour**, so a move the Arbiter makes
-  lands within about half an hour of its deadline, or later when GitHub runs
-  the clock late.
+- **The clock checks every game once an hour**, so a move the Arbiter makes
+  lands within about an hour of its deadline, or later when GitHub runs the
+  clock late.
 - **The Arbiter's moves count for nobody**: its ghosts and moves after a
   week, and any win one of them makes. Its draws only decide who places the
   first ghost and who moves first.

@@ -70,7 +70,7 @@ Every folder under `.github/` keeps a `README.md` that logs its files.
 | `README.md` between the kit's markers, `assets/`, and `.github/markdown.lock.json`       | the kit, through 📝 Markdown                | daily at midnight EST, and when a move, a tick or a pick asks |
 | `README.md` between `<!-- notes:start -->` and `<!-- notes:end -->`                      | `notes.py`, through 📝 Notes                | Mondays at 09:30 EST                                          |
 | The rest of `README.md`                                                                  | by hand                                     |                                                               |
-| `.github/markdown.yaml`: the `tictac`, `pentago`, `checkers`, `chess` and `hall` regions | the games' own runs, and the clock          | after every move, and twice an hour                           |
+| `.github/markdown.yaml`: the `tictac`, `pentago`, `checkers`, `chess` and `hall` regions | the games' own runs, and the clock          | after every move, and once an hour                            |
 | `.github/markdown.yaml`: the `releases` and `issues` regions                             | `releases.py` and `issue.py`, through Picks | Wednesdays and Fridays at 09:30 EST                           |
 | The rest of `.github/markdown.yaml`                                                      | by hand                                     |                                                               |
 | `.github/chess/`, `checkers/`, `pentago/` and `tictac/`                                  | the game's own runs, and the clock          | after every move, and on any tick that moves the game on      |
@@ -89,7 +89,7 @@ and a game's state that no longer replays stops that game and the clock, as
 ```mermaid
 graph LR
     Issue["A move's issue in play"] -->|Move Intake| Game["The game's workflow"]
-    Clock["The clock, twice an hour"] --> State
+    Clock["The clock, once an hour"] --> State
     Game --> State["Game state and the settings' regions"]
     Picks["Picks, Wednesdays and Fridays"] --> Placards["The placard regions"]
     State --> Kit["The Markdown run"]

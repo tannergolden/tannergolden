@@ -118,10 +118,10 @@ was set out anew, or its last move was sent again.
 
 ## ⏰ The Arbiter Moved Late
 
-- **The clock runs at 17 and 47 minutes past every hour**, so the Arbiter's
-  move lands within about half an hour of its deadline, or later when GitHub
-  runs the clock late or drops a tick. Every check counts from the state, so
-  the next tick catches up.
+- **The clock runs at 17 minutes past every hour**, so the Arbiter's move
+  lands within about an hour of its deadline, or later when GitHub runs the
+  clock late or drops a tick. Every check counts from the state, so the next
+  tick catches up.
 - **Each Clock run logs one line a game**, such as
   `the side to move has until <time>` (the week is not up),
   `game <N>'s final board is up until <time>`, or `no game has started`

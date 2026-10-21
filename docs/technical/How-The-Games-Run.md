@@ -26,7 +26,7 @@ _Played on the latest state, and never played twice._
 | A game's workflow       | `chess.yml`; `tictac.yml`, `pentago.yml` and `checkers.yml`, which each call `game.yml`                | Takes one move from play's Move Intake, plays it or turns it away, replies and rules |
 | The engines             | `chess.py` for Chess; `games.py` for the other three, with `tictac.py`, `pentago.py` and `checkers.py` | Decide a move against the state, save it, and set the board out for the page         |
 | The rules and the names | `*_rules.py` and `*_names.py`                                                                          | Each game's legal moves and endings, and each move's emoji, name and words           |
-| The clock               | `clock.yml` and `clock.py`                                                                             | Twice an hour, every game's Arbiter in one run                                       |
+| The clock               | `clock.yml` and `clock.py`                                                                             | Once an hour, every game's Arbiter in one run                                        |
 | The Arbiter's words     | `arbiter.sh`                                                                                           | Replies, rulings, the logbook and the outage notice on tannergolden/play             |
 | The Hall of Fame        | `hall.py`                                                                                              | The four games' series, winners and leaderboard, from every game's state             |
 | The replays             | `replays.py`                                                                                           | What each turn of a won game did, for play's Replay workflow                         |
@@ -140,8 +140,8 @@ answer it on.
 ## ⏰ The Clock
 
 No game's own workflow keeps a schedule. [`clock.yml`](../../.github/workflows/clock.yml)
-runs at 17 and 47 minutes past every hour, and `clock.py` ticks each game in
-tier order, Tic-Tac, Pentago, Checkers, then Chess. For each, in one tick:
+runs at 17 minutes past every hour, and `clock.py` ticks each game in tier
+order, Tic-Tac, Pentago, Checkers, then Chess. For each, in one tick:
 
 - **A first game starts.** Tic-Tac's, Pentago's and Checkers' first games
   start on the first run that meets them, GitHub to open Checkers as Black.

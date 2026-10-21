@@ -1,7 +1,7 @@
 name: Clock
 
 # The one clock for the profile's four games: Tic-Tac, Pentago, Checkers and
-# Chess. Twice an hour, .github/scripts/clock.py ticks each game in turn: a
+# Chess. Once an hour, .github/scripts/clock.py ticks each game in turn: a
 # first game of Checkers starts on its first run, GitHub to open it as Black;
 # under the Ghost Rule the Arbiter draws the side that places the first ghost
 # of a fresh board of Tic-Tac or Pentago; once a finished game's final board
@@ -20,10 +20,10 @@ name: Clock
 # when anything changed.
 on:
   schedule:
-    # Twice an hour, off the hour: GitHub delays scheduled runs at the top of
+    # Once an hour, off the hour: GitHub delays scheduled runs at the top of
     # the hour and drops some, and each tick catches up on whatever the one
     # before it missed: the Arbiter's week, and a final board's two days.
-    - cron: '17,47 * * * *'
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 # One clock at a time: a run started by hand while a scheduled tick is running waits for it, and then

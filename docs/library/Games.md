@@ -47,9 +47,10 @@ end. What all four share is below.
 3. **Follow a move's link.** It opens a new issue in
    [tannergolden/play](https://github.com/tannergolden/play) with the move
    already in its title.
-4. **Submit the issue as it opens.** The title is all the game reads, so leave
-   it exactly as it is. The note box is optional, and only for people: the game
-   never reads it.
+4. **Tick the box at the bottom, then submit the issue.** The box agrees to the
+   rules and to the games showing your move, username and avatar. The title is
+   all the game reads, so leave it exactly as it is. The note box is optional,
+   and only for people: the game never reads it.
 5. **Give it a few minutes.** The Official Arbiter reacts with 👀 as it picks
    your issue up and checks the move, and a bot reacts with 🚀 as the move is
    sent on to its game. Your issue stays open until the Arbiter rules on it:
@@ -160,7 +161,7 @@ account is never played.
 
 <div align="center">
 
-**Pick a move, submit it as it opens, and the board answers.**
+**Pick a move, tick the box, submit it, and the board answers.**
 
 [↑ Back to Top](#top)
 

@@ -41,10 +41,10 @@ in a row wins.
 2. **Follow the link for the turn you want.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    whole move, such as `pentago: e4-ur-cw · game 1 · move 7`.
-3. **Submit it as it opens, without changing the title.** Within a few minutes
-   the Official Arbiter answers on your issue and closes it, as `played` or
-   `turned away`, in the milestone `Pentago · game N`. Then the board is
-   redrawn.
+3. **Tick the box at the bottom and submit it, title unchanged.** Within a few
+   minutes the Official Arbiter answers on your issue and closes it, as
+   `played` or `turned away`, in the milestone `Pentago · game N`. Then the
+   board is redrawn.
 
 Only @tannergolden can set the white marbles. Anyone else can set the black,
 whoever set the last one included, and the first move to reach the game is the

@@ -37,10 +37,10 @@ Black. Checkmate wins, and a game ends only when the rules of chess end it.
 2. **Follow a move's link.** It opens a ready-made issue in
    [tannergolden/play](https://github.com/tannergolden/play), titled with the
    move, such as `chess: g8f6 · game 1 · move 2`.
-3. **Submit it as it opens, without changing the title.** Within a few minutes
-   the Official Arbiter answers on your issue and closes it, as `played` or
-   `turned away`, in the milestone `Chess · game N`. Then the board is
-   redrawn.
+3. **Tick the box at the bottom and submit it, title unchanged.** Within a few
+   minutes the Official Arbiter answers on your issue and closes it, as
+   `played` or `turned away`, in the milestone `Chess · game N`. Then the
+   board is redrawn.
 
 Only @tannergolden can play White's moves. Anyone else can play Black's,
 whoever played the last one included, and the first move to reach the game is

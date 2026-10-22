@@ -74,8 +74,9 @@ everyone else on GitHub on the other. I always play White, and X in Tic-Tac.
 
 1. **Pick a move** from the list under a board. Chess is always in view, and
    the other three open with a click.
-2. **Submit the issue its link opens**, unchanged. The first move to reach the
-   game is the one played.
+2. **Tick the box in the issue its link opens, then submit it**, its title
+   unchanged. The box agrees to the rules and to the games showing your move,
+   username and avatar. The first move to reach the game is the one played.
 3. **The Official Arbiter rules on it** within a few minutes: it answers on
    your issue, closes it as `played` or `turned away`, and redraws the board.
 

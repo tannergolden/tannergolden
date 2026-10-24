@@ -11,7 +11,17 @@
       "issue": 7,
       "arbiter": false,
       "at": "2026-10-17T10:31:55Z"
+    },
+    {
+      "move": "d2",
+      "shown": "d2",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-10-24T14:01:01Z"
     }
   ],
+  "opens": "github",
   "moves": []
 }

@@ -722,21 +722,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 19 Oct.** [CodeQL changes for macOS 27, Xcode 27, and Swift 6.4](https://github.blog/changelog/2026-10-19-codeql-changes-for-macos-27-xcode-27-and-swift-6-4)
+> **GitHub changelog · 26 Oct.** [GPT-6.1 Terra in GitHub Copilot](https://github.blog/changelog/2026-10-26-gpt-6-1-terra-in-github-copilot)
 
 > [!TIP]
-> **tldr-pages · [openssl](https://github.com/tldr-pages/tldr/blob/main/pages/common/openssl.md).** Generate a self-signed certificate valid for a specified number of days (365): `openssl req -new -x509 -key <path/to/private.key> -out <path/to/certificate.crt> -days 365`
+> **Professional · Architecture.** Propagate a deadline rather than fixed per-hop timeouts: each service passes on the time remaining, so downstream work stops as soon as the original caller has given up.
 
 > [!IMPORTANT]
-> **Professional · Accessibility.** Build accessibility into your shared component library, so every team gets labeled controls, focus handling and sufficient contrast by default. Fixing one component fixes every screen that uses it; fixing screens one by one never finishes.
+> **End of life · [PostgreSQL 14](https://endoflife.date/postgresql).** PostgreSQL 14 stops getting security fixes on 12 November 2026. Move to 18, the newest release.
 
 > [!WARNING]
-> **Advisory · [GHSA-mc4q-93x5-f6hj](https://github.com/advisories/GHSA-mc4q-93x5-f6hj) · nuget.** `Microsoft.NETCore.App.Runtime.linux-arm` (\>= 9.0.0, \<= 9.0.20): Microsoft Security Advisory CVE-2026-58280 - .NET and Visual Studio Denial of Service Vulnerability. Update to `9.0.21` or later.
+> **Intermediate · Linux.** GNU `xargs` runs the command once even when its input is empty, so `find . -name '*.tmp' | xargs ls -l` lists the current directory when nothing matches. Add `-r` to skip the run on empty input.
 
 > [!CAUTION]
-> **Intermediate · Git.** A leading `+` in a push refspec, as in `git push origin +main`, forces that update exactly like `--force`, overwriting whatever the remote branch held. Read refspecs in scripts and aliases carefully before running them.
+> **Actively exploited · [CVE-2026-105133](https://nvd.nist.gov/vuln/detail/CVE-2026-105133).** Ahsay AhsayCBS: Ahsay AhsayCBS Improper Authentication Vulnerability. Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on…
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 43 of 2026. Open data this week: GitHub changelog, tldr-pages (CC BY 4.0), GitHub Advisory Database (CC BY 4.0).</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 44 of 2026. Open data this week: GitHub changelog, endoflife.date, CISA KEV.</sub>
 
 <!-- notes:end -->
 

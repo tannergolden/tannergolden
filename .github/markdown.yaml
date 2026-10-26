@@ -171,7 +171,7 @@ elements:
   # until when, and every legal move as a link to its ready-made issue, or
   # for two days after a game ends, its final board. After every move,
   # .github/scripts/games.py rewrites the lines between a game's two markers,
-  # and chess.py chess's; twice an hour clock.py rewrites them all; and nothing
+  # and chess.py chess's; once an hour clock.py rewrites them all; and nothing
   # else in this file.
   # tictac:start
   tictac:

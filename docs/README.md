@@ -85,6 +85,7 @@ in the same commit.
 | [`operations/`](operations/README.md)     | Keeping this project healthy and safe once it runs: runbooks, incident response, post-mortems, security, and the risks it still carries.                    |
 | [`references/`](references/README.md)     | Things to look up: the glossary, catalogues, settings and formats, the pages this project consults rather than reads through.                               |
 | [`technical/`](technical/README.md)       | How this project is built: its architecture, stack and source, one document for each part that needs one, and the designs, plans and research behind them.  |
+| [`Prompts.md`](Prompts.md)                | Prompts for working in this repository with an AI agent, written for it. Copy one, fill in any details it asks for, and paste it into your agent.           |
 | [`README.md`](README.md)                  | This file.                                                                                                                                                  |
 
 <!-- AUTO-INDEX:END -->

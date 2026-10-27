@@ -17,7 +17,7 @@ type: index
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,472. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,476. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -188,25 +188,25 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/checkers-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/checkers-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/checkers-dark.svg">
-  <img alt="Checkers: game 1, move 2. Game 1 of @tannergolden against GitHub, after 1... 24-19: man from 24 to 19. It is GitHub&#x27;s turn as Black, due by 27 Oct. @tannergolden, White: men on 19, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32; GitHub, Black: men on 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16." src="assets/elements/checkers-day.svg">
+  <img alt="Checkers: game 1, move 2. Game 1 of @tannergolden against GitHub, after 2. 8-12, the Arbiter&#x27;s move for GitHub: man from 8 to 12. It is @tannergolden&#x27;s turn as White, due by 3 Nov. @tannergolden, White: men on 19, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32; GitHub, Black: men on 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 16." src="assets/elements/checkers-day.svg">
 </picture>
 
 <details>
-<summary>⛂ <b>GitHub's Turn</b> · 7 legal moves · open to choose one</summary>
+<summary>⛀ <b>@tannergolden's Turn</b> · 7 legal moves · only @tannergolden can play these</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 👣 | **Man Move** `8-12` | Man from 8 to 12 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%208-12%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 👣 | **Man Move** `9-13` | Man from 9 to 13 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-13%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 👣 | **Man Move** `9-14` | Man from 9 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%209-14%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 👣 | **Man Move** `10-14` | Man from 10 to 14 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-14%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 👣 | **Man Move** `10-15` | Man from 10 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2010-15%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 👣 | **Man Move** `11-15` | Man from 11 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2011-15%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 👣 | **Man Move** `16-20` | Man from 16 to 20 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2016-20%20%C2%B7%20game%201%20%C2%B7%20move%203) |
+| 👣 | **Man Move** `19-15` | Man from 19 to 15 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2019-15%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👣 | **Man Move** `21-17` | Man from 21 to 17 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2021-17%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👣 | **Man Move** `22-17` | Man from 22 to 17 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2022-17%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👣 | **Man Move** `22-18` | Man from 22 to 18 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2022-18%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👣 | **Man Move** `23-18` | Man from 23 to 18 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2023-18%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👣 | **Man Move** `27-24` | Man from 27 to 24 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2027-24%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👣 | **Man Move** `28-24` | Man from 28 to 24 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=checkers%3A%2028-24%20%C2%B7%20game%201%20%C2%B7%20move%204) |
 
 </details>
 
-Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 27 Oct, 11:48 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
+Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 3 Nov, 16:19 EST, or the Arbiter plays a random legal move. A jump must be taken whenever there is one, and a man that reaches the far row is crowned.
 
 </details>
 <!-- markdown:element:checkers:end -->
@@ -533,8 +533,8 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 26, 11,119 XP, case 41% complete, 11-day streak"></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Green Machine II 98%, Generous 94%, Branching Out 90%"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 26, 11,319 XP, case 41% complete, 11-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, Branching Out 90%, Lunch Break 78%"></picture>
 </p>
 
 <p align="center">
@@ -546,7 +546,7 @@ depends on a third-party service.
 </p>
 
 <details>
-<summary><b>Achievements</b> · 43 of 104 earned · next: Green Machine II, 98%</summary>
+<summary><b>Achievements</b> · 43 of 104 earned · next: Generous, 94%</summary>
 
 <p align="center"><b>Milestones</b></p>
 <p align="center">
@@ -577,7 +577,7 @@ depends on a third-party service.
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 41% to By the Book III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 98% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine II: earned, Rare, 10% to Green Machine III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 61% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: earned, Rare"></picture></a>

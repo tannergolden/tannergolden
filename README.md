@@ -17,7 +17,7 @@ type: index
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,487. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,488. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -696,18 +696,18 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- markdown:element:release-1:start -->
-<a href="https://github.com/tannergolden/markdown/releases/latest">
+<a href="https://github.com/tannergolden/standards/releases/latest">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/release-1-dark.svg">
-  <img alt="tannergolden/markdown. Automated SVG generator for README headers, badges, trophies, and footers, rendered locally from a single stub to bypass API rate limits." src="assets/elements/release-1-day.svg">
+  <img alt="tannergolden/standards. Engineering standards plus reusable GitHub Actions workflows and composite actions that enforce them for any language." src="assets/elements/release-1-day.svg">
 </picture>
 </a>
 <!-- markdown:element:release-1:end -->
 <!-- markdown:element:release-2:start -->
-<a href="https://github.com/tannergolden/standards/releases/latest">
+<a href="https://github.com/tannergolden/environment/releases/latest">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/release-2-dark.svg">
-  <img alt="tannergolden/standards. Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain." src="assets/elements/release-2-day.svg">
+  <img alt="tannergolden/environment. Golden Docker image for reproducible development." src="assets/elements/release-2-day.svg">
 </picture>
 </a>
 <!-- markdown:element:release-2:end -->

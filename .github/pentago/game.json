@@ -23,5 +23,15 @@
     }
   ],
   "opens": "github",
-  "moves": []
+  "moves": [
+    {
+      "move": "a2-ll-acw",
+      "shown": "a2-ll-acw",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-10-28T01:21:26Z"
+    }
+  ]
 }

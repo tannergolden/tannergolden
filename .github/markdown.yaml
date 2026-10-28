@@ -121,24 +121,24 @@ elements:
   release-1:
     kind: "placard"
     owner: "tannergolden"
-    name: "markdown"
+    name: "standards"
     icon: "package"
-    link: "https://github.com/tannergolden/markdown/releases/latest"
-    desc: "Automated SVG generator for README headers, badges, trophies, and footers, rendered locally from a single stub to bypass API rate limits."
+    link: "https://github.com/tannergolden/standards/releases/latest"
+    desc: "Engineering standards plus reusable GitHub Actions workflows and composite actions that enforce them for any language."
     cells:
-      - ["Release", "V1.16.0"]
-      - ["Published", "13 OCT"]
+      - ["Release", "V1.18.1"]
+      - ["Published", "26 OCT"]
       - ["Pinned as", "@V1"]
   release-2:
     kind: "placard"
     owner: "tannergolden"
-    name: "standards"
+    name: "environment"
     icon: "package"
-    link: "https://github.com/tannergolden/standards/releases/latest"
-    desc: "Documented engineering standards, plus the reusable workflows and composite actions that enforce them for any toolchain."
+    link: "https://github.com/tannergolden/environment/releases/latest"
+    desc: "Golden Docker image for reproducible development."
     cells:
-      - ["Release", "V1.13.2"]
-      - ["Published", "13 OCT"]
+      - ["Release", "V1.0.0"]
+      - ["Published", "26 OCT"]
       - ["Pinned as", "@V1"]
   # releases:end
   # The two good first issues. Every Friday .github/scripts/issue.py rewrites

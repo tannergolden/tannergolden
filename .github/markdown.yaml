@@ -152,20 +152,20 @@ elements:
     link: "https://github.com/langgenius/dify/issues/43768"
     desc: "#43768: bump to python 3.14."
     cells:
-      - ["Stars", "159K"]
+      - ["Stars", "160K"]
       - ["Language", "PYTHON"]
       - ["Opened", "9 OCT"]
   issue-2:
     kind: "placard"
-    owner: "immich-app"
-    name: "immich"
+    owner: "rtk-ai"
+    name: "rtk"
     icon: "flag"
-    link: "https://github.com/immich-app/immich/issues/32476"
-    desc: "#32476: Ui inconsistency in mobile app Library Tab."
+    link: "https://github.com/rtk-ai/rtk/issues/4858"
+    desc: "#4858: pnpm install wrapper drops the child's stdout on failure."
     cells:
-      - ["Stars", "116K"]
-      - ["Language", "TYPESCRIPT"]
-      - ["Opened", "15 OCT"]
+      - ["Stars", "85.1K"]
+      - ["Language", "RUST"]
+      - ["Opened", "30 OCT"]
   # issues:end
   # The games on this page, in their tiers: each board, whose turn it is and
   # until when, and every legal move as a link to its ready-made issue, or

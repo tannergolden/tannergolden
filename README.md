@@ -17,7 +17,7 @@ type: index
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,520. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,529. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -754,10 +754,10 @@ release. Redrawn every Wednesday.
 </a>
 <!-- markdown:element:issue-1:end -->
 <!-- markdown:element:issue-2:start -->
-<a href="https://github.com/immich-app/immich/issues/32476">
+<a href="https://github.com/rtk-ai/rtk/issues/4858">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/issue-2-dark.svg">
-  <img alt="immich-app/immich. #32476: Ui inconsistency in mobile app Library Tab." src="assets/elements/issue-2-day.svg">
+  <img alt="rtk-ai/rtk. #4858: pnpm install wrapper drops the child&#x27;s stdout on failure." src="assets/elements/issue-2-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-2:end -->

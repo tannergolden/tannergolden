@@ -17,7 +17,7 @@ type: index
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,573. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 1,576. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -97,83 +97,85 @@ guide: [Chess](docs/library/Chess.md), [Checkers](docs/library/Checkers.md),
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/chess-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/chess-dark.svg">
-  <img alt="Chess: game 1, move 2. Game 1 of @tannergolden against GitHub, after 1... e6: pawn from e7 to e6. It is @tannergolden&#x27;s turn, due by 31 Oct. White: king e1; queen d1; rooks a1 and h1; bishops c1 and f1; knights b1 and g1; pawns a2, b2, c2, d4, e2, f2, g2 and h2. Black: king e8; queen d8; rooks a8 and h8; bishops c8 and f8; knights b8 and g8; pawns a7, b7, c7, d7, e6, f7, g7 and h7." src="assets/elements/chess-day.svg">
+  <img alt="Chess: game 1, move 2. Game 1 of @tannergolden against GitHub, after 2. d5: pawn from d4 to d5. It is GitHub&#x27;s turn, due by 7 Nov. White: king e1; queen d1; rooks a1 and h1; bishops c1 and f1; knights b1 and g1; pawns a2, b2, c2, d5, e2, f2, g2 and h2. Black: king e8; queen d8; rooks a8 and h8; bishops c8 and f8; knights b8 and g8; pawns a7, b7, c7, d7, e6, f7, g7 and h7." src="assets/elements/chess-day.svg">
 </picture>
 
 <details>
-<summary>♔ <b>@tannergolden's Turn</b> · 28 legal moves · only @tannergolden can play these</summary>
+<summary>♚ <b>GitHub's Turn</b> · 30 legal moves · open to choose one</summary>
 
 <details>
-<summary>♔ King · 1 move</summary>
+<summary>♚ King · 1 move</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 🤴 | **King Move** `Kd2` | King from e1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e1d2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>♕ Queen · 2 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 👸 | **Queen Move** `Qd3` | Queen from d1 to d3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d1d3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 👸 | **Queen Move** `Qd2` | Queen from d1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d1d2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
+| 🤴 | **King Move** `Ke7` | King from e8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e8e7%20%C2%B7%20game%201%20%C2%B7%20move%204) |
 
 </details>
 
 <details>
-<summary>♗ Bishop · 5 moves</summary>
+<summary>♛ Queen · 4 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ⛪ | **Bishop Move** `Bd2` | Bishop from c1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1d2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ⛪ | **Bishop Move** `Be3` | Bishop from c1 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1e3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ⛪ | **Bishop Move** `Bf4` | Bishop from c1 to f4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1f4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ⛪ | **Bishop Move** `Bg5` | Bishop from c1 to g5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1g5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ⛪ | **Bishop Move** `Bh6` | Bishop from c1 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1h6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
+| 👸 | **Queen Move** `Qe7` | Queen from d8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d8e7%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👸 | **Queen Move** `Qf6` | Queen from d8 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d8f6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👸 | **Queen Move** `Qg5` | Queen from d8 to g5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d8g5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 👸 | **Queen Move** `Qh4` | Queen from d8 to h4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d8h4%20%C2%B7%20game%201%20%C2%B7%20move%204) |
 
 </details>
 
 <details>
-<summary>♘ Knights · 5 moves</summary>
+<summary>♝ Bishop · 5 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 🐴 | **Knight Move** `Na3` | Knight from b1 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🐴 | **Knight Move** `Nc3` | Knight from b1 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🐴 | **Knight Move** `Nd2` | Knight from b1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1d2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🐴 | **Knight Move** `Nf3` | Knight from g1 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🐴 | **Knight Move** `Nh3` | Knight from g1 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
+| ⛪ | **Bishop Move** `Ba3` | Bishop from f8 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8a3%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ⛪ | **Bishop Move** `Bb4` | Bishop from f8 to b4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8b4%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ⛪ | **Bishop Move** `Bc5` | Bishop from f8 to c5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8c5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ⛪ | **Bishop Move** `Bd6` | Bishop from f8 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8d6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ⛪ | **Bishop Move** `Be7` | Bishop from f8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8e7%20%C2%B7%20game%201%20%C2%B7%20move%204) |
 
 </details>
 
 <details>
-<summary>♙ Pawns · 15 moves</summary>
+<summary>♞ Knights · 5 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ♟️ | **Double Pawn Push** `a4` | Pawn from a2 to a4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `a3` | Pawn from a2 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Double Pawn Push** `b4` | Pawn from b2 to b4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `b3` | Pawn from b2 to b3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Double Pawn Push** `c4` | Pawn from c2 to c4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `c3` | Pawn from c2 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `d5` | Pawn from d4 to d5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4d5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Double Pawn Push** `e4` | Pawn from e2 to e4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `e3` | Pawn from e2 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Double Pawn Push** `f4` | Pawn from f2 to f4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `f3` | Pawn from f2 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f2f3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Double Pawn Push** `g4` | Pawn from g2 to g4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `g3` | Pawn from g2 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Double Pawn Push** `h4` | Pawn from h2 to h4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| ♟️ | **Pawn Push** `h3` | Pawn from h2 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
+| 🐴 | **Knight Move** `Na6` | Knight from b8 to a6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8a6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 🐴 | **Knight Move** `Nc6` | Knight from b8 to c6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8c6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 🐴 | **Knight Move** `Ne7` | Knight from g8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8e7%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 🐴 | **Knight Move** `Nf6` | Knight from g8 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8f6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 🐴 | **Knight Move** `Nh6` | Knight from g8 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8h6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+
+</details>
+
+<details>
+<summary>♟ Pawns · 15 moves</summary>
+
+|  | Move | In words | Play |
+| :-: | :--- | :--- | :-: |
+| ♟️ | **Pawn Push** `a6` | Pawn from a7 to a6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Double Pawn Push** `a5` | Pawn from a7 to a5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Pawn Push** `b6` | Pawn from b7 to b6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Double Pawn Push** `b5` | Pawn from b7 to b5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Pawn Push** `c6` | Pawn from c7 to c6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Double Pawn Push** `c5` | Pawn from c7 to c5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Pawn Push** `d6` | Pawn from d7 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d7d6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ⚔️ | **Pawn Takes Pawn** `exd5` | Pawn from e6 takes the pawn on d5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6d5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Pawn Push** `e5` | Pawn from e6 to e5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6e5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Pawn Push** `f6` | Pawn from f7 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Double Pawn Push** `f5` | Pawn from f7 to f5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Pawn Push** `g6` | Pawn from g7 to g6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Double Pawn Push** `g5` | Pawn from g7 to g5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Pawn Push** `h6` | Pawn from h7 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h6%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| ♟️ | **Double Pawn Push** `h5` | Pawn from h7 to h5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h5%20%C2%B7%20game%201%20%C2%B7%20move%204) |
 
 </details>
 
 </details>
 
-Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 31 Oct, 09:01 EST, or the Arbiter plays a random legal move.
+Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 7 Nov, 12:43 EST, or the Arbiter plays a random legal move.
 <!-- markdown:element:chess:end -->
 
 <!-- markdown:element:checkers:start -->
@@ -313,166 +315,27 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictac-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictac-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictac-dark.svg">
-  <img alt="Tic-Tac: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. Ghosts lock e5 and d2. After G... d2, the Arbiter&#x27;s move for GitHub: a ghost locks the left edge of the bottom board. The Arbiter drew GitHub to make the first mark. It is GitHub&#x27;s turn as O, in any open board, due by 31 Oct. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
+  <img alt="Tic-Tac: game 1, move 1. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. Ghosts lock e5 and d2. After 1. Oe6, the Arbiter&#x27;s move for GitHub: O takes the top edge of the centre board. It is @tannergolden&#x27;s turn as X, in the top board, due by 7 Nov. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
 </picture>
 
 <details>
-<summary>⭕ <b>GitHub's Turn</b> · 79 open squares · open to choose one</summary>
-
-<details>
-<summary>⭕ Upper Left Board · 9 moves</summary>
+<summary>❌ <b>@tannergolden's Turn</b> · 9 open squares · only @tannergolden can play these</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Oa9` | O takes the upper left corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Ob9` | O takes the top edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oc9` | O takes the upper right corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oa8` | O takes the left edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Ob8` | O takes the centre of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oc8` | O takes the right edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oa7` | O takes the lower left corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Ob7` | O takes the bottom edge of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oc7` | O takes the lower right corner of the upper left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
+| 📐 | **Corner Move** `Xd9` | X takes the upper left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d9%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 📏 | **Edge Move** `Xe9` | X takes the top edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e9%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 📐 | **Corner Move** `Xf9` | X takes the upper right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f9%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 📏 | **Edge Move** `Xd8` | X takes the left edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d8%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 🔳 | **Centre Move** `Xe8` | X takes the centre of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e8%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 📏 | **Edge Move** `Xf8` | X takes the right edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f8%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 📐 | **Corner Move** `Xd7` | X takes the lower left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d7%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 📏 | **Edge Move** `Xe7` | X takes the bottom edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e7%20%C2%B7%20game%201%20%C2%B7%20move%204) |
+| 📐 | **Corner Move** `Xf7` | X takes the lower right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f7%20%C2%B7%20game%201%20%C2%B7%20move%204) |
 
 </details>
 
-<details>
-<summary>⭕ Top Board · 9 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Od9` | O takes the upper left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oe9` | O takes the top edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Of9` | O takes the upper right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Od8` | O takes the left edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Oe8` | O takes the centre of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Of8` | O takes the right edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Od7` | O takes the lower left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oe7` | O takes the bottom edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Of7` | O takes the lower right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>⭕ Upper Right Board · 9 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Og9` | O takes the upper left corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oh9` | O takes the top edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oi9` | O takes the upper right corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i9%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Og8` | O takes the left edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Oh8` | O takes the centre of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oi8` | O takes the right edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i8%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Og7` | O takes the lower left corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oh7` | O takes the bottom edge of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oi7` | O takes the lower right corner of the upper right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i7%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>⭕ Left Board · 9 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Oa6` | O takes the upper left corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Ob6` | O takes the top edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oc6` | O takes the upper right corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oa5` | O takes the left edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Ob5` | O takes the centre of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oc5` | O takes the right edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oa4` | O takes the lower left corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Ob4` | O takes the bottom edge of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oc4` | O takes the lower right corner of the left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>⭕ Centre Board · 8 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Od6` | O takes the upper left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oe6` | O takes the top edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Of6` | O takes the upper right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Od5` | O takes the left edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Of5` | O takes the right edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Od4` | O takes the lower left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oe4` | O takes the bottom edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Of4` | O takes the lower right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>⭕ Right Board · 9 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Og6` | O takes the upper left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oh6` | O takes the top edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oi6` | O takes the upper right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i6%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Og5` | O takes the left edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Oh5` | O takes the centre of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oi5` | O takes the right edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i5%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Og4` | O takes the lower left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oh4` | O takes the bottom edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oi4` | O takes the lower right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i4%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>⭕ Lower Left Board · 9 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Oa3` | O takes the upper left corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Ob3` | O takes the top edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oc3` | O takes the upper right corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oa2` | O takes the left edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Ob2` | O takes the centre of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oc2` | O takes the right edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oa1` | O takes the lower left corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20a1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Ob1` | O takes the bottom edge of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20b1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oc1` | O takes the lower right corner of the lower left board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20c1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>⭕ Bottom Board · 8 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Od3` | O takes the upper left corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oe3` | O takes the top edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Of3` | O takes the upper right corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Oe2` | O takes the centre of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Of2` | O takes the right edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Od1` | O takes the lower left corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oe1` | O takes the bottom edge of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Of1` | O takes the lower right corner of the bottom board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-<details>
-<summary>⭕ Lower Right Board · 9 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Og3` | O takes the upper left corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oh3` | O takes the top edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oi3` | O takes the upper right corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i3%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Og2` | O takes the left edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 🔳 | **Centre Move** `Oh2` | O takes the centre of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oi2` | O takes the right edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i2%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Og1` | O takes the lower left corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📏 | **Edge Move** `Oh1` | O takes the bottom edge of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-| 📐 | **Corner Move** `Oi1` | O takes the lower right corner of the lower right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i1%20%C2%B7%20game%201%20%C2%B7%20move%203) |
-
-</details>
-
-</details>
-
-@tannergolden always plays X and GitHub O. Under the Ghost Rule each side first locks a square with a ghost, and then the Arbiter draws who makes the first mark. Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 31 Oct, 09:01 EST, or the Arbiter plays a random legal move.
+Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 7 Nov, 12:43 EST, or the Arbiter plays a random legal move.
 
 </details>
 <!-- markdown:element:tictac:end -->

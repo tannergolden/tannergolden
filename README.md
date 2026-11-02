@@ -584,21 +584,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 26 Oct.** [GPT-6.1 Terra in GitHub Copilot](https://github.blog/changelog/2026-10-26-gpt-6-1-terra-in-github-copilot)
+> **GitHub changelog · 2 Nov.** [pull\_request\_target blocked by default December 2](https://github.blog/changelog/2026-11-02-pull_request_target-blocked-by-default-december-2)
 
 > [!TIP]
-> **Professional · Architecture.** Propagate a deadline rather than fixed per-hop timeouts: each service passes on the time remaining, so downstream work stops as soon as the original caller has given up.
+> **Beginner · Linux.** Identify an unknown file with `file name`; it looks at the contents rather than the extension and reports things like PNG image or ASCII text.
 
 > [!IMPORTANT]
-> **End of life · [PostgreSQL 14](https://endoflife.date/postgresql).** PostgreSQL 14 stops getting security fixes on 12 November 2026. Move to 18, the newest release.
+> **End of life · [Angular 20](https://endoflife.date/angular).** Angular 20 stops getting security fixes on 28 November 2026. Move to 22, the newest release.
 
 > [!WARNING]
-> **Intermediate · Linux.** GNU `xargs` runs the command once even when its input is empty, so `find . -name '*.tmp' | xargs ls -l` lists the current directory when nothing matches. Add `-r` to skip the run on empty input.
+> **Advisory · [GHSA-8494-f6mr-cjpv](https://github.com/advisories/GHSA-8494-f6mr-cjpv) · npm.** `@hapi/content` (\<= 6.0.2): @hapi/content: quadratic-time parsing of Content-Disposition parameters allows denial of service. Update to `6.0.3` or later.
 
 > [!CAUTION]
-> **Actively exploited · [CVE-2026-105133](https://nvd.nist.gov/vuln/detail/CVE-2026-105133).** Ahsay AhsayCBS: Ahsay AhsayCBS Improper Authentication Vulnerability. Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on…
+> **Professional · Supply chain.** Building release artifacts on a developer machine lets anything on it, from a malicious extension to a compromised package, slip into what you ship. Build releases in CI from a tagged commit and publish provenance for them.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 44 of 2026. Open data this week: GitHub changelog, endoflife.date, CISA KEV.</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 45 of 2026. Open data this week: GitHub changelog, endoflife.date, GitHub Advisory Database (CC BY 4.0).</sub>
 
 <!-- notes:end -->
 

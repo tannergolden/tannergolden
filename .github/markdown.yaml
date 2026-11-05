@@ -5,8 +5,10 @@
 # https://github.com/tannergolden/markdown/blob/Development/docs/references/Settings.md
 
 # The README tells time in EST, so the page's day, and a holiday's set with
-# it, changes over at midnight EST.
-timezone: EST
+# it, changes over at midnight EST. Etc/GMT+5 is EST by its canonical name,
+# UTC-5 all year (the sign is POSIX's, inverted). The bare legacy name EST is
+# not in the zone database Ubuntu 26.04 runners install, so the kit stops on it.
+timezone: Etc/GMT+5
 
 # My birthday, the month and the day: on it the whole page is drawn in the
 # kit's Birthday set for the day, over the medieval design and any holiday's

@@ -151,23 +151,23 @@ elements:
     owner: "langgenius"
     name: "dify"
     icon: "flag"
-    link: "https://github.com/langgenius/dify/issues/43768"
-    desc: "#43768: bump to python 3.14."
+    link: "https://github.com/langgenius/dify/issues/45584"
+    desc: "#45584: [Chore/Refactor] use sqlalchemy engine."
     cells:
-      - ["Stars", "160K"]
+      - ["Stars", "161K"]
       - ["Language", "PYTHON"]
-      - ["Opened", "9 OCT"]
+      - ["Opened", "4 NOV"]
   issue-2:
     kind: "placard"
     owner: "rtk-ai"
     name: "rtk"
     icon: "flag"
-    link: "https://github.com/rtk-ai/rtk/issues/4858"
-    desc: "#4858: pnpm install wrapper drops the child's stdout on failure."
+    link: "https://github.com/rtk-ai/rtk/issues/5030"
+    desc: "#5030: test: `--dd` is not a git option, so the log-cap test fails on stock git."
     cells:
-      - ["Stars", "85.1K"]
+      - ["Stars", "85.7K"]
       - ["Language", "RUST"]
-      - ["Opened", "30 OCT"]
+      - ["Opened", "6 NOV"]
   # issues:end
   # The games on this page, in their tiers: each board, whose turn it is and
   # until when, and every legal move as a link to its ready-made issue, or

@@ -19,12 +19,12 @@ _The universal rules first, then the house rules of the board._
 
 ---
 
-<!-- INTELLIGENCE:BEGIN sha256:9c61940532a892b54634e0d4a7db866c8b5d5d43b491901f2c15d046ae897a39 -->
+<!-- INTELLIGENCE:BEGIN sha256:10c18e5e2b030ebe29815f3ad2a7da2aeba674a2da6b03ce7f5795d84a1bcd8b -->
 
 ## Constitution
 
 - Invariants: follow every one in every copy; nothing waives one. If a request needs what one forbids, do the rest, skip that part and name the rule ID.
-- Defaults: your user's explicit request for this task wins, then the repository's "Overrides" entry for that rule ID, then the repository's copy of these rules. In forks, and in repositories tannergolden does not own, the project's own rules win and owner-only Defaults do not apply; a repository with no remote yet counts as tannergolden's.
+- Defaults: your user's explicit request for this task wins, then the repository's "Overrides" entry for that rule ID, then its own rules, then its `docs/`, then the standards' `docs/` (STD-001), then the repository's copy of these rules. Owner-only Defaults hold in repositories your user owns or whose AGENTS.md carries these rules, never in forks; a repository with no remote yet counts as your user's.
 
 ### Invariants
 
@@ -44,6 +44,7 @@ _The universal rules first, then the house rules of the board._
 ### Defaults
 
 - CODE-001: Before calling work done, run the narrowest existing test that covers your change, then the documented checks once; a check that failed to start, was cut short or ran nothing does not count.
+- CODE-004: Every hook and CI check on your commits must pass: when one fails, find why from its output and fix the cause, wherever it lies, before going on; if you cannot or may not, stop and report the check, its error and your diagnosis.
 - WORK-001: Deliver all of the task and only the task (a question gets an answer, not a change): no features, refactors, tests, docs or files beyond what your user or the repository's rules ask for; report extras and pre-existing bugs instead.
 - WORK-002: Ask first only if readings of the request lead to materially different work; otherwise, or if no one can answer, take the reading the request and code best support and say so.
 - WORK-004: Keep command output short with quiet flags, grep, head or tail, but keep every error and failure with the lines around it.
@@ -53,7 +54,7 @@ _The universal rules first, then the house rules of the board._
 
 ### Owner-only Defaults
 
-- STD-001: Follow github.com/tannergolden/standards, which win over this block's Defaults: before you commit, branch, open a PR, write docs or tests, or add a dependency, read the matching file in its `docs/`, or say you could not.
+- STD-001: Before you commit, branch, open a PR, write docs or tests, or add a dependency, read the matching file in this repository's `docs/` and in https://github.com/tannergolden/standards `docs/`, or say you could not.
 - GIT-010: Name branches `<type>/<topic>`, title commits and PRs `type(scope): subject`, and give each commit a body saying why and your user's `Signed-off-by:` last.
 - GIT-012: Keep each PR to one intent, under 300 changed lines and at most 10 files, into `Development`.
 - GIT-013: Add `Co-Authored-By: <model> <vendor no-reply address>` above the sign-off on each commit an AI shaped.

@@ -573,21 +573,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 2 Nov.** [pull\_request\_target blocked by default December 2](https://github.blog/changelog/2026-11-02-pull_request_target-blocked-by-default-december-2)
+> **GitHub changelog · 6 Nov.** [Copilot code review: API management and review overview updates](https://github.blog/changelog/2026-11-06-copilot-code-review-api-management-and-review-overview-updates)
 
 > [!TIP]
-> **Beginner · Linux.** Identify an unknown file with `file name`; it looks at the contents rather than the extension and reports things like PNG image or ASCII text.
+> **Intermediate · HTTP.** Send `Cache-Control: no-store` on responses that contain personal data, so browsers and shared caches do not keep a copy of them.
 
 > [!IMPORTANT]
-> **End of life · [Angular 20](https://endoflife.date/angular).** Angular 20 stops getting security fixes on 28 November 2026. Move to 22, the newest release.
+> **End of life · [PHP 8.2](https://endoflife.date/php).** PHP 8.2 stops getting security fixes on 31 December 2026. Move to 8.5, the newest release.
 
 > [!WARNING]
-> **Advisory · [GHSA-8494-f6mr-cjpv](https://github.com/advisories/GHSA-8494-f6mr-cjpv) · npm.** `@hapi/content` (\<= 6.0.2): @hapi/content: quadratic-time parsing of Content-Disposition parameters allows denial of service. Update to `6.0.3` or later.
+> **Professional · Time.** Hosts with drifting clocks reject valid TLS certificates and tokens, or accept expired ones, and the errors look like authentication bugs. Monitor clock offset on every machine and alert when NTP synchronization is lost.
 
 > [!CAUTION]
-> **Professional · Supply chain.** Building release artifacts on a developer machine lets anything on it, from a malicious extension to a compromised package, slip into what you ship. Build releases in CI from a tagged commit and publish provenance for them.
+> **Beginner · Testing.** Make sure your tests can never connect to the production database: a test that empties tables during setup will wipe real data. Use a separate test database and have the setup refuse any other one.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 45 of 2026. Open data this week: GitHub changelog, endoflife.date, GitHub Advisory Database (CC BY 4.0).</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 46 of 2026. Open data this week: GitHub changelog, endoflife.date.</sub>
 
 <!-- notes:end -->
 

@@ -123,25 +123,25 @@ elements:
   release-1:
     kind: "placard"
     owner: "tannergolden"
-    name: "standards"
+    name: "knowledge"
     icon: "package"
-    link: "https://github.com/tannergolden/standards/releases/latest"
-    desc: "Engineering standards plus reusable GitHub Actions workflows and composite actions that enforce them for any language."
+    link: "https://github.com/tannergolden/knowledge/releases/latest"
+    desc: "Second brain template for AI agents: personal knowledge vault in plain Markdown that gives Claude, GPT or Gemini lasting memory and context about you."
     cells:
-      - ["Release", "V1.18.1"]
-      - ["Published", "26 OCT"]
-      - ["Pinned as", "@V1"]
+      - ["Release", "V2.1.0"]
+      - ["Published", "8 NOV"]
+      - ["Pinned as", "@V2"]
   release-2:
     kind: "placard"
     owner: "tannergolden"
-    name: "environment"
+    name: "intelligence"
     icon: "package"
-    link: "https://github.com/tannergolden/environment/releases/latest"
-    desc: "Golden Docker image for reproducible development."
+    link: "https://github.com/tannergolden/intelligence/releases/latest"
+    desc: "Universal rules for AI coding agents like Claude Code, Codex, Copilot and Cursor."
     cells:
-      - ["Release", "V1.0.0"]
-      - ["Published", "26 OCT"]
-      - ["Pinned as", "@V1"]
+      - ["Release", "V0.9.0"]
+      - ["Published", "7 NOV"]
+      - ["Pinned as", "@V0"]
   # releases:end
   # The two good first issues. Every Friday .github/scripts/issue.py rewrites
   # the lines between the next two, and nothing else in this file.

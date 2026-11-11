@@ -41,6 +41,15 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-11-04T09:11:04Z"
+    },
+    {
+      "move": "d3-ll-cw",
+      "shown": "d3-ll-cw",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-11-11T15:11:20Z"
     }
   ]
 }

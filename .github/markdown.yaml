@@ -148,26 +148,26 @@ elements:
   # issues:start
   issue-1:
     kind: "placard"
-    owner: "langgenius"
-    name: "dify"
+    owner: "heygen-com"
+    name: "hyperframes"
     icon: "flag"
-    link: "https://github.com/langgenius/dify/issues/45584"
-    desc: "#45584: [Chore/Refactor] use sqlalchemy engine."
+    link: "https://github.com/heygen-com/hyperframes/issues/7671"
+    desc: "#7671: cli: `capture --timeout 1s` means 1 ms and `grade-compare --timeout abc` silently becomes 5000."
     cells:
-      - ["Stars", "161K"]
-      - ["Language", "PYTHON"]
-      - ["Opened", "4 NOV"]
+      - ["Stars", "83.9K"]
+      - ["Language", "TYPESCRIPT"]
+      - ["Opened", "13 NOV"]
   issue-2:
     kind: "placard"
-    owner: "rtk-ai"
-    name: "rtk"
+    owner: "career-ops-hq"
+    name: "career-ops"
     icon: "flag"
-    link: "https://github.com/rtk-ai/rtk/issues/5030"
-    desc: "#5030: test: `--dd` is not a git option, so the log-cap test fails on stock git."
+    link: "https://github.com/career-ops-hq/career-ops/issues/6907"
+    desc: "#6907: feat(lever): read salaryRange, so Lever pay ranges reach salary_filter and the compensation column."
     cells:
-      - ["Stars", "85.7K"]
-      - ["Language", "RUST"]
-      - ["Opened", "6 NOV"]
+      - ["Stars", "82.4K"]
+      - ["Language", "JAVASCRIPT"]
+      - ["Opened", "11 NOV"]
   # issues:end
   # The games on this page, in their tiers: each board, whose turn it is and
   # until when, and every legal move as a link to its ready-made issue, or

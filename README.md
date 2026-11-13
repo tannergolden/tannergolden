@@ -383,7 +383,7 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 27, 11,993 XP, case 44% complete, 28-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 27, 11,997 XP, case 44% complete, 28-day streak"></picture>
   <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, Longest Streak to Silver 91%, Open Door II 90%"></picture>
 </p>
 
@@ -391,7 +391,7 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 1,356, 57% to Gold, top 10%, up 29 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-repos"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/repos.svg"><img src="assets/trophies/repos-day.svg" alt="Repositories trophy: Bronze, 10, 50% to Silver, top 30%"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Bronze, 28 days, 91% to Silver, top 19%, up 7 this week"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 13, 52% to Bronze"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 14, 56% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-pulls"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/pulls.svg"><img src="assets/trophies/pulls-day.svg" alt="Pull Requests trophy: Unranked, 4, 80% to Bronze"></picture></a>
 </p>
 
@@ -427,7 +427,7 @@ depends on a third-party service.
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 43% to By the Book III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 85% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 87% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 64% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: earned, Rare"></picture></a>
@@ -597,18 +597,18 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- markdown:element:issue-1:start -->
-<a href="https://github.com/langgenius/dify/issues/45584">
+<a href="https://github.com/heygen-com/hyperframes/issues/7671">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/issue-1-dark.svg">
-  <img alt="langgenius/dify. #45584: [Chore/Refactor] use sqlalchemy engine." src="assets/elements/issue-1-day.svg">
+  <img alt="heygen-com/hyperframes. #7671: cli: `capture --timeout 1s` means 1 ms and `grade-compare --timeout abc` silently becomes 5000." src="assets/elements/issue-1-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-1:end -->
 <!-- markdown:element:issue-2:start -->
-<a href="https://github.com/rtk-ai/rtk/issues/5030">
+<a href="https://github.com/career-ops-hq/career-ops/issues/6907">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/issue-2-dark.svg">
-  <img alt="rtk-ai/rtk. #5030: test: `--dd` is not a git option, so the log-cap test fails on stock git." src="assets/elements/issue-2-day.svg">
+  <img alt="career-ops-hq/career-ops. #6907: feat(lever): read salaryRange, so Lever pay ranges reach salary_filter and the compensation column." src="assets/elements/issue-2-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-2:end -->

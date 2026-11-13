@@ -17,7 +17,7 @@ type: index
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 2,739. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 2,819. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -383,20 +383,20 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 27, 11,784 XP, case 44% complete, 27-day streak"></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, Open Door II 90%, Branching Out 90%"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 27, 11,993 XP, case 44% complete, 28-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Generous 94%, Longest Streak to Silver 91%, Open Door II 90%"></picture>
 </p>
 
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 1,356, 57% to Gold, top 10%, up 29 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-repos"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/repos.svg"><img src="assets/trophies/repos-day.svg" alt="Repositories trophy: Bronze, 10, 50% to Silver, top 30%"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Bronze, 27 days, 86% to Silver, top 19%, up 7 this week"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Bronze, 28 days, 91% to Silver, top 19%, up 7 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 13, 52% to Bronze"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-pulls"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/pulls.svg"><img src="assets/trophies/pulls-day.svg" alt="Pull Requests trophy: Unranked, 4, 80% to Bronze"></picture></a>
 </p>
 
 <details>
-<summary><b>Achievements</b> · 46 of 104 earned · next: Generous, 94%</summary>
+<summary><b>Achievements</b> · 47 of 104 earned · next: Generous, 94%</summary>
 
 <p align="center"><b>Milestones</b></p>
 <p align="center">
@@ -427,7 +427,7 @@ depends on a third-party service.
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 43% to By the Book III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 82% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 85% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 64% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: earned, Rare"></picture></a>
@@ -452,8 +452,8 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 82% (41 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-long-game"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/long-game.svg"><img src="assets/trophies/achievements/long-game-day.svg" alt="Long Game: 66% (2 of 3)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-weekender"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekender.svg"><img src="assets/trophies/achievements/weekender-day.svg" alt="Weekender: 30% (8 of 26)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-weekday-warrior"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekday-warrior.svg"><img src="assets/trophies/achievements/weekday-warrior-day.svg" alt="Weekday Warrior: 15% (31 of 200)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-year-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/year-of-code.svg"><img src="assets/trophies/achievements/year-of-code-day.svg" alt="Year of Code: 15% (46 of 300)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-weekday-warrior"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekday-warrior.svg"><img src="assets/trophies/achievements/weekday-warrior-day.svg" alt="Weekday Warrior: 16% (32 of 200)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-year-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/year-of-code.svg"><img src="assets/trophies/achievements/year-of-code-day.svg" alt="Year of Code: 15% (47 of 300)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-four-seasons"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/four-seasons.svg"><img src="assets/trophies/achievements/four-seasons-day.svg" alt="Four Seasons: 0% (0 of 1)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-friday-deploy"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/friday-deploy.svg"><img src="assets/trophies/achievements/friday-deploy-day.svg" alt="Friday Deploy: 0% (0 of 1)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-perfect-month"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/perfect-month.svg"><img src="assets/trophies/achievements/perfect-month-day.svg" alt="Perfect Month: 0% (0 of 1)"></picture></a>
@@ -508,9 +508,9 @@ depends on a third-party service.
 
 <p align="center"><b>Secret</b></p>
 <p align="center">
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-friday-the-13th"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/friday-the-13th.svg"><img src="assets/trophies/achievements/friday-the-13th-day.svg" alt="Friday the 13th: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-ghost"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/ghost.svg"><img src="assets/trophies/achievements/ghost-day.svg" alt="Ghost: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-constellation"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/constellation.svg"><img src="assets/trophies/achievements/constellation-day.svg" alt="Secret achievement"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-friday-the-13th"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/friday-the-13th.svg"><img src="assets/trophies/achievements/friday-the-13th-day.svg" alt="Secret achievement"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-full-house"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/full-house.svg"><img src="assets/trophies/achievements/full-house-day.svg" alt="Secret achievement"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-wall"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-wall.svg"><img src="assets/trophies/achievements/green-wall-day.svg" alt="Secret achievement"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-homecoming"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/homecoming.svg"><img src="assets/trophies/achievements/homecoming-day.svg" alt="Secret achievement"></picture></a>

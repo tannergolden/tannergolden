@@ -45,15 +45,6 @@ the layer under the experiments: environments that rebuild the same way every
 time, dependencies that are pinned and scanned, and CI that fails for the
 right reasons, so a result can be trusted and repeated.
 
-Most of my public work is one connected system.
-[`standards`](https://github.com/tannergolden/standards) holds the engineering
-rules and the reusable workflows that enforce them, called by link so a fix
-lands once and reaches every repository.
-[`path`](https://github.com/tannergolden/path) is the template new
-repositories start from, and
-[`markdown`](https://github.com/tannergolden/markdown) draws READMEs like this
-one from data measured on a schedule.
-
 - **Working on:** reproducible environments, supply-chain hygiene (pinned
   dependencies, secret scanning, CodeQL and SBOMs), and CI that fails for the
   right reasons.
@@ -378,7 +369,7 @@ A win counts only for the player who makes the winning move: the checkmate in Ch
 
 ---
 
-## 💡 How It Fits Together
+## 📖 How It Fits Together
 
 Follow the arrows from the rules to this page.
 [`standards`](https://github.com/tannergolden/standards) holds the rules and
@@ -562,9 +553,7 @@ depends on a third-party service.
 ## 📦 Latest Releases
 
 The two repositories on this account that shipped most recently, each with its
-version, the day it went out and the major tag a stub pins to follow it.
-Superseded releases are pruned, so each one shown is its repository's current
-release. Redrawn every Wednesday.
+version and the major tag a stub pins to follow it. Redrawn every Wednesday.
 
 <div align="center">
 

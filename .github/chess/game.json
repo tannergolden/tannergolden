@@ -1,7 +1,7 @@
 {
   "game": 1,
   "started": "2026-10-17T10:55:58Z",
-  "fen": "rnb1kbnr/pppp1ppp/4p3/3P4/7q/8/PPP1PPPP/RNBQKBNR w KQkq - 1 3",
+  "fen": "rnb1kbnr/pppp1ppp/4p3/3P4/3Q3q/8/PPP1PPPP/RNB1KBNR b KQkq - 2 3",
   "moves": [
     {
       "uci": "d2d4",
@@ -38,6 +38,15 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-11-07T20:52:26Z"
+    },
+    {
+      "uci": "d1d4",
+      "san": "Qd4",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-11-14T21:29:29Z"
     }
   ]
 }

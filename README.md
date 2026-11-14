@@ -17,7 +17,7 @@ type: index
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/banners/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/banners/header-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/banners/header-dark.svg">
-  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 2,880. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
+  <img alt="Tanner Golden: Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons. Built to be rebuilt. All times in EST. Account: @tannergolden. Repositories: 10. Contributions, last year: 2,921. Language: Python. Member since: 2016. Site: tannergolden.com." src="assets/banners/header-day.svg">
 </picture>
 
 </div>
@@ -97,82 +97,96 @@ guide: [Chess](docs/library/Chess.md), [Checkers](docs/library/Checkers.md),
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/chess-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/chess-dark.svg">
-  <img alt="Chess: game 1, move 3. Game 1 of @tannergolden against GitHub, after 2... Qh4: queen from d8 to h4. It is @tannergolden&#x27;s turn, due by 14 Nov. White: king e1; queen d1; rooks a1 and h1; bishops c1 and f1; knights b1 and g1; pawns a2, b2, c2, d5, e2, f2, g2 and h2. Black: king e8; queen h4; rooks a8 and h8; bishops c8 and f8; knights b8 and g8; pawns a7, b7, c7, d7, e6, f7, g7 and h7." src="assets/elements/chess-day.svg">
+  <img alt="Chess: game 1, move 3. Game 1 of @tannergolden against GitHub, after 3. Qd4: queen from d1 to d4. It is GitHub&#x27;s turn, due by 21 Nov. White: king e1; queen d4; rooks a1 and h1; bishops c1 and f1; knights b1 and g1; pawns a2, b2, c2, d5, e2, f2, g2 and h2. Black: king e8; queen h4; rooks a8 and h8; bishops c8 and f8; knights b8 and g8; pawns a7, b7, c7, d7, e6, f7, g7 and h7." src="assets/elements/chess-day.svg">
 </picture>
 
 <details>
-<summary>♔ <b>@tannergolden's Turn</b> · 27 legal moves · only @tannergolden can play these</summary>
+<summary>♚ <b>GitHub's Turn</b> · 41 legal moves · open to choose one</summary>
 
 <details>
-<summary>♔ King · 1 move</summary>
+<summary>♚ King · 2 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 🤴 | **King Move** `Kd2` | King from e1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e1d2%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-
-</details>
-
-<details>
-<summary>♕ Queen · 3 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 👸 | **Queen Move** `Qd4` | Queen from d1 to d4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d1d4%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 👸 | **Queen Move** `Qd3` | Queen from d1 to d3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d1d3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 👸 | **Queen Move** `Qd2` | Queen from d1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d1d2%20%C2%B7%20game%201%20%C2%B7%20move%205) |
+| 🤴 | **King Move** `Kd8` | King from e8 to d8 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e8d8%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🤴 | **King Move** `Ke7` | King from e8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e8e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
 
 </details>
 
 <details>
-<summary>♗ Bishop · 5 moves</summary>
+<summary>♛ Queen · 14 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ⛪ | **Bishop Move** `Bd2` | Bishop from c1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1d2%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ⛪ | **Bishop Move** `Be3` | Bishop from c1 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1e3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ⛪ | **Bishop Move** `Bf4` | Bishop from c1 to f4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1f4%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ⛪ | **Bishop Move** `Bg5` | Bishop from c1 to g5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1g5%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ⛪ | **Bishop Move** `Bh6` | Bishop from c1 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1h6%20%C2%B7%20game%201%20%C2%B7%20move%205) |
+| 👸 | **Queen Retreat** `Qd8` | Queen from h4 to d8 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4d8%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⚔️ | **Queen Takes Queen** `Qxd4` | Queen from h4 takes the queen on d4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4d4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Retreat** `Qe7` | Queen from h4 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Move** `Qe4` | Queen from h4 to e4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4e4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Retreat** `Qf6` | Queen from h4 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Move** `Qf4` | Queen from h4 to f4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⚔️ | **Queen Takes Pawn** `Qxf2` | Queen from h4 takes the pawn on f2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f2%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Retreat** `Qg5` | Queen from h4 to g5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Move** `Qg4` | Queen from h4 to g4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Move** `Qg3` | Queen from h4 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g3%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Retreat** `Qh6` | Queen from h4 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Retreat** `Qh5` | Queen from h4 to h5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 👸 | **Queen Move** `Qh3` | Queen from h4 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h3%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⚔️ | **Queen Takes Pawn** `Qxh2` | Queen from h4 takes the pawn on h2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h2%20%C2%B7%20game%201%20%C2%B7%20move%206) |
 
 </details>
 
 <details>
-<summary>♘ Knights · 5 moves</summary>
+<summary>♝ Bishop · 5 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 🐴 | **Knight Move** `Na3` | Knight from b1 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 🐴 | **Knight Move** `Nc3` | Knight from b1 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 🐴 | **Knight Move** `Nd2` | Knight from b1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1d2%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 🐴 | **Knight Move** `Nf3` | Knight from g1 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 🐴 | **Knight Move** `Nh3` | Knight from g1 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
+| ⛪ | **Bishop Move** `Ba3` | Bishop from f8 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8a3%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⛪ | **Bishop Move** `Bb4` | Bishop from f8 to b4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8b4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⛪ | **Bishop Move** `Bc5` | Bishop from f8 to c5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8c5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⛪ | **Bishop Move** `Bd6` | Bishop from f8 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8d6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⛪ | **Bishop Move** `Be7` | Bishop from f8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
 
 </details>
 
 <details>
-<summary>♙ Pawns · 13 moves</summary>
+<summary>♞ Knights · 5 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ♟️ | **Double Pawn Push** `a4` | Pawn from a2 to a4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a4%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Pawn Push** `a3` | Pawn from a2 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Double Pawn Push** `b4` | Pawn from b2 to b4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Pawn Push** `b3` | Pawn from b2 to b3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Double Pawn Push** `c4` | Pawn from c2 to c4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Pawn Push** `c3` | Pawn from c2 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Pawn Push** `d6` | Pawn from d5 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d5d6%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ⚔️ | **Pawn Takes Pawn** `dxe6` | Pawn from d5 takes the pawn on e6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d5e6%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Double Pawn Push** `e4` | Pawn from e2 to e4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Pawn Push** `e3` | Pawn from e2 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Double Pawn Push** `g4` | Pawn from g2 to g4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Pawn Push** `g3` | Pawn from g2 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| ♟️ | **Pawn Push** `h3` | Pawn from h2 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%205) |
+| 🐴 | **Knight Move** `Na6` | Knight from b8 to a6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8a6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🐴 | **Knight Move** `Nc6` | Knight from b8 to c6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8c6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🐴 | **Knight Move** `Ne7` | Knight from g8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🐴 | **Knight Move** `Nf6` | Knight from g8 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8f6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🐴 | **Knight Move** `Nh6` | Knight from g8 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+
+</details>
+
+<details>
+<summary>♟ Pawns · 15 moves</summary>
+
+|  | Move | In words | Play |
+| :-: | :--- | :--- | :-: |
+| ♟️ | **Pawn Push** `a6` | Pawn from a7 to a6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Double Pawn Push** `a5` | Pawn from a7 to a5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Pawn Push** `b6` | Pawn from b7 to b6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Double Pawn Push** `b5` | Pawn from b7 to b5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Pawn Push** `c6` | Pawn from c7 to c6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Double Pawn Push** `c5` | Pawn from c7 to c5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Pawn Push** `d6` | Pawn from d7 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d7d6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⚔️ | **Pawn Takes Pawn** `exd5` | Pawn from e6 takes the pawn on d5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6d5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Pawn Push** `e5` | Pawn from e6 to e5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6e5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Pawn Push** `f6` | Pawn from f7 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Double Pawn Push** `f5` | Pawn from f7 to f5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Pawn Push** `g6` | Pawn from g7 to g6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Double Pawn Push** `g5` | Pawn from g7 to g5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Pawn Push** `h6` | Pawn from h7 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ♟️ | **Double Pawn Push** `h5` | Pawn from h7 to h5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
 
 </details>
 
 </details>
 
-Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 14 Nov, 15:52 EST, or the Arbiter plays a random legal move.
+Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 21 Nov, 16:29 EST, or the Arbiter plays a random legal move.
 <!-- markdown:element:chess:end -->
 
 <!-- markdown:element:checkers:start -->
@@ -304,26 +318,27 @@ Only @tannergolden can play on this turn: a pick from anyone else is turned away
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictac-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictac-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictac-dark.svg">
-  <img alt="Tic-Tac: game 1, move 2. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. Ghosts lock e5 and d2. After 1... Xe9, the Arbiter&#x27;s move for @tannergolden: X takes the top edge of the top board. It is GitHub&#x27;s turn as O, in the top board, due by 14 Nov. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
+  <img alt="Tic-Tac: game 1, move 2. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. Ghosts lock e5 and d2. After 2. Of8, the Arbiter&#x27;s move for GitHub: O takes the right edge of the top board. It is @tannergolden&#x27;s turn as X, in the right board, due by 21 Nov. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
 </picture>
 
 <details>
-<summary>⭕ <b>GitHub's Turn</b> · 8 open squares · open to choose one</summary>
+<summary>❌ <b>@tannergolden's Turn</b> · 9 open squares · only @tannergolden can play these</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Od9` | O takes the upper left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d9%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 📐 | **Corner Move** `Of9` | O takes the upper right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f9%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 📏 | **Edge Move** `Od8` | O takes the left edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d8%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 🔳 | **Centre Move** `Oe8` | O takes the centre of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e8%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 📏 | **Edge Move** `Of8` | O takes the right edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f8%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 📐 | **Corner Move** `Od7` | O takes the lower left corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d7%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 📏 | **Edge Move** `Oe7` | O takes the bottom edge of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e7%20%C2%B7%20game%201%20%C2%B7%20move%205) |
-| 📐 | **Corner Move** `Of7` | O takes the lower right corner of the top board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f7%20%C2%B7%20game%201%20%C2%B7%20move%205) |
+| 📐 | **Corner Move** `Xg6` | X takes the upper left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📏 | **Edge Move** `Xh6` | X takes the top edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📐 | **Corner Move** `Xi6` | X takes the upper right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📏 | **Edge Move** `Xg5` | X takes the left edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🔳 | **Centre Move** `Xh5` | X takes the centre of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📏 | **Edge Move** `Xi5` | X takes the right edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📐 | **Corner Move** `Xg4` | X takes the lower left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📏 | **Edge Move** `Xh4` | X takes the bottom edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📐 | **Corner Move** `Xi4` | X takes the lower right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
 
 </details>
 
-Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 14 Nov, 15:52 EST, or the Arbiter plays a random legal move. Where a mark goes in its board sends the other side to the board in that place, three in a row wins a board, and three boards in a row wins the game; once neither side can win three boards in a row, it is a draw.
+Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 21 Nov, 16:29 EST, or the Arbiter plays a random legal move.
 
 </details>
 <!-- markdown:element:tictac:end -->
@@ -383,12 +398,12 @@ depends on a third-party service.
 
 <!-- markdown:trophies:start -->
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 27, 12,016 XP, case 44% complete, 29-day streak"></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Green Machine II 98%, Longest Streak to Silver 95%, Generous 94%"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 28, 12,425 XP, case 45% complete, 29-day streak"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Longest Streak to Silver 95%, Generous 94%, Open Door II 90%"></picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 1,395, 59% to Gold, top 10%, up 61 this week"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-commits"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/commits.svg"><img src="assets/trophies/commits-day.svg" alt="Commits trophy: Silver, 1,429, 61% to Gold, top 10%, up 95 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-repos"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/repos.svg"><img src="assets/trophies/repos-day.svg" alt="Repositories trophy: Bronze, 10, 50% to Silver, top 30%"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-streak"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/streak.svg"><img src="assets/trophies/streak-day.svg" alt="Longest Streak trophy: Bronze, 29 days, 95% to Silver, top 18%, up 7 this week"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-followers"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/followers.svg"><img src="assets/trophies/followers-day.svg" alt="Followers trophy: Unranked, 14, 56% to Bronze"></picture></a>
@@ -396,10 +411,11 @@ depends on a third-party service.
 </p>
 
 <details>
-<summary><b>Achievements</b> · 47 of 104 earned · next: Green Machine II, 98%</summary>
+<summary><b>Achievements</b> · 48 of 104 earned · next: Longest Streak to Silver, 95%</summary>
 
 <p align="center"><b>Milestones</b></p>
 <p align="center">
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-branching-out"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/branching-out.svg"><img src="assets/trophies/achievements/branching-out-day.svg" alt="Branching Out: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-shipwright"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/shipwright.svg"><img src="assets/trophies/achievements/shipwright-day.svg" alt="Shipwright I: earned, Rare, 26% to Shipwright II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-century"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/century.svg"><img src="assets/trophies/achievements/century-day.svg" alt="Century: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-landed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/landed.svg"><img src="assets/trophies/achievements/landed-day.svg" alt="Landed: earned, Uncommon"></picture></a>
@@ -409,8 +425,7 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-hello-world"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/hello-world.svg"><img src="assets/trophies/achievements/hello-world-day.svg" alt="Hello World: earned, Common"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-opening-move"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/opening-move.svg"><img src="assets/trophies/achievements/opening-move-day.svg" alt="Opening Move: earned, Common"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-veteran"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/veteran.svg"><img src="assets/trophies/achievements/veteran-day.svg" alt="Veteran II: earned, Common, 90% to Veteran III"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-branching-out"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/branching-out.svg"><img src="assets/trophies/achievements/branching-out-day.svg" alt="Branching Out: 90% (9 of 10)"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-monolith"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/monolith.svg"><img src="assets/trophies/achievements/monolith-day.svg" alt="Monolith: 26% (269 of 1,000)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-monolith"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/monolith.svg"><img src="assets/trophies/achievements/monolith-day.svg" alt="Monolith: 27% (275 of 1,000)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-closer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/closer.svg"><img src="assets/trophies/achievements/closer-day.svg" alt="Closer: 18% (18 of 100)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-bug-hunter"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/bug-hunter.svg"><img src="assets/trophies/achievements/bug-hunter-day.svg" alt="Bug Hunter: 16% (4 of 25)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-merge-master"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/merge-master.svg"><img src="assets/trophies/achievements/merge-master-day.svg" alt="Merge Master: 16% (4 of 25)"></picture></a>
@@ -425,11 +440,11 @@ depends on a third-party service.
 
 <p align="center"><b>Craft</b></p>
 <p align="center">
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 45% to By the Book III"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 47% to By the Book III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 98% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine II: earned, Rare, 11% to Green Machine III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 68% to Signed II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 71% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-fixer"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/fixer.svg"><img src="assets/trophies/achievements/fixer-day.svg" alt="Fixer: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-surgeon"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/surgeon.svg"><img src="assets/trophies/achievements/surgeon-day.svg" alt="Surgeon: earned, Uncommon"></picture></a>
@@ -449,7 +464,7 @@ depends on a third-party service.
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-big-week"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/big-week.svg"><img src="assets/trophies/achievements/big-week-day.svg" alt="Big Week: earned, Uncommon"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-night-owl"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/night-owl.svg"><img src="assets/trophies/achievements/night-owl-day.svg" alt="Night Owl I: earned, Uncommon, 56% to Night Owl II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-comeback"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/comeback.svg"><img src="assets/trophies/achievements/comeback-day.svg" alt="Comeback: earned, Common"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 82% (41 of 50)"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-lunch-break"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/lunch-break.svg"><img src="assets/trophies/achievements/lunch-break-day.svg" alt="Lunch Break: 86% (43 of 50)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-long-game"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/long-game.svg"><img src="assets/trophies/achievements/long-game-day.svg" alt="Long Game: 66% (2 of 3)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-weekender"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekender.svg"><img src="assets/trophies/achievements/weekender-day.svg" alt="Weekender: 34% (9 of 26)"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-weekday-warrior"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/weekday-warrior.svg"><img src="assets/trophies/achievements/weekday-warrior-day.svg" alt="Weekday Warrior: 16% (32 of 200)"></picture></a>

@@ -587,21 +587,21 @@ release. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **GitHub changelog · 6 Nov.** [Copilot code review: API management and review overview updates](https://github.blog/changelog/2026-11-06-copilot-code-review-api-management-and-review-overview-updates)
+> **Intermediate · Concurrency.** `async` code in Python and JavaScript runs its tasks on one thread and switches between them at each `await`, so it helps a program wait on many network calls at once but does not make calculations any faster.
 
 > [!TIP]
-> **Intermediate · HTTP.** Send `Cache-Control: no-store` on responses that contain personal data, so browsers and shared caches do not keep a copy of them.
+> **Advanced · TypeScript.** When TypeScript resolves an import to the wrong types or can't find a module, run `tsc --traceResolution` to print every path it tried for each import and the file it finally picked.
 
 > [!IMPORTANT]
-> **End of life · [PHP 8.2](https://endoflife.date/php).** PHP 8.2 stops getting security fixes on 31 December 2026. Move to 8.5, the newest release.
+> **Professional · Databases.** Run large backfills in small, throttled batches that you can pause. One huge transaction holds locks, bloats the write-ahead log and can push replicas far behind, turning a data fix into an outage.
 
 > [!WARNING]
-> **Professional · Time.** Hosts with drifting clocks reject valid TLS certificates and tokens, or accept expired ones, and the errors look like authentication bugs. Monitor clock offset on every machine and alert when NTP synchronization is lost.
+> **Beginner · C.** A stray semicolon in `if (x > 0);` ends the `if` right there, so the block below always runs. Compile with `-Wextra`, which warns about the empty body.
 
 > [!CAUTION]
-> **Beginner · Testing.** Make sure your tests can never connect to the production database: a test that empties tables during setup will wipe real data. Use a separate test database and have the setup refuse any other one.
+> **Intermediate · Python.** `shutil.rmtree()` deletes a whole directory tree at once, with no prompt and no trash. Resolve the path and confirm it lies inside the directory you expect, for example with `Path.resolve()` and `is_relative_to()`, before calling it.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 46 of 2026. Open data this week: GitHub changelog, endoflife.date.</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 47 of 2026.</sub>
 
 <!-- notes:end -->
 

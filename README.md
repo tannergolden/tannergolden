@@ -569,18 +569,18 @@ release. Redrawn every Wednesday.
 <div align="center">
 
 <!-- markdown:element:release-1:start -->
-<a href="https://github.com/tannergolden/knowledge/releases/latest">
+<a href="https://github.com/tannergolden/intelligence/releases/latest">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/release-1-dark.svg">
-  <img alt="tannergolden/knowledge. Second brain template for AI agents: personal knowledge vault in plain Markdown that gives Claude, GPT or Gemini lasting memory and context about you." src="assets/elements/release-1-day.svg">
+  <img alt="tannergolden/intelligence. Universal rules for AI coding agents like Claude Code, Codex, Copilot and Cursor." src="assets/elements/release-1-day.svg">
 </picture>
 </a>
 <!-- markdown:element:release-1:end -->
 <!-- markdown:element:release-2:start -->
-<a href="https://github.com/tannergolden/intelligence/releases/latest">
+<a href="https://github.com/tannergolden/knowledge/releases/latest">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/release-2-dark.svg">
-  <img alt="tannergolden/intelligence. Universal rules for AI coding agents like Claude Code, Codex, Copilot and Cursor." src="assets/elements/release-2-day.svg">
+  <img alt="tannergolden/knowledge. Second brain template for AI agents." src="assets/elements/release-2-day.svg">
 </picture>
 </a>
 <!-- markdown:element:release-2:end -->

@@ -50,6 +50,15 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-11-11T15:11:20Z"
+    },
+    {
+      "move": "b2-ul-acw",
+      "shown": "b2-ul-acw",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-11-18T21:56:14Z"
     }
   ]
 }

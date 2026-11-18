@@ -46,6 +46,15 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-11-11T06:18:24Z"
+    },
+    {
+      "move": "26x19",
+      "shown": "26x19",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-11-18T13:57:43Z"
     }
   ]
 }

@@ -148,26 +148,26 @@ elements:
   # issues:start
   issue-1:
     kind: "placard"
-    owner: "heygen-com"
-    name: "hyperframes"
+    owner: "immich-app"
+    name: "immich"
     icon: "flag"
-    link: "https://github.com/heygen-com/hyperframes/issues/7671"
-    desc: "#7671: cli: `capture --timeout 1s` means 1 ms and `grade-compare --timeout abc` silently becomes 5000."
+    link: "https://github.com/immich-app/immich/issues/33325"
+    desc: "#33325: [Web] Star rating in detail panel is applied to the wrong asset / sticks when navigating to the next asset."
     cells:
-      - ["Stars", "83.9K"]
+      - ["Stars", "120K"]
       - ["Language", "TYPESCRIPT"]
-      - ["Opened", "13 NOV"]
+      - ["Opened", "15 NOV"]
   issue-2:
     kind: "placard"
-    owner: "career-ops-hq"
-    name: "career-ops"
+    owner: "supabase"
+    name: "supabase"
     icon: "flag"
-    link: "https://github.com/career-ops-hq/career-ops/issues/6907"
-    desc: "#6907: feat(lever): read salaryRange, so Lever pay ranges reach salary_filter and the compensation column."
+    link: "https://github.com/supabase/supabase/issues/53401"
+    desc: "#53401: Update Docs: fix Grammar errors, Typos and unclear wording in “Dashboard errors when managing users” KB article (N1ls4A)."
     cells:
-      - ["Stars", "82.4K"]
-      - ["Language", "JAVASCRIPT"]
-      - ["Opened", "11 NOV"]
+      - ["Stars", "115K"]
+      - ["Language", "TYPESCRIPT"]
+      - ["Opened", "14 NOV"]
   # issues:end
   # The games on this page, in their tiers: each board, whose turn it is and
   # until when, and every legal move as a link to its ready-made issue, or

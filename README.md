@@ -397,7 +397,7 @@ depends on a third-party service.
 <!-- markdown:trophies:start -->
 <p align="center">
   <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/level.svg"><img src="assets/trophies/level-day.svg" alt="tannergolden: level 28, 12,228 XP, case 45% complete, 0-day streak"></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Green Machine II 97%, Longest Streak to Silver 95%, Generous 94%"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/next-up.svg"><img src="assets/trophies/next-up-day.svg" alt="Next up: Green Machine II 99%, Longest Streak to Silver 95%, Generous 94%"></picture>
 </p>
 
 <p align="center">
@@ -409,7 +409,7 @@ depends on a third-party service.
 </p>
 
 <details>
-<summary><b>Achievements</b> · 48 of 104 earned · next: Green Machine II, 97%</summary>
+<summary><b>Achievements</b> · 48 of 104 earned · next: Green Machine II, 99%</summary>
 
 <p align="center"><b>Milestones</b></p>
 <p align="center">
@@ -440,7 +440,7 @@ depends on a third-party service.
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 47% to By the Book III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 97% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 99% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 71% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: earned, Rare"></picture></a>
@@ -608,18 +608,18 @@ version and the major tag a stub pins to follow it. Redrawn every Wednesday.
 <div align="center">
 
 <!-- markdown:element:issue-1:start -->
-<a href="https://github.com/heygen-com/hyperframes/issues/7671">
+<a href="https://github.com/immich-app/immich/issues/33325">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/issue-1-dark.svg">
-  <img alt="heygen-com/hyperframes. #7671: cli: `capture --timeout 1s` means 1 ms and `grade-compare --timeout abc` silently becomes 5000." src="assets/elements/issue-1-day.svg">
+  <img alt="immich-app/immich. #33325: [Web] Star rating in detail panel is applied to the wrong asset / sticks when navigating to the next asset." src="assets/elements/issue-1-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-1:end -->
 <!-- markdown:element:issue-2:start -->
-<a href="https://github.com/career-ops-hq/career-ops/issues/6907">
+<a href="https://github.com/supabase/supabase/issues/53401">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/issue-2-dark.svg">
-  <img alt="career-ops-hq/career-ops. #6907: feat(lever): read salaryRange, so Lever pay ranges reach salary_filter and the compensation column." src="assets/elements/issue-2-day.svg">
+  <img alt="supabase/supabase. #53401: Update Docs: fix Grammar errors, Typos and unclear wording in “Dashboard errors when managing users” KB article (N1ls4A)." src="assets/elements/issue-2-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-2:end -->

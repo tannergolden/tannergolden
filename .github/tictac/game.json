@@ -50,6 +50,15 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-11-14T21:29:29Z"
+    },
+    {
+      "move": "h5",
+      "shown": "Xh5",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-11-21T23:15:26Z"
     }
   ]
 }

@@ -178,30 +178,28 @@ elements:
   # tictac:start
   tictac:
     kind: "tictac"
-    board: "....X..../.....O.../........./....O..../....G..../........./........./...G...../........."
+    board: "....X..../.....O.../........./....O..../....G..X./........./........./...G...../........."
     places: "house"
     opens: "github"
     game: 1
-    move: 2
+    move: 3
     players: 0
-    due: "21 Nov"
-    last: {"move": "Of8", "words": "O takes the right edge of the top board", "by": "the Arbiter", "when": "14 Nov"}
-    alert: "right board"
+    due: "28 Nov"
+    last: {"move": "Xh5", "words": "X takes the centre of the right board", "by": "the Arbiter", "when": "21 Nov"}
+    alert: "centre board"
     history:
-      - ["G", "e5", "d2", "the Arbiter"]
       - [1, "Oe6", "Xe9", "the Arbiter"]
-      - [2, "Of8", "", "the Arbiter"]
-    note: "Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 21 Nov, 16:29 EST, or the Arbiter plays a random legal move."
+      - [2, "Of8", "Xh5", "the Arbiter"]
+      - [3, "", "", ""]
+    note: "Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 28 Nov, 18:15 EST, or the Arbiter plays a random legal move. Where a mark goes in its board sends the other side to the board in that place, three in a row wins a board, and three boards in a row wins the game; once neither side can win three boards in a row, it is a draw."
     moves:
-      - ["📐", "Corner Move", "Xg6", "X takes the upper left corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["📏", "Edge Move", "Xh6", "X takes the top edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["📐", "Corner Move", "Xi6", "X takes the upper right corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["📏", "Edge Move", "Xg5", "X takes the left edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["🔳", "Centre Move", "Xh5", "X takes the centre of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["📏", "Edge Move", "Xi5", "X takes the right edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["📐", "Corner Move", "Xg4", "X takes the lower left corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["📏", "Edge Move", "Xh4", "X takes the bottom edge of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-      - ["📐", "Corner Move", "Xi4", "X takes the lower right corner of the right board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
+      - ["📐", "Corner Move", "Od6", "O takes the upper left corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+      - ["📐", "Corner Move", "Of6", "O takes the upper right corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+      - ["📏", "Edge Move", "Od5", "O takes the left edge of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+      - ["📏", "Edge Move", "Of5", "O takes the right edge of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+      - ["📐", "Corner Move", "Od4", "O takes the lower left corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+      - ["📏", "Edge Move", "Oe4", "O takes the bottom edge of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+      - ["📐", "Corner Move", "Of4", "O takes the lower right corner of the centre board", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
   # tictac:end
   # pentago:start
   pentago:
@@ -280,70 +278,72 @@ elements:
   # chess:start
   chess:
     kind: "chess"
-    fen: "rnb1kbnr/pppp1ppp/4p3/3P4/3Q3q/8/PPP1PPPP/RNB1KBNR b KQkq - 2 3"
+    fen: "rnbk1bnr/pppp1ppp/4p3/3P4/3Q3q/8/PPP1PPPP/RNB1KBNR w KQ - 3 4"
     game: 1
-    move: 3
+    move: 4
     players: 0
-    due: "21 Nov"
-    last: {"san": "Qd4", "from": "d1", "to": "d4", "piece": "queen", "captured": "", "words": "Queen from d1 to d4", "by": "the Arbiter", "when": "14 Nov"}
+    due: "28 Nov"
+    last: {"san": "Kd8", "from": "e8", "to": "d8", "piece": "king", "captured": "", "words": "King from e8 to d8", "by": "the Arbiter", "when": "21 Nov"}
     taken: {"white": "", "black": ""}
     history:
-      - [1, "d4", "e6", "the Arbiter"]
       - [2, "d5", "Qh4", "the Arbiter"]
-      - [3, "Qd4", "", ""]
-    note: "Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 21 Nov, 16:29 EST, or the Arbiter plays a random legal move."
+      - [3, "Qd4", "Kd8", "the Arbiter"]
+      - [4, "", "", ""]
+    note: "Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 28 Nov, 18:15 EST, or the Arbiter plays a random legal move."
     moves:
       - piece: "king"
         list:
-          - ["🤴", "King Move", "Kd8", "King from e8 to d8", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e8d8%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["🤴", "King Move", "Ke7", "King from e8 to e7", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e8e7%20%C2%B7%20game%201%20%C2%B7%20move%206"]
+          - ["🤴", "King Move", "Kd2", "King from e1 to d2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e1d2%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["🤴", "King Move", "Kd1", "King from e1 to d1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e1d1%20%C2%B7%20game%201%20%C2%B7%20move%207"]
       - piece: "queen"
         list:
-          - ["👸", "Queen Retreat", "Qd8", "Queen from h4 to d8", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4d8%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⚔️", "Queen Takes Queen", "Qxd4", "Queen from h4 takes the queen on d4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4d4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Retreat", "Qe7", "Queen from h4 to e7", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4e7%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Move", "Qe4", "Queen from h4 to e4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4e4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Retreat", "Qf6", "Queen from h4 to f6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Move", "Qf4", "Queen from h4 to f4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⚔️", "Queen Takes Pawn", "Qxf2", "Queen from h4 takes the pawn on f2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f2%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Retreat", "Qg5", "Queen from h4 to g5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Move", "Qg4", "Queen from h4 to g4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Move", "Qg3", "Queen from h4 to g3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g3%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Retreat", "Qh6", "Queen from h4 to h6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Retreat", "Qh5", "Queen from h4 to h5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["👸", "Queen Move", "Qh3", "Queen from h4 to h3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h3%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⚔️", "Queen Takes Pawn", "Qxh2", "Queen from h4 takes the pawn on h2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h2%20%C2%B7%20game%201%20%C2%B7%20move%206"]
+          - ["⚔️", "Queen Takes Pawn", "Qxa7", "Queen from d4 takes the pawn on a7", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4a7%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qa4", "Queen from d4 to a4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4a4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qb6", "Queen from d4 to b6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4b6%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qb4", "Queen from d4 to b4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4b4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qc5", "Queen from d4 to c5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4c5%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qc4", "Queen from d4 to c4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4c4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Retreat", "Qc3", "Queen from d4 to c3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4c3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Retreat", "Qd3", "Queen from d4 to d3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4d3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Retreat", "Qd2", "Queen from d4 to d2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4d2%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Retreat", "Qd1", "Queen from d4 to d1", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4d1%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qe5", "Queen from d4 to e5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4e5%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qe4", "Queen from d4 to e4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4e4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Retreat", "Qe3", "Queen from d4 to e3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4e3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qf6", "Queen from d4 to f6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4f6%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qf4", "Queen from d4 to f4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4f4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["⚔️", "Queen Takes Pawn", "Qxg7", "Queen from d4 takes the pawn on g7", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4g7%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["👸", "Queen Move", "Qg4", "Queen from d4 to g4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4g4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["⚔️", "Queen Takes Queen", "Qxh4", "Queen from d4 takes the queen on h4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4h4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
       - piece: "bishop"
         list:
-          - ["⛪", "Bishop Move", "Ba3", "Bishop from f8 to a3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8a3%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⛪", "Bishop Move", "Bb4", "Bishop from f8 to b4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8b4%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⛪", "Bishop Move", "Bc5", "Bishop from f8 to c5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8c5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⛪", "Bishop Move", "Bd6", "Bishop from f8 to d6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8d6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⛪", "Bishop Move", "Be7", "Bishop from f8 to e7", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8e7%20%C2%B7%20game%201%20%C2%B7%20move%206"]
+          - ["⛪", "Bishop Move", "Bd2", "Bishop from c1 to d2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1d2%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["⛪", "Bishop Move", "Be3", "Bishop from c1 to e3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1e3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["⛪", "Bishop Move", "Bf4", "Bishop from c1 to f4", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1f4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["⛪", "Bishop Move", "Bg5", "Bishop from c1 to g5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1g5%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["⛪", "Bishop Move", "Bh6", "Bishop from c1 to h6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1h6%20%C2%B7%20game%201%20%C2%B7%20move%207"]
       - piece: "knight"
         list:
-          - ["🐴", "Knight Move", "Na6", "Knight from b8 to a6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8a6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["🐴", "Knight Move", "Nc6", "Knight from b8 to c6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8c6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["🐴", "Knight Move", "Ne7", "Knight from g8 to e7", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8e7%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["🐴", "Knight Move", "Nf6", "Knight from g8 to f6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8f6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["🐴", "Knight Move", "Nh6", "Knight from g8 to h6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8h6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
+          - ["🐴", "Knight Move", "Na3", "Knight from b1 to a3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["🐴", "Knight Move", "Nc3", "Knight from b1 to c3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["🐴", "Knight Move", "Nd2", "Knight from b1 to d2", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1d2%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["🐴", "Knight Move", "Nf3", "Knight from g1 to f3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["🐴", "Knight Move", "Nh3", "Knight from g1 to h3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
       - piece: "pawn"
         list:
-          - ["♟️", "Pawn Push", "a6", "Pawn from a7 to a6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Double Pawn Push", "a5", "Pawn from a7 to a5, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Pawn Push", "b6", "Pawn from b7 to b6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Double Pawn Push", "b5", "Pawn from b7 to b5, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Pawn Push", "c6", "Pawn from c7 to c6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Double Pawn Push", "c5", "Pawn from c7 to c5, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Pawn Push", "d6", "Pawn from d7 to d6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d7d6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["⚔️", "Pawn Takes Pawn", "exd5", "Pawn from e6 takes the pawn on d5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6d5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Pawn Push", "e5", "Pawn from e6 to e5", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6e5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Pawn Push", "f6", "Pawn from f7 to f6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Double Pawn Push", "f5", "Pawn from f7 to f5, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Pawn Push", "g6", "Pawn from g7 to g6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Double Pawn Push", "g5", "Pawn from g7 to g5, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Pawn Push", "h6", "Pawn from h7 to h6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h6%20%C2%B7%20game%201%20%C2%B7%20move%206"]
-          - ["♟️", "Double Pawn Push", "h5", "Pawn from h7 to h5, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h5%20%C2%B7%20game%201%20%C2%B7%20move%206"]
+          - ["♟️", "Double Pawn Push", "a4", "Pawn from a2 to a4, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Pawn Push", "a3", "Pawn from a2 to a3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Double Pawn Push", "b4", "Pawn from b2 to b4, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Pawn Push", "b3", "Pawn from b2 to b3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Double Pawn Push", "c4", "Pawn from c2 to c4, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Pawn Push", "c3", "Pawn from c2 to c3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Pawn Push", "d6", "Pawn from d5 to d6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d5d6%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["⚔️", "Pawn Takes Pawn", "dxe6", "Pawn from d5 takes the pawn on e6", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d5e6%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Double Pawn Push", "e4", "Pawn from e2 to e4, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Pawn Push", "e3", "Pawn from e2 to e3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Double Pawn Push", "g4", "Pawn from g2 to g4, two squares", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Pawn Push", "g3", "Pawn from g2 to g3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
+          - ["♟️", "Pawn Push", "h3", "Pawn from h2 to h3", "https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%207"]
   # chess:end
   # The Hall of Fame of all four games: each one's series, the leading
   # winners and the leaderboard. Every game's run rewrites the lines between

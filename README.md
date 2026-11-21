@@ -88,96 +88,98 @@ guide: [Chess](docs/library/Chess.md), [Checkers](docs/library/Checkers.md),
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/chess-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/chess-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/chess-dark.svg">
-  <img alt="Chess: game 1, move 3. Game 1 of @tannergolden against GitHub, after 3. Qd4: queen from d1 to d4. It is GitHub&#x27;s turn, due by 21 Nov. White: king e1; queen d4; rooks a1 and h1; bishops c1 and f1; knights b1 and g1; pawns a2, b2, c2, d5, e2, f2, g2 and h2. Black: king e8; queen h4; rooks a8 and h8; bishops c8 and f8; knights b8 and g8; pawns a7, b7, c7, d7, e6, f7, g7 and h7." src="assets/elements/chess-day.svg">
+  <img alt="Chess: game 1, move 4. Game 1 of @tannergolden against GitHub, after 3... Kd8: king from e8 to d8. It is @tannergolden&#x27;s turn, due by 28 Nov. White: king e1; queen d4; rooks a1 and h1; bishops c1 and f1; knights b1 and g1; pawns a2, b2, c2, d5, e2, f2, g2 and h2. Black: king d8; queen h4; rooks a8 and h8; bishops c8 and f8; knights b8 and g8; pawns a7, b7, c7, d7, e6, f7, g7 and h7." src="assets/elements/chess-day.svg">
 </picture>
 
 <details>
-<summary>♚ <b>GitHub's Turn</b> · 41 legal moves · open to choose one</summary>
+<summary>♔ <b>@tannergolden's Turn</b> · 43 legal moves · only @tannergolden can play these</summary>
 
 <details>
-<summary>♚ King · 2 moves</summary>
+<summary>♔ King · 2 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 🤴 | **King Move** `Kd8` | King from e8 to d8 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e8d8%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 🤴 | **King Move** `Ke7` | King from e8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e8e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-
-</details>
-
-<details>
-<summary>♛ Queen · 14 moves</summary>
-
-|  | Move | In words | Play |
-| :-: | :--- | :--- | :-: |
-| 👸 | **Queen Retreat** `Qd8` | Queen from h4 to d8 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4d8%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⚔️ | **Queen Takes Queen** `Qxd4` | Queen from h4 takes the queen on d4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4d4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Retreat** `Qe7` | Queen from h4 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Move** `Qe4` | Queen from h4 to e4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4e4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Retreat** `Qf6` | Queen from h4 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Move** `Qf4` | Queen from h4 to f4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⚔️ | **Queen Takes Pawn** `Qxf2` | Queen from h4 takes the pawn on f2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4f2%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Retreat** `Qg5` | Queen from h4 to g5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Move** `Qg4` | Queen from h4 to g4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Move** `Qg3` | Queen from h4 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4g3%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Retreat** `Qh6` | Queen from h4 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Retreat** `Qh5` | Queen from h4 to h5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 👸 | **Queen Move** `Qh3` | Queen from h4 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h3%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⚔️ | **Queen Takes Pawn** `Qxh2` | Queen from h4 takes the pawn on h2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h4h2%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🤴 | **King Move** `Kd2` | King from e1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e1d2%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 🤴 | **King Move** `Kd1` | King from e1 to d1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e1d1%20%C2%B7%20game%201%20%C2%B7%20move%207) |
 
 </details>
 
 <details>
-<summary>♝ Bishop · 5 moves</summary>
+<summary>♕ Queen · 18 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ⛪ | **Bishop Move** `Ba3` | Bishop from f8 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8a3%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⛪ | **Bishop Move** `Bb4` | Bishop from f8 to b4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8b4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⛪ | **Bishop Move** `Bc5` | Bishop from f8 to c5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8c5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⛪ | **Bishop Move** `Bd6` | Bishop from f8 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8d6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⛪ | **Bishop Move** `Be7` | Bishop from f8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f8e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⚔️ | **Queen Takes Pawn** `Qxa7` | Queen from d4 takes the pawn on a7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4a7%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qa4` | Queen from d4 to a4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4a4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qb6` | Queen from d4 to b6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4b6%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qb4` | Queen from d4 to b4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4b4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qc5` | Queen from d4 to c5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4c5%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qc4` | Queen from d4 to c4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4c4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Retreat** `Qc3` | Queen from d4 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4c3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Retreat** `Qd3` | Queen from d4 to d3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4d3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Retreat** `Qd2` | Queen from d4 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4d2%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Retreat** `Qd1` | Queen from d4 to d1 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4d1%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qe5` | Queen from d4 to e5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4e5%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qe4` | Queen from d4 to e4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4e4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Retreat** `Qe3` | Queen from d4 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4e3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qf6` | Queen from d4 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4f6%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qf4` | Queen from d4 to f4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4f4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ⚔️ | **Queen Takes Pawn** `Qxg7` | Queen from d4 takes the pawn on g7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4g7%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 👸 | **Queen Move** `Qg4` | Queen from d4 to g4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4g4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ⚔️ | **Queen Takes Queen** `Qxh4` | Queen from d4 takes the queen on h4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d4h4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
 
 </details>
 
 <details>
-<summary>♞ Knights · 5 moves</summary>
+<summary>♗ Bishop · 5 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 🐴 | **Knight Move** `Na6` | Knight from b8 to a6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8a6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 🐴 | **Knight Move** `Nc6` | Knight from b8 to c6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b8c6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 🐴 | **Knight Move** `Ne7` | Knight from g8 to e7 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8e7%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 🐴 | **Knight Move** `Nf6` | Knight from g8 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8f6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 🐴 | **Knight Move** `Nh6` | Knight from g8 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g8h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| ⛪ | **Bishop Move** `Bd2` | Bishop from c1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1d2%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ⛪ | **Bishop Move** `Be3` | Bishop from c1 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1e3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ⛪ | **Bishop Move** `Bf4` | Bishop from c1 to f4 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1f4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ⛪ | **Bishop Move** `Bg5` | Bishop from c1 to g5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1g5%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ⛪ | **Bishop Move** `Bh6` | Bishop from c1 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c1h6%20%C2%B7%20game%201%20%C2%B7%20move%207) |
 
 </details>
 
 <details>
-<summary>♟ Pawns · 15 moves</summary>
+<summary>♘ Knights · 5 moves</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| ♟️ | **Pawn Push** `a6` | Pawn from a7 to a6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Double Pawn Push** `a5` | Pawn from a7 to a5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a7a5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Pawn Push** `b6` | Pawn from b7 to b6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Double Pawn Push** `b5` | Pawn from b7 to b5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b7b5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Pawn Push** `c6` | Pawn from c7 to c6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Double Pawn Push** `c5` | Pawn from c7 to c5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c7c5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Pawn Push** `d6` | Pawn from d7 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d7d6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ⚔️ | **Pawn Takes Pawn** `exd5` | Pawn from e6 takes the pawn on d5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6d5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Pawn Push** `e5` | Pawn from e6 to e5 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e6e5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Pawn Push** `f6` | Pawn from f7 to f6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Double Pawn Push** `f5` | Pawn from f7 to f5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20f7f5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Pawn Push** `g6` | Pawn from g7 to g6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Double Pawn Push** `g5` | Pawn from g7 to g5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g7g5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Pawn Push** `h6` | Pawn from h7 to h6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| ♟️ | **Double Pawn Push** `h5` | Pawn from h7 to h5, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h7h5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 🐴 | **Knight Move** `Na3` | Knight from b1 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1a3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 🐴 | **Knight Move** `Nc3` | Knight from b1 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1c3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 🐴 | **Knight Move** `Nd2` | Knight from b1 to d2 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b1d2%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 🐴 | **Knight Move** `Nf3` | Knight from g1 to f3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1f3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 🐴 | **Knight Move** `Nh3` | Knight from g1 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g1h3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+
+</details>
+
+<details>
+<summary>♙ Pawns · 13 moves</summary>
+
+|  | Move | In words | Play |
+| :-: | :--- | :--- | :-: |
+| ♟️ | **Double Pawn Push** `a4` | Pawn from a2 to a4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Pawn Push** `a3` | Pawn from a2 to a3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20a2a3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Double Pawn Push** `b4` | Pawn from b2 to b4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Pawn Push** `b3` | Pawn from b2 to b3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20b2b3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Double Pawn Push** `c4` | Pawn from c2 to c4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Pawn Push** `c3` | Pawn from c2 to c3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20c2c3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Pawn Push** `d6` | Pawn from d5 to d6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d5d6%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ⚔️ | **Pawn Takes Pawn** `dxe6` | Pawn from d5 takes the pawn on e6 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20d5e6%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Double Pawn Push** `e4` | Pawn from e2 to e4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Pawn Push** `e3` | Pawn from e2 to e3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20e2e3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Double Pawn Push** `g4` | Pawn from g2 to g4, two squares | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Pawn Push** `g3` | Pawn from g2 to g3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20g2g3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| ♟️ | **Pawn Push** `h3` | Pawn from h2 to h3 | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=chess%3A%20h2h3%20%C2%B7%20game%201%20%C2%B7%20move%207) |
 
 </details>
 
 </details>
 
-Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 21 Nov, 16:29 EST, or the Arbiter plays a random legal move.
+Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 28 Nov, 18:15 EST, or the Arbiter plays a random legal move.
 <!-- markdown:element:chess:end -->
 
 <!-- markdown:element:checkers:start -->
@@ -316,27 +318,25 @@ Anyone but @tannergolden can play on this turn, and the first pick in is played.
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/elements/tictac-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/elements/tictac-still-day.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/tictac-dark.svg">
-  <img alt="Tic-Tac: game 1, move 2. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. Ghosts lock e5 and d2. After 2. Of8, the Arbiter&#x27;s move for GitHub: O takes the right edge of the top board. It is @tannergolden&#x27;s turn as X, in the right board, due by 21 Nov. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
+  <img alt="Tic-Tac: game 1, move 3. Game 1 of @tannergolden against GitHub, @tannergolden plays X and GitHub O, under the Ghost Rule. Ghosts lock e5 and d2. After 2... Xh5, the Arbiter&#x27;s move for @tannergolden: X takes the centre of the right board. It is GitHub&#x27;s turn as O, in the centre board, due by 28 Nov. Boards won: X 0, O 0." src="assets/elements/tictac-day.svg">
 </picture>
 
 <details>
-<summary>❌ <b>@tannergolden's Turn</b> · 9 open squares · only @tannergolden can play these</summary>
+<summary>⭕ <b>GitHub's Turn</b> · 7 open squares · open to choose one</summary>
 
 |  | Move | In words | Play |
 | :-: | :--- | :--- | :-: |
-| 📐 | **Corner Move** `Xg6` | X takes the upper left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 📏 | **Edge Move** `Xh6` | X takes the top edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 📐 | **Corner Move** `Xi6` | X takes the upper right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i6%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 📏 | **Edge Move** `Xg5` | X takes the left edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 🔳 | **Centre Move** `Xh5` | X takes the centre of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 📏 | **Edge Move** `Xi5` | X takes the right edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i5%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 📐 | **Corner Move** `Xg4` | X takes the lower left corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20g4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 📏 | **Edge Move** `Xh4` | X takes the bottom edge of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20h4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
-| 📐 | **Corner Move** `Xi4` | X takes the lower right corner of the right board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20i4%20%C2%B7%20game%201%20%C2%B7%20move%206) |
+| 📐 | **Corner Move** `Od6` | O takes the upper left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d6%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 📐 | **Corner Move** `Of6` | O takes the upper right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f6%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 📏 | **Edge Move** `Od5` | O takes the left edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d5%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 📏 | **Edge Move** `Of5` | O takes the right edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f5%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 📐 | **Corner Move** `Od4` | O takes the lower left corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20d4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 📏 | **Edge Move** `Oe4` | O takes the bottom edge of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20e4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
+| 📐 | **Corner Move** `Of4` | O takes the lower right corner of the centre board | [Play ↗](https://github.com/tannergolden/play/issues/new?template=move.yml&title=tictac%3A%20f4%20%C2%B7%20game%201%20%C2%B7%20move%207) |
 
 </details>
 
-Only @tannergolden can play on this turn: a pick from anyone else is turned away with a comment on its issue. The move is due by 21 Nov, 16:29 EST, or the Arbiter plays a random legal move.
+Anyone but @tannergolden can play on this turn, and the first pick in is played. The move is due by 28 Nov, 18:15 EST, or the Arbiter plays a random legal move. Where a mark goes in its board sends the other side to the board in that place, three in a row wins a board, and three boards in a row wins the game; once neither side can win three boards in a row, it is a draw.
 
 </details>
 <!-- markdown:element:tictac:end -->

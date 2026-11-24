@@ -583,21 +583,21 @@ version and the major tag a stub pins to follow it. Redrawn every Wednesday.
 <!-- notes:start -->
 
 > [!NOTE]
-> **Intermediate · Concurrency.** `async` code in Python and JavaScript runs its tasks on one thread and switches between them at each `await`, so it helps a program wait on many network calls at once but does not make calculations any faster.
+> **Advanced · Security.** A server-side URL fetcher that can reach internal addresses exposes cloud metadata endpoints such as `169.254.169.254`, which can hand instance credentials to an attacker.
 
 > [!TIP]
-> **Advanced · TypeScript.** When TypeScript resolves an import to the wrong types or can't find a module, run `tsc --traceResolution` to print every path it tried for each import and the file it finally picked.
+> **Professional · Infrastructure as code.** Test plans against policy in CI by exporting them with `terraform show -json tfplan` and checking the JSON with a policy engine such as OPA.
 
 > [!IMPORTANT]
-> **Professional · Databases.** Run large backfills in small, throttled batches that you can pause. One huge transaction holds locks, bloats the write-ahead log and can push replicas far behind, turning a data fix into an outage.
+> **Beginner · Reproducibility.** Save the exact commands and parameters that produced each result in a script committed with the code. A number in a report that nobody can regenerate can't be checked, corrected or updated.
 
 > [!WARNING]
-> **Beginner · C.** A stray semicolon in `if (x > 0);` ends the `if` right there, so the block below always runs. Compile with `-Wextra`, which warns about the empty body.
+> **Intermediate · Testing.** An unconfigured `Mock` method returns another `Mock`, which is truthy, so code like `if client.is_allowed(user):` takes the true branch in every test. Set `return_value` on each method your code branches on.
 
 > [!CAUTION]
-> **Intermediate · Python.** `shutil.rmtree()` deletes a whole directory tree at once, with no prompt and no trash. Resolve the path and confirm it lies inside the directory you expect, for example with `Path.resolve()` and `is_relative_to()`, before calling it.
+> **Advanced · Shell.** GNU `sed -i` on a symlink replaces the link with a regular file and leaves the real target unchanged. Pass `--follow-symlinks` to edit the file it points to, and use `-i.bak` to keep a backup.
 
-<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 47 of 2026.</sub>
+<sub>Redrawn every Monday, at random, from 5,000 curated notes and five open data sources. Week 48 of 2026.</sub>
 
 <!-- notes:end -->
 

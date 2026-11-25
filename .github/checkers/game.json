@@ -55,6 +55,15 @@
       "issue": null,
       "arbiter": true,
       "at": "2026-11-18T13:57:43Z"
+    },
+    {
+      "move": "9-14",
+      "shown": "9-14",
+      "player": null,
+      "player_id": null,
+      "issue": null,
+      "arbiter": true,
+      "at": "2026-11-25T22:31:45Z"
     }
   ]
 }

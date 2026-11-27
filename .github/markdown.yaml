@@ -148,26 +148,26 @@ elements:
   # issues:start
   issue-1:
     kind: "placard"
+    owner: "langgenius"
+    name: "dify"
+    icon: "flag"
+    link: "https://github.com/langgenius/dify/issues/45585"
+    desc: "#45585: too much Mock(spec=."
+    cells:
+      - ["Stars", "162K"]
+      - ["Language", "PYTHON"]
+      - ["Opened", "4 NOV"]
+  issue-2:
+    kind: "placard"
     owner: "immich-app"
     name: "immich"
     icon: "flag"
-    link: "https://github.com/immich-app/immich/issues/33325"
-    desc: "#33325: [Web] Star rating in detail panel is applied to the wrong asset / sticks when navigating to the next asset."
+    link: "https://github.com/immich-app/immich/issues/33576"
+    desc: "#33576: Locked folder asset deletion inconsistent between App and Web."
     cells:
       - ["Stars", "120K"]
       - ["Language", "TYPESCRIPT"]
-      - ["Opened", "15 NOV"]
-  issue-2:
-    kind: "placard"
-    owner: "supabase"
-    name: "supabase"
-    icon: "flag"
-    link: "https://github.com/supabase/supabase/issues/53401"
-    desc: "#53401: Update Docs: fix Grammar errors, Typos and unclear wording in “Dashboard errors when managing users” KB article (N1ls4A)."
-    cells:
-      - ["Stars", "115K"]
-      - ["Language", "TYPESCRIPT"]
-      - ["Opened", "14 NOV"]
+      - ["Opened", "22 NOV"]
   # issues:end
   # The games on this page, in their tiers: each board, whose turn it is and
   # until when, and every legal move as a link to its ready-made issue, or

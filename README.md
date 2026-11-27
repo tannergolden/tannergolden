@@ -431,7 +431,7 @@ depends on a third-party service.
 <p align="center">
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-by-the-book"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/by-the-book.svg"><img src="assets/trophies/achievements/by-the-book-day.svg" alt="By the Book II: earned, Epic, 47% to By the Book III"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-duet"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/duet.svg"><img src="assets/trophies/achievements/duet-day.svg" alt="Duet: earned, Rare"></picture></a>
-  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 85% to Green Machine II"></picture></a>
+  <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-green-machine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/green-machine.svg"><img src="assets/trophies/achievements/green-machine-day.svg" alt="Green Machine I: earned, Rare, 87% to Green Machine II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-scribe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/scribe.svg"><img src="assets/trophies/achievements/scribe-day.svg" alt="Scribe: earned, Rare"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-signed"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/signed.svg"><img src="assets/trophies/achievements/signed-day.svg" alt="Signed I: earned, Rare, 71% to Signed II"></picture></a>
   <a href="https://github.com/tannergolden/markdown/blob/HEAD/docs/references/Catalogue.md#profile-tested"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/trophies/achievements/tested.svg"><img src="assets/trophies/achievements/tested-day.svg" alt="Tested: earned, Rare"></picture></a>
@@ -599,18 +599,18 @@ version and the major tag a stub pins to follow it. Redrawn every Wednesday.
 <div align="center">
 
 <!-- markdown:element:issue-1:start -->
-<a href="https://github.com/immich-app/immich/issues/33325">
+<a href="https://github.com/langgenius/dify/issues/45585">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/issue-1-dark.svg">
-  <img alt="immich-app/immich. #33325: [Web] Star rating in detail panel is applied to the wrong asset / sticks when navigating to the next asset." src="assets/elements/issue-1-day.svg">
+  <img alt="langgenius/dify. #45585: too much Mock(spec=." src="assets/elements/issue-1-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-1:end -->
 <!-- markdown:element:issue-2:start -->
-<a href="https://github.com/supabase/supabase/issues/53401">
+<a href="https://github.com/immich-app/immich/issues/33576">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/elements/issue-2-dark.svg">
-  <img alt="supabase/supabase. #53401: Update Docs: fix Grammar errors, Typos and unclear wording in “Dashboard errors when managing users” KB article (N1ls4A)." src="assets/elements/issue-2-day.svg">
+  <img alt="immich-app/immich. #33576: Locked folder asset deletion inconsistent between App and Web." src="assets/elements/issue-2-day.svg">
 </picture>
 </a>
 <!-- markdown:element:issue-2:end -->

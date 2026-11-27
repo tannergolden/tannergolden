@@ -1,6 +1,6 @@
 {
  "drawn": {
-  "day": "2026-11-26",
+  "day": "2026-11-27",
   "design": "medieval-illuminated",
   "holiday": "thanksgiving",
   "rainbow": null,
@@ -10,8 +10,8 @@
   "badges": {
    "measured": {
     "last-commit": {
-     "message": "This Week",
-     "state": "green"
+     "message": "This Month",
+     "state": "yellow"
     },
     "standards-ci": {
      "message": "Passing",
@@ -25,9 +25,9 @@
     "profile": {
      "bio": "Infrastructure for AI research. Reproducibility, supply-chain hygiene, and CI that fails for the right reasons.",
      "company": "",
-     "contributions": 2946,
+     "contributions": 2948,
      "created": "2016-12-20",
-     "followers": 14,
+     "followers": 13,
      "following": 0,
      "language": "Python",
      "location": "United States",
@@ -76,11 +76,11 @@
      "workflows": 11
     },
     "subject": "tannergolden",
-    "today": "2026-11-26"
+    "today": "2026-11-27"
    }
   },
   "elements": {
-   "asof": "2026-11-26T14:43:00Z",
+   "asof": "2026-11-27T14:42:00Z",
    "drawn": [
     "how-it-fits",
     "release-1",
@@ -129,7 +129,8 @@
      "2026-10-30": 13,
      "2026-11-06": 14,
      "2026-11-10": 13,
-     "2026-11-13": 14
+     "2026-11-13": 14,
+     "2026-11-27": 13
     },
     "pulls": {
      "2026-09-27": 2,
@@ -214,7 +215,7 @@
      "gist-keeper": null,
      "gitmoji": 0,
      "green-light": 0,
-     "green-machine": 823,
+     "green-machine": 856,
      "green-wall": 0,
      "heavy-lifter": 81,
      "hello-world": 1439,
@@ -258,7 +259,7 @@
      "shipped": 14,
      "shipwright": 14,
      "signed": 714,
-     "sprint": 1163,
+     "sprint": 1165,
      "standard-bearer": 1,
      "stargazer": 1,
      "surgeon": 302,
@@ -276,21 +277,21 @@
      "veteran": 9,
      "voice": 0,
      "watched": 0,
-     "weekday-warrior": 33,
+     "weekday-warrior": 34,
      "weekender": 9,
      "welcome-mat": 8,
      "well-maintained": 9,
-     "year-of-code": 49
+     "year-of-code": 50
     },
     "delta": {
-     "commits": 10,
+     "commits": 0,
      "followers": 0,
      "pulls": 0,
      "repos": 0,
      "streak": 0
     },
     "extra": {
-     "currentStreak": 0,
+     "currentStreak": 1,
      "streak": 29,
      "years": 9
     },
@@ -308,10 +309,10 @@
      "tannergolden/standards": "tannergolden"
     },
     "subject": "tannergolden",
-    "today": "2026-11-26",
+    "today": "2026-11-27",
     "values": {
      "commits": 1439,
-     "followers": 14,
+     "followers": 13,
      "issues": 0,
      "pulls": 4,
      "repos": 10,
@@ -741,7 +742,7 @@
     "tannergolden/path": {
      "complete": true,
      "cursor": null,
-     "head": "5d867c1381acc33ddd4d07dd8ee80820994109dc",
+     "head": "6a95dc039933ac5e17e4017d0f316fdc312ca360",
      "stats": {
       "authors": {
        "tannergolden": 148
@@ -886,7 +887,7 @@
     "tannergolden/tannergolden": {
      "complete": true,
      "cursor": null,
-     "head": "609a57a1fbbb4f714639b565c09ff08a4cc34526",
+     "head": "d0ae9b723726e303749f2bafc70036829fcd2893",
      "stats": {
       "authors": {
        "tannergolden": 123

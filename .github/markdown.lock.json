@@ -1,8 +1,8 @@
 {
  "drawn": {
-  "day": "2026-11-27",
+  "day": "2026-11-28",
   "design": "medieval-illuminated",
-  "holiday": "thanksgiving",
+  "holiday": null,
   "rainbow": null,
   "theme": "medieval-illuminated"
  },
@@ -76,11 +76,11 @@
      "workflows": 11
     },
     "subject": "tannergolden",
-    "today": "2026-11-27"
+    "today": "2026-11-28"
    }
   },
   "elements": {
-   "asof": "2026-11-27T22:52:00Z",
+   "asof": "2026-11-28T13:53:00Z",
    "drawn": [
     "how-it-fits",
     "release-1",
@@ -215,7 +215,7 @@
      "gist-keeper": null,
      "gitmoji": 0,
      "green-light": 0,
-     "green-machine": 877,
+     "green-machine": 889,
      "green-wall": 0,
      "heavy-lifter": 81,
      "hello-world": 1439,
@@ -309,7 +309,7 @@
      "tannergolden/standards": "tannergolden"
     },
     "subject": "tannergolden",
-    "today": "2026-11-27",
+    "today": "2026-11-28",
     "values": {
      "commits": 1439,
      "followers": 13,
@@ -742,7 +742,7 @@
     "tannergolden/path": {
      "complete": true,
      "cursor": null,
-     "head": "6a95dc039933ac5e17e4017d0f316fdc312ca360",
+     "head": "38db4257ca98cff9f68510cf28a01e316933f027",
      "stats": {
       "authors": {
        "tannergolden": 148
@@ -887,7 +887,7 @@
     "tannergolden/tannergolden": {
      "complete": true,
      "cursor": null,
-     "head": "0d6c97398f27fcd78a4a58839258bd383dac168c",
+     "head": "f5d83181d5a2fb2e8f91516c222610ff7e62fd4b",
      "stats": {
       "authors": {
        "tannergolden": 123
